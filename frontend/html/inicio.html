@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <title>ACAUCAB - Asociación de Cerveceros Artesanales UCAB</title>
     <link rel="stylesheet" href="../css/inicio.css" />
     <link
@@ -32,7 +33,7 @@
 
         <!-- Formulario de Inicio de Sesión -->
         <div id="login" class="tab-content active">
-          <form id="login-form">
+          <form id="login-form" >
             <div class="form-group">
               <label for="login-email">Correo Electrónico</label>
               <input
@@ -399,8 +400,15 @@
     </div>
 
     <script>
-      // Función para cambiar entre pestañas
+        console.log("Probando")
+        axios.get('http://localhost:3000/', async (e)=>{
+          console.log("Respuesta")
+          console.log(e)
+        })
+
       function openTab(tabName) {
+
+
         const tabContents = document.getElementsByClassName("tab-content");
         for (let i = 0; i < tabContents.length; i++) {
           tabContents[i].classList.remove("active");
