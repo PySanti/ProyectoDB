@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DiarioDeCerveza - ACAUCAB</title>
+    <link rel="stylesheet" href="../css/diario.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <!-- Header (mismo que en home.html) -->
+    <header class="main-header">
+        <div class="header-container">
+            <div class="logo-header">
+                <h1>ACAUCAB</h1>
+            </div>
+            <nav class="main-nav">
+                <ul class="nav-list">
+                    <li class="nav-item"><a href="home.html">Inicio</a></li>
+                    <li class="nav-item"><a href="catalog.html">Productos</a></li>
+                    <li class="nav-item active"><a href="diario.html">DiarioDeCerveza</a></li>
+                    <li class="nav-item"><a href="events.html">Eventos</a></li>
+                </ul>
+            </nav>
+            <div class="user-actions">
+                <a href="cart.html" class="cart-icon"><i class="fas fa-shopping-cart"></i> <span class="cart-count">0</span></a>
+                <a href="index.html" class="login-btn">Iniciar Sesión</a>
+                <a href="profile.html" class="profile-btn"><i class="fas fa-user"></i></a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Diario Page Title -->
+    <section class="page-title">
+        <div class="section-container">
+            <h1>DiarioDeCerveza</h1>
+            <div class="breadcrumb">
+                <a href="home.html">Inicio</a> / <span>DiarioDeCerveza</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Diario Content -->
+    <section class="diario-section">
+        <div class="section-container">
+            <div class="diario-layout">
+                <!-- Current Edition -->
+                <div class="diario-current">
+                    <div class="diario-header">
+                        <h2>Edición Actual: Julio 2025</h2>
+                        <p>Válido del 1 al 10 de Julio de 2025</p>
+                    </div>
+                    
+                    <div class="diario-viewer">
+                        <div class="diario-controls">
+                            <button class="control-btn prev"><i class="fas fa-chevron-left"></i></button>
+                            <span class="page-indicator">Página <span id="current-page">1</span> de <span id="total-pages">12</span></span>
+                            <button class="control-btn next"><i class="fas fa-chevron-right"></i></button>
+                            <button class="control-btn fullscreen"><i class="fas fa-expand"></i></button>
+                            <a href="#" class="control-btn download"><i class="fas fa-download"></i></a>
+                        </div>
+                        
+                        <div class="diario-pages">
+                            <div class="diario-page active" id="page-1">
+                                <img src="https://images.unsplash.com/photo-1594631252845-29fc4cc8cde9?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="DiarioDeCerveza Página 1">
+                            </div>
+                            <!-- Más páginas... -->
+                        </div>
+                    </div>
+                    
+                    <div class="diario-featured">
+                        <h3>Ofertas Destacadas</h3>
+                        
+                        <div class="featured-products">
+                            <!-- Producto 1 -->
+                            <div class="featured-product">
+                                <div class="product-badge sale">-25%</div>
+                                <img src="https://images.unsplash.com/photo-1600788886242-5c96aabe3757?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80" alt="Benitz Pale Ale" class="product-image">
+                                <div class="product-info">
+                                    <h4 class="product-title">Benitz Pale Ale</h4>
+                                    <p class="product-category">American Pale Ale</p>
+                                    <div class="product-price">
+                                        <span class="original-price">$9.99</span>
+                                        <span class="current-price">$7.50</span>
+                                    </div>
+                                    <button class="add-to-cart-btn">Añadir al carrito</button>
+                                </div>
+                            </div>
+                            
+                            <!-- Producto 2 -->
+                            <div class="featured-product">
+                                <div class="product-badge sale">-20%</div>
+                                <img src="https://images.unsplash.com/photo-1613989969925-d64b5a1fcf11?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80" alt="Aldarra Mantuana" class="product-image">
+                                <div class="product-info">
+                                    <h4 class="product-title">Aldarra Mantuana</h4>
+                                    <p class="product-category">Blonde Ale</p>
+                                    <div class="product-price">
+                                        <span class="original-price">$10.50</span>
+                                        <span class="current-price">$8.75</span>
+                                    </div>
+                                    <button class="add-to-cart-btn">Añadir al carrito</button>
+                                </div>
+                            </div>
+                            
+                            <!-- Producto 3 -->
+                            <div class="featured-product">
+                                <div class="product-badge sale">-15%</div>
+                                <img src="https://images.unsplash.com/photo-1566633806327-68e152aaf26d?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80" alt="Destilo Amber Ale" class="product-image">
+                                <div class="product-info">
+                                    <h4 class="product-title">Destilo Amber Ale</h4>
+                                    <p class="product-category">Amber Ale</p>
+                                    <div class="product-price">
+                                        <span class="original-price">$8.50</span>
+                                        <span class="current-price">$7.25</span>
+                                    </div>
+                                    <button class="add-to-cart-btn">Añadir al carrito</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Archive -->
+                <div class="diario-archive">
+                    <div class="archive-header">
+                        <h2>Ediciones Anteriores</h2>
+                    </div>
+                    
+                    <div class="archive-list">
+                        <!-- Edición 1 -->
+                        <div class="archive-item">
+                            <div class="archive-cover">
+                                <img src="https://images.unsplash.com/photo-1613989969925-d64b5a1fcf11?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80" alt="Edición Junio 2025">
+                            </div>
+                            <div class="archive-info">
+                                <h3>Junio 2025</h3>
+                                <p>Válido del 1 al 10 de Junio de 2025</p>
+                                <a href="#" class="archive-link">Ver Edición</a>
+                            </div>
+                        </div>
+                        
+                        <!-- Edición 2 -->
+                        <div class="archive-item">
+                            <div class="archive-cover">
+                                <img src="https://images.unsplash.com/photo-1612528443702-f6741f70a049?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80" alt="Edición Mayo 2025">
+                            </div>
+                            <div class="archive-info">
+                                <h3>Mayo 2025</h3>
+                                <p>Válido del 1 al 10 de Mayo de 2025</p>
+                                <a href="#" class="archive-link">Ver Edición</a>
+                            </div>
+                        </div>
+                        
+                        <!-- Edición 3 -->
+                        <div class="archive-item">
+                            <div class="archive-cover">
+                                <img src="https://images.unsplash.com/photo-1618183479302-1e0aa382c36b?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80" alt="Edición Abril 2025">
+                            </div>
+                            <div class="archive-info">
+                                <h3>Abril 2025</h3>
+                                <p>Válido del 1 al 10 de Abril de 2025</p>
+                                <a href="#" class="archive-link">Ver Edición</a>
+                            </div>
+                        </div>
+                        
+                        <!-- Edición 4 -->
+                        <div class="archive-item">
+                            <div class="archive-cover">
+                                <img src="https://images.unsplash.com/photo-1596424773667-11d2f98ad6b1?ixlib=rb-1.2.1&auto=format&fit=crop&w=300&q=80" alt="Edición Marzo 2025">
+                            </div>
+                            <div class="archive-info">
+                                <h3>Marzo 2025</h3>
+                                <p>Válido del 1 al 10 de Marzo de 2025</p>
+                                <a href="#" class="archive-link">Ver Edición</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="archive-pagination">
+                        <a href="#" class="page-link active">1</a>
+                        <a href="#" class="page-link">2</a>
+                        <a href="#" class="page-link">3</a>
+                        <a href="#" class="page-link next"><i class="fas fa-chevron-right"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer (mismo que en home.html) -->
+    <footer class="main-footer">
+        <div class="footer-container">
+            <div class="footer-column">
+                <h3>ACAUCAB</h3>
+                <p>Asociación de Cerveceros Artesanales UCAB</p>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h3>Enlaces Rápidos</h3>
+                <ul class="footer-links">
+                    <li><a href="home.html">Inicio</a></li>
+                    <li><a href="catalog.html">Productos</a></li>
+                    <li><a href="diario.html">DiarioDeCerveza</a></li>
+                    <li><a href="events.html">Eventos</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Contacto</h3>
+                <ul class="contact-info">
+                    <li><i class="fas fa-map-marker-alt"></i> Sede ACAUCAB, Caracas, Venezuela</li>
+                    <li><i class="fas fa-phone"></i> +58 212 123 4567</li>
+                    <li><i class="fas fa-envelope"></i> info@acaucab.com</li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Suscríbete</h3>
+                <p>Recibe nuestras novedades y ofertas</p>
+                <form class="subscribe-form">
+                    <input type="email" placeholder="Tu correo electrónico">
+                    <button type="submit"><i class="fas fa-paper-plane"></i></button>
+                </form>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 ACAUCAB. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Controles del visor de DiarioDeCerveza
+        document.querySelector('.control-btn.next').addEventListener('click', function() {
+            const currentPage = parseInt(document.getElementById('current-page').textContent);
+            const totalPages = parseInt(document.getElementById('total-pages').textContent);
+            
+            if (currentPage < totalPages) {
+                document.getElementById('current-page').textContent = currentPage + 1;
+                document.querySelectorAll('.diario-page').forEach(page => {
+                    page.classList.remove('active');
+                });
+                document.getElementById('page-' + (currentPage + 1)).classList.add('active');
+            }
+        });
+        
+        document.querySelector('.control-btn.prev').addEventListener('click', function() {
+            const currentPage = parseInt(document.getElementById('current-page').textContent);
+            
+            if (currentPage > 1) {
+                document.getElementById('current-page').textContent = currentPage - 1;
+                document.querySelectorAll('.diario-page').forEach(page => {
+                    page.classList.remove('active');
+                });
+                document.getElementById('page-' + (currentPage - 1)).classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html>

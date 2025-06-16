@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil de Cliente - ACAUCAB</title>
+    <link rel="stylesheet" href="../css/profile.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <!-- Header (mismo que en home.html) -->
+    <header class="main-header">
+        <div class="header-container">
+            <div class="logo-header">
+                <h1>ACAUCAB</h1>
+            </div>
+            <nav class="main-nav">
+                <ul class="nav-list">
+                    <li class="nav-item"><a href="home.html">Inicio</a></li>
+                    <li class="nav-item"><a href="catalog.html">Productos</a></li>
+                    <li class="nav-item"><a href="diario.html">DiarioDeCerveza</a></li>
+                    <li class="nav-item"><a href="events.html">Eventos</a></li>
+                </ul>
+            </nav>
+            <div class="user-actions">
+                <a href="cart.html" class="cart-icon"><i class="fas fa-shopping-cart"></i> <span class="cart-count">0</span></a>
+                <a href="index.html" class="login-btn">Iniciar Sesión</a>
+                <a href="profile.html" class="profile-btn active"><i class="fas fa-user"></i></a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Profile Page Title -->
+    <section class="page-title">
+        <div class="section-container">
+            <h1>Mi Perfil</h1>
+            <div class="breadcrumb">
+                <a href="home.html">Inicio</a> / <span>Mi Perfil</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Profile Content -->
+    <section class="profile-section">
+        <div class="section-container">
+            <div class="profile-layout">
+                <!-- Profile Sidebar -->
+                <div class="profile-sidebar">
+                    <div class="profile-user">
+                        <div class="profile-avatar">
+                            <i class="fas fa-user-circle"></i>
+                        </div>
+                        <div class="profile-info">
+                            <h3>Juan Pérez</h3>
+                            <p>Cliente desde Julio 2024</p>
+                        </div>
+                    </div>
+                    
+                    <ul class="profile-menu">
+                        <li class="active"><a href="#dashboard"><i class="fas fa-tachometer-alt"></i> Panel Principal</a></li>
+                        <li><a href="#orders"><i class="fas fa-shopping-bag"></i> Mis Pedidos</a></li>
+                        <li><a href="#points"><i class="fas fa-star"></i> Mis Puntos</a></li>
+                        <li><a href="#addresses"><i class="fas fa-map-marker-alt"></i> Direcciones</a></li>
+                        <li><a href="#payment"><i class="fas fa-credit-card"></i> Métodos de Pago</a></li>
+                        <li><a href="#account"><i class="fas fa-user-cog"></i> Detalles de la Cuenta</a></li>
+                        <li><a href="index.html"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a></li>
+                    </ul>
+                </div>
+                
+                <!-- Profile Content -->
+                <div class="profile-content">
+                    <!-- Dashboard Tab -->
+                    <div class="profile-tab active" id="dashboard">
+                        <h2>Panel Principal</h2>
+                        
+                        <div class="dashboard-cards">
+                            <div class="dashboard-card">
+                                <div class="card-icon"><i class="fas fa-shopping-bag"></i></div>
+                                <div class="card-info">
+                                    <h3>5</h3>
+                                    <p>Pedidos Totales</p>
+                                </div>
+                            </div>
+                            
+                            <div class="dashboard-card">
+                                <div class="card-icon"><i class="fas fa-star"></i></div>
+                                <div class="card-info">
+                                    <h3>34</h3>
+                                    <p>Puntos Disponibles</p>
+                                </div>
+                            </div>
+                            
+                            <div class="dashboard-card">
+                                <div class="card-icon"><i class="fas fa-heart"></i></div>
+                                <div class="card-info">
+                                    <h3>8</h3>
+                                    <p>Productos Favoritos</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="recent-orders">
+                            <div class="section-header">
+                                <h3>Pedidos Recientes</h3>
+                                <a href="#orders" class="view-all">Ver todos</a>
+                            </div>
+                            
+                            <div class="orders-table">
+                                <div class="table-header">
+                                    <div class="header-cell">Pedido</div>
+                                    <div class="header-cell">Fecha</div>
+                                    <div class="header-cell">Estado</div>
+                                    <div class="header-cell">Total</div>
+                                    <div class="header-cell">Acciones</div>
+                                </div>
+                                
+                                <div class="table-row">
+                                    <div class="table-cell">#1089</div>
+                                    <div class="table-cell">15/07/2025</div>
+                                    <div class="table-cell"><span class="status completed">Completado</span></div>
+                                    <div class="table-cell">$45.75</div>
+                                    <div class="table-cell"><a href="#" class="view-btn">Ver</a></div>
+                                </div>
+                                
+                                <div class="table-row">
+                                    <div class="table-cell">#1076</div>
+                                    <div class="table-cell">02/07/2025</div>
+                                    <div class="table-cell"><span class="status completed">Completado</span></div>
+                                    <div class="table-cell">$32.50</div>
+                                    <div class="table-cell"><a href="#" class="view-btn">Ver</a></div>
+                                </div>
+                                
+                                <div class="table-row">
+                                    <div class="table-cell">#1065</div>
+                                    <div class="table-cell">18/06/2025</div>
+                                    <div class="table-cell"><span class="status completed">Completado</span></div>
+                                    <div class="table-cell">$28.25</div>
+                                    <div class="table-cell"><a href="#" class="view-btn">Ver</a></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="membership-card">
+                            <div class="card-header">
+                                <h3>Tarjeta de Membresía</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="membership-info">
+                                    <div class="membership-logo">
+                                        <img src="logo-acaucab.png" alt="Logo ACAUCAB">
+                                    </div>
+                                    <div class="membership-details">
+                                        <h4>Juan Pérez</h4>
+                                        <p>Miembro #ACAU12345</p>
+                                        <p>Válido hasta: 31/12/2026</p>
+                                    </div>
+                                </div>
+                                <div class="membership-qr">
+                                    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=ACAU12345" alt="QR Code">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Orders Tab -->
+                    <div class="profile-tab" id="orders">
+                        <h2>Mis Pedidos</h2>
+                        
+                        <div class="orders-filter">
+                            <div class="filter-group">
+                                <label for="order-status">Estado:</label>
+                                <select id="order-status">
+                                    <option value="all">Todos</option>
+                                    <option value="pending">Pendiente</option>
+                                    <option value="processing">En Proceso</option>
+                                    <option value="completed">Completado</option>
+                                    <option value="cancelled">Cancelado</option>
+                                </select>
+                            </div>
+                            
+                            <div class="filter-group">
+                                <label for="order-date">Fecha:</label>
+                                <select id="order-date">
+                                    <option value="all">Todos</option>
+                                    <option value="last-month">Último Mes</option>
+                                    <option value="last-3-months">Últimos 3 Meses</option>
+                                    <option value="last-6-months">Últimos 6 Meses</option>
+                                    <option value="last-year">Último Año</option>
+                                </select>
+                            </div>
+                            
+                            <button class="filter-btn">Filtrar</button>
+                        </div>
+                        
+                        <div class="orders-table full-table">
+                            <div class="table-header">
+                                <div class="header-cell">Pedido</div>
+                                <div class="header-cell">Fecha</div>
+                                <div class="header-cell">Estado</div>
+                                <div class="header-cell">Total</div>
+                                <div class="header-cell">Acciones</div>
+                            </div>
+                            
+                            <div class="table-row">
+                                <div class="table-cell">#1089</div>
+                                <div class="table-cell">15/07/2025</div>
+                                <div class="table-cell"><span class="status completed">Completado</span></div>
+                                <div class="table-cell">$45.75</div>
+                                <div class="table-cell"><a href="#" class="view-btn">Ver</a></div>
+                            </div>
+                            
+                            <div class="table-row">
+                                <div class="table-cell">#1076</div>
+                                <div class="table-cell">02/07/2025</div>
+                                <div class="table-cell"><span class="status completed">Completado</span></div>
+                                <div class="table-cell">$32.50</div>
+                                <div class="table-cell"><a href="#" class="view-btn">Ver</a></div>
+                            </div>
+                            
+                            <div class="table-row">
+                                <div class="table-cell">#1065</div>
+                                <div class="table-cell">18/06/2025</div>
+                                <div class="table-cell"><span class="status completed">Completado</span></div>
+                                <div class="table-cell">$28.25</div>
+                                <div class="table-cell"><a href="#" class="view-btn">Ver</a></div>
+                            </div>
+                            
+                            <div class="table-row">
+                                <div class="table-cell">#1052</div>
+                                <div class="table-cell">05/06/2025</div>
+                                <div class="table-cell"><span class="status completed">Completado</span></div>
+                                <div class="table-cell">$37.00</div>
+                                <div class="table-cell"><a href="#" class="view-btn">Ver</a></div>
+                            </div>
+                            
+                            <div class="table-row">
+                                <div class="table-cell">#1043</div>
+                                <div class="table-cell">22/05/2025</div>
+                                <div class="table-cell"><span class="status completed">Completado</span></div>
+                                <div class="table-cell">$42.25</div>
+                                <div class="table-cell"><a href="#" class="view-btn">Ver</a></div>
+                            </div>
+                        </div>
+                        
+                        <div class="pagination">
+                            <a href="#" class="page-link active">1</a>
+                            <a href="#" class="page-link">2</a>
+                            <a href="#" class="page-link">3</a>
+                            <a href="#" class="page-link next"><i class="fas fa-chevron-right"></i></a>
+                        </div>
+                    </div>
+                    
+                    <!-- Points Tab -->
+                    <div class="profile-tab" id="points">
+                        <h2>Mis Puntos</h2>
+                        
+                        <div class="points-summary">
+                            <div class="points-card">
+                                <div class="points-icon"><i class="fas fa-star"></i></div>
+                                <div class="points-info">
+                                    <h3>34</h3>
+                                    <p>Puntos Disponibles</p>
+                                </div>
+                            </div>
+                            
+                            <div class="points-card">
+                                <div class="points-icon"><i class="fas fa-exchange-alt"></i></div>
+                                <div class="points-info">
+                                    <h3>45</h3>
+                                    <p>Puntos Canjeados</p>
+                                </div>
+                            </div>
+                            
+                            <div class="points-card">
+                                <div class="points-icon"><i class="fas fa-history"></i></div>
+                                <div class="points-info">
+                                    <h3>79</h3>
+                                    <p>Puntos Totales</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="points-info-box">
+                            <h3>¿Cómo funcionan los puntos?</h3>
+                            <p>Por cada producto comprado en ACAUCAB, obtienes 1 punto en tu cuenta. Cada punto equivale a 1 Bs que puedes canjear en tus próximas compras.</p>
+                            <p>Los puntos tienen una validez de 12 meses desde la fecha de obtención.</p>
+                        </div>
+                        
+                        <div class="points-history">
+                            <h3>Historial de Puntos</h3>
+                            
+                            <div class="points-table">
+                                <div class="table-header">
+                                    <div class="header-cell">Fecha</div>
+                                    <div class="header-cell">Descripción</div>
+                                    <div class="header-cell">Puntos</div>
+                                </div>
+                                
+                                <div class="table-row">
+                                    <div class="table-cell">15/07/2025</div>
+                                    <div class="table-cell">Compra #1089</div>
+                                    <div class="table-cell">+5</div>
+                                </div>
+                                
+                                <div class="table-row">
+                                    <div class="table-cell">10/07/2025</div>
+                                    <div class="table-cell">Canje en compra #1082</div>
+                                    <div class="table-cell">-10</div>
+                                </div>
+                                
+                                <div class="table-row">
+                                    <div class="table-cell">02/07/2025</div>
+                                    <div class="table-cell">Compra #1076</div>
+                                    <div class="table-cell">+4</div>
+                                </div>
+                                
+                                <div class="table-row">
+                                    <div class="table-cell">18/06/2025</div>
+                                    <div class="table-cell">Compra #1065</div>
+                                    <div class="table-cell">+3</div>
+                                </div>
+                                
+                                <div class="table-row">
+                                    <div class="table-cell">05/06/2025</div>
+                                    <div class="table-cell">Compra #1052</div>
+                                    <div class="table-cell">+4</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Addresses Tab -->
+                    <div class="profile-tab" id="addresses">
+                        <!-- Contenido de direcciones -->
+                    </div>
+                    
+                    <!-- Payment Methods Tab -->
+                    <div class="profile-tab" id="payment">
+                        <!-- Contenido de métodos de pago -->
+                    </div>
+                    
+                    <!-- Account Details Tab -->
+                    <div class="profile-tab" id="account">
+                        <!-- Contenido de detalles de la cuenta -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer (mismo que en home.html) -->
+    <footer class="main-footer">
+        <div class="footer-container">
+            <div class="footer-column">
+                <h3>ACAUCAB</h3>
+                <p>Asociación de Cerveceros Artesanales UCAB</p>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h3>Enlaces Rápidos</h3>
+                <ul class="footer-links">
+                    <li><a href="home.html">Inicio</a></li>
+                    <li><a href="catalog.html">Productos</a></li>
+                    <li><a href="diario.html">DiarioDeCerveza</a></li>
+                    <li><a href="events.html">Eventos</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Contacto</h3>
+                <ul class="contact-info">
+                    <li><i class="fas fa-map-marker-alt"></i> Sede ACAUCAB, Caracas, Venezuela</li>
+                    <li><i class="fas fa-phone"></i> +58 212 123 4567</li>
+                    <li><i class="fas fa-envelope"></i> info@acaucab.com</li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Suscríbete</h3>
+                <p>Recibe nuestras novedades y ofertas</p>
+                <form class="subscribe-form">
+                    <input type="email" placeholder="Tu correo electrónico">
+                    <button type="submit"><i class="fas fa-paper-plane"></i></button>
+                </form>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 ACAUCAB. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Cambiar entre pestañas del perfil
+        document.querySelectorAll('.profile-menu a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Actualizar menú activo
+                document.querySelectorAll('.profile-menu li').forEach(item => {
+                    item.classList.remove('active');
+                });
+                this.parentElement.classList.add('active');
+                
+                // Mostrar tab correspondiente
+                const tabId = this.getAttribute('href').substring(1);
+                document.querySelectorAll('.profile-tab').forEach(tab => {
+                    tab.classList.remove('active');
+                });
+                document.getElementById(tabId).classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

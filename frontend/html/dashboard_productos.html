@@ -1,0 +1,1421 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Gestión de Productos - ACAUCAB</title>
+    <link rel="stylesheet" href="../css/dashboard_productos.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="dashboard-sidebar">
+            <div class="sidebar-header">
+                <h1>ACAUCAB</h1>
+                <p>Panel de Administración</p>
+            </div>
+            
+            <div class="sidebar-user">
+                <div class="user-avatar">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <div class="user-info">
+                    <h3>Miguel Sánchez</h3>
+                    <p>Gestión de Productos</p>
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="active"><a href="#productos" data-section="productos"><i class="fas fa-beer"></i> Productos</a></li>
+                    <li><a href="#inventario" data-section="inventario"><i class="fas fa-warehouse"></i> Inventario</a></li>
+                    <li><a href="#categorias" data-section="categorias"><i class="fas fa-tags"></i> Categorías</a></li>
+                    <li><a href="#ubicaciones" data-section="ubicaciones"><i class="fas fa-map-marker-alt"></i> Ubicaciones</a></li>
+                    <li><a href="#proveedores" data-section="proveedores"><i class="fas fa-truck"></i> Proveedores</a></li>
+                    <li><a href="#reportes" data-section="reportes"><i class="fas fa-chart-bar"></i> Reportes</a></li>
+                    <li><a href="#configuracion" data-section="configuracion"><i class="fas fa-cog"></i> Configuración</a></li>
+                </ul>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <a href="index.html" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="dashboard-content">
+            <header class="content-header">
+                <div class="header-left">
+                    <button class="toggle-sidebar"><i class="fas fa-bars"></i></button>
+                    <h2>Dashboard de Gestión de Productos</h2>
+                </div>
+                <div class="header-right">
+                    <div class="search-box">
+                        <input type="text" placeholder="Buscar cerveza...">
+                        <button><i class="fas fa-search"></i></button>
+                    </div>
+                    <div class="notifications">
+                        <button class="notification-btn"><i class="fas fa-bell"></i><span class="badge">5</span></button>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Productos Section -->
+            <section class="content-section active" id="productos-section">
+                <div class="section-header">
+                    <h2>Gestión de Productos</h2>
+                    <button class="primary-btn" id="add-producto-btn"><i class="fas fa-plus"></i> Nueva Cerveza</button>
+                </div>
+                
+                <div class="filter-bar">
+                    <div class="filter-group">
+                        <label for="filter-marca">Marca:</label>
+                        <select id="filter-marca">
+                            <option value="all">Todas las marcas</option>
+                            <option value="polar">Polar</option>
+                            <option value="zulia">Zulia</option>
+                            <option value="regional">Regional</option>
+                            <option value="solera">Solera</option>
+                            <option value="tovar">Tovar</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="filter-tipo">Tipo:</label>
+                        <select id="filter-tipo">
+                            <option value="all">Todos los tipos</option>
+                            <option value="pilsener">Pilsener</option>
+                            <option value="lager">Lager</option>
+                            <option value="light">Light</option>
+                            <option value="ipa">IPA</option>
+                            <option value="stout">Stout</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="filter-stock">Stock:</label>
+                        <select id="filter-stock">
+                            <option value="all">Todos</option>
+                            <option value="in-stock">En stock</option>
+                            <option value="low-stock">Stock bajo</option>
+                            <option value="out-of-stock">Sin stock</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="filter-pasillo">Pasillo:</label>
+                        <select id="filter-pasillo">
+                            <option value="all">Todos</option>
+                            <option value="1">Pasillo 1</option>
+                            <option value="2">Pasillo 2</option>
+                            <option value="3">Pasillo 3</option>
+                            <option value="4">Pasillo 4</option>
+                            <option value="5">Pasillo 5</option>
+                        </select>
+                    </div>
+                    
+                    <button class="secondary-btn"><i class="fas fa-filter"></i> Filtrar</button>
+                    <button class="outline-btn"><i class="fas fa-sync-alt"></i> Reiniciar</button>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Lista de Productos</h3>
+                        <div class="card-actions">
+                            <select id="sort-products">
+                                <option value="name-asc">Nombre (A-Z)</option>
+                                <option value="name-desc">Nombre (Z-A)</option>
+                                <option value="stock-asc">Stock (Menor a Mayor)</option>
+                                <option value="stock-desc">Stock (Mayor a Menor)</option>
+                                <option value="price-asc">Precio (Menor a Mayor)</option>
+                                <option value="price-desc">Precio (Mayor a Menor)</option>
+                            </select>
+                            <button class="export-btn"><i class="fas fa-download"></i> Exportar</button>
+                        </div>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Imagen</th>
+                                    <th>Marca</th>
+                                    <th>Nombre</th>
+                                    <th>Tipo</th>
+                                    <th>Precio</th>
+                                    <th>Stock</th>
+                                    <th>Pasillo</th>
+                                    <th>Zona</th>
+                                    <th>Anaquel</th>
+                                    <th>Proveedor</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>PRD001</td>
+                                    <td><img src="../img/producto1.jpg" alt="Cerveza Polar" class="product-thumbnail"></td>
+                                    <td>Polar</td>
+                                    <td>Pilsen 355ml</td>
+                                    <td>Pilsener</td>
+                                    <td>$2.50</td>
+                                    <td>120</td>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>A</td>
+                                    <td>Empresas Polar</td>
+                                    <td><span class="status active">Activo</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>PRD002</td>
+                                    <td><img src="../img/producto2.jpg" alt="Cerveza Zulia" class="product-thumbnail"></td>
+                                    <td>Zulia</td>
+                                    <td>Pilsen 355ml</td>
+                                    <td>Pilsener</td>
+                                    <td>$2.50</td>
+                                    <td>85</td>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>A</td>
+                                    <td>Cervecería Zulia</td>
+                                    <td><span class="status active">Activo</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>PRD003</td>
+                                    <td><img src="../img/producto3.jpg" alt="Cerveza Regional" class="product-thumbnail"></td>
+                                    <td>Regional</td>
+                                    <td>Pilsen 355ml</td>
+                                    <td>Pilsener</td>
+                                    <td>$2.45</td>
+                                    <td>92</td>
+                                    <td>1</td>
+                                    <td>3</td>
+                                    <td>B</td>
+                                    <td>Cervecería Regional</td>
+                                    <td><span class="status active">Activo</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>PRD004</td>
+                                    <td><img src="../img/producto4.jpg" alt="Cerveza Solera" class="product-thumbnail"></td>
+                                    <td>Solera</td>
+                                    <td>Premium 355ml</td>
+                                    <td>Lager</td>
+                                    <td>$3.25</td>
+                                    <td>18</td>
+                                    <td>2</td>
+                                    <td>1</td>
+                                    <td>C</td>
+                                    <td>Cervecería Solera</td>
+                                    <td><span class="status low">Stock Bajo</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>PRD005</td>
+                                    <td><img src="../img/producto5.jpg" alt="Cerveza Tovar" class="product-thumbnail"></td>
+                                    <td>Tovar</td>
+                                    <td>Stout 330ml</td>
+                                    <td>Stout</td>
+                                    <td>$4.75</td>
+                                    <td>0</td>
+                                    <td>3</td>
+                                    <td>4</td>
+                                    <td>B</td>
+                                    <td>Cervecería Tovar</td>
+                                    <td><span class="status inactive">Sin Stock</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>PRD006</td>
+                                    <td><img src="../img/producto6.jpg" alt="Cerveza Polar" class="product-thumbnail"></td>
+                                    <td>Polar</td>
+                                    <td>Light 355ml</td>
+                                    <td>Light</td>
+                                    <td>$2.60</td>
+                                    <td>65</td>
+                                    <td>2</td>
+                                    <td>2</td>
+                                    <td>A</td>
+                                    <td>Empresas Polar</td>
+                                    <td><span class="status active">Activo</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="table-footer">
+                        <div class="pagination">
+                            <button class="page-btn prev"><i class="fas fa-chevron-left"></i></button>
+                            <button class="page-btn active">1</button>
+                            <button class="page-btn">2</button>
+                            <button class="page-btn">3</button>
+                            <span class="page-dots">...</span>
+                            <button class="page-btn">10</button>
+                            <button class="page-btn next"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                        <div class="page-info">
+                            Mostrando 1-6 de 125 productos
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Inventario Section -->
+            <section class="content-section" id="inventario-section">
+                <div class="section-header">
+                    <h2>Monitoreo de Inventario</h2>
+                    <button class="primary-btn" id="add-stock-btn"><i class="fas fa-plus"></i> Registrar Entrada</button>
+                </div>
+                
+                <div class="dashboard-cards">
+                    <div class="dashboard-card">
+                        <div class="card-icon"><i class="fas fa-beer"></i></div>
+                        <div class="card-info">
+                            <h3>1,245</h3>
+                            <p>Total de Productos</p>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-icon warning"><i class="fas fa-exclamation-triangle"></i></div>
+                        <div class="card-info">
+                            <h3>28</h3>
+                            <p>Productos con Stock Bajo</p>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-icon danger"><i class="fas fa-times-circle"></i></div>
+                        <div class="card-info">
+                            <h3>15</h3>
+                            <p>Productos Sin Stock</p>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-icon success"><i class="fas fa-check-circle"></i></div>
+                        <div class="card-info">
+                            <h3>1,202</h3>
+                            <p>Productos con Stock Normal</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Productos con Stock Bajo</h3>
+                                <div class="card-actions">
+                                    <button class="export-btn"><i class="fas fa-download"></i> Exportar</button>
+                                </div>
+                            </div>
+                            
+                            <div class="table-responsive">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Marca</th>
+                                            <th>Producto</th>
+                                            <th>Stock Actual</th>
+                                            <th>Stock Mínimo</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>PRD004</td>
+                                            <td>Solera</td>
+                                            <td>Premium 355ml</td>
+                                            <td>18</td>
+                                            <td>20</td>
+                                            <td class="actions">
+                                                <button class="action-btn add-stock" title="Añadir Stock"><i class="fas fa-plus-circle"></i></button>
+                                                <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>PRD012</td>
+                                            <td>Polar</td>
+                                            <td>ICE 355ml</td>
+                                            <td>12</td>
+                                            <td>15</td>
+                                            <td class="actions">
+                                                <button class="action-btn add-stock" title="Añadir Stock"><i class="fas fa-plus-circle"></i></button>
+                                                <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>PRD023</td>
+                                            <td>Regional</td>
+                                            <td>Light 355ml</td>
+                                            <td>8</td>
+                                            <td>10</td>
+                                            <td class="actions">
+                                                <button class="action-btn add-stock" title="Añadir Stock"><i class="fas fa-plus-circle"></i></button>
+                                                <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="card-footer">
+                                <a href="#" class="view-all">Ver todos los productos con stock bajo <i class="fas fa-arrow-right"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Productos Sin Stock</h3>
+                                <div class="card-actions">
+                                    <button class="export-btn"><i class="fas fa-download"></i> Exportar</button>
+                                </div>
+                            </div>
+                            
+                            <div class="table-responsive">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Marca</th>
+                                            <th>Producto</th>
+                                            <th>Último Stock</th>
+                                            <th>Fecha Agotado</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>PRD005</td>
+                                            <td>Tovar</td>
+                                            <td>Stout 330ml</td>
+                                            <td>0</td>
+                                            <td>15/06/2025</td>
+                                            <td class="actions">
+                                                <button class="action-btn add-stock" title="Añadir Stock"><i class="fas fa-plus-circle"></i></button>
+                                                <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>PRD018</td>
+                                            <td>Zulia</td>
+                                            <td>ICE 355ml</td>
+                                            <td>0</td>
+                                            <td>18/06/2025</td>
+                                            <td class="actions">
+                                                <button class="action-btn add-stock" title="Añadir Stock"><i class="fas fa-plus-circle"></i></button>
+                                                <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>PRD031</td>
+                                            <td>Regional</td>
+                                            <td>IPA 330ml</td>
+                                            <td>0</td>
+                                            <td>20/06/2025</td>
+                                            <td class="actions">
+                                                <button class="action-btn add-stock" title="Añadir Stock"><i class="fas fa-plus-circle"></i></button>
+                                                <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="card-footer">
+                                <a href="#" class="view-all">Ver todos los productos sin stock <i class="fas fa-arrow-right"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Movimientos de Inventario Recientes</h3>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID Movimiento</th>
+                                    <th>Marca</th>
+                                    <th>Producto</th>
+                                    <th>Tipo</th>
+                                    <th>Cantidad</th>
+                                    <th>Fecha</th>
+                                    <th>Responsable</th>
+                                    <th>Notas</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>MOV001</td>
+                                    <td>Polar</td>
+                                    <td>Pilsen 355ml</td>
+                                    <td><span class="badge success">Entrada</span></td>
+                                    <td>+50</td>
+                                    <td>01/07/2025</td>
+                                    <td>Miguel Sánchez</td>
+                                    <td>Reposición de stock</td>
+                                </tr>
+                                <tr>
+                                    <td>MOV002</td>
+                                    <td>Solera</td>
+                                    <td>Premium 355ml</td>
+                                    <td><span class="badge success">Entrada</span></td>
+                                    <td>+10</td>
+                                    <td>01/07/2025</td>
+                                    <td>Miguel Sánchez</td>
+                                    <td>Reposición de stock</td>
+                                </tr>
+                                <tr>
+                                    <td>MOV003</td>
+                                    <td>Regional</td>
+                                    <td>Pilsen 355ml</td>
+                                    <td><span class="badge danger">Salida</span></td>
+                                    <td>-5</td>
+                                    <td>30/06/2025</td>
+                                    <td>Carlos Pérez</td>
+                                    <td>Venta</td>
+                                </tr>
+                                <tr>
+                                    <td>MOV004</td>
+                                    <td>Tovar</td>
+                                    <td>Stout 330ml</td>
+                                    <td><span class="badge warning">Ajuste</span></td>
+                                    <td>-3</td>
+                                    <td>30/06/2025</td>
+                                    <td>Laura Gómez</td>
+                                    <td>Productos dañados</td>
+                                </tr>
+                                <tr>
+                                    <td>MOV005</td>
+                                    <td>Zulia</td>
+                                    <td>Pilsen 355ml</td>
+                                    <td><span class="badge danger">Salida</span></td>
+                                    <td>-12</td>
+                                    <td>29/06/2025</td>
+                                    <td>Carlos Pérez</td>
+                                    <td>Venta</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="table-footer">
+                        <div class="pagination">
+                            <button class="page-btn prev"><i class="fas fa-chevron-left"></i></button>
+                            <button class="page-btn active">1</button>
+                            <button class="page-btn">2</button>
+                            <button class="page-btn">3</button>
+                            <button class="page-btn next"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                        <div class="page-info">
+                            Mostrando 1-5 de 42 movimientos
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Categorías Section -->
+            <section class="content-section" id="categorias-section">
+                <div class="section-header">
+                    <h2>Gestión de Categorías</h2>
+                    <button class="primary-btn" id="add-categoria-btn"><i class="fas fa-plus"></i> Nueva Categoría</button>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Añadir/Editar Categoría</h3>
+                            </div>
+                            
+                            <div class="card-body">
+                                <form class="form-grid">
+                                    <div class="form-group full-width">
+                                        <label for="nombre-categoria">Nombre de la Categoría</label>
+                                        <input type="text" id="nombre-categoria" placeholder="Ej: Pilsener, Lager, etc.">
+                                    </div>
+                                    
+                                    <div class="form-group full-width">
+                                        <label for="descripcion-categoria">Descripción</label>
+                                        <textarea id="descripcion-categoria" rows="3" placeholder="Descripción breve de la categoría"></textarea>
+                                    </div>
+                                    
+                                    <div class="form-group full-width">
+                                        <label for="icono-categoria">Icono</label>
+                                        <select id="icono-categoria">
+                                            <option value="beer">Cerveza</option>
+                                            <option value="beer-mug">Jarra de Cerveza</option>
+                                            <option value="bottle-beer">Botella de Cerveza</option>
+                                            <option value="glass-cheers">Brindis</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group full-width">
+                                        <label for="estado-categoria">Estado</label>
+                                        <select id="estado-categoria">
+                                            <option value="active">Activo</option>
+                                            <option value="inactive">Inactivo</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-actions full-width">
+                                        <button type="button" class="secondary-btn">Cancelar</button>
+                                        <button type="button" class="primary-btn">Guardar Categoría</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Lista de Categorías</h3>
+                                <div class="card-actions">
+                                    <button class="export-btn"><i class="fas fa-download"></i> Exportar</button>
+                                </div>
+                            </div>
+                            
+                            <div class="table-responsive">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Icono</th>
+                                            <th>Nombre</th>
+                                            <th>Descripción</th>
+                                            <th>Productos</th>
+                                            <th>Estado</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>CAT001</td>
+                                            <td><i class="fas fa-beer"></i></td>
+                                            <td>Pilsener</td>
+                                            <td>Cervezas tipo Pilsener, claras y refrescantes</td>
+                                            <td>45</td>
+                                            <td><span class="status active">Activo</span></td>
+                                            <td class="actions">
+                                                <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                                <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>CAT002</td>
+                                            <td><i class="fas fa-beer"></i></td>
+                                            <td>Lager</td>
+                                            <td>Cervezas tipo Lager, de fermentación baja</td>
+                                            <td>32</td>
+                                            <td><span class="status active">Activo</span></td>
+                                            <td class="actions">
+                                                <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                                <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>CAT003</td>
+                                            <td><i class="fas fa-beer"></i></td>
+                                            <td>Light</td>
+                                            <td>Cervezas ligeras, con menos calorías</td>
+                                            <td>28</td>
+                                            <td><span class="status active">Activo</span></td>
+                                            <td class="actions">
+                                                <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                                <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>CAT004</td>
+                                            <td><i class="fas fa-beer"></i></td>
+                                            <td>Stout</td>
+                                            <td>Cervezas oscuras tipo Stout, con sabores tostados</td>
+                                            <td>15</td>
+                                            <td><span class="status active">Activo</span></td>
+                                            <td class="actions">
+                                                <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                                <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>CAT005</td>
+                                            <td><i class="fas fa-beer"></i></td>
+                                            <td>IPA</td>
+                                            <td>Cervezas tipo India Pale Ale, más amargas y aromáticas</td>
+                                            <td>20</td>
+                                            <td><span class="status active">Activo</span></td>
+                                            <td class="actions">
+                                                <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                                <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Ubicaciones Section -->
+            <section class="content-section" id="ubicaciones-section">
+                <div class="section-header">
+                    <h2>Gestión de Ubicaciones</h2>
+                    <button class="primary-btn" id="add-ubicacion-btn"><i class="fas fa-plus"></i> Nueva Ubicación</button>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Añadir/Editar Ubicación</h3>
+                            </div>
+                            
+                            <div class="card-body">
+                                <form class="form-grid">
+                                    <div class="form-group">
+                                        <label for="tipo-ubicacion">Tipo</label>
+                                        <select id="tipo-ubicacion">
+                                            <option value="pasillo">Pasillo</option>
+                                            <option value="zona">Zona</option>
+                                            <option value="anaquel">Anaquel</option>
+                                            <option value="refrigerador">Refrigerador</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="nombre-ubicacion">Nombre/Número</label>
+                                        <input type="text" id="nombre-ubicacion" placeholder="Ej: 1, 2, A, B, etc.">
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="area-ubicacion">Área</label>
+                                        <select id="area-ubicacion">
+                                            <option value="ventas">Área de Ventas</option>
+                                            <option value="almacen">Almacén</option>
+                                            <option value="refrigerados">Zona Refrigerada</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="capacidad-ubicacion">Capacidad</label>
+                                        <input type="number" id="capacidad-ubicacion" min="1">
+                                    </div>
+                                    
+                                    <div class="form-group full-width">
+                                        <label for="descripcion-ubicacion">Descripción</label>
+                                        <textarea id="descripcion-ubicacion" rows="3" placeholder="Descripción o notas adicionales"></textarea>
+                                    </div>
+                                    
+                                    <div class="form-actions full-width">
+                                        <button type="button" class="secondary-btn">Cancelar</button>
+                                        <button type="button" class="primary-btn">Guardar Ubicación</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Lista de Ubicaciones</h3>
+                                <div class="card-actions">
+                                    <button class="export-btn"><i class="fas fa-download"></i> Exportar</button>
+                                </div>
+                            </div>
+                            
+                            <div class="table-responsive">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>Tipo</th>
+                                            <th>Nombre/Número</th>
+                                            <th>Área</th>
+                                            <th>Capacidad</th>
+                                            <th>Ocupación</th>
+                                            <th>Estado</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>UBI001</td>
+                                            <td>Pasillo</td>
+                                            <td>1</td>
+                                            <td>Área de Ventas</td>
+                                            <td>200</td>
+                                            <td>
+                                                <div class="progress-bar">
+                                                    <div class="progress" style="width: 75%"></div>
+                                                </div>
+                                                <span class="progress-text">75%</span>
+                                            </td>
+                                            <td><span class="status active">Activo</span></td>
+                                            <td class="actions">
+                                                <button class="action-btn view" title="Ver productos"><i class="fas fa-eye"></i></button>
+                                                <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                                <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>UBI002</td>
+                                            <td>Pasillo</td>
+                                            <td>2</td>
+                                            <td>Área de Ventas</td>
+                                            <td>200</td>
+                                            <td>
+                                                <div class="progress-bar">
+                                                    <div class="progress" style="width: 60%"></div>
+                                                </div>
+                                                <span class="progress-text">60%</span>
+                                            </td>
+                                            <td><span class="status active">Activo</span></td>
+                                            <td class="actions">
+                                                <button class="action-btn view" title="Ver productos"><i class="fas fa-eye"></i></button>
+                                                <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                                <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>UBI003</td>
+                                            <td>Zona</td>
+                                            <td>2</td>
+                                            <td>Pasillo 1</td>
+                                            <td>50</td>
+                                            <td>
+                                                <div class="progress-bar">
+                                                    <div class="progress" style="width: 90%"></div>
+                                                </div>
+                                                <span class="progress-text">90%</span>
+                                            </td>
+                                            <td><span class="status warning">Casi Lleno</span></td>
+                                            <td class="actions">
+                                                <button class="action-btn view" title="Ver productos"><i class="fas fa-eye"></i></button>
+                                                <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                                <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>UBI004</td>
+                                            <td>Anaquel</td>
+                                            <td>A</td>
+                                            <td>Zona 2, Pasillo 1</td>
+                                            <td>100</td>
+                                            <td>
+                                                <div class="progress-bar">
+                                                    <div class="progress" style="width: 45%"></div>
+                                                </div>
+                                                <span class="progress-text">45%</span>
+                                            </td>
+                                            <td><span class="status active">Activo</span></td>
+                                            <td class="actions">
+                                                <button class="action-btn view" title="Ver productos"><i class="fas fa-eye"></i></button>
+                                                <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                                <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>UBI005</td>
+                                            <td>Refrigerador</td>
+                                            <td>1</td>
+                                            <td>Zona Refrigerada</td>
+                                            <td>100</td>
+                                            <td>
+                                                <div class="progress-bar">
+                                                    <div class="progress" style="width: 80%"></div>
+                                                </div>
+                                                <span class="progress-text">80%</span>
+                                            </td>
+                                            <td><span class="status active">Activo</span></td>
+                                            <td class="actions">
+                                                <button class="action-btn view" title="Ver productos"><i class="fas fa-eye"></i></button>
+                                                <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                                <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Mapa de Ubicaciones</h3>
+                    </div>
+                    
+                    <div class="card-body">
+                        <div class="store-map">
+                            <!-- Aquí iría un mapa interactivo de la tienda -->
+                            <div class="map-placeholder">
+                                <i class="fas fa-map"></i>
+                                <p>Mapa interactivo de la tienda</p>
+                                <button class="primary-btn">Ver Mapa Completo</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Proveedores Section -->
+            <section class="content-section" id="proveedores-section">
+                <div class="section-header">
+                    <h2>Gestión de Proveedores</h2>
+                    <button class="primary-btn" id="add-proveedor-btn"><i class="fas fa-plus"></i> Nuevo Proveedor</button>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Lista de Proveedores</h3>
+                        <div class="card-actions">
+                            <button class="export-btn"><i class="fas fa-download"></i> Exportar</button>
+                        </div>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Logo</th>
+                                    <th>Nombre</th>
+                                    <th>Contacto</th>
+                                    <th>Teléfono</th>
+                                    <th>Email</th>
+                                    <th>Productos</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>PROV001</td>
+                                    <td><img src="../img/logo-polar.jpg" alt="Empresas Polar" class="product-thumbnail"></td>
+                                    <td>Empresas Polar</td>
+                                    <td>Juan Rodríguez</td>
+                                    <td>+58 212-555-1234</td>
+                                    <td>ventas@polar.com</td>
+                                    <td>45</td>
+                                    <td><span class="status active">Activo</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>PROV002</td>
+                                    <td><img src="../img/logo-regional.jpg" alt="Cervecería Regional" class="product-thumbnail"></td>
+                                    <td>Cervecería Regional</td>
+                                    <td>María Gómez</td>
+                                    <td>+58 261-555-6789</td>
+                                    <td>distribución@regional.com</td>
+                                    <td>32</td>
+                                    <td><span class="status active">Activo</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>PROV003</td>
+                                    <td><img src="../img/logo-zulia.jpg" alt="Cervecería Zulia" class="product-thumbnail"></td>
+                                    <td>Cervecería Zulia</td>
+                                    <td>Pedro Pérez</td>
+                                    <td>+58 261-555-4321</td>
+                                    <td>ventas@zulia.com</td>
+                                    <td>28</td>
+                                    <td><span class="status active">Activo</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>PROV004</td>
+                                    <td><img src="../img/logo-tovar.jpg" alt="Cervecería Tovar" class="product-thumbnail"></td>
+                                    <td>Cervecería Tovar</td>
+                                    <td>Ana Martínez</td>
+                                    <td>+58 274-555-8765</td>
+                                    <td>distribución@tovar.com</td>
+                                    <td>15</td>
+                                    <td><span class="status active">Activo</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>PROV005</td>
+                                    <td><img src="../img/logo-solera.jpg" alt="Cervecería Solera" class="product-thumbnail"></td>
+                                    <td>Cervecería Solera</td>
+                                    <td>Luis Torres</td>
+                                    <td>+58 212-555-9876</td>
+                                    <td>ventas@solera.com</td>
+                                    <td>20</td>
+                                    <td><span class="status active">Activo</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="table-footer">
+                        <div class="pagination">
+                            <button class="page-btn prev"><i class="fas fa-chevron-left"></i></button>
+                            <button class="page-btn active">1</button>
+                            <button class="page-btn">2</button>
+                            <button class="page-btn next"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                        <div class="page-info">
+                            Mostrando 1-5 de 12 proveedores
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Reportes Section -->
+            <section class="content-section" id="reportes-section">
+                <div class="section-header">
+                    <h2>Reportes de Inventario</h2>
+                </div>
+                
+                <div class="dashboard-cards">
+                    <div class="dashboard-card">
+                        <div class="card-icon"><i class="fas fa-chart-line"></i></div>
+                        <div class="card-info">
+                            <h3>Inventario</h3>
+                            <p>Estado actual del inventario</p>
+                        </div>
+                        <a href="#" class="card-link"><i class="fas fa-arrow-right"></i></a>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-icon"><i class="fas fa-exchange-alt"></i></div>
+                        <div class="card-info">
+                            <h3>Movimientos</h3>
+                            <p>Entradas y salidas de productos</p>
+                        </div>
+                        <a href="#" class="card-link"><i class="fas fa-arrow-right"></i></a>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                        <div class="card-info">
+                            <h3>Alertas</h3>
+                            <p>Productos con stock bajo o agotados</p>
+                        </div>
+                        <a href="#" class="card-link"><i class="fas fa-arrow-right"></i></a>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-icon"><i class="fas fa-chart-pie"></i></div>
+                        <div class="card-info">
+                            <h3>Categorías</h3>
+                            <p>Distribución por categorías</p>
+                        </div>
+                        <a href="#" class="card-link"><i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Generar Reporte</h3>
+                    </div>
+                    
+                    <div class="card-body">
+                        <form class="form-grid">
+                            <div class="form-group">
+                                <label for="tipo-reporte">Tipo de Reporte</label>
+                                <select id="tipo-reporte" required>
+                                    <option value="">Seleccione un tipo de reporte</option>
+                                    <option value="inventario">Estado de Inventario</option>
+                                    <option value="movimientos">Movimientos de Inventario</option>
+                                    <option value="stock-bajo">Productos con Stock Bajo</option>
+                                    <option value="sin-stock">Productos Sin Stock</option>
+                                    <option value="categorias">Distribución por Categorías</option>
+                                    <option value="ubicaciones">Distribución por Ubicaciones</option>
+                                    <option value="proveedores">Distribución por Proveedores</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="formato-reporte">Formato</label>
+                                <select id="formato-reporte" required>
+                                    <option value="pdf">PDF</option>
+                                    <option value="excel">Excel</option>
+                                    <option value="csv">CSV</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="fecha-inicio">Fecha Inicio</label>
+                                <input type="date" id="fecha-inicio" value="2025-01-01">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="fecha-fin">Fecha Fin</label>
+                                <input type="date" id="fecha-fin" value="2025-07-01">
+                            </div>
+                            
+                            <div class="form-actions full-width">
+                                <button type="button" class="primary-btn"><i class="fas fa-file-download"></i> Generar Reporte</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Reportes Recientes</h3>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Nombre del Reporte</th>
+                                    <th>Tipo</th>
+                                    <th>Formato</th>
+                                    <th>Fecha de Generación</th>
+                                    <th>Generado por</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Estado de Inventario - Julio 2025</td>
+                                    <td>Inventario</td>
+                                    <td>PDF</td>
+                                    <td>01/07/2025</td>
+                                    <td>Miguel Sánchez</td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver reporte"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn download" title="Descargar"><i class="fas fa-download"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Productos con Stock Bajo - Junio 2025</td>
+                                    <td>Stock Bajo</td>
+                                    <td>Excel</td>
+                                    <td>30/06/2025</td>
+                                    <td>Miguel Sánchez</td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver reporte"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn download" title="Descargar"><i class="fas fa-download"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Movimientos de Inventario - Junio 2025</td>
+                                    <td>Movimientos</td>
+                                    <td>PDF</td>
+                                    <td>28/06/2025</td>
+                                    <td>Laura Gómez</td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver reporte"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn download" title="Descargar"><i class="fas fa-download"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    
+    <!-- Modal para Nuevo Producto -->
+    <div class="modal" id="nuevo-producto-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Nueva Cerveza</h3>
+                <button class="close-modal"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <form class="form-grid">
+                    <div class="form-group">
+                        <label for="marca-producto">Marca</label>
+                        <select id="marca-producto" required>
+                            <option value="">Seleccione una marca</option>
+                            <option value="polar">Polar</option>
+                            <option value="zulia">Zulia</option>
+                            <option value="regional">Regional</option>
+                            <option value="solera">Solera</option>
+                            <option value="tovar">Tovar</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="nombre-producto">Nombre del Producto</label>
+                        <input type="text" id="nombre-producto" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="tipo-producto">Tipo</label>
+                        <select id="tipo-producto" required>
+                            <option value="">Seleccione un tipo</option>
+                            <option value="pilsener">Pilsener</option>
+                            <option value="lager">Lager</option>
+                            <option value="light">Light</option>
+                            <option value="ipa">IPA</option>
+                            <option value="stout">Stout</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="precio-producto">Precio</label>
+                        <input type="number" id="precio-producto" min="0" step="0.01" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="stock-producto">Stock Inicial</label>
+                        <input type="number" id="stock-producto" min="0" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="stock-minimo">Stock Mínimo</label>
+                        <input type="number" id="stock-minimo" min="0" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="pasillo-producto">Pasillo</label>
+                        <select id="pasillo-producto" required>
+                            <option value="">Seleccione un pasillo</option>
+                            <option value="1">Pasillo 1</option>
+                            <option value="2">Pasillo 2</option>
+                            <option value="3">Pasillo 3</option>
+                            <option value="4">Pasillo 4</option>
+                            <option value="5">Pasillo 5</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="zona-producto">Zona</label>
+                        <select id="zona-producto" required>
+                            <option value="">Seleccione una zona</option>
+                            <option value="1">Zona 1</option>
+                            <option value="2">Zona 2</option>
+                            <option value="3">Zona 3</option>
+                            <option value="4">Zona 4</option>
+                            <option value="5">Zona 5</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="anaquel-producto">Anaquel</label>
+                        <select id="anaquel-producto" required>
+                            <option value="">Seleccione un anaquel</option>
+                            <option value="A">Anaquel A</option>
+                            <option value="B">Anaquel B</option>
+                            <option value="C">Anaquel C</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="proveedor-producto">Proveedor</label>
+                        <select id="proveedor-producto" required>
+                            <option value="">Seleccione un proveedor</option>
+                            <option value="empresas-polar">Empresas Polar</option>
+                            <option value="cerveceria-regional">Cervecería Regional</option>
+                            <option value="cerveceria-zulia">Cervecería Zulia</option>
+                            <option value="cerveceria-tovar">Cervecería Tovar</option>
+                            <option value="cerveceria-solera">Cervecería Solera</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="codigo-barras">Código de Barras</label>
+                        <input type="text" id="codigo-barras">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="estado-producto">Estado</label>
+                        <select id="estado-producto" required>
+                            <option value="active">Activo</option>
+                            <option value="inactive">Inactivo</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label for="descripcion-producto">Descripción</label>
+                        <textarea id="descripcion-producto" rows="3"></textarea>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label for="imagen-producto">Imagen del Producto</label>
+                        <div class="file-upload">
+                            <input type="file" id="imagen-producto">
+                            <button type="button" class="upload-btn">Seleccionar archivo</button>
+                            <span class="file-name">Ningún archivo seleccionado</span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="secondary-btn">Cancelar</button>
+                <button class="primary-btn">Guardar Producto</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal para Añadir Stock -->
+    <div class="modal" id="add-stock-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Registrar Entrada de Stock</h3>
+                <button class="close-modal"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <form class="form-grid">
+                    <div class="form-group">
+                        <label for="marca-stock">Marca</label>
+                        <select id="marca-stock" required>
+                            <option value="">Seleccione una marca</option>
+                            <option value="polar">Polar</option>
+                            <option value="zulia">Zulia</option>
+                            <option value="regional">Regional</option>
+                            <option value="solera">Solera</option>
+                            <option value="tovar">Tovar</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="producto-stock">Producto</label>
+                        <select id="producto-stock" required>
+                            <option value="">Seleccione un producto</option>
+                            <option value="PRD001">Pilsen 355ml</option>
+                            <option value="PRD002">Light 355ml</option>
+                            <option value="PRD003">ICE 355ml</option>
+                            <option value="PRD004">Premium 355ml</option>
+                            <option value="PRD005">Stout 330ml</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="cantidad-stock">Cantidad</label>
+                        <input type="number" id="cantidad-stock" min="1" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="tipo-movimiento">Tipo de Movimiento</label>
+                        <select id="tipo-movimiento" required>
+                            <option value="entrada">Entrada</option>
+                            <option value="salida">Salida</option>
+                            <option value="ajuste">Ajuste</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="fecha-movimiento">Fecha</label>
+                        <input type="date" id="fecha-movimiento" value="2025-07-01" required>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label for="notas-movimiento">Notas</label>
+                        <textarea id="notas-movimiento" rows="3" placeholder="Detalles adicionales sobre el movimiento"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="secondary-btn">Cancelar</button>
+                <button class="primary-btn">Registrar Movimiento</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Cambiar entre secciones
+        document.querySelectorAll('.sidebar-nav a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Actualizar menú activo
+                document.querySelectorAll('.sidebar-nav li').forEach(item => {
+                    item.classList.remove('active');
+                });
+                this.parentElement.classList.add('active');
+                
+                // Mostrar sección correspondiente
+                const sectionId = this.getAttribute('data-section');
+                document.querySelectorAll('.content-section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                document.getElementById(sectionId + '-section').classList.add('active');
+            });
+        });
+        
+        // Toggle sidebar en móvil
+        document.querySelector('.toggle-sidebar').addEventListener('click', function() {
+            document.querySelector('.dashboard-sidebar').classList.toggle('active');
+        });
+        
+        // Modal de nuevo producto
+        document.getElementById('add-producto-btn').addEventListener('click', function() {
+            document.getElementById('nuevo-producto-modal').classList.add('active');
+        });
+        
+        // Modal de añadir stock
+        document.getElementById('add-stock-btn').addEventListener('click', function() {
+            document.getElementById('add-stock-modal').classList.add('active');
+        });
+        
+        // Cerrar modales
+        document.querySelectorAll('.close-modal, .modal .secondary-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.modal').forEach(modal => {
+                    modal.classList.remove('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

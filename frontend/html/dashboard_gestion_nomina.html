@@ -1,0 +1,1430 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Nómina - ACAUCAB</title>
+    <link rel="stylesheet" href="../css/dashboard_gestion_nomina.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="dashboard-sidebar">
+            <div class="sidebar-header">
+                <h1>ACAUCAB</h1>
+                <p>Panel de Administración</p>
+            </div>
+            
+            <div class="sidebar-user">
+                <div class="user-avatar">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <div class="user-info">
+                    <h3>Ana Rodríguez</h3>
+                    <p>Talento Humano</p>
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="active"><a href="#empleados" data-section="empleados"><i class="fas fa-users"></i> <span>Empleados</span></a></li>
+                    <li><a href="#vacaciones" data-section="vacaciones"><i class="fas fa-umbrella-beach"></i> <span>Vacaciones</span></a></li>
+                    <li><a href="#horarios" data-section="horarios"><i class="fas fa-clock"></i> <span>Horarios</span></a></li>
+                    <li><a href="#control-entrada" data-section="control-entrada"><i class="fas fa-fingerprint"></i> <span>Control de Entrada</span></a></li>
+                    <li><a href="#reportes" data-section="reportes"><i class="fas fa-chart-bar"></i> <span>Reportes</span></a></li>
+                </ul>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <a href="index.html" class="logout-btn"><i class="fas fa-sign-out-alt"></i> <span>Cerrar Sesión</span></a>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="dashboard-content">
+            <header class="content-header">
+                <div class="header-left">
+                    <button class="toggle-sidebar"><i class="fas fa-bars"></i></button>
+                    <h2>Gestión de Nómina</h2>
+                </div>
+                <div class="header-right">
+                    <div class="search-box">
+                        <input type="text" placeholder="Buscar empleado...">
+                        <button><i class="fas fa-search"></i></button>
+                    </div>
+                    <div class="notifications">
+                        <button class="notification-btn"><i class="fas fa-bell"></i><span class="badge">3</span></button>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Empleados Section -->
+            <section class="content-section active" id="empleados-section">
+                <div class="section-header">
+                    <h2>Gestión de Empleados</h2>
+                    <button class="primary-btn" id="nuevo-empleado-btn"><i class="fas fa-plus"></i> Nuevo Empleado</button>
+                </div>
+                
+                <div class="dashboard-cards">
+                    <div class="dashboard-card">
+                        <div class="card-icon"><i class="fas fa-users"></i></div>
+                        <div class="card-info">
+                            <h3>45</h3>
+                            <p>Total Empleados</p>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-icon info"><i class="fas fa-user-tie"></i></div>
+                        <div class="card-info">
+                            <h3>12</h3>
+                            <p>Administrativos</p>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-icon success"><i class="fas fa-truck"></i></div>
+                        <div class="card-info">
+                            <h3>18</h3>
+                            <p>Operativos</p>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-icon warning"><i class="fas fa-store"></i></div>
+                        <div class="card-info">
+                            <h3>15</h3>
+                            <p>Ventas</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="filter-bar">
+                    <div class="filter-group">
+                        <label for="filter-departamento">Departamento:</label>
+                        <select id="filter-departamento">
+                            <option value="all">Todos los departamentos</option>
+                            <option value="administrativo">Administrativo</option>
+                            <option value="operativo">Operativo</option>
+                            <option value="ventas">Ventas</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="filter-cargo">Cargo:</label>
+                        <select id="filter-cargo">
+                            <option value="all">Todos los cargos</option>
+                            <option value="gerente">Gerente</option>
+                            <option value="supervisor">Supervisor</option>
+                            <option value="analista">Analista</option>
+                            <option value="operador">Operador</option>
+                            <option value="vendedor">Vendedor</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="filter-estatus">Estatus:</label>
+                        <select id="filter-estatus">
+                            <option value="all">Todos</option>
+                            <option value="activo">Activo</option>
+                            <option value="vacaciones">En Vacaciones</option>
+                            <option value="permiso">De Permiso</option>
+                            <option value="inactivo">Inactivo</option>
+                        </select>
+                    </div>
+                    
+                    <button class="secondary-btn"><i class="fas fa-filter"></i> Filtrar</button>
+                    <button class="outline-btn"><i class="fas fa-sync-alt"></i> Reiniciar</button>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Lista de Empleados</h3>
+                        <div class="card-actions">
+                            <select id="sort-empleados">
+                                <option value="nombre-asc">Nombre (A-Z)</option>
+                                <option value="nombre-desc">Nombre (Z-A)</option>
+                                <option value="departamento">Departamento</option>
+                                <option value="cargo">Cargo</option>
+                            </select>
+                            <button class="export-btn"><i class="fas fa-download"></i> Exportar</button>
+                        </div>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Cédula</th>
+                                    <th>Nombre</th>
+                                    <th>Departamento</th>
+                                    <th>Cargo</th>
+                                    <th>Fecha Ingreso</th>
+                                    <th>Estatus</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>V-12345678</td>
+                                    <td>Juan Pérez</td>
+                                    <td>Administrativo</td>
+                                    <td>Gerente</td>
+                                    <td>15/01/2020</td>
+                                    <td><span class="status active">Activo</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>V-23456789</td>
+                                    <td>María González</td>
+                                    <td>Administrativo</td>
+                                    <td>Analista RRHH</td>
+                                    <td>10/03/2021</td>
+                                    <td><span class="status active">Activo</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>V-34567890</td>
+                                    <td>Pedro Sánchez</td>
+                                    <td>Operativo</td>
+                                    <td>Supervisor</td>
+                                    <td>05/06/2019</td>
+                                    <td><span class="status pending">En Vacaciones</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>V-45678901</td>
+                                    <td>Ana Martínez</td>
+                                    <td>Ventas</td>
+                                    <td>Gerente Ventas</td>
+                                    <td>20/11/2018</td>
+                                    <td><span class="status active">Activo</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>V-56789012</td>
+                                    <td>Luis Fernández</td>
+                                    <td>Operativo</td>
+                                    <td>Operador</td>
+                                    <td>12/07/2022</td>
+                                    <td><span class="status info">De Permiso</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>V-67890123</td>
+                                    <td>Carmen López</td>
+                                    <td>Ventas</td>
+                                    <td>Vendedor</td>
+                                    <td>03/04/2021</td>
+                                    <td><span class="status active">Activo</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>V-78901234</td>
+                                    <td>Roberto Díaz</td>
+                                    <td>Operativo</td>
+                                    <td>Operador</td>
+                                    <td>18/09/2020</td>
+                                    <td><span class="status active">Activo</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>V-89012345</td>
+                                    <td>Sofía Ramírez</td>
+                                    <td>Administrativo</td>
+                                    <td>Analista Contable</td>
+                                    <td>25/02/2022</td>
+                                    <td><span class="status active">Activo</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="table-footer">
+                        <div class="pagination">
+                            <button class="page-btn prev"><i class="fas fa-chevron-left"></i></button>
+                            <button class="page-btn active">1</button>
+                            <button class="page-btn">2</button>
+                            <button class="page-btn">3</button>
+                            <button class="page-btn next"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                        <div class="page-info">
+                            Mostrando 1-8 de 45 empleados
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Vacaciones Section -->
+            <section class="content-section" id="vacaciones-section">
+                <div class="section-header">
+                    <h2>Gestión de Vacaciones</h2>
+                    <button class="primary-btn" id="nueva-solicitud-btn"><i class="fas fa-plus"></i> Nueva Solicitud</button>
+                </div>
+                
+                <div class="dashboard-cards">
+                    <div class="dashboard-card">
+                        <div class="card-icon warning"><i class="fas fa-hourglass-half"></i></div>
+                        <div class="card-info">
+                            <h3>5</h3>
+                            <p>Solicitudes Pendientes</p>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-icon success"><i class="fas fa-check-circle"></i></div>
+                        <div class="card-info">
+                            <h3>12</h3>
+                            <p>Solicitudes Aprobadas</p>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-icon info"><i class="fas fa-calendar-alt"></i></div>
+                        <div class="card-info">
+                            <h3>3</h3>
+                            <p>En Vacaciones Actualmente</p>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-icon"><i class="fas fa-umbrella-beach"></i></div>
+                        <div class="card-info">
+                            <h3>25</h3>
+                            <p>Total Solicitudes (Año)</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="filter-bar">
+                    <div class="filter-group">
+                        <label for="filter-estatus-vacaciones">Estatus:</label>
+                        <select id="filter-estatus-vacaciones">
+                            <option value="all">Todos los estatus</option>
+                            <option value="pendiente">Pendiente</option>
+                            <option value="aprobado">Aprobado</option>
+                            <option value="rechazado">Rechazado</option>
+                            <option value="en-curso">En Curso</option>
+                            <option value="completado">Completado</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="filter-departamento-vacaciones">Departamento:</label>
+                        <select id="filter-departamento-vacaciones">
+                            <option value="all">Todos los departamentos</option>
+                            <option value="administrativo">Administrativo</option>
+                            <option value="operativo">Operativo</option>
+                            <option value="ventas">Ventas</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="filter-fecha-vacaciones">Fecha:</label>
+                        <select id="filter-fecha-vacaciones">
+                            <option value="all">Todas las fechas</option>
+                            <option value="mes-actual">Mes Actual</option>
+                            <option value="trimestre">Trimestre Actual</option>
+                            <option value="anio">Año Actual</option>
+                        </select>
+                    </div>
+                    
+                    <button class="secondary-btn"><i class="fas fa-filter"></i> Filtrar</button>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Solicitudes de Vacaciones</h3>
+                        <div class="card-actions">
+                            <button class="export-btn"><i class="fas fa-download"></i> Exportar</button>
+                        </div>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Empleado</th>
+                                    <th>Departamento</th>
+                                    <th>Fecha Solicitud</th>
+                                    <th>Fecha Inicio</th>
+                                    <th>Fecha Fin</th>
+                                    <th>Días</th>
+                                    <th>Estatus</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>VAC-2025-001</td>
+                                    <td>Pedro Sánchez</td>
+                                    <td>Operativo</td>
+                                    <td>10/03/2025</td>
+                                    <td>15/04/2025</td>
+                                    <td>30/04/2025</td>
+                                    <td>15</td>
+                                    <td><span class="status pending">En Curso</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>VAC-2025-002</td>
+                                    <td>María González</td>
+                                    <td>Administrativo</td>
+                                    <td>15/03/2025</td>
+                                    <td>01/05/2025</td>
+                                    <td>15/05/2025</td>
+                                    <td>15</td>
+                                    <td><span class="status active">Aprobado</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>VAC-2025-003</td>
+                                    <td>Roberto Díaz</td>
+                                    <td>Operativo</td>
+                                    <td>20/03/2025</td>
+                                    <td>10/05/2025</td>
+                                    <td>24/05/2025</td>
+                                    <td>15</td>
+                                    <td><span class="status warning">Pendiente</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Aprobar"><i class="fas fa-check"></i></button>
+                                        <button class="action-btn delete" title="Rechazar"><i class="fas fa-times"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>VAC-2025-004</td>
+                                    <td>Carmen López</td>
+                                    <td>Ventas</td>
+                                    <td>22/03/2025</td>
+                                    <td>01/06/2025</td>
+                                    <td>15/06/2025</td>
+                                    <td>15</td>
+                                    <td><span class="status warning">Pendiente</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Aprobar"><i class="fas fa-check"></i></button>
+                                        <button class="action-btn delete" title="Rechazar"><i class="fas fa-times"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>VAC-2025-005</td>
+                                    <td>Luis Fernández</td>
+                                    <td>Operativo</td>
+                                    <td>25/03/2025</td>
+                                    <td>05/04/2025</td>
+                                    <td>12/04/2025</td>
+                                    <td>7</td>
+                                    <td><span class="status info">De Permiso</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>VAC-2025-006</td>
+                                    <td>Ana Martínez</td>
+                                    <td>Ventas</td>
+                                    <td>01/04/2025</td>
+                                    <td>15/07/2025</td>
+                                    <td>29/07/2025</td>
+                                    <td>15</td>
+                                    <td><span class="status warning">Pendiente</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Aprobar"><i class="fas fa-check"></i></button>
+                                        <button class="action-btn delete" title="Rechazar"><i class="fas fa-times"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="table-footer">
+                        <div class="pagination">
+                            <button class="page-btn prev"><i class="fas fa-chevron-left"></i></button>
+                            <button class="page-btn active">1</button>
+                            <button class="page-btn">2</button>
+                            <button class="page-btn next"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                        <div class="page-info">
+                            Mostrando 1-6 de 17 solicitudes
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Horarios Section -->
+            <section class="content-section" id="horarios-section">
+                <div class="section-header">
+                    <h2>Gestión de Horarios</h2>
+                    <button class="primary-btn" id="nuevo-horario-btn"><i class="fas fa-plus"></i> Nuevo Horario</button>
+                </div>
+                
+                <div class="filter-bar">
+                    <div class="filter-group">
+                        <label for="filter-departamento-horario">Departamento:</label>
+                        <select id="filter-departamento-horario">
+                            <option value="all">Todos los departamentos</option>
+                            <option value="administrativo">Administrativo</option>
+                            <option value="operativo">Operativo</option>
+                            <option value="ventas">Ventas</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="filter-turno">Turno:</label>
+                        <select id="filter-turno">
+                            <option value="all">Todos los turnos</option>
+                            <option value="manana">Mañana</option>
+                            <option value="tarde">Tarde</option>
+                            <option value="noche">Noche</option>
+                            <option value="rotativo">Rotativo</option>
+                        </select>
+                    </div>
+                    
+                    <button class="secondary-btn"><i class="fas fa-filter"></i> Filtrar</button>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Horarios Establecidos</h3>
+                        <div class="card-actions">
+                            <button class="export-btn"><i class="fas fa-download"></i> Exportar</button>
+                        </div>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nombre</th>
+                                    <th>Departamento</th>
+                                    <th>Días</th>
+                                    <th>Hora Entrada</th>
+                                    <th>Hora Salida</th>
+                                    <th>Turno</th>
+                                    <th>Empleados Asignados</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>HOR-001</td>
+                                    <td>Administrativo General</td>
+                                    <td>Administrativo</td>
+                                    <td>Lun-Vie</td>
+                                    <td>08:00</td>
+                                    <td>17:00</td>
+                                    <td>Diurno</td>
+                                    <td>12</td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>HOR-002</td>
+                                    <td>Operativo Mañana</td>
+                                    <td>Operativo</td>
+                                    <td>Lun-Sáb</td>
+                                    <td>06:00</td>
+                                    <td>14:00</td>
+                                    <td>Mañana</td>
+                                    <td>8</td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>HOR-003</td>
+                                    <td>Operativo Tarde</td>
+                                    <td>Operativo</td>
+                                    <td>Lun-Sáb</td>
+                                    <td>14:00</td>
+                                    <td>22:00</td>
+                                    <td>Tarde</td>
+                                    <td>6</td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>HOR-004</td>
+                                    <td>Ventas Tienda</td>
+                                    <td>Ventas</td>
+                                    <td>Lun-Dom</td>
+                                    <td>09:00</td>
+                                    <td>18:00</td>
+                                    <td>Rotativo</td>
+                                    <td>10</td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>HOR-005</td>
+                                    <td>Operativo Noche</td>
+                                    <td>Operativo</td>
+                                    <td>Lun-Vie</td>
+                                    <td>22:00</td>
+                                    <td>06:00</td>
+                                    <td>Noche</td>
+                                    <td>4</td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="table-footer">
+                        <div class="pagination">
+                            <button class="page-btn prev"><i class="fas fa-chevron-left"></i></button>
+                            <button class="page-btn active">1</button>
+                            <button class="page-btn next"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                        <div class="page-info">
+                            Mostrando 1-5 de 5 horarios
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Asignación de Horarios</h3>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Empleado</th>
+                                    <th>Cédula</th>
+                                    <th>Departamento</th>
+                                    <th>Cargo</th>
+                                    <th>Horario Actual</th>
+                                    <th>Desde</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Juan Pérez</td>
+                                    <td>V-12345678</td>
+                                    <td>Administrativo</td>
+                                    <td>Gerente</td>
+                                    <td>Administrativo General</td>
+                                    <td>15/01/2020</td>
+                                    <td class="actions">
+                                        <button class="action-btn edit" title="Cambiar horario"><i class="fas fa-exchange-alt"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>María González</td>
+                                    <td>V-23456789</td>
+                                    <td>Administrativo</td>
+                                    <td>Analista RRHH</td>
+                                    <td>Administrativo General</td>
+                                    <td>10/03/2021</td>
+                                    <td class="actions">
+                                        <button class="action-btn edit" title="Cambiar horario"><i class="fas fa-exchange-alt"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Pedro Sánchez</td>
+                                    <td>V-34567890</td>
+                                    <td>Operativo</td>
+                                    <td>Supervisor</td>
+                                    <td>Operativo Mañana</td>
+                                    <td>05/06/2019</td>
+                                    <td class="actions">
+                                        <button class="action-btn edit" title="Cambiar horario"><i class="fas fa-exchange-alt"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Ana Martínez</td>
+                                    <td>V-45678901</td>
+                                    <td>Ventas</td>
+                                    <td>Gerente Ventas</td>
+                                    <td>Ventas Tienda</td>
+                                    <td>20/11/2018</td>
+                                    <td class="actions">
+                                        <button class="action-btn edit" title="Cambiar horario"><i class="fas fa-exchange-alt"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Luis Fernández</td>
+                                    <td>V-56789012</td>
+                                    <td>Operativo</td>
+                                    <td>Operador</td>
+                                    <td>Operativo Tarde</td>
+                                    <td>12/07/2022</td>
+                                    <td class="actions">
+                                        <button class="action-btn edit" title="Cambiar horario"><i class="fas fa-exchange-alt"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="table-footer">
+                        <div class="pagination">
+                            <button class="page-btn prev"><i class="fas fa-chevron-left"></i></button>
+                            <button class="page-btn active">1</button>
+                            <button class="page-btn">2</button>
+                            <button class="page-btn next"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                        <div class="page-info">
+                            Mostrando 1-5 de 45 empleados
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Control de Entrada Section -->
+            <section class="content-section" id="control-entrada-section">
+                <div class="section-header">
+                    <h2>Control de Entrada</h2>
+                </div>
+                
+                <div class="dashboard-cards">
+                    <div class="dashboard-card">
+                        <div class="card-icon success"><i class="fas fa-user-check"></i></div>
+                        <div class="card-info">
+                            <h3>38</h3>
+                            <p>Asistencias Hoy</p>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-icon warning"><i class="fas fa-user-clock"></i></div>
+                        <div class="card-info">
+                            <h3>5</h3>
+                            <p>Llegadas Tardías</p>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-icon error"><i class="fas fa-user-times"></i></div>
+                        <div class="card-info">
+                            <h3>2</h3>
+                            <p>Ausencias</p>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-icon info"><i class="fas fa-fingerprint"></i></div>
+                        <div class="card-info">
+                            <h3>76</h3>
+                            <p>Registros Hoy</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Registro Manual</h3>
+                            </div>
+                            <div class="card-body">
+                                <form class="form-grid">
+                                    <div class="form-group">
+                                        <label for="cedula-empleado">Cédula del Empleado:</label>
+                                        <input type="text" id="cedula-empleado" placeholder="Ej: V-12345678">
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="tipo-registro">Tipo de Registro:</label>
+                                        <select id="tipo-registro">
+                                            <option value="entrada">Entrada</option>
+                                            <option value="salida">Salida</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="fecha-registro">Fecha:</label>
+                                        <input type="date" id="fecha-registro" value="2025-04-15">
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="hora-registro">Hora:</label>
+                                        <input type="time" id="hora-registro" value="08:00">
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="observacion-registro">Observación:</label>
+                                        <textarea id="observacion-registro" rows="3" placeholder="Ingrese observación si es necesario"></textarea>
+                                    </div>
+                                    
+                                    <div class="form-actions">
+                                        <button type="button" class="primary-btn">Registrar</button>
+                                        <button type="button" class="secondary-btn">Limpiar</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Importar Registros</h3>
+                            </div>
+                            <div class="card-body">
+                                <form class="form-grid">
+                                    <div class="form-group full-width">
+                                        <label for="archivo-importar">Archivo de Registros (.txt):</label>
+                                        <input type="file" id="archivo-importar" accept=".txt">
+                                        <p class="form-help">El archivo debe estar en formato .txt con separador "/"</p>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="fecha-importar">Fecha:</label>
+                                        <input type="date" id="fecha-importar" value="2025-04-15">
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="tipo-importar">Tipo de Importación:</label>
+                                        <select id="tipo-importar">
+                                            <option value="diario">Diario</option>
+                                            <option value="semanal">Semanal</option>
+                                            <option value="mensual">Mensual</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-actions">
+                                        <button type="button" class="primary-btn">Importar</button>
+                                        <button type="button" class="secondary-btn">Cancelar</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="filter-bar">
+                    <div class="filter-group">
+                        <label for="filter-fecha-control">Fecha:</label>
+                        <input type="date" id="filter-fecha-control" value="2025-04-15">
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="filter-departamento-control">Departamento:</label>
+                        <select id="filter-departamento-control">
+                            <option value="all">Todos los departamentos</option>
+                            <option value="administrativo">Administrativo</option>
+                            <option value="operativo">Operativo</option>
+                            <option value="ventas">Ventas</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="filter-estatus-control">Estatus:</label>
+                        <select id="filter-estatus-control">
+                            <option value="all">Todos</option>
+                            <option value="a-tiempo">A Tiempo</option>
+                            <option value="tarde">Tarde</option>
+                            <option value="ausente">Ausente</option>
+                        </select>
+                    </div>
+                    
+                    <button class="secondary-btn"><i class="fas fa-filter"></i> Filtrar</button>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Registros de Entrada/Salida</h3>
+                        <div class="card-actions">
+                            <button class="export-btn"><i class="fas fa-download"></i> Exportar</button>
+                        </div>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Cédula</th>
+                                    <th>Empleado</th>
+                                    <th>Cargo</th>
+                                    <th>Fecha</th>
+                                    <th>Hora Entrada</th>
+                                    <th>Hora Salida</th>
+                                    <th>Horario</th>
+                                    <th>Estatus</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>V-12345678</td>
+                                    <td>Juan Pérez</td>
+                                    <td>Gerente</td>
+                                    <td>15/04/2025</td>
+                                    <td>07:55</td>
+                                    <td>17:05</td>
+                                    <td>08:00 - 17:00</td>
+                                    <td><span class="status active">A Tiempo</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>V-23456789</td>
+                                    <td>María González</td>
+                                    <td>Analista RRHH</td>
+                                    <td>15/04/2025</td>
+                                    <td>08:10</td>
+                                    <td>17:00</td>
+                                    <td>08:00 - 17:00</td>
+                                    <td><span class="status warning">Tarde (10 min)</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>V-34567890</td>
+                                    <td>Pedro Sánchez</td>
+                                    <td>Supervisor</td>
+                                    <td>15/04/2025</td>
+                                    <td>--:--</td>
+                                    <td>--:--</td>
+                                    <td>06:00 - 14:00</td>
+                                    <td><span class="status pending">En Vacaciones</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>V-45678901</td>
+                                    <td>Ana Martínez</td>
+                                    <td>Gerente Ventas</td>
+                                    <td>15/04/2025</td>
+                                    <td>09:00</td>
+                                    <td>18:05</td>
+                                    <td>09:00 - 18:00</td>
+                                    <td><span class="status active">A Tiempo</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>V-56789012</td>
+                                    <td>Luis Fernández</td>
+                                    <td>Operador</td>
+                                    <td>15/04/2025</td>
+                                    <td>--:--</td>
+                                    <td>--:--</td>
+                                    <td>14:00 - 22:00</td>
+                                    <td><span class="status info">De Permiso</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>V-67890123</td>
+                                    <td>Carmen López</td>
+                                    <td>Vendedor</td>
+                                    <td>15/04/2025</td>
+                                    <td>09:25</td>
+                                    <td>18:00</td>
+                                    <td>09:00 - 18:00</td>
+                                    <td><span class="status warning">Tarde (25 min)</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="table-footer">
+                        <div class="pagination">
+                            <button class="page-btn prev"><i class="fas fa-chevron-left"></i></button>
+                            <button class="page-btn active">1</button>
+                            <button class="page-btn">2</button>
+                            <button class="page-btn">3</button>
+                            <button class="page-btn next"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                        <div class="page-info">
+                            Mostrando 1-6 de 45 registros
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Reportes Section -->
+            <section class="content-section" id="reportes-section">
+                <div class="section-header">
+                    <h2>Generación de Reportes</h2>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Reporte de Asistencia</h3>
+                            </div>
+                            <div class="card-body">
+                                <form class="form-grid">
+                                    <div class="form-group">
+                                        <label for="tipo-reporte">Tipo de Reporte:</label>
+                                        <select id="tipo-reporte">
+                                            <option value="diario">Diario</option>
+                                            <option value="semanal">Semanal</option>
+                                            <option value="mensual">Mensual</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="fecha-desde">Desde:</label>
+                                        <input type="date" id="fecha-desde" value="2025-04-01">
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="fecha-hasta">Hasta:</label>
+                                        <input type="date" id="fecha-hasta" value="2025-04-15">
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="departamento-reporte">Departamento:</label>
+                                        <select id="departamento-reporte">
+                                            <option value="all">Todos los departamentos</option>
+                                            <option value="administrativo">Administrativo</option>
+                                            <option value="operativo">Operativo</option>
+                                            <option value="ventas">Ventas</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="formato-reporte">Formato:</label>
+                                        <select id="formato-reporte">
+                                            <option value="txt">.txt</option>
+                                            <option value="excel">.xlsx</option>
+                                            <option value="pdf">.pdf</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-actions">
+                                        <button type="button" class="primary-btn">Generar Reporte</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Reportes Recientes</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="report-list">
+                                    <div class="report-item">
+                                        <div class="report-icon"><i class="fas fa-file-alt"></i></div>
+                                        <div class="report-info">
+                                            <h4>Reporte Diario - 14/04/2025</h4>
+                                            <p>Generado: 15/04/2025 08:15</p>
+                                        </div>
+                                        <div class="report-actions">
+                                            <button class="action-btn download" title="Descargar"><i class="fas fa-download"></i></button>
+                                        </div>
+                                    </div>
+                                    <div class="report-item">
+                                        <div class="report-icon"><i class="fas fa-file-alt"></i></div>
+                                        <div class="report-info">
+                                            <h4>Reporte Semanal - 07/04/2025 al 13/04/2025</h4>
+                                            <p>Generado: 14/04/2025 09:30</p>
+                                        </div>
+                                        <div class="report-actions">
+                                            <button class="action-btn download" title="Descargar"><i class="fas fa-download"></i></button>
+                                        </div>
+                                    </div>
+                                    <div class="report-item">
+                                        <div class="report-icon"><i class="fas fa-file-alt"></i></div>
+                                        <div class="report-info">
+                                            <h4>Reporte Mensual - Marzo 2025</h4>
+                                            <p>Generado: 01/04/2025 10:15</p>
+                                        </div>
+                                        <div class="report-actions">
+                                            <button class="action-btn download" title="Descargar"><i class="fas fa-download"></i></button>
+                                        </div>
+                                    </div>
+                                    <div class="report-item">
+                                        <div class="report-icon"><i class="fas fa-file-alt"></i></div>
+                                        <div class="report-info">
+                                            <h4>Reporte Diario - 13/04/2025</h4>
+                                            <p>Generado: 14/04/2025 08:10</p>
+                                        </div>
+                                        <div class="report-actions">
+                                            <button class="action-btn download" title="Descargar"><i class="fas fa-download"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Estadísticas de Asistencia</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="chart-container">
+                                    <div class="chart-placeholder">
+                                        <i class="fas fa-chart-line"></i>
+                                        <p>Tendencia de asistencia semanal</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="chart-container">
+                                    <div class="chart-placeholder">
+                                        <i class="fas fa-chart-pie"></i>
+                                        <p>Distribución de cumplimiento de horario</p>
+                                        <ul class="chart-legend">
+                                            <li><span class="legend-color" style="background-color: var(--success-color);"></span> A Tiempo (85%)</li>
+                                            <li><span class="legend-color" style="background-color: var(--warning-color);"></span> Tardanzas (10%)</li>
+                                            <li><span class="legend-color" style="background-color: var(--error-color);"></span> Ausencias (5%)</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    
+    <!-- Modal para Nuevo/Editar Empleado -->
+    <div class="modal" id="empleado-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Nuevo Empleado</h3>
+                <button class="close-modal"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <form class="form-grid">
+                    <div class="form-group">
+                        <label for="cedula">Cédula:</label>
+                        <input type="text" id="cedula" placeholder="Ej: V-12345678">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="nombre">Nombre:</label>
+                        <input type="text" id="nombre" placeholder="Nombre completo">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="departamento">Departamento:</label>
+                        <select id="departamento">
+                            <option value="administrativo">Administrativo</option>
+                            <option value="operativo">Operativo</option>
+                            <option value="ventas">Ventas</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="cargo">Cargo:</label>
+                        <input type="text" id="cargo" placeholder="Cargo">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="fecha-ingreso">Fecha de Ingreso:</label>
+                        <input type="date" id="fecha-ingreso">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="horario">Horario:</label>
+                        <select id="horario">
+                            <option value="HOR-001">Administrativo General</option>
+                            <option value="HOR-002">Operativo Mañana</option>
+                            <option value="HOR-003">Operativo Tarde</option>
+                            <option value="HOR-004">Ventas Tienda</option>
+                            <option value="HOR-005">Operativo Noche</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" placeholder="correo@ejemplo.com">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="telefono">Teléfono:</label>
+                        <input type="tel" id="telefono" placeholder="Ej: +58 412 1234567">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="direccion">Dirección:</label>
+                        <textarea id="direccion" rows="2" placeholder="Dirección completa"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="estatus">Estatus:</label>
+                        <select id="estatus">
+                            <option value="activo">Activo</option>
+                            <option value="inactivo">Inactivo</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="secondary-btn close-modal-btn">Cancelar</button>
+                <button class="primary-btn" id="guardar-empleado-btn">Guardar</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal para Nueva Solicitud de Vacaciones -->
+    <div class="modal" id="vacaciones-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Nueva Solicitud de Vacaciones</h3>
+                <button class="close-modal"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <form class="form-grid">
+                    <div class="form-group">
+                        <label for="empleado-vacaciones">Empleado:</label>
+                        <select id="empleado-vacaciones">
+                            <option value="">Seleccione un empleado</option>
+                            <option value="1">Juan Pérez - V-12345678</option>
+                            <option value="2">María González - V-23456789</option>
+                            <option value="3">Ana Martínez - V-45678901</option>
+                            <option value="4">Luis Fernández - V-56789012</option>
+                            <option value="5">Carmen López - V-67890123</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="fecha-inicio">Fecha de Inicio:</label>
+                        <input type="date" id="fecha-inicio">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="fecha-fin">Fecha de Fin:</label>
+                        <input type="date" id="fecha-fin">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="dias-solicitados">Días Solicitados:</label>
+                        <input type="number" id="dias-solicitados" min="1" max="30" value="15">
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label for="motivo-vacaciones">Motivo:</label>
+                        <textarea id="motivo-vacaciones" rows="3" placeholder="Describa el motivo de la solicitud"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="secondary-btn close-modal-btn">Cancelar</button>
+                <button class="primary-btn" id="guardar-vacaciones-btn">Guardar</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal para Nuevo/Editar Horario -->
+    <div class="modal" id="horario-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Nuevo Horario</h3>
+                <button class="close-modal"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <form class="form-grid">
+                    <div class="form-group">
+                        <label for="nombre-horario">Nombre:</label>
+                        <input type="text" id="nombre-horario" placeholder="Nombre del horario">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="departamento-horario">Departamento:</label>
+                        <select id="departamento-horario">
+                            <option value="administrativo">Administrativo</option>
+                            <option value="operativo">Operativo</option>
+                            <option value="ventas">Ventas</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="dias-horario">Días:</label>
+                        <select id="dias-horario">
+                            <option value="lun-vie">Lunes a Viernes</option>
+                            <option value="lun-sab">Lunes a Sábado</option>
+                            <option value="lun-dom">Lunes a Domingo</option>
+                            <option value="personalizado">Personalizado</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="hora-entrada">Hora de Entrada:</label>
+                        <input type="time" id="hora-entrada">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="hora-salida">Hora de Salida:</label>
+                        <input type="time" id="hora-salida">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="turno-horario">Turno:</label>
+                        <select id="turno-horario">
+                            <option value="diurno">Diurno</option>
+                            <option value="manana">Mañana</option>
+                            <option value="tarde">Tarde</option>
+                            <option value="noche">Noche</option>
+                            <option value="rotativo">Rotativo</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label for="descripcion-horario">Descripción:</label>
+                        <textarea id="descripcion-horario" rows="3" placeholder="Descripción del horario"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="secondary-btn close-modal-btn">Cancelar</button>
+                <button class="primary-btn" id="guardar-horario-btn">Guardar</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal de Confirmación -->
+    <div class="modal" id="confirmar-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Confirmar Acción</h3>
+                <button class="close-modal"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <p>¿Está seguro que desea eliminar este registro?</p>
+                <p>Esta acción no se puede deshacer.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="secondary-btn close-modal-btn">Cancelar</button>
+                <button class="primary-btn" id="confirmar-btn">Confirmar</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Cambiar entre secciones
+        document.querySelectorAll('.sidebar-nav a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Actualizar menú activo
+                document.querySelectorAll('.sidebar-nav li').forEach(item => {
+                    item.classList.remove('active');
+                });
+                this.parentElement.classList.add('active');
+                
+                // Mostrar sección correspondiente
+                const sectionId = this.getAttribute('data-section');
+                document.querySelectorAll('.content-section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                document.getElementById(sectionId + '-section').classList.add('active');
+            });
+        });
+        
+        // Toggle sidebar en móvil
+        document.querySelector('.toggle-sidebar').addEventListener('click', function() {
+            document.querySelector('.dashboard-sidebar').classList.toggle('active');
+        });
+        
+        // Abrir modal de nuevo empleado
+        document.getElementById('nuevo-empleado-btn').addEventListener('click', function() {
+            document.getElementById('empleado-modal').classList.add('active');
+        });
+        
+        // Abrir modal de nueva solicitud de vacaciones
+        document.getElementById('nueva-solicitud-btn').addEventListener('click', function() {
+            document.getElementById('vacaciones-modal').classList.add('active');
+        });
+        
+        // Abrir modal de nuevo horario
+        document.getElementById('nuevo-horario-btn').addEventListener('click', function() {
+            document.getElementById('horario-modal').classList.add('active');
+        });
+        
+        // Abrir modal de confirmación para eliminar
+        document.querySelectorAll('.action-btn.delete').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.getElementById('confirmar-modal').classList.add('active');
+            });
+        });
+        
+        // Cerrar modales
+        document.querySelectorAll('.close-modal, .close-modal-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.modal').forEach(modal => {
+                    modal.classList.remove('active');
+                });
+            });
+        });
+        
+        // Confirmar acción
+        document.getElementById('confirmar-btn').addEventListener('click', function() {
+            alert('La acción ha sido completada exitosamente.');
+            document.getElementById('confirmar-modal').classList.remove('active');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,866 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Órdenes de Compra - ACAUCAB</title>
+    <link rel="stylesheet" href="../css/dashboard_gestion_ordenes_compra.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="dashboard-sidebar">
+            <div class="sidebar-header">
+                <h1>ACAUCAB</h1>
+                <p>Panel de Administración</p>
+            </div>
+            
+            <div class="sidebar-user">
+                <div class="user-avatar">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <div class="user-info">
+                    <h3>Carlos Mendoza</h3>
+                    <p>Despacho</p>
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="active"><a href="#ordenes" data-section="ordenes"><i class="fas fa-shopping-cart"></i> <span>Órdenes de Compra</span></a></li>
+                    <li><a href="#historial" data-section="historial"><i class="fas fa-history"></i> <span>Historial</span></a></li>
+                    <li><a href="#estadisticas" data-section="estadisticas"><i class="fas fa-chart-bar"></i> <span>Estadísticas</span></a></li>
+                    <li><a href="#configuracion" data-section="configuracion"><i class="fas fa-cog"></i> <span>Configuración</span></a></li>
+                </ul>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <a href="index.html" class="logout-btn"><i class="fas fa-sign-out-alt"></i> <span>Cerrar Sesión</span></a>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="dashboard-content">
+            <header class="content-header">
+                <div class="header-left">
+                    <button class="toggle-sidebar"><i class="fas fa-bars"></i></button>
+                    <h2>Gestión de Órdenes de Compra</h2>
+                </div>
+                <div class="header-right">
+                    <div class="search-box">
+                        <input type="text" placeholder="Buscar orden...">
+                        <button><i class="fas fa-search"></i></button>
+                    </div>
+                    <div class="notifications">
+                        <button class="notification-btn"><i class="fas fa-bell"></i><span class="badge">3</span></button>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Órdenes Section -->
+            <section class="content-section active" id="ordenes-section">
+                <div class="section-header">
+                    <h2>Órdenes de Compra</h2>
+                </div>
+                
+                <div class="dashboard-cards">
+                    <div class="dashboard-card">
+                        <div class="card-icon warning"><i class="fas fa-clock"></i></div>
+                        <div class="card-info">
+                            <h3>12</h3>
+                            <p>Pendientes</p>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-icon info"><i class="fas fa-spinner"></i></div>
+                        <div class="card-info">
+                            <h3>8</h3>
+                            <p>En Proceso</p>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-icon success"><i class="fas fa-check"></i></div>
+                        <div class="card-info">
+                            <h3>5</h3>
+                            <p>Listos para Entrega</p>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-icon"><i class="fas fa-shopping-cart"></i></div>
+                        <div class="card-info">
+                            <h3>25</h3>
+                            <p>Total Hoy</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="filter-bar">
+                    <div class="filter-group">
+                        <label for="filter-estado">Estado:</label>
+                        <select id="filter-estado">
+                            <option value="all">Todos los estados</option>
+                            <option value="pendiente">Pendiente</option>
+                            <option value="en-proceso">En Proceso</option>
+                            <option value="listo">Listo para Entrega</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="filter-fecha">Fecha:</label>
+                        <select id="filter-fecha">
+                            <option value="all">Todas las fechas</option>
+                            <option value="hoy">Hoy</option>
+                            <option value="ayer">Ayer</option>
+                            <option value="semana">Esta semana</option>
+                            <option value="mes">Este mes</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="filter-tiempo">Tiempo restante:</label>
+                        <select id="filter-tiempo">
+                            <option value="all">Todos</option>
+                            <option value="urgente">Urgente (< 30 min)</option>
+                            <option value="normal">Normal (30 min - 1 hora)</option>
+                            <option value="amplio">Amplio (> 1 hora)</option>
+                        </select>
+                    </div>
+                    
+                    <button class="secondary-btn"><i class="fas fa-filter"></i> Filtrar</button>
+                    <button class="outline-btn"><i class="fas fa-sync-alt"></i> Reiniciar</button>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Órdenes Activas</h3>
+                        <div class="card-actions">
+                            <select id="sort-ordenes">
+                                <option value="date-desc">Fecha (Reciente a Antigua)</option>
+                                <option value="date-asc">Fecha (Antigua a Reciente)</option>
+                                <option value="time-asc">Tiempo Restante (Menor a Mayor)</option>
+                                <option value="time-desc">Tiempo Restante (Mayor a Menor)</option>
+                            </select>
+                            <button class="export-btn"><i class="fas fa-download"></i> Exportar</button>
+                        </div>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID Orden</th>
+                                    <th>Cliente</th>
+                                    <th>Fecha</th>
+                                    <th>Total</th>
+                                    <th>Estado</th>
+                                    <th>Tiempo Restante</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>#ORD-2025-001</td>
+                                    <td>Juan Pérez</td>
+                                    <td>15/04/2025 10:30</td>
+                                    <td>$45.80</td>
+                                    <td><span class="status pending">Pendiente</span></td>
+                                    <td>01:45:22</td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Marcar como listo"><i class="fas fa-check"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#ORD-2025-002</td>
+                                    <td>María González</td>
+                                    <td>15/04/2025 11:15</td>
+                                    <td>$32.50</td>
+                                    <td><span class="status pending">En Proceso</span></td>
+                                    <td>00:55:10</td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Marcar como listo"><i class="fas fa-check"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#ORD-2025-003</td>
+                                    <td>Pedro Sánchez</td>
+                                    <td>15/04/2025 09:45</td>
+                                    <td>$78.20</td>
+                                    <td><span class="status pending">En Proceso</span></td>
+                                    <td class="urgent">00:15:05</td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Marcar como listo"><i class="fas fa-check"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#ORD-2025-004</td>
+                                    <td>Ana Martínez</td>
+                                    <td>15/04/2025 12:00</td>
+                                    <td>$54.30</td>
+                                    <td><span class="status active">Listo para Entrega</span></td>
+                                    <td>Completado</td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Marcar como listo" disabled><i class="fas fa-check"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#ORD-2025-005</td>
+                                    <td>Luis Fernández</td>
+                                    <td>15/04/2025 12:30</td>
+                                    <td>$28.90</td>
+                                    <td><span class="status pending">Pendiente</span></td>
+                                    <td>01:30:45</td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Marcar como listo"><i class="fas fa-check"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#ORD-2025-006</td>
+                                    <td>Carmen López</td>
+                                    <td>15/04/2025 13:15</td>
+                                    <td>$65.75</td>
+                                    <td><span class="status pending">Pendiente</span></td>
+                                    <td>01:15:30</td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Marcar como listo"><i class="fas fa-check"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="table-footer">
+                        <div class="pagination">
+                            <button class="page-btn prev"><i class="fas fa-chevron-left"></i></button>
+                            <button class="page-btn active">1</button>
+                            <button class="page-btn">2</button>
+                            <button class="page-btn">3</button>
+                            <span class="page-dots">...</span>
+                            <button class="page-btn">10</button>
+                            <button class="page-btn next"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                        <div class="page-info">
+                            Mostrando 1-6 de 25 órdenes
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Órdenes Urgentes</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="alert-list">
+                                    <div class="alert-item warning">
+                                        <div class="alert-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                                        <div class="alert-content">
+                                            <h4>Orden #ORD-2025-003</h4>
+                                            <p>Tiempo restante: <strong>00:15:05</strong> - Cliente: Pedro Sánchez</p>
+                                            <span class="alert-time">En proceso desde hace 2 horas</span>
+                                        </div>
+                                        <button class="alert-action">Procesar</button>
+                                    </div>
+                                    <div class="alert-item warning">
+                                        <div class="alert-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                                        <div class="alert-content">
+                                            <h4>Orden #ORD-2025-007</h4>
+                                            <p>Tiempo restante: <strong>00:25:18</strong> - Cliente: Roberto Díaz</p>
+                                            <span class="alert-time">En proceso desde hace 1.5 horas</span>
+                                        </div>
+                                        <button class="alert-action">Procesar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Distribución por Estado</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <div class="chart-placeholder">
+                                        <i class="fas fa-chart-pie"></i>
+                                        <p>Distribución de órdenes por estado</p>
+                                        <ul class="chart-legend">
+                                            <li><span class="legend-color" style="background-color: var(--warning-color);"></span> Pendientes (48%)</li>
+                                            <li><span class="legend-color" style="background-color: var(--info-color);"></span> En Proceso (32%)</li>
+                                            <li><span class="legend-color" style="background-color: var(--success-color);"></span> Listos para Entrega (20%)</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Historial Section -->
+            <section class="content-section" id="historial-section">
+                <div class="section-header">
+                    <h2>Historial de Órdenes</h2>
+                </div>
+                
+                <div class="filter-bar">
+                    <div class="form-group">
+                        <label for="historial-cliente">Cliente:</label>
+                        <select id="historial-cliente">
+                            <option value="all">Todos los clientes</option>
+                            <option value="CLI001">Juan Pérez</option>
+                            <option value="CLI002">María González</option>
+                            <option value="CLI003">Pedro Sánchez</option>
+                            <option value="CLI004">Ana Martínez</option>
+                            <option value="CLI005">Luis Fernández</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="historial-estado">Estado:</label>
+                        <select id="historial-estado">
+                            <option value="all">Todos los estados</option>
+                            <option value="pendiente">Pendiente</option>
+                            <option value="en-proceso">En Proceso</option>
+                            <option value="listo">Listo para Entrega</option>
+                            <option value="entregado">Entregado</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="historial-desde">Desde:</label>
+                        <input type="date" id="historial-desde" value="2025-01-01">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="historial-hasta">Hasta:</label>
+                        <input type="date" id="historial-hasta" value="2025-04-15">
+                    </div>
+                    
+                    <button class="secondary-btn"><i class="fas fa-filter"></i> Filtrar</button>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Historial Completo</h3>
+                        <div class="card-actions">
+                            <button class="export-btn"><i class="fas fa-download"></i> Exportar</button>
+                        </div>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID Orden</th>
+                                    <th>Cliente</th>
+                                    <th>Fecha</th>
+                                    <th>Total</th>
+                                    <th>Estado</th>
+                                    <th>Tiempo Procesamiento</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>#ORD-2025-004</td>
+                                    <td>Ana Martínez</td>
+                                    <td>15/04/2025 12:00</td>
+                                    <td>$54.30</td>
+                                    <td><span class="status active">Listo para Entrega</span></td>
+                                    <td>01:25:15</td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#ORD-2025-001</td>
+                                    <td>Juan Pérez</td>
+                                    <td>14/04/2025 15:30</td>
+                                    <td>$38.75</td>
+                                    <td><span class="status active">Entregado</span></td>
+                                    <td>01:15:45</td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#ORD-2025-002</td>
+                                    <td>María González</td>
+                                    <td>14/04/2025 16:45</td>
+                                    <td>$65.20</td>
+                                    <td><span class="status active">Entregado</span></td>
+                                    <td>01:30:10</td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#ORD-2025-003</td>
+                                    <td>Pedro Sánchez</td>
+                                    <td>14/04/2025 17:20</td>
+                                    <td>$42.50</td>
+                                    <td><span class="status active">Entregado</span></td>
+                                    <td>01:10:35</td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#ORD-2025-004</td>
+                                    <td>Luis Fernández</td>
+                                    <td>13/04/2025 10:15</td>
+                                    <td>$28.90</td>
+                                    <td><span class="status active">Entregado</span></td>
+                                    <td>01:45:20</td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#ORD-2025-005</td>
+                                    <td>Carmen López</td>
+                                    <td>13/04/2025 11:30</td>
+                                    <td>$52.75</td>
+                                    <td><span class="status active">Entregado</span></td>
+                                    <td>01:20:15</td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="table-footer">
+                        <div class="pagination">
+                            <button class="page-btn prev"><i class="fas fa-chevron-left"></i></button>
+                            <button class="page-btn active">1</button>
+                            <button class="page-btn">2</button>
+                            <button class="page-btn">3</button>
+                            <button class="page-btn next"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                        <div class="page-info">
+                            Mostrando 1-6 de 120 órdenes
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Estadísticas Section -->
+            <section class="content-section" id="estadisticas-section">
+                <div class="section-header">
+                    <h2>Estadísticas de Despacho</h2>
+                </div>
+                
+                <div class="dashboard-cards">
+                    <div class="dashboard-card">
+                        <div class="card-icon success"><i class="fas fa-check-circle"></i></div>
+                        <div class="card-info">
+                            <h3>98%</h3>
+                            <p>Cumplimiento de Tiempo</p>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-icon info"><i class="fas fa-clock"></i></div>
+                        <div class="card-info">
+                            <h3>1h 25m</h3>
+                            <p>Tiempo Promedio</p>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-icon warning"><i class="fas fa-exclamation-triangle"></i></div>
+                        <div class="card-info">
+                            <h3>2%</h3>
+                            <p>Órdenes Retrasadas</p>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-icon"><i class="fas fa-shopping-cart"></i></div>
+                        <div class="card-info">
+                            <h3>120</h3>
+                            <p>Órdenes Procesadas (Mes)</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Tiempo de Procesamiento</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <div class="chart-placeholder">
+                                        <i class="fas fa-chart-line"></i>
+                                        <p>Tiempo promedio de procesamiento por día</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Volumen de Órdenes</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <div class="chart-placeholder">
+                                        <i class="fas fa-chart-bar"></i>
+                                        <p>Volumen de órdenes por día de la semana</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Rendimiento por Operador</h3>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Operador</th>
+                                    <th>Órdenes Procesadas</th>
+                                    <th>Tiempo Promedio</th>
+                                    <th>Cumplimiento</th>
+                                    <th>Eficiencia</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Carlos Mendoza</td>
+                                    <td>45</td>
+                                    <td>1h 15m</td>
+                                    <td>100%</td>
+                                    <td><span class="badge success">Excelente</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Ana Rodríguez</td>
+                                    <td>38</td>
+                                    <td>1h 20m</td>
+                                    <td>98%</td>
+                                    <td><span class="badge success">Excelente</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Luis Torres</td>
+                                    <td>32</td>
+                                    <td>1h 30m</td>
+                                    <td>95%</td>
+                                    <td><span class="badge info">Buena</span></td>
+                                </tr>
+                                <tr>
+                                    <td>María Pérez</td>
+                                    <td>28</td>
+                                    <td>1h 35m</td>
+                                    <td>92%</td>
+                                    <td><span class="badge info">Buena</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Juan Gómez</td>
+                                    <td>25</td>
+                                    <td>1h 45m</td>
+                                    <td>88%</td>
+                                    <td><span class="badge warning">Regular</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Configuración Section -->
+            <section class="content-section" id="configuracion-section">
+                <div class="section-header">
+                    <h2>Configuración</h2>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Configuración de Alertas</h3>
+                            </div>
+                            
+                            <div class="card-body">
+                                <form class="form-grid">
+                                    <div class="form-group">
+                                        <label for="config-tiempo-alerta">Tiempo para Alerta (minutos)</label>
+                                        <input type="number" id="config-tiempo-alerta" min="30" value="30">
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="config-tiempo-maximo">Tiempo Máximo de Procesamiento (horas)</label>
+                                        <input type="number" id="config-tiempo-maximo" min="1" step="0.5" value="2">
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="config-notificaciones">Notificaciones</label>
+                                        <select id="config-notificaciones">
+                                            <option value="todas">Todas las alertas</option>
+                                            <option value="urgentes">Solo urgentes</option>
+                                            <option value="ninguna">Ninguna</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="config-sonido">Sonido de Alerta</label>
+                                        <select id="config-sonido">
+                                            <option value="activado">Activado</option>
+                                            <option value="desactivado">Desactivado</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-actions full-width">
+                                        <button type="button" class="primary-btn">Guardar Configuración</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Preferencias de Visualización</h3>
+                            </div>
+                            
+                            <div class="card-body">
+                                <form class="form-grid">
+                                    <div class="form-group">
+                                        <label for="config-ordenes-pagina">Órdenes por Página</label>
+                                        <select id="config-ordenes-pagina">
+                                            <option value="5">5</option>
+                                            <option value="10" selected>10</option>
+                                            <option value="20">20</option>
+                                            <option value="50">50</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="config-orden-defecto">Ordenamiento por Defecto</label>
+                                        <select id="config-orden-defecto">
+                                            <option value="fecha-desc">Fecha (Reciente a Antigua)</option>
+                                            <option value="fecha-asc">Fecha (Antigua a Reciente)</option>
+                                            <option value="tiempo-asc">Tiempo Restante (Menor a Mayor)</option>
+                                            <option value="tiempo-desc">Tiempo Restante (Mayor a Menor)</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="config-auto-refresh">Actualización Automática (minutos)</label>
+                                        <input type="number" id="config-auto-refresh" min="1" value="5">
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="config-tema">Tema</label>
+                                        <select id="config-tema">
+                                            <option value="claro">Claro</option>
+                                            <option value="oscuro">Oscuro</option>
+                                            <option value="sistema">Según Sistema</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-actions full-width">
+                                        <button type="button" class="primary-btn">Guardar Preferencias</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    
+    <!-- Modal para Ver Detalles de Orden -->
+    <div class="modal" id="ver-orden-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Detalles de Orden #ORD-2025-001</h3>
+                <button class="close-modal"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h4>Información del Cliente</h4>
+                        <p><strong>Nombre:</strong> Juan Pérez</p>
+                        <p><strong>Email:</strong> juan.perez@email.com</p>
+                        <p><strong>Teléfono:</strong> +58 412 555 1234</p>
+                        <p><strong>Dirección:</strong> Av. Principal #123, Caracas</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h4>Información de la Orden</h4>
+                        <p><strong>Fecha:</strong> 15/04/2025 10:30</p>
+                        <p><strong>Estado:</strong> <span class="status pending">Pendiente</span></p>
+                        <p><strong>Método de Pago:</strong> Tarjeta de Crédito</p>
+                        <p><strong>Tiempo Restante:</strong> 01:45:22</p>
+                    </div>
+                </div>
+                
+                <h4>Productos</h4>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Cantidad</th>
+                                <th>Precio Unitario</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Cerveza IPA Clásica</td>
+                                <td>6</td>
+                                <td>$4.50</td>
+                                <td>$27.00</td>
+                            </tr>
+                            <tr>
+                                <td>Cerveza Amber Ale</td>
+                                <td>4</td>
+                                <td>$4.20</td>
+                                <td>$16.80</td>
+                            </tr>
+                            <tr>
+                                <td>Cerveza Stout</td>
+                                <td>1</td>
+                                <td>$5.00</td>
+                                <td>$5.00</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="3" class="text-right"><strong>Subtotal:</strong></td>
+                                <td>$48.80</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" class="text-right"><strong>Descuento:</strong></td>
+                                <td>-$5.00</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" class="text-right"><strong>IVA (16%):</strong></td>
+                                <td>$7.00</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" class="text-right"><strong>Total:</strong></td>
+                                <td>$45.80</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                
+                <h4>Notas</h4>
+                <p>Cliente solicita que las cervezas estén frías. Entrega en horario de tarde preferiblemente.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="secondary-btn close-modal-btn">Cerrar</button>
+                <button class="primary-btn" id="marcar-listo-btn">Marcar como Listo para Entrega</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal de Confirmación -->
+    <div class="modal" id="confirmar-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Confirmar Acción</h3>
+                <button class="close-modal"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <p>¿Está seguro que desea marcar la orden <strong>#ORD-2025-001</strong> como "Listo para Entrega"?</p>
+                <p>Esta acción generará un registro en la tabla "Despacho" para ser visualizado por el departamento de entregas.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="secondary-btn close-modal-btn">Cancelar</button>
+                <button class="primary-btn" id="confirmar-btn">Confirmar</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Cambiar entre secciones
+        document.querySelectorAll('.sidebar-nav a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Actualizar menú activo
+                document.querySelectorAll('.sidebar-nav li').forEach(item => {
+                    item.classList.remove('active');
+                });
+                this.parentElement.classList.add('active');
+                
+                // Mostrar sección correspondiente
+                const sectionId = this.getAttribute('data-section');
+                document.querySelectorAll('.content-section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                document.getElementById(sectionId + '-section').classList.add('active');
+            });
+        });
+        
+        // Toggle sidebar en móvil
+        document.querySelector('.toggle-sidebar').addEventListener('click', function() {
+            document.querySelector('.dashboard-sidebar').classList.toggle('active');
+        });
+        
+        // Abrir modal de detalles
+        document.querySelectorAll('.action-btn.view').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.getElementById('ver-orden-modal').classList.add('active');
+            });
+        });
+        
+        // Abrir modal de confirmación desde botón de tabla
+        document.querySelectorAll('.action-btn.edit').forEach(btn => {
+            btn.addEventListener('click', function() {
+                if (!this.disabled) {
+                    document.getElementById('confirmar-modal').classList.add('active');
+                }
+            });
+        });
+        
+        // Abrir modal de confirmación desde modal de detalles
+        document.getElementById('marcar-listo-btn').addEventListener('click', function() {
+            document.getElementById('ver-orden-modal').classList.remove('active');
+            document.getElementById('confirmar-modal').classList.add('active');
+        });
+        
+        // Cerrar modales
+        document.querySelectorAll('.close-modal, .close-modal-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.modal').forEach(modal => {
+                    modal.classList.remove('active');
+                });
+            });
+        });
+        
+        // Confirmar cambio de estado
+        document.getElementById('confirmar-btn').addEventListener('click', function() {
+            alert('La orden ha sido marcada como "Listo para Entrega" y se ha notificado al departamento de entregas.');
+            document.getElementById('confirmar-modal').classList.remove('active');
+        });
+    </script>
+</body>
+</html>

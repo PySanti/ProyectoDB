@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eventos - ACAUCAB</title>
+    <link rel="stylesheet" href="../css/events.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <!-- Header (mismo que en home.html) -->
+    <header class="main-header">
+        <div class="header-container">
+            <div class="logo-header">
+                <h1>ACAUCAB</h1>
+            </div>
+            <nav class="main-nav">
+                <ul class="nav-list">
+                    <li class="nav-item"><a href="home.html">Inicio</a></li>
+                    <li class="nav-item"><a href="catalog.html">Productos</a></li>
+                    <li class="nav-item"><a href="diario.html">DiarioDeCerveza</a></li>
+                    <li class="nav-item active"><a href="events.html">Eventos</a></li>
+                </ul>
+            </nav>
+            <div class="user-actions">
+                <a href="cart.html" class="cart-icon"><i class="fas fa-shopping-cart"></i> <span class="cart-count">0</span></a>
+                <a href="index.html" class="login-btn">Iniciar Sesión</a>
+                <a href="profile.html" class="profile-btn"><i class="fas fa-user"></i></a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Events Page Title -->
+    <section class="page-title">
+        <div class="section-container">
+            <h1>Eventos</h1>
+            <div class="breadcrumb">
+                <a href="home.html">Inicio</a> / <span>Eventos</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Events Content -->
+    <section class="events-section full-events">
+        <div class="section-container">
+            <!-- Events Calendar -->
+            <div class="events-calendar">
+                <div class="calendar-header">
+                    <button class="calendar-nav prev"><i class="fas fa-chevron-left"></i></button>
+                    <h2>Julio 2025</h2>
+                    <button class="calendar-nav next"><i class="fas fa-chevron-right"></i></button>
+                </div>
+                
+                <div class="calendar-weekdays">
+                    <div class="weekday">Dom</div>
+                    <div class="weekday">Lun</div>
+                    <div class="weekday">Mar</div>
+                    <div class="weekday">Mié</div>
+                    <div class="weekday">Jue</div>
+                    <div class="weekday">Vie</div>
+                    <div class="weekday">Sáb</div>
+                </div>
+                
+                <div class="calendar-days">
+                    <div class="day prev-month">30</div>
+                    <div class="day">1</div>
+                    <div class="day">2</div>
+                    <div class="day">3</div>
+                    <div class="day">4</div>
+                    <div class="day">5</div>
+                    <div class="day">6</div>
+                    <div class="day">7</div>
+                    <div class="day">8</div>
+                    <div class="day">9</div>
+                    <div class="day">10</div>
+                    <div class="day">11</div>
+                    <div class="day">12</div>
+                    <div class="day">13</div>
+                    <div class="day">14</div>
+                    <div class="day has-event active">15</div>
+                    <div class="day">16</div>
+                    <div class="day">17</div>
+                    <div class="day">18</div>
+                    <div class="day">19</div>
+                    <div class="day">20</div>
+                    <div class="day">21</div>
+                    <div class="day has-event">22</div>
+                    <div class="day">23</div>
+                    <div class="day">24</div>
+                    <div class="day">25</div>
+                    <div class="day">26</div>
+                    <div class="day">27</div>
+                    <div class="day">28</div>
+                    <div class="day">29</div>
+                    <div class="day">30</div>
+                    <div class="day">31</div>
+                    <div class="day next-month">1</div>
+                    <div class="day next-month">2</div>
+                    <div class="day next-month">3</div>
+                </div>
+            </div>
+            
+            <!-- Events List -->
+            <div class="events-list">
+                <div class="events-filter">
+                    <div class="filter-group">
+                        <label for="event-month">Mes:</label>
+                        <select id="event-month">
+                            <option value="all">Todos</option>
+                            <option value="july" selected>Julio 2025</option>
+                            <option value="august">Agosto 2025</option>
+                            <option value="september">Septiembre 2025</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="event-type">Tipo:</label>
+                        <select id="event-type">
+                            <option value="all">Todos</option>
+                            <option value="festival">Festival</option>
+                            <option value="tasting">Degustación</option>
+                            <option value="workshop">Taller</option>
+                        </select>
+                    </div>
+                    
+                    <button class="filter-btn">Filtrar</button>
+                </div>
+                
+                <!-- Event 1 -->
+                <div class="event-card large active">
+                    <div class="event-date">
+                        <span class="event-day">15</span>
+                        <span class="event-month">JUL</span>
+                    </div>
+                    <div class="event-details">
+                        <div class="event-image">
+                            <img src="https://images.unsplash.com/photo-1575037614876-c38a4d44f5b8?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="UBirra 2025">
+                        </div>
+                        <div class="event-info">
+                            <h3 class="event-title">UBirra 2025</h3>
+                            <p class="event-meta">
+                                <span><i class="fas fa-map-marker-alt"></i> Plaza Mickey, Caracas</span>
+                                <span><i class="fas fa-clock"></i> 2:00 PM - 10:00 PM</span>
+                                <span><i class="fas fa-tag"></i> Festival</span>
+                            </p>
+                            <p class="event-description">Degustación de más de 30 tipos de cervezas artesanales con los mejores productores de Venezuela. Disfruta de música en vivo, food trucks y actividades para toda la familia.</p>
+                            <div class="event-actions">
+                                <a href="#" class="event-btn primary">Comprar Entradas</a>
+                                <a href="#" class="event-btn secondary">Más Información</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Event 2 -->
+                <div class="event-card large">
+                    <div class="event-date">
+                        <span class="event-day">22</span>
+                        <span class="event-month">JUL</span>
+                    </div>
+                    <div class="event-details">
+                        <div class="event-image">
+                            <img src="https://images.unsplash.com/photo-1559526324-593bc073d938?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Taller de Elaboración">
+                        </div>
+                        <div class="event-info">
+                            <h3 class="event-title">Taller de Elaboración</h3>
+                            <p class="event-meta">
+                                <span><i class="fas fa-map-marker-alt"></i> Sede ACAUCAB, Caracas</span>
+                                <span><i class="fas fa-clock"></i> 3:00 PM - 7:00 PM</span>
+                                <span><i class="fas fa-tag"></i> Taller</span>
+                            </p>
+                            <p class="event-description">Aprende los secretos de la elaboración de cerveza artesanal con nuestros maestros cerveceros. Conoce el proceso completo desde la selección de ingredientes hasta el embotellado.</p>
+                            <div class="event-actions">
+                                <a href="#" class="event-btn primary">Reservar Cupo</a>
+                                <a href="#" class="event-btn secondary">Más Información</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Event 3 -->
+                <div class="event-card large">
+                    <div class="event-date">
+                        <span class="event-day">5</span>
+                        <span class="event-month">AGO</span>
+                    </div>
+                    <div class="event-details">
+                        <div class="event-image">
+                            <img src="https://images.unsplash.com/photo-1584225064785-c62a8b43d148?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Degustación Premium">
+                        </div>
+                        <div class="event-info">
+                            <h3 class="event-title">Degustación Premium</h3>
+                            <p class="event-meta">
+                                <span><i class="fas fa-map-marker-alt"></i> Hotel Eurobuilding, Caracas</span>
+                                <span><i class="fas fa-clock"></i> 6:00 PM - 9:00 PM</span>
+                                <span><i class="fas fa-tag"></i> Degustación</span>
+                            </p>
+                            <p class="event-description">Una experiencia exclusiva para conocedores de cerveza artesanal. Degustación de ediciones limitadas y maridaje con platos gourmet preparados por chefs reconocidos.</p>
+                            <div class="event-actions">
+                                <a href="#" class="event-btn primary">Comprar Entradas</a>
+                                <a href="#" class="event-btn secondary">Más Información</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Event 4 -->
+                <div class="event-card large">
+                    <div class="event-date">
+                        <span class="event-day">18</span>
+                        <span class="event-month">AGO</span>
+                    </div>
+                    <div class="event-details">
+                        <div class="event-image">
+                            <img src="https://images.unsplash.com/photo-1600788886242-5c96aabe3757?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Cata de Cervezas Belgas">
+                        </div>
+                        <div class="event-info">
+                            <h3 class="event-title">Cata de Cervezas Belgas</h3>
+                            <p class="event-meta">
+                                <span><i class="fas fa-map-marker-alt"></i> Sede ACAUCAB, Caracas</span>
+                                <span><i class="fas fa-clock"></i> 5:00 PM - 8:00 PM</span>
+                                <span><i class="fas fa-tag"></i> Degustación</span>
+                            </p>
+                            <p class="event-description">Descubre los secretos y características de las cervezas de estilo belga elaboradas en Venezuela. Aprende sobre su historia, proceso de elaboración y disfruta de una degustación guiada.</p>
+                            <div class="event-actions">
+                                <a href="#" class="event-btn primary">Reservar Cupo</a>
+                                <a href="#" class="event-btn secondary">Más Información</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer (mismo que en home.html) -->
+    <footer class="main-footer">
+        <div class="footer-container">
+            <div class="footer-column">
+                <h3>ACAUCAB</h3>
+                <p>Asociación de Cerveceros Artesanales UCAB</p>
+                <div class="social-icons">
+                    <a href="#"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+            <div class="footer-column">
+                <h3>Enlaces Rápidos</h3>
+                <ul class="footer-links">
+                    <li><a href="home.html">Inicio</a></li>
+                    <li><a href="catalog.html">Productos</a></li>
+                    <li><a href="diario.html">DiarioDeCerveza</a></li>
+                    <li><a href="events.html">Eventos</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Contacto</h3>
+                <ul class="contact-info">
+                    <li><i class="fas fa-map-marker-alt"></i> Sede ACAUCAB, Caracas, Venezuela</li>
+                    <li><i class="fas fa-phone"></i> +58 212 123 4567</li>
+                    <li><i class="fas fa-envelope"></i> info@acaucab.com</li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Suscríbete</h3>
+                <p>Recibe nuestras novedades y ofertas</p>
+                <form class="subscribe-form">
+                    <input type="email" placeholder="Tu correo electrónico">
+                    <button type="submit"><i class="fas fa-paper-plane"></i></button>
+                </form>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 ACAUCAB. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Cambiar entre eventos al hacer clic en días del calendario
+        document.querySelectorAll('.day').forEach(day => {
+            day.addEventListener('click', function() {
+                // Actualizar día activo
+                document.querySelectorAll('.day').forEach(d => {
+                    d.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                // Mostrar evento correspondiente (simulado)
+                const dayNumber = this.textContent;
+                document.querySelectorAll('.event-card').forEach(event => {
+                    event.classList.remove('active');
+                    const eventDay = event.querySelector('.event-day').textContent;
+                    if (eventDay === dayNumber) {
+                        event.classList.add('active');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

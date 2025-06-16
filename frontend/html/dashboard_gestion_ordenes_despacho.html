@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Órdenes de Despacho - ACAUCAB</title>
+    <link rel="stylesheet" href="../css/dashboard_gestion_ordenes_despacho.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="dashboard-sidebar">
+            <div class="sidebar-header">
+                <h1>ACAUCAB</h1>
+                <p>Panel de Administración</p>
+            </div>
+            
+            <div class="sidebar-user">
+                <div class="user-avatar">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <div class="user-info">
+                    <h3>Luis Martínez</h3>
+                    <p>Entregas</p>
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="active"><a href="#despachos" data-section="despachos"><i class="fas fa-truck"></i> <span>Despachos</span></a></li>
+                    <li><a href="#historial" data-section="historial"><i class="fas fa-history"></i> <span>Historial</span></a></li>
+                    <li><a href="#estadisticas" data-section="estadisticas"><i class="fas fa-chart-bar"></i> <span>Estadísticas</span></a></li>
+                </ul>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <a href="index.html" class="logout-btn"><i class="fas fa-sign-out-alt"></i> <span>Cerrar Sesión</span></a>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="dashboard-content">
+            <header class="content-header">
+                <div class="header-left">
+                    <button class="toggle-sidebar"><i class="fas fa-bars"></i></button>
+                    <h2>Gestión de Órdenes de Despacho</h2>
+                </div>
+                <div class="header-right">
+                    <div class="search-box">
+                        <input type="text" placeholder="Buscar orden...">
+                        <button><i class="fas fa-search"></i></button>
+                    </div>
+                    <div class="notifications">
+                        <button class="notification-btn"><i class="fas fa-bell"></i><span class="badge">5</span></button>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Despachos Section -->
+            <section class="content-section active" id="despachos-section">
+                <div class="section-header">
+                    <h2>Despachos Listos para Entrega</h2>
+                </div>
+                
+                <div class="dashboard-cards">
+                    <div class="dashboard-card">
+                        <div class="card-icon warning"><i class="fas fa-clock"></i></div>
+                        <div class="card-info">
+                            <h3>8</h3>
+                            <p>Pendientes de Entrega</p>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-icon success"><i class="fas fa-check"></i></div>
+                        <div class="card-info">
+                            <h3>15</h3>
+                            <p>Entregados Hoy</p>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-icon info"><i class="fas fa-route"></i></div>
+                        <div class="card-info">
+                            <h3>3</h3>
+                            <p>Entregado</p>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-icon"><i class="fas fa-truck"></i></div>
+                        <div class="card-info">
+                            <h3>23</h3>
+                            <p>Total Hoy</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="filter-bar">
+                    <div class="filter-group">
+                        <label for="filter-zona">Zona:</label>
+                        <select id="filter-zona">
+                            <option value="all">Todas las zonas</option>
+                            <option value="norte">Norte</option>
+                            <option value="sur">Sur</option>
+                            <option value="este">Este</option>
+                            <option value="oeste">Oeste</option>
+                            <option value="centro">Centro</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="filter-fecha">Fecha:</label>
+                        <select id="filter-fecha">
+                            <option value="all">Todas las fechas</option>
+                            <option value="hoy">Hoy</option>
+                            <option value="ayer">Ayer</option>
+                        </select>
+                    </div>
+                    
+                    <button class="secondary-btn"><i class="fas fa-filter"></i> Filtrar</button>
+                    <button class="outline-btn"><i class="fas fa-sync-alt"></i> Reiniciar</button>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Órdenes Listas para Entrega</h3>
+                        <div class="card-actions">
+                            <select id="sort-ordenes">
+                                <option value="date-desc">Fecha (Reciente a Antigua)</option>
+                                <option value="date-asc">Fecha (Antigua a Reciente)</option>
+                                <option value="zona">Zona</option>
+                                <option value="cliente">Cliente</option>
+                            </select>
+                            <button class="export-btn"><i class="fas fa-download"></i> Exportar</button>
+                        </div>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID Orden</th>
+                                    <th>Cliente</th>
+                                    <th>Dirección</th>
+                                    <th>Zona</th>
+                                    <th>Fecha Listo</th>
+                                    <th>Productos</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>#ORD-2025-001</td>
+                                    <td>Juan Pérez</td>
+                                    <td>Av. Principal #123, Caracas</td>
+                                    <td>Norte</td>
+                                    <td>15/04/2025 10:30</td>
+                                    <td>3</td>
+                                    <td><span class="status pending">Listo para Entrega</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Marcar como entregado"><i class="fas fa-check"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#ORD-2025-002</td>
+                                    <td>María González</td>
+                                    <td>Calle Bolívar #45, Caracas</td>
+                                    <td>Centro</td>
+                                    <td>15/04/2025 11:15</td>
+                                    <td>5</td>
+                                    <td><span class="status pending">Listo para Entrega</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Marcar como entregado"><i class="fas fa-check"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#ORD-2025-003</td>
+                                    <td>Pedro Sánchez</td>
+                                    <td>Av. Libertador #78, Caracas</td>
+                                    <td>Este</td>
+                                    <td>15/04/2025 09:45</td>
+                                    <td>2</td>
+                                    <td><span class="status pending">Listo para Entrega</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Marcar como entregado"><i class="fas fa-check"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#ORD-2025-004</td>
+                                    <td>Ana Martínez</td>
+                                    <td>Calle Los Palos Grandes #12, Caracas</td>
+                                    <td>Este</td>
+                                    <td>15/04/2025 12:00</td>
+                                    <td>8</td>
+                                    <td><span class="status info">Entregado</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Marcar como entregado"><i class="fas fa-check"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#ORD-2025-005</td>
+                                    <td>Luis Fernández</td>
+                                    <td>Av. Francisco de Miranda #56, Caracas</td>
+                                    <td>Sur</td>
+                                    <td>15/04/2025 12:30</td>
+                                    <td>4</td>
+                                    <td><span class="status pending">Listo para Entrega</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Marcar como entregado"><i class="fas fa-check"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#ORD-2025-006</td>
+                                    <td>Carmen López</td>
+                                    <td>Calle El Recreo #34, Caracas</td>
+                                    <td>Oeste</td>
+                                    <td>15/04/2025 13:15</td>
+                                    <td>6</td>
+                                    <td><span class="status info">Entregado</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Marcar como entregado"><i class="fas fa-check"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#ORD-2025-007</td>
+                                    <td>Roberto Díaz</td>
+                                    <td>Av. Las Mercedes #90, Caracas</td>
+                                    <td>Sur</td>
+                                    <td>15/04/2025 13:45</td>
+                                    <td>3</td>
+                                    <td><span class="status info">Entregado</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Marcar como entregado"><i class="fas fa-check"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#ORD-2025-008</td>
+                                    <td>Sofía Ramírez</td>
+                                    <td>Calle La Candelaria #23, Caracas</td>
+                                    <td>Centro</td>
+                                    <td>15/04/2025 14:00</td>
+                                    <td>5</td>
+                                    <td><span class="status pending">Listo para Entrega</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Marcar como entregado"><i class="fas fa-check"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="table-footer">
+                        <div class="pagination">
+                            <button class="page-btn prev"><i class="fas fa-chevron-left"></i></button>
+                            <button class="page-btn active">1</button>
+                            <button class="page-btn">2</button>
+                            <button class="page-btn next"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                        <div class="page-info">
+                            Mostrando 1-8 de 11 despachos
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Historial Section -->
+            <section class="content-section" id="historial-section">
+                <div class="section-header">
+                    <h2>Historial de Entregas</h2>
+                </div>
+                
+                <div class="filter-bar">
+                    <div class="form-group">
+                        <label for="historial-cliente">Cliente:</label>
+                        <select id="historial-cliente">
+                            <option value="all">Todos los clientes</option>
+                            <option value="CLI001">Juan Pérez</option>
+                            <option value="CLI002">María González</option>
+                            <option value="CLI003">Pedro Sánchez</option>
+                            <option value="CLI004">Ana Martínez</option>
+                            <option value="CLI005">Luis Fernández</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="historial-zona">Zona:</label>
+                        <select id="historial-zona">
+                            <option value="all">Todas las zonas</option>
+                            <option value="norte">Norte</option>
+                            <option value="sur">Sur</option>
+                            <option value="este">Este</option>
+                            <option value="oeste">Oeste</option>
+                            <option value="centro">Centro</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="historial-desde">Desde:</label>
+                        <input type="date" id="historial-desde" value="2025-01-01">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="historial-hasta">Hasta:</label>
+                        <input type="date" id="historial-hasta" value="2025-04-15">
+                    </div>
+                    
+                    <button class="secondary-btn"><i class="fas fa-filter"></i> Filtrar</button>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Entregas Completadas</h3>
+                        <div class="card-actions">
+                            <button class="export-btn"><i class="fas fa-download"></i> Exportar</button>
+                        </div>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID Orden</th>
+                                    <th>Cliente</th>
+                                    <th>Dirección</th>
+                                    <th>Zona</th>
+                                    <th>Fecha Entrega</th>
+                                    <th>Productos</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>#ORD-2025-001</td>
+                                    <td>Carlos Rodríguez</td>
+                                    <td>Av. Urdaneta #45, Caracas</td>
+                                    <td>Centro</td>
+                                    <td>14/04/2025 15:30</td>
+                                    <td>4</td>
+                                    <td><span class="status active">Entregado</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#ORD-2025-002</td>
+                                    <td>Laura Torres</td>
+                                    <td>Calle Sabana Grande #12, Caracas</td>
+                                    <td>Este</td>
+                                    <td>14/04/2025 16:15</td>
+                                    <td>3</td>
+                                    <td><span class="status active">Entregado</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#ORD-2025-003</td>
+                                    <td>Miguel Fernández</td>
+                                    <td>Av. Casanova #78, Caracas</td>
+                                    <td>Sur</td>
+                                    <td>14/04/2025 16:45</td>
+                                    <td>6</td>
+                                    <td><span class="status active">Entregado</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#ORD-2025-004</td>
+                                    <td>Isabel Gómez</td>
+                                    <td>Calle El Rosal #34, Caracas</td>
+                                    <td>Este</td>
+                                    <td>14/04/2025 17:20</td>
+                                    <td>2</td>
+                                    <td><span class="status active">Entregado</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#ORD-2025-005</td>
+                                    <td>Javier Pérez</td>
+                                    <td>Av. Andrés Bello #56, Caracas</td>
+                                    <td>Norte</td>
+                                    <td>14/04/2025 17:45</td>
+                                    <td>5</td>
+                                    <td><span class="status active">Entregado</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>#ORD-2025-006</td>
+                                    <td>Valentina Díaz</td>
+                                    <td>Calle La Campiña #23, Caracas</td>
+                                    <td>Oeste</td>
+                                    <td>14/04/2025 18:10</td>
+                                    <td>3</td>
+                                    <td><span class="status active">Entregado</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="table-footer">
+                        <div class="pagination">
+                            <button class="page-btn prev"><i class="fas fa-chevron-left"></i></button>
+                            <button class="page-btn active">1</button>
+                            <button class="page-btn">2</button>
+                            <button class="page-btn">3</button>
+                            <button class="page-btn next"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                        <div class="page-info">
+                            Mostrando 1-6 de 15 entregas
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Estadísticas Section -->
+            <section class="content-section" id="estadisticas-section">
+                <div class="section-header">
+                    <h2>Estadísticas de Entregas</h2>
+                </div>
+                
+                <div class="dashboard-cards">
+                    <div class="dashboard-card">
+                        <div class="card-icon success"><i class="fas fa-check-circle"></i></div>
+                        <div class="card-info">
+                            <h3>98%</h3>
+                            <p>Entregas a Tiempo</p>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-icon info"><i class="fas fa-clock"></i></div>
+                        <div class="card-info">
+                            <h3>45 min</h3>
+                            <p>Tiempo Promedio</p>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-icon warning"><i class="fas fa-exclamation-triangle"></i></div>
+                        <div class="card-info">
+                            <h3>2%</h3>
+                            <p>Entregas Retrasadas</p>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-icon"><i class="fas fa-truck"></i></div>
+                        <div class="card-info">
+                            <h3>150</h3>
+                            <p>Entregas (Mes)</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Entregas por Zona</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <div class="chart-placeholder">
+                                        <i class="fas fa-chart-pie"></i>
+                                        <p>Distribución de entregas por zona</p>
+                                        <ul class="chart-legend">
+                                            <li><span class="legend-color" style="background-color: var(--primary-color);"></span> Norte (25%)</li>
+                                            <li><span class="legend-color" style="background-color: var(--info-color);"></span> Sur (20%)</li>
+                                            <li><span class="legend-color" style="background-color: var(--success-color);"></span> Este (30%)</li>
+                                            <li><span class="legend-color" style="background-color: var(--warning-color);"></span> Oeste (15%)</li>
+                                            <li><span class="legend-color" style="background-color: var(--error-color);"></span> Centro (10%)</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Tiempo de Entrega</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <div class="chart-placeholder">
+                                        <i class="fas fa-chart-line"></i>
+                                        <p>Tiempo promedio de entrega por día</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    
+    <!-- Modal para Ver Detalles de Orden -->
+    <div class="modal" id="ver-orden-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Detalles de Orden #ORD-2025-001</h3>
+                <button class="close-modal"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <h4>Información del Cliente</h4>
+                        <p><strong>Nombre:</strong> Juan Pérez</p>
+                        <p><strong>Email:</strong> juan.perez@email.com</p>
+                        <p><strong>Teléfono:</strong> +58 412 555 1234</p>
+                        <p><strong>Dirección:</strong> Av. Principal #123, Caracas</p>
+                        <p><strong>Zona:</strong> Norte</p>
+                    </div>
+                    <div class="col-md-6">
+                        <h4>Información de la Orden</h4>
+                        <p><strong>Fecha de Orden:</strong> 15/04/2025 08:30</p>
+                        <p><strong>Fecha Listo para Entrega:</strong> 15/04/2025 10:30</p>
+                        <p><strong>Estado:</strong> <span class="status pending">Listo para Entrega</span></p>
+                        <p><strong>Método de Pago:</strong> Tarjeta de Crédito</p>
+                    </div>
+                </div>
+                
+                <h4>Productos</h4>
+                <div class="table-responsive">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Cantidad</th>
+                                <th>Precio Unitario</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Cerveza IPA Clásica</td>
+                                <td>6</td>
+                                <td>$4.50</td>
+                                <td>$27.00</td>
+                            </tr>
+                            <tr>
+                                <td>Cerveza Amber Ale</td>
+                                <td>4</td>
+                                <td>$4.20</td>
+                                <td>$16.80</td>
+                            </tr>
+                            <tr>
+                                <td>Cerveza Stout</td>
+                                <td>1</td>
+                                <td>$5.00</td>
+                                <td>$5.00</td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="3" class="text-right"><strong>Subtotal:</strong></td>
+                                <td>$48.80</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" class="text-right"><strong>Descuento:</strong></td>
+                                <td>-$5.00</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" class="text-right"><strong>IVA (16%):</strong></td>
+                                <td>$7.00</td>
+                            </tr>
+                            <tr>
+                                <td colspan="3" class="text-right"><strong>Total:</strong></td>
+                                <td>$50.80</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                
+                <h4>Notas</h4>
+                <p>Cliente solicita que las cervezas estén frías. Entregar en horario de tarde preferiblemente.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="secondary-btn close-modal-btn">Cerrar</button>
+                <button class="primary-btn" id="marcar-entregado-btn">Marcar como Entregado</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal de Confirmación -->
+    <div class="modal" id="confirmar-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Confirmar Acción</h3>
+                <button class="close-modal"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <p>¿Está seguro que desea marcar la orden <strong>#ORD-2025-001</strong> como "Entregado"?</p>
+                <p>Esta acción actualizará el estado del pedido en el sistema.</p>
+            </div>
+            <div class="modal-footer">
+                <button class="secondary-btn close-modal-btn">Cancelar</button>
+                <button class="primary-btn" id="confirmar-btn">Confirmar</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Cambiar entre secciones
+        document.querySelectorAll('.sidebar-nav a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Actualizar menú activo
+                document.querySelectorAll('.sidebar-nav li').forEach(item => {
+                    item.classList.remove('active');
+                });
+                this.parentElement.classList.add('active');
+                
+                // Mostrar sección correspondiente
+                const sectionId = this.getAttribute('data-section');
+                document.querySelectorAll('.content-section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                document.getElementById(sectionId + '-section').classList.add('active');
+            });
+        });
+        
+        // Toggle sidebar en móvil
+        document.querySelector('.toggle-sidebar').addEventListener('click', function() {
+            document.querySelector('.dashboard-sidebar').classList.toggle('active');
+        });
+        
+        // Abrir modal de detalles
+        document.querySelectorAll('.action-btn.view').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.getElementById('ver-orden-modal').classList.add('active');
+            });
+        });
+        
+        // Abrir modal de confirmación desde botón de tabla
+        document.querySelectorAll('.action-btn.edit').forEach(btn => {
+            btn.addEventListener('click', function() {
+                if (!this.disabled) {
+                    document.getElementById('confirmar-modal').classList.add('active');
+                }
+            });
+        });
+        
+        // Abrir modal de confirmación desde modal de detalles
+        document.getElementById('marcar-entregado-btn').addEventListener('click', function() {
+            document.getElementById('ver-orden-modal').classList.remove('active');
+            document.getElementById('confirmar-modal').classList.add('active');
+        });
+        
+        // Cerrar modales
+        document.querySelectorAll('.close-modal, .close-modal-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.modal').forEach(modal => {
+                    modal.classList.remove('active');
+                });
+            });
+        });
+        
+        // Confirmar cambio de estado
+        document.getElementById('confirmar-btn').addEventListener('click', function() {
+            alert('La orden ha sido marcada como "Entregado" exitosamente.');
+            document.getElementById('confirmar-modal').classList.remove('active');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1693 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sostenibilidad y ODS - ACAUCAB</title>
+    <link rel="stylesheet" href="../css/dashboard_sostenibilidad.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="dashboard-sidebar">
+            <div class="sidebar-header">
+                <h1>ACAUCAB</h1>
+                <p>Panel de Administración</p>
+            </div>
+            
+            <div class="sidebar-user">
+                <div class="user-avatar">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <div class="user-info">
+                    <h3>Carlos Mendoza</h3>
+                    <p>Sostenibilidad</p>
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="active"><a href="#metricas" data-section="metricas"><i class="fas fa-chart-line"></i> <span>Métricas</span></a></li>
+                    <li><a href="#ods" data-section="ods"><i class="fas fa-globe-americas"></i> <span>ODS</span></a></li>
+                    <li><a href="#informes" data-section="informes"><i class="fas fa-file-alt"></i> <span>Informes</span></a></li>
+                    <li><a href="#auditorias" data-section="auditorias"><i class="fas fa-clipboard-check"></i> <span>Auditorías</span></a></li>
+                    <li><a href="#configuracion" data-section="configuracion"><i class="fas fa-cog"></i> <span>Configuración</span></a></li>
+                </ul>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <a href="index.html" class="logout-btn"><i class="fas fa-sign-out-alt"></i> <span>Cerrar Sesión</span></a>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="dashboard-content">
+            <header class="content-header">
+                <div class="header-left">
+                    <button class="toggle-sidebar"><i class="fas fa-bars"></i></button>
+                    <h2>Sostenibilidad y ODS</h2>
+                </div>
+                <div class="header-right">
+                    <div class="search-box">
+                        <input type="text" placeholder="Buscar...">
+                        <button><i class="fas fa-search"></i></button>
+                    </div>
+                    <div class="notifications">
+                        <button class="notification-btn"><i class="fas fa-bell"></i><span class="badge">2</span></button>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Métricas Section -->
+            <section class="content-section active" id="metricas-section">
+                <div class="section-header">
+                    <h2>Métricas de Sostenibilidad</h2>
+                    <button class="primary-btn" id="nueva-metrica-btn"><i class="fas fa-plus"></i> Nueva Métrica</button>
+                </div>
+                
+                <div class="dashboard-cards">
+                    <div class="dashboard-card">
+                        <div class="card-icon"><i class="fas fa-water"></i></div>
+                        <div class="card-info">
+                            <h3>-15%</h3>
+                            <p>Consumo de Agua</p>
+                            <span class="trend positive"><i class="fas fa-arrow-down"></i> vs. año anterior</span>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-icon info"><i class="fas fa-bolt"></i></div>
+                        <div class="card-info">
+                            <h3>-8%</h3>
+                            <p>Consumo Energético</p>
+                            <span class="trend positive"><i class="fas fa-arrow-down"></i> vs. año anterior</span>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-icon success"><i class="fas fa-recycle"></i></div>
+                        <div class="card-info">
+                            <h3>78%</h3>
+                            <p>Residuos Reciclados</p>
+                            <span class="trend positive"><i class="fas fa-arrow-up"></i> vs. año anterior</span>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-icon warning"><i class="fas fa-cloud"></i></div>
+                        <div class="card-info">
+                            <h3>-12%</h3>
+                            <p>Emisiones CO2</p>
+                            <span class="trend positive"><i class="fas fa-arrow-down"></i> vs. año anterior</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="filter-bar">
+                    <div class="filter-group">
+                        <label for="filter-categoria">Categoría:</label>
+                        <select id="filter-categoria">
+                            <option value="all">Todas las categorías</option>
+                            <option value="agua">Agua</option>
+                            <option value="energia">Energía</option>
+                            <option value="residuos">Residuos</option>
+                            <option value="emisiones">Emisiones</option>
+                            <option value="social">Social</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="filter-periodo">Período:</label>
+                        <select id="filter-periodo">
+                            <option value="2025">2025</option>
+                            <option value="2024">2024</option>
+                            <option value="2023">2023</option>
+                            <option value="2022">2022</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="filter-ods">ODS:</label>
+                        <select id="filter-ods">
+                            <option value="all">Todos los ODS</option>
+                            <option value="ods6">ODS 6 - Agua Limpia</option>
+                            <option value="ods7">ODS 7 - Energía Asequible</option>
+                            <option value="ods8">ODS 8 - Trabajo Decente</option>
+                            <option value="ods12">ODS 12 - Producción Responsable</option>
+                            <option value="ods13">ODS 13 - Acción Climática</option>
+                        </select>
+                    </div>
+                    
+                    <button class="secondary-btn"><i class="fas fa-filter"></i> Filtrar</button>
+                    <button class="outline-btn"><i class="fas fa-sync-alt"></i> Reiniciar</button>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Consumo de Agua</h3>
+                                <div class="card-actions">
+                                    <select id="agua-periodo">
+                                        <option value="mensual">Mensual</option>
+                                        <option value="trimestral">Trimestral</option>
+                                        <option value="anual">Anual</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <div class="chart-placeholder">
+                                        <i class="fas fa-chart-line"></i>
+                                        <p>Consumo de agua por litro de cerveza producido</p>
+                                    </div>
+                                </div>
+                                <div class="metric-summary">
+                                    <div class="metric-item">
+                                        <span class="metric-label">Actual:</span>
+                                        <span class="metric-value">4.2 L/L</span>
+                                    </div>
+                                    <div class="metric-item">
+                                        <span class="metric-label">Meta:</span>
+                                        <span class="metric-value">4.0 L/L</span>
+                                    </div>
+                                    <div class="metric-item">
+                                        <span class="metric-label">Progreso:</span>
+                                        <div class="progress-bar">
+                                            <div class="progress" style="width: 85%;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Consumo Energético</h3>
+                                <div class="card-actions">
+                                    <select id="energia-periodo">
+                                        <option value="mensual">Mensual</option>
+                                        <option value="trimestral">Trimestral</option>
+                                        <option value="anual">Anual</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <div class="chart-placeholder">
+                                        <i class="fas fa-chart-line"></i>
+                                        <p>Consumo energético por litro de cerveza producido</p>
+                                    </div>
+                                </div>
+                                <div class="metric-summary">
+                                    <div class="metric-item">
+                                        <span class="metric-label">Actual:</span>
+                                        <span class="metric-value">0.12 kWh/L</span>
+                                    </div>
+                                    <div class="metric-item">
+                                        <span class="metric-label">Meta:</span>
+                                        <span class="metric-value">0.10 kWh/L</span>
+                                    </div>
+                                    <div class="metric-item">
+                                        <span class="metric-label">Progreso:</span>
+                                        <div class="progress-bar">
+                                            <div class="progress" style="width: 75%;"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Registro de Métricas</h3>
+                        <div class="card-actions">
+                            <button class="export-btn"><i class="fas fa-download"></i> Exportar</button>
+                        </div>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Métrica</th>
+                                    <th>Categoría</th>
+                                    <th>ODS</th>
+                                    <th>Valor</th>
+                                    <th>Unidad</th>
+                                    <th>Fecha</th>
+                                    <th>Tendencia</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>MET-001</td>
+                                    <td>Consumo de Agua</td>
+                                    <td>Agua</td>
+                                    <td>ODS 6</td>
+                                    <td>4.2</td>
+                                    <td>L/L cerveza</td>
+                                    <td>15/04/2025</td>
+                                    <td><span class="trend positive"><i class="fas fa-arrow-down"></i> -15%</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>MET-002</td>
+                                    <td>Consumo Energético</td>
+                                    <td>Energía</td>
+                                    <td>ODS 7</td>
+                                    <td>0.12</td>
+                                    <td>kWh/L cerveza</td>
+                                    <td>15/04/2025</td>
+                                    <td><span class="trend positive"><i class="fas fa-arrow-down"></i> -8%</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>MET-003</td>
+                                    <td>Residuos Reciclados</td>
+                                    <td>Residuos</td>
+                                    <td>ODS 12</td>
+                                    <td>78</td>
+                                    <td>%</td>
+                                    <td>15/04/2025</td>
+                                    <td><span class="trend positive"><i class="fas fa-arrow-up"></i> +5%</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>MET-004</td>
+                                    <td>Emisiones CO2</td>
+                                    <td>Emisiones</td>
+                                    <td>ODS 13</td>
+                                    <td>0.35</td>
+                                    <td>kg CO2/L cerveza</td>
+                                    <td>15/04/2025</td>
+                                    <td><span class="trend positive"><i class="fas fa-arrow-down"></i> -12%</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>MET-005</td>
+                                    <td>Ingredientes Locales</td>
+                                    <td>Producción</td>
+                                    <td>ODS 12</td>
+                                    <td>65</td>
+                                    <td>%</td>
+                                    <td>15/04/2025</td>
+                                    <td><span class="trend positive"><i class="fas fa-arrow-up"></i> +10%</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>MET-006</td>
+                                    <td>Empleos Locales</td>
+                                    <td>Social</td>
+                                    <td>ODS 8</td>
+                                    <td>85</td>
+                                    <td>%</td>
+                                    <td>15/04/2025</td>
+                                    <td><span class="trend positive"><i class="fas fa-arrow-up"></i> +5%</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>MET-007</td>
+                                    <td>Agua Reciclada</td>
+                                    <td>Agua</td>
+                                    <td>ODS 6</td>
+                                    <td>45</td>
+                                    <td>%</td>
+                                    <td>15/04/2025</td>
+                                    <td><span class="trend positive"><i class="fas fa-arrow-up"></i> +15%</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>MET-008</td>
+                                    <td>Capacitación Sostenible</td>
+                                    <td>Social</td>
+                                    <td>ODS 8</td>
+                                    <td>24</td>
+                                    <td>horas/empleado</td>
+                                    <td>15/04/2025</td>
+                                    <td><span class="trend positive"><i class="fas fa-arrow-up"></i> +20%</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="table-footer">
+                        <div class="pagination">
+                            <button class="page-btn prev"><i class="fas fa-chevron-left"></i></button>
+                            <button class="page-btn active">1</button>
+                            <button class="page-btn">2</button>
+                            <button class="page-btn next"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                        <div class="page-info">
+                            Mostrando 1-8 de 15 métricas
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- ODS Section -->
+            <section class="content-section" id="ods-section">
+                <div class="section-header">
+                    <h2>Objetivos de Desarrollo Sostenible (ODS)</h2>
+                </div>
+                
+                <div class="ods-grid">
+                    <div class="ods-card ods-6">
+                        <div class="ods-header">
+                            <div class="ods-icon">
+                                <i class="fas fa-water"></i>
+                            </div>
+                            <div class="ods-title">
+                                <h3>ODS 6</h3>
+                                <p>Agua Limpia y Saneamiento</p>
+                            </div>
+                        </div>
+                        <div class="ods-body">
+                            <div class="ods-progress">
+                                <div class="progress-bar">
+                                    <div class="progress" style="width: 75%;"></div>
+                                </div>
+                                <span class="progress-text">75% completado</span>
+                            </div>
+                            <div class="ods-metrics">
+                                <div class="ods-metric">
+                                    <span class="metric-name">Consumo de Agua</span>
+                                    <span class="metric-value">4.2 L/L</span>
+                                    <span class="trend positive"><i class="fas fa-arrow-down"></i> -15%</span>
+                                </div>
+                                <div class="ods-metric">
+                                    <span class="metric-name">Agua Reciclada</span>
+                                    <span class="metric-value">45%</span>
+                                    <span class="trend positive"><i class="fas fa-arrow-up"></i> +15%</span>
+                                </div>
+                            </div>
+                            <div class="ods-actions">
+                                <button class="secondary-btn">Ver Detalles</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="ods-card ods-7">
+                        <div class="ods-header">
+                            <div class="ods-icon">
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <div class="ods-title">
+                                <h3>ODS 7</h3>
+                                <p>Energía Asequible y No Contaminante</p>
+                            </div>
+                        </div>
+                        <div class="ods-body">
+                            <div class="ods-progress">
+                                <div class="progress-bar">
+                                    <div class="progress" style="width: 60%;"></div>
+                                </div>
+                                <span class="progress-text">60% completado</span>
+                            </div>
+                            <div class="ods-metrics">
+                                <div class="ods-metric">
+                                    <span class="metric-name">Consumo Energético</span>
+                                    <span class="metric-value">0.12 kWh/L</span>
+                                    <span class="trend positive"><i class="fas fa-arrow-down"></i> -8%</span>
+                                </div>
+                                <div class="ods-metric">
+                                    <span class="metric-name">Energía Renovable</span>
+                                    <span class="metric-value">35%</span>
+                                    <span class="trend positive"><i class="fas fa-arrow-up"></i> +10%</span>
+                                </div>
+                            </div>
+                            <div class="ods-actions">
+                                <button class="secondary-btn">Ver Detalles</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="ods-card ods-8">
+                        <div class="ods-header">
+                            <div class="ods-icon">
+                                <i class="fas fa-briefcase"></i>
+                            </div>
+                            <div class="ods-title">
+                                <h3>ODS 8</h3>
+                                <p>Trabajo Decente y Crecimiento Económico</p>
+                            </div>
+                        </div>
+                        <div class="ods-body">
+                            <div class="ods-progress">
+                                <div class="progress-bar">
+                                    <div class="progress" style="width: 85%;"></div>
+                                </div>
+                                <span class="progress-text">85% completado</span>
+                            </div>
+                            <div class="ods-metrics">
+                                <div class="ods-metric">
+                                    <span class="metric-name">Empleos Locales</span>
+                                    <span class="metric-value">85%</span>
+                                    <span class="trend positive"><i class="fas fa-arrow-up"></i> +5%</span>
+                                </div>
+                                <div class="ods-metric">
+                                    <span class="metric-name">Capacitación</span>
+                                    <span class="metric-value">24 h/emp</span>
+                                    <span class="trend positive"><i class="fas fa-arrow-up"></i> +20%</span>
+                                </div>
+                            </div>
+                            <div class="ods-actions">
+                                <button class="secondary-btn">Ver Detalles</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="ods-card ods-12">
+                        <div class="ods-header">
+                            <div class="ods-icon">
+                                <i class="fas fa-recycle"></i>
+                            </div>
+                            <div class="ods-title">
+                                <h3>ODS 12</h3>
+                                <p>Producción y Consumo Responsables</p>
+                            </div>
+                        </div>
+                        <div class="ods-body">
+                            <div class="ods-progress">
+                                <div class="progress-bar">
+                                    <div class="progress" style="width: 70%;"></div>
+                                </div>
+                                <span class="progress-text">70% completado</span>
+                            </div>
+                            <div class="ods-metrics">
+                                <div class="ods-metric">
+                                    <span class="metric-name">Residuos Reciclados</span>
+                                    <span class="metric-value">78%</span>
+                                    <span class="trend positive"><i class="fas fa-arrow-up"></i> +5%</span>
+                                </div>
+                                <div class="ods-metric">
+                                    <span class="metric-name">Ingredientes Locales</span>
+                                    <span class="metric-value">65%</span>
+                                    <span class="trend positive"><i class="fas fa-arrow-up"></i> +10%</span>
+                                </div>
+                            </div>
+                            <div class="ods-actions">
+                                <button class="secondary-btn">Ver Detalles</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="ods-card ods-13">
+                        <div class="ods-header">
+                            <div class="ods-icon">
+                                <i class="fas fa-cloud"></i>
+                            </div>
+                            <div class="ods-title">
+                                <h3>ODS 13</h3>
+                                <p>Acción por el Clima</p>
+                            </div>
+                        </div>
+                        <div class="ods-body">
+                            <div class="ods-progress">
+                                <div class="progress-bar">
+                                    <div class="progress" style="width: 65%;"></div>
+                                </div>
+                                <span class="progress-text">65% completado</span>
+                            </div>
+                            <div class="ods-metrics">
+                                <div class="ods-metric">
+                                    <span class="metric-name">Emisiones CO2</span>
+                                    <span class="metric-value">0.35 kg/L</span>
+                                    <span class="trend positive"><i class="fas fa-arrow-down"></i> -12%</span>
+                                </div>
+                                <div class="ods-metric">
+                                    <span class="metric-name">Huella de Carbono</span>
+                                    <span class="metric-value">-15%</span>
+                                    <span class="trend positive"><i class="fas fa-arrow-down"></i> vs. base</span>
+                                </div>
+                            </div>
+                            <div class="ods-actions">
+                                <button class="secondary-btn">Ver Detalles</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Iniciativas por ODS</h3>
+                        <div class="card-actions">
+                            <button class="primary-btn"><i class="fas fa-plus"></i> Nueva Iniciativa</button>
+                        </div>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Iniciativa</th>
+                                    <th>ODS</th>
+                                    <th>Responsable</th>
+                                    <th>Fecha Inicio</th>
+                                    <th>Estado</th>
+                                    <th>Progreso</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>INI-001</td>
+                                    <td>Sistema de reciclaje de agua</td>
+                                    <td>ODS 6</td>
+                                    <td>María Gómez</td>
+                                    <td>10/01/2025</td>
+                                    <td><span class="status active">En Progreso</span></td>
+                                    <td>
+                                        <div class="progress-bar">
+                                            <div class="progress" style="width: 65%;"></div>
+                                        </div>
+                                    </td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>INI-002</td>
+                                    <td>Instalación de paneles solares</td>
+                                    <td>ODS 7</td>
+                                    <td>Carlos Rodríguez</td>
+                                    <td>15/02/2025</td>
+                                    <td><span class="status active">En Progreso</span></td>
+                                    <td>
+                                        <div class="progress-bar">
+                                            <div class="progress" style="width: 40%;"></div>
+                                        </div>
+                                    </td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>INI-003</td>
+                                    <td>Programa de capacitación sostenible</td>
+                                    <td>ODS 8</td>
+                                    <td>Ana Martínez</td>
+                                    <td>05/03/2025</td>
+                                    <td><span class="status active">En Progreso</span></td>
+                                    <td>
+                                        <div class="progress-bar">
+                                            <div class="progress" style="width: 85%;"></div>
+                                        </div>
+                                    </td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>INI-004</td>
+                                    <td>Optimización de envases y embalajes</td>
+                                    <td>ODS 12</td>
+                                    <td>Pedro Sánchez</td>
+                                    <td>20/01/2025</td>
+                                    <td><span class="status pending">Planificado</span></td>
+                                    <td>
+                                        <div class="progress-bar">
+                                            <div class="progress" style="width: 15%;"></div>
+                                        </div>
+                                    </td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>INI-005</td>
+                                    <td>Reducción de emisiones en transporte</td>
+                                    <td>ODS 13</td>
+                                    <td>Laura Torres</td>
+                                    <td>12/02/2025</td>
+                                    <td><span class="status success">Completado</span></td>
+                                    <td>
+                                        <div class="progress-bar">
+                                            <div class="progress" style="width: 100%;"></div>
+                                        </div>
+                                    </td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="table-footer">
+                        <div class="pagination">
+                            <button class="page-btn prev"><i class="fas fa-chevron-left"></i></button>
+                            <button class="page-btn active">1</button>
+                            <button class="page-btn">2</button>
+                            <button class="page-btn next"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                        <div class="page-info">
+                            Mostrando 1-5 de 12 iniciativas
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Informes Section -->
+            <section class="content-section" id="informes-section">
+                <div class="section-header">
+                    <h2>Informes de Sostenibilidad</h2>
+                    <button class="primary-btn" id="nuevo-informe-btn"><i class="fas fa-plus"></i> Nuevo Informe</button>
+                </div>
+                
+                <div class="filter-bar">
+                    <div class="filter-group">
+                        <label for="filter-tipo-informe">Tipo:</label>
+                        <select id="filter-tipo-informe">
+                            <option value="all">Todos los tipos</option>
+                            <option value="anual">Informe Anual</option>
+                            <option value="gri">GRI</option>
+                            <option value="vnr">VNR</option>
+                            <option value="interno">Interno</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="filter-ano-informe">Año:</label>
+                        <select id="filter-ano-informe">
+                            <option value="2025">2025</option>
+                            <option value="2024">2024</option>
+                            <option value="2023">2023</option>
+                            <option value="2022">2022</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="filter-estado-informe">Estado:</label>
+                        <select id="filter-estado-informe">
+                            <option value="all">Todos los estados</option>
+                            <option value="borrador">Borrador</option>
+                            <option value="revision">En Revisión</option>
+                            <option value="publicado">Publicado</option>
+                        </select>
+                    </div>
+                    
+                    <button class="secondary-btn"><i class="fas fa-filter"></i> Filtrar</button>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Informes Recientes</h3>
+                        <div class="card-actions">
+                            <button class="export-btn"><i class="fas fa-download"></i> Exportar</button>
+                        </div>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Título</th>
+                                    <th>Tipo</th>
+                                    <th>Año</th>
+                                    <th>Fecha Creación</th>
+                                    <th>Responsable</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>INF-2025-001</td>
+                                    <td>Informe Anual de Sostenibilidad 2024</td>
+                                    <td>Anual</td>
+                                    <td>2024</td>
+                                    <td>15/01/2025</td>
+                                    <td>Carlos Mendoza</td>
+                                    <td><span class="status success">Publicado</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn download" title="Descargar"><i class="fas fa-download"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>INF-2025-002</td>
+                                    <td>Informe GRI 2024</td>
+                                    <td>GRI</td>
+                                    <td>2024</td>
+                                    <td>20/02/2025</td>
+                                    <td>María Gómez</td>
+                                    <td><span class="status success">Publicado</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn download" title="Descargar"><i class="fas fa-download"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>INF-2025-003</td>
+                                    <td>Informe VNR 2024</td>
+                                    <td>VNR</td>
+                                    <td>2024</td>
+                                    <td>05/03/2025</td>
+                                    <td>Pedro Sánchez</td>
+                                    <td><span class="status active">En Revisión</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>INF-2025-004</td>
+                                    <td>Informe Trimestral Q1 2025</td>
+                                    <td>Interno</td>
+                                    <td>2025</td>
+                                    <td>10/04/2025</td>
+                                    <td>Ana Martínez</td>
+                                    <td><span class="status pending">Borrador</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>INF-2025-005</td>
+                                    <td>Informe de Impacto Ambiental 2024</td>
+                                    <td>Especializado</td>
+                                    <td>2024</td>
+                                    <td>25/02/2025</td>
+                                    <td>Laura Torres</td>
+                                    <td><span class="status success">Publicado</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn download" title="Descargar"><i class="fas fa-download"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="table-footer">
+                        <div class="pagination">
+                            <button class="page-btn prev"><i class="fas fa-chevron-left"></i></button>
+                            <button class="page-btn active">1</button>
+                            <button class="page-btn">2</button>
+                            <button class="page-btn next"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                        <div class="page-info">
+                            Mostrando 1-5 de 10 informes
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Plantillas de Informes</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="template-list">
+                                    <div class="template-item">
+                                        <div class="template-icon"><i class="fas fa-file-alt"></i></div>
+                                        <div class="template-info">
+                                            <h4>Informe Anual de Sostenibilidad</h4>
+                                            <p>Plantilla estándar para informes anuales</p>
+                                        </div>
+                                        <div class="template-actions">
+                                            <button class="action-btn view" title="Ver"><i class="fas fa-eye"></i></button>
+                                            <button class="action-btn download" title="Usar"><i class="fas fa-plus"></i></button>
+                                        </div>
+                                    </div>
+                                    <div class="template-item">
+                                        <div class="template-icon"><i class="fas fa-file-alt"></i></div>
+                                        <div class="template-info">
+                                            <h4>Informe GRI</h4>
+                                            <p>Plantilla según estándares GRI</p>
+                                        </div>
+                                        <div class="template-actions">
+                                            <button class="action-btn view" title="Ver"><i class="fas fa-eye"></i></button>
+                                            <button class="action-btn download" title="Usar"><i class="fas fa-plus"></i></button>
+                                        </div>
+                                    </div>
+                                    <div class="template-item">
+                                        <div class="template-icon"><i class="fas fa-file-alt"></i></div>
+                                        <div class="template-info">
+                                            <h4>Informe VNR</h4>
+                                            <p>Plantilla para Informes Nacionales Voluntarios</p>
+                                        </div>
+                                        <div class="template-actions">
+                                            <button class="action-btn view" title="Ver"><i class="fas fa-eye"></i></button>
+                                            <button class="action-btn download" title="Usar"><i class="fas fa-plus"></i></button>
+                                        </div>
+                                    </div>
+                                    <div class="template-item">
+                                        <div class="template-icon"><i class="fas fa-file-alt"></i></div>
+                                        <div class="template-info">
+                                            <h4>Informe Trimestral</h4>
+                                            <p>Plantilla para informes internos trimestrales</p>
+                                        </div>
+                                        <div class="template-actions">
+                                            <button class="action-btn view" title="Ver"><i class="fas fa-eye"></i></button>
+                                            <button class="action-btn download" title="Usar"><i class="fas fa-plus"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Calendario de Informes</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="calendar-list">
+                                    <div class="calendar-item">
+                                        <div class="calendar-date">
+                                            <span class="month">ENE</span>
+                                            <span class="day">31</span>
+                                        </div>
+                                        <div class="calendar-info">
+                                            <h4>Informe Anual de Sostenibilidad</h4>
+                                            <p>Publicación del informe anual</p>
+                                        </div>
+                                        <div class="calendar-status">
+                                            <span class="status success">Completado</span>
+                                        </div>
+                                    </div>
+                                    <div class="calendar-item">
+                                        <div class="calendar-date">
+                                            <span class="month">MAR</span>
+                                            <span class="day">15</span>
+                                        </div>
+                                        <div class="calendar-info">
+                                            <h4>Informe GRI</h4>
+                                            <p>Entrega de informe GRI</p>
+                                        </div>
+                                        <div class="calendar-status">
+                                            <span class="status success">Completado</span>
+                                        </div>
+                                    </div>
+                                    <div class="calendar-item">
+                                        <div class="calendar-date">
+                                            <span class="month">ABR</span>
+                                            <span class="day">30</span>
+                                        </div>
+                                        <div class="calendar-info">
+                                            <h4>Informe Trimestral Q1</h4>
+                                            <p>Informe interno del primer trimestre</p>
+                                        </div>
+                                        <div class="calendar-status">
+                                            <span class="status pending">Pendiente</span>
+                                        </div>
+                                    </div>
+                                    <div class="calendar-item">
+                                        <div class="calendar-date">
+                                            <span class="month">JUN</span>
+                                            <span class="day">30</span>
+                                        </div>
+                                        <div class="calendar-info">
+                                            <h4>Informe VNR</h4>
+                                            <p>Entrega de Informe Nacional Voluntario</p>
+                                        </div>
+                                        <div class="calendar-status">
+                                            <span class="status pending">Pendiente</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Auditorías Section -->
+            <section class="content-section" id="auditorias-section">
+                <div class="section-header">
+                    <h2>Auditorías de Sostenibilidad</h2>
+                    <button class="primary-btn" id="nueva-auditoria-btn"><i class="fas fa-plus"></i> Nueva Auditoría</button>
+                </div>
+                
+                <div class="dashboard-cards">
+                    <div class="dashboard-card">
+                        <div class="card-icon success"><i class="fas fa-check-circle"></i></div>
+                        <div class="card-info">
+                            <h3>3</h3>
+                            <p>Auditorías Completadas</p>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-icon warning"><i class="fas fa-hourglass-half"></i></div>
+                        <div class="card-info">
+                            <h3>1</h3>
+                            <p>Auditorías en Progreso</p>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-icon info"><i class="fas fa-calendar-alt"></i></div>
+                        <div class="card-info">
+                            <h3>2</h3>
+                            <p>Auditorías Programadas</p>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-icon"><i class="fas fa-clipboard-check"></i></div>
+                        <div class="card-info">
+                            <h3>85%</h3>
+                            <p>Cumplimiento Promedio</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="filter-bar">
+                    <div class="filter-group">
+                        <label for="filter-tipo-auditoria">Tipo:</label>
+                        <select id="filter-tipo-auditoria">
+                            <option value="all">Todos los tipos</option>
+                            <option value="interna">Interna</option>
+                            <option value="externa">Externa</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="filter-estado-auditoria">Estado:</label>
+                        <select id="filter-estado-auditoria">
+                            <option value="all">Todos los estados</option>
+                            <option value="programada">Programada</option>
+                            <option value="en-progreso">En Progreso</option>
+                            <option value="completada">Completada</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="filter-ano-auditoria">Año:</label>
+                        <select id="filter-ano-auditoria">
+                            <option value="2025">2025</option>
+                            <option value="2024">2024</option>
+                            <option value="2023">2023</option>
+                        </select>
+                    </div>
+                    
+                    <button class="secondary-btn"><i class="fas fa-filter"></i> Filtrar</button>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Registro de Auditorías</h3>
+                        <div class="card-actions">
+                            <button class="export-btn"><i class="fas fa-download"></i> Exportar</button>
+                        </div>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Título</th>
+                                    <th>Tipo</th>
+                                    <th>Auditor</th>
+                                    <th>Fecha Inicio</th>
+                                    <th>Fecha Fin</th>
+                                    <th>Estado</th>
+                                    <th>Cumplimiento</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>AUD-2025-001</td>
+                                    <td>Auditoría Interna de Procesos Sostenibles</td>
+                                    <td>Interna</td>
+                                    <td>Ana Martínez</td>
+                                    <td>15/01/2025</td>
+                                    <td>30/01/2025</td>
+                                    <td><span class="status success">Completada</span></td>
+                                    <td>
+                                        <div class="progress-bar">
+                                            <div class="progress" style="width: 85%;"></div>
+                                        </div>
+                                        <span class="progress-text">85%</span>
+                                    </td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn download" title="Descargar"><i class="fas fa-download"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>AUD-2025-002</td>
+                                    <td>Auditoría Externa GRI</td>
+                                    <td>Externa</td>
+                                    <td>EcoAudit S.A.</td>
+                                    <td>10/02/2025</td>
+                                    <td>28/02/2025</td>
+                                    <td><span class="status success">Completada</span></td>
+                                    <td>
+                                        <div class="progress-bar">
+                                            <div class="progress" style="width: 90%;"></div>
+                                        </div>
+                                        <span class="progress-text">90%</span>
+                                    </td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn download" title="Descargar"><i class="fas fa-download"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>AUD-2025-003</td>
+                                    <td>Auditoría de Consumo de Agua</td>
+                                    <td>Interna</td>
+                                    <td>Pedro Sánchez</td>
+                                    <td>05/03/2025</td>
+                                    <td>20/03/2025</td>
+                                    <td><span class="status success">Completada</span></td>
+                                    <td>
+                                        <div class="progress-bar">
+                                            <div class="progress" style="width: 80%;"></div>
+                                        </div>
+                                        <span class="progress-text">80%</span>
+                                    </td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn download" title="Descargar"><i class="fas fa-download"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>AUD-2025-004</td>
+                                    <td>Auditoría de Emisiones</td>
+                                    <td>Externa</td>
+                                    <td>CarbonTrust</td>
+                                    <td>01/04/2025</td>
+                                    <td>30/04/2025</td>
+                                    <td><span class="status active">En Progreso</span></td>
+                                    <td>
+                                        <div class="progress-bar">
+                                            <div class="progress" style="width: 45%;"></div>
+                                        </div>
+                                        <span class="progress-text">45%</span>
+                                    </td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>AUD-2025-005</td>
+                                    <td>Auditoría de Prácticas Laborales</td>
+                                    <td>Interna</td>
+                                    <td>María Gómez</td>
+                                    <td>15/05/2025</td>
+                                    <td>30/05/2025</td>
+                                    <td><span class="status pending">Programada</span></td>
+                                    <td>
+                                        <div class="progress-bar">
+                                            <div class="progress" style="width: 0%;"></div>
+                                        </div>
+                                        <span class="progress-text">0%</span>
+                                    </td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>AUD-2025-006</td>
+                                    <td>Auditoría de Cadena de Suministro</td>
+                                    <td>Externa</td>
+                                    <td>SupplyChain Cert</td>
+                                    <td>10/06/2025</td>
+                                    <td>30/06/2025</td>
+                                    <td><span class="status pending">Programada</span></td>
+                                    <td>
+                                        <div class="progress-bar">
+                                            <div class="progress" style="width: 0%;"></div>
+                                        </div>
+                                        <span class="progress-text">0%</span>
+                                    </td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="table-footer">
+                        <div class="pagination">
+                            <button class="page-btn prev"><i class="fas fa-chevron-left"></i></button>
+                            <button class="page-btn active">1</button>
+                            <button class="page-btn next"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                        <div class="page-info">
+                            Mostrando 1-6 de 6 auditorías
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Hallazgos y Acciones Correctivas</h3>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Auditoría</th>
+                                    <th>Hallazgo</th>
+                                    <th>Severidad</th>
+                                    <th>Acción Correctiva</th>
+                                    <th>Responsable</th>
+                                    <th>Fecha Límite</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>HAL-001</td>
+                                    <td>AUD-2025-001</td>
+                                    <td>Consumo excesivo de agua en proceso de limpieza</td>
+                                    <td><span class="badge warning">Media</span></td>
+                                    <td>Implementar sistema de recirculación de agua</td>
+                                    <td>Pedro Sánchez</td>
+                                    <td>15/02/2025</td>
+                                    <td><span class="status success">Completado</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>HAL-002</td>
+                                    <td>AUD-2025-002</td>
+                                    <td>Documentación incompleta de proveedores sostenibles</td>
+                                    <td><span class="badge warning">Media</span></td>
+                                    <td>Actualizar registro de proveedores con certificaciones</td>
+                                    <td>María Gómez</td>
+                                    <td>20/03/2025</td>
+                                    <td><span class="status success">Completado</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>HAL-003</td>
+                                    <td>AUD-2025-003</td>
+                                    <td>Fugas en sistema de distribución de agua</td>
+                                    <td><span class="badge error">Alta</span></td>
+                                    <td>Reparar tuberías y programar mantenimiento preventivo</td>
+                                    <td>Carlos Rodríguez</td>
+                                    <td>10/04/2025</td>
+                                    <td><span class="status active">En Progreso</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>HAL-004</td>
+                                    <td>AUD-2025-004</td>
+                                    <td>Emisiones por encima del estándar en transporte</td>
+                                    <td><span class="badge error">Alta</span></td>
+                                    <td>Renovar flota con vehículos de bajas emisiones</td>
+                                    <td>Laura Torres</td>
+                                    <td>30/06/2025</td>
+                                    <td><span class="status pending">Pendiente</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="table-footer">
+                        <div class="pagination">
+                            <button class="page-btn prev"><i class="fas fa-chevron-left"></i></button>
+                            <button class="page-btn active">1</button>
+                            <button class="page-btn next"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                        <div class="page-info">
+                            Mostrando 1-4 de 8 hallazgos
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Configuración Section -->
+            <section class="content-section" id="configuracion-section">
+                <div class="section-header">
+                    <h2>Configuración</h2>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Configuración General</h3>
+                            </div>
+                            <div class="card-body">
+                                <form class="form-grid">
+                                    <div class="form-group">
+                                        <label for="empresa-nombre">Nombre de la Empresa:</label>
+                                        <input type="text" id="empresa-nombre" value="ACAUCAB">
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="periodo-reporte">Período de Reporte:</label>
+                                        <select id="periodo-reporte">
+                                            <option value="anual">Anual</option>
+                                            <option value="semestral">Semestral</option>
+                                            <option value="trimestral">Trimestral</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="estandar-reporte">Estándar de Reporte:</label>
+                                        <select id="estandar-reporte">
+                                            <option value="gri">GRI (Global Reporting Initiative)</option>
+                                            <option value="vnr">VNR (Voluntary National Review)</option>
+                                            <option value="personalizado">Personalizado</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="unidades-medida">Unidades de Medida:</label>
+                                        <select id="unidades-medida">
+                                            <option value="metrico">Sistema Métrico</option>
+                                            <option value="imperial">Sistema Imperial</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-actions">
+                                        <button type="button" class="primary-btn">Guardar Cambios</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Objetivos y Metas</h3>
+                            </div>
+                            <div class="card-body">
+                                <form class="form-grid">
+                                    <div class="form-group">
+                                        <label for="objetivo-agua">Reducción de Consumo de Agua (%):</label>
+                                        <input type="number" id="objetivo-agua" value="20">
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="objetivo-energia">Reducción de Consumo Energético (%):</label>
+                                        <input type="number" id="objetivo-energia" value="15">
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="objetivo-residuos">Reciclaje de Residuos (%):</label>
+                                        <input type="number" id="objetivo-residuos" value="80">
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="objetivo-emisiones">Reducción de Emisiones CO2 (%):</label>
+                                        <input type="number" id="objetivo-emisiones" value="25">
+                                    </div>
+                                    
+                                    <div class="form-actions">
+                                        <button type="button" class="primary-btn">Guardar Objetivos</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Categorías de Métricas</h3>
+                        <div class="card-actions">
+                            <button class="primary-btn"><i class="fas fa-plus"></i> Nueva Categoría</button>
+                        </div>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nombre</th>
+                                    <th>Descripción</th>
+                                    <th>ODS Relacionado</th>
+                                    <th>Unidad de Medida</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>CAT-001</td>
+                                    <td>Consumo de Agua</td>
+                                    <td>Métricas relacionadas con el uso y gestión del agua</td>
+                                    <td>ODS 6</td>
+                                    <td>Litros</td>
+                                    <td class="actions">
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>CAT-002</td>
+                                    <td>Consumo Energético</td>
+                                    <td>Métricas relacionadas con el uso de energía</td>
+                                    <td>ODS 7</td>
+                                    <td>kWh</td>
+                                    <td class="actions">
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>CAT-003</td>
+                                    <td>Gestión de Residuos</td>
+                                    <td>Métricas relacionadas con residuos y reciclaje</td>
+                                    <td>ODS 12</td>
+                                    <td>Kg, %</td>
+                                    <td class="actions">
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>CAT-004</td>
+                                    <td>Emisiones</td>
+                                    <td>Métricas relacionadas con emisiones de gases</td>
+                                    <td>ODS 13</td>
+                                    <td>Kg CO2</td>
+                                    <td class="actions">
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>CAT-005</td>
+                                    <td>Impacto Social</td>
+                                    <td>Métricas relacionadas con impacto en la comunidad</td>
+                                    <td>ODS 8</td>
+                                    <td>Varios</td>
+                                    <td class="actions">
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    
+    <!-- Modal para Nueva Métrica -->
+    <div class="modal" id="metrica-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Nueva Métrica</h3>
+                <button class="close-modal"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <form class="form-grid">
+                    <div class="form-group">
+                        <label for="metrica-nombre">Nombre:</label>
+                        <input type="text" id="metrica-nombre" placeholder="Nombre de la métrica">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="metrica-categoria">Categoría:</label>
+                        <select id="metrica-categoria">
+                            <option value="agua">Agua</option>
+                            <option value="energia">Energía</option>
+                            <option value="residuos">Residuos</option>
+                            <option value="emisiones">Emisiones</option>
+                            <option value="social">Social</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="metrica-ods">ODS Relacionado:</label>
+                        <select id="metrica-ods">
+                            <option value="ods6">ODS 6 - Agua Limpia</option>
+                            <option value="ods7">ODS 7 - Energía Asequible</option>
+                            <option value="ods8">ODS 8 - Trabajo Decente</option>
+                            <option value="ods12">ODS 12 - Producción Responsable</option>
+                            <option value="ods13">ODS 13 - Acción Climática</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="metrica-valor">Valor:</label>
+                        <input type="number" id="metrica-valor" step="0.01">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="metrica-unidad">Unidad:</label>
+                        <input type="text" id="metrica-unidad" placeholder="Ej: L/L cerveza, kWh, %">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="metrica-fecha">Fecha:</label>
+                        <input type="date" id="metrica-fecha">
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label for="metrica-descripcion">Descripción:</label>
+                        <textarea id="metrica-descripcion" rows="3" placeholder="Descripción detallada de la métrica"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="secondary-btn close-modal-btn">Cancelar</button>
+                <button class="primary-btn" id="guardar-metrica-btn">Guardar</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal para Nuevo Informe -->
+    <div class="modal" id="informe-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Nuevo Informe</h3>
+                <button class="close-modal"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <form class="form-grid">
+                    <div class="form-group">
+                        <label for="informe-titulo">Título:</label>
+                        <input type="text" id="informe-titulo" placeholder="Título del informe">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="informe-tipo">Tipo:</label>
+                        <select id="informe-tipo">
+                            <option value="anual">Informe Anual</option>
+                            <option value="gri">GRI</option>
+                            <option value="vnr">VNR</option>
+                            <option value="interno">Interno</option>
+                            <option value="especializado">Especializado</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="informe-ano">Año:</label>
+                        <select id="informe-ano">
+                            <option value="2025">2025</option>
+                            <option value="2024">2024</option>
+                            <option value="2023">2023</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="informe-responsable">Responsable:</label>
+                        <input type="text" id="informe-responsable" placeholder="Nombre del responsable">
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label for="informe-descripcion">Descripción:</label>
+                        <textarea id="informe-descripcion" rows="3" placeholder="Descripción del informe"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="informe-plantilla">Plantilla:</label>
+                        <select id="informe-plantilla">
+                            <option value="anual">Informe Anual de Sostenibilidad</option>
+                            <option value="gri">Informe GRI</option>
+                            <option value="vnr">Informe VNR</option>
+                            <option value="trimestral">Informe Trimestral</option>
+                            <option value="personalizado">Personalizado</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="secondary-btn close-modal-btn">Cancelar</button>
+                <button class="primary-btn" id="guardar-informe-btn">Crear Informe</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal para Nueva Auditoría -->
+    <div class="modal" id="auditoria-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Nueva Auditoría</h3>
+                <button class="close-modal"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <form class="form-grid">
+                    <div class="form-group">
+                        <label for="auditoria-titulo">Título:</label>
+                        <input type="text" id="auditoria-titulo" placeholder="Título de la auditoría">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="auditoria-tipo">Tipo:</label>
+                        <select id="auditoria-tipo">
+                            <option value="interna">Interna</option>
+                            <option value="externa">Externa</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="auditoria-auditor">Auditor:</label>
+                        <input type="text" id="auditoria-auditor" placeholder="Nombre del auditor o empresa">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="auditoria-fecha-inicio">Fecha de Inicio:</label>
+                        <input type="date" id="auditoria-fecha-inicio">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="auditoria-fecha-fin">Fecha de Fin:</label>
+                        <input type="date" id="auditoria-fecha-fin">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="auditoria-alcance">Alcance:</label>
+                        <select id="auditoria-alcance">
+                            <option value="completa">Completa</option>
+                            <option value="agua">Gestión del Agua</option>
+                            <option value="energia">Gestión Energética</option>
+                            <option value="residuos">Gestión de Residuos</option>
+                            <option value="emisiones">Emisiones</option>
+                            <option value="social">Impacto Social</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label for="auditoria-descripcion">Descripción:</label>
+                        <textarea id="auditoria-descripcion" rows="3" placeholder="Descripción y objetivos de la auditoría"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="secondary-btn close-modal-btn">Cancelar</button>
+                <button class="primary-btn" id="guardar-auditoria-btn">Guardar</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Cambiar entre secciones
+        document.querySelectorAll('.sidebar-nav a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Actualizar menú activo
+                document.querySelectorAll('.sidebar-nav li').forEach(item => {
+                    item.classList.remove('active');
+                });
+                this.parentElement.classList.add('active');
+                
+                // Mostrar sección correspondiente
+                const sectionId = this.getAttribute('data-section');
+                document.querySelectorAll('.content-section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                document.getElementById(sectionId + '-section').classList.add('active');
+            });
+        });
+        
+        // Toggle sidebar en móvil
+        document.querySelector('.toggle-sidebar').addEventListener('click', function() {
+            document.querySelector('.dashboard-sidebar').classList.toggle('active');
+        });
+        
+        // Abrir modal de nueva métrica
+        document.getElementById('nueva-metrica-btn').addEventListener('click', function() {
+            document.getElementById('metrica-modal').classList.add('active');
+        });
+        
+        // Abrir modal de nuevo informe
+        document.getElementById('nuevo-informe-btn').addEventListener('click', function() {
+            document.getElementById('informe-modal').classList.add('active');
+        });
+        
+        // Abrir modal de nueva auditoría
+        document.getElementById('nueva-auditoria-btn').addEventListener('click', function() {
+            document.getElementById('auditoria-modal').classList.add('active');
+        });
+        
+        // Cerrar modales
+        document.querySelectorAll('.close-modal, .close-modal-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.modal').forEach(modal => {
+                    modal.classList.remove('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

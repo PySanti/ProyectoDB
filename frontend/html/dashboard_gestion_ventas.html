@@ -1,0 +1,949 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Gestión de Ventas - ACAUCAB</title>
+    <link rel="stylesheet" href="../css/dashboard_gestion_ventas.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="dashboard-sidebar">
+            <div class="sidebar-header">
+                <h1>ACAUCAB</h1>
+                <p>Panel de Administración</p>
+            </div>
+            
+            <div class="sidebar-user">
+                <div class="user-avatar">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <div class="user-info">
+                    <h3>Carlos Mendoza</h3>
+                    <p>Gestión de Ventas</p>
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="active"><a href="#ventas" data-section="ventas"><i class="fas fa-shopping-cart"></i> Ventas</a></li>
+                    <li><a href="#historial" data-section="historial"><i class="fas fa-history"></i> Historial</a></li>
+                    <li><a href="#puntos" data-section="puntos"><i class="fas fa-star"></i> Puntos</a></li>
+                    <li><a href="#configuracion" data-section="configuracion"><i class="fas fa-cog"></i> Configuración</a></li>
+                </ul>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <a href="index.html" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="dashboard-content">
+            <header class="content-header">
+                <div class="header-left">
+                    <button class="toggle-sidebar"><i class="fas fa-bars"></i></button>
+                    <h2>Dashboard de Gestión de Ventas</h2>
+                </div>
+                <div class="header-right">
+                    <div class="search-box">
+                        <input type="text" placeholder="Buscar venta...">
+                        <button><i class="fas fa-search"></i></button>
+                    </div>
+                    <div class="notifications">
+                        <button class="notification-btn"><i class="fas fa-bell"></i><span class="badge">2</span></button>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Ventas Section -->
+            <section class="content-section active" id="ventas-section">
+                <div class="section-header">
+                    <h2>Gestión de Ventas</h2>
+                    <button class="primary-btn" id="add-venta-btn"><i class="fas fa-plus"></i> Nueva Venta</button>
+                </div>
+                
+                <div class="dashboard-cards">
+                    <div class="dashboard-card">
+                        <div class="card-icon"><i class="fas fa-shopping-cart"></i></div>
+                        <div class="card-info">
+                            <h3>124</h3>
+                            <p>Ventas del Mes</p>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-icon success"><i class="fas fa-dollar-sign"></i></div>
+                        <div class="card-info">
+                            <h3>$8,450</h3>
+                            <p>Ingresos del Mes</p>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-icon warning"><i class="fas fa-store"></i></div>
+                        <div class="card-info">
+                            <h3>85</h3>
+                            <p>Ventas en Tienda</p>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-icon info"><i class="fas fa-globe"></i></div>
+                        <div class="card-info">
+                            <h3>39</h3>
+                            <p>Ventas Online</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="filter-bar">
+                    <div class="filter-group">
+                        <label for="filter-tipo">Tipo:</label>
+                        <select id="filter-tipo">
+                            <option value="all">Todos los tipos</option>
+                            <option value="tienda">Tienda</option>
+                            <option value="online">Online</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="filter-estado">Estado:</label>
+                        <select id="filter-estado">
+                            <option value="all">Todos</option>
+                            <option value="completado">Completado</option>
+                            <option value="pendiente">Pendiente</option>
+                            <option value="cancelado">Cancelado</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="filter-fecha">Fecha:</label>
+                        <select id="filter-fecha">
+                            <option value="all">Todas las fechas</option>
+                            <option value="hoy">Hoy</option>
+                            <option value="semana">Esta semana</option>
+                            <option value="mes">Este mes</option>
+                            <option value="trimestre">Último trimestre</option>
+                        </select>
+                    </div>
+                    
+                    <button class="secondary-btn"><i class="fas fa-filter"></i> Filtrar</button>
+                    <button class="outline-btn"><i class="fas fa-sync-alt"></i> Reiniciar</button>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Ventas Recientes</h3>
+                        <div class="card-actions">
+                            <select id="sort-ventas">
+                                <option value="date-desc">Fecha (Reciente a Antigua)</option>
+                                <option value="date-asc">Fecha (Antigua a Reciente)</option>
+                                <option value="amount-desc">Monto (Mayor a Menor)</option>
+                                <option value="amount-asc">Monto (Menor a Mayor)</option>
+                            </select>
+                            <button class="export-btn"><i class="fas fa-download"></i> Exportar</button>
+                        </div>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID Venta</th>
+                                    <th>Cliente</th>
+                                    <th>Fecha</th>
+                                    <th>Tipo</th>
+                                    <th>Productos</th>
+                                    <th>Total</th>
+                                    <th>Puntos</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>VNT001</td>
+                                    <td>Juan Pérez</td>
+                                    <td>01/07/2025 14:30</td>
+                                    <td>Tienda</td>
+                                    <td>3</td>
+                                    <td>$45.75</td>
+                                    <td>+5</td>
+                                    <td><span class="status active">Completado</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>VNT002</td>
+                                    <td>María González</td>
+                                    <td>01/07/2025 15:45</td>
+                                    <td>Online</td>
+                                    <td>5</td>
+                                    <td>$78.50</td>
+                                    <td>+8</td>
+                                    <td><span class="status active">Completado</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>VNT003</td>
+                                    <td>Carlos Rodríguez</td>
+                                    <td>01/07/2025 16:20</td>
+                                    <td>Tienda</td>
+                                    <td>2</td>
+                                    <td>$32.25</td>
+                                    <td>+3</td>
+                                    <td><span class="status active">Completado</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>VNT004</td>
+                                    <td>Ana Martínez</td>
+                                    <td>01/07/2025 17:10</td>
+                                    <td>Online</td>
+                                    <td>8</td>
+                                    <td>$120.00</td>
+                                    <td>+12</td>
+                                    <td><span class="status pending">Pendiente</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>VNT005</td>
+                                    <td>Pedro Sánchez</td>
+                                    <td>01/07/2025 18:05</td>
+                                    <td>Tienda</td>
+                                    <td>4</td>
+                                    <td>$65.50</td>
+                                    <td>+7</td>
+                                    <td><span class="status active">Completado</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>VNT006</td>
+                                    <td>Laura Torres</td>
+                                    <td>01/07/2025 18:30</td>
+                                    <td>Online</td>
+                                    <td>3</td>
+                                    <td>$42.75</td>
+                                    <td>+4</td>
+                                    <td><span class="status inactive">Cancelado</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="table-footer">
+                        <div class="pagination">
+                            <button class="page-btn prev"><i class="fas fa-chevron-left"></i></button>
+                            <button class="page-btn active">1</button>
+                            <button class="page-btn">2</button>
+                            <button class="page-btn">3</button>
+                            <span class="page-dots">...</span>
+                            <button class="page-btn">10</button>
+                            <button class="page-btn next"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                        <div class="page-info">
+                            Mostrando 1-6 de 124 ventas
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Alertas de Inventario</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="alert-list">
+                                    <div class="alert-item warning">
+                                        <div class="alert-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                                        <div class="alert-content">
+                                            <h4>Reposición de Inventario</h4>
+                                            <p>Cerveza Amber Ale - Stock bajo (5 unidades)</p>
+                                            <span class="alert-time">Hace 2 horas</span>
+                                        </div>
+                                        <button class="alert-action">Ver</button>
+                                    </div>
+                                    <div class="alert-item warning">
+                                        <div class="alert-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                                        <div class="alert-content">
+                                            <h4>Reposición de Anaquel</h4>
+                                            <p>Cerveza IPA - Anaquel 3 (2 unidades)</p>
+                                            <span class="alert-time">Hace 3 horas</span>
+                                        </div>
+                                        <button class="alert-action">Ver</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Ventas por Tipo de Cerveza</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <div class="chart-placeholder">
+                                        <i class="fas fa-chart-pie"></i>
+                                        <p>Distribución de ventas por tipo de cerveza</p>
+                                        <ul class="chart-legend">
+                                            <li><span class="legend-color" style="background-color: var(--primary-color);"></span> IPA (35%)</li>
+                                            <li><span class="legend-color" style="background-color: var(--info-color);"></span> Stout (25%)</li>
+                                            <li><span class="legend-color" style="background-color: var(--success-color);"></span> Lager (20%)</li>
+                                            <li><span class="legend-color" style="background-color: var(--warning-color);"></span> Amber Ale (15%)</li>
+                                            <li><span class="legend-color" style="background-color: var(--error-color);"></span> Otros (5%)</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Historial Section -->
+            <section class="content-section" id="historial-section">
+                <div class="section-header">
+                    <h2>Historial de Ventas</h2>
+                </div>
+                
+                <div class="filter-bar">
+                    <div class="form-group">
+                        <label for="historial-cliente">Cliente:</label>
+                        <select id="historial-cliente">
+                            <option value="all">Todos los clientes</option>
+                            <option value="CLI001">Juan Pérez</option>
+                            <option value="CLI002">María González</option>
+                            <option value="CLI003">Carlos Rodríguez</option>
+                            <option value="CLI004">Ana Martínez</option>
+                            <option value="CLI005">Pedro Sánchez</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="historial-tipo">Tipo:</label>
+                        <select id="historial-tipo">
+                            <option value="all">Todos los tipos</option>
+                            <option value="tienda">Tienda</option>
+                            <option value="online">Online</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="historial-desde">Desde:</label>
+                        <input type="date" id="historial-desde" value="2025-01-01">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="historial-hasta">Hasta:</label>
+                        <input type="date" id="historial-hasta" value="2025-07-01">
+                    </div>
+                    
+                    <button class="secondary-btn"><i class="fas fa-filter"></i> Filtrar</button>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Historial Completo</h3>
+                        <div class="card-actions">
+                            <button class="export-btn"><i class="fas fa-download"></i> Exportar</button>
+                        </div>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID Venta</th>
+                                    <th>Cliente</th>
+                                    <th>Fecha</th>
+                                    <th>Tipo</th>
+                                    <th>Productos</th>
+                                    <th>Total</th>
+                                    <th>Puntos</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>VNT001</td>
+                                    <td>Juan Pérez</td>
+                                    <td>01/07/2025 14:30</td>
+                                    <td>Tienda</td>
+                                    <td>3</td>
+                                    <td>$45.75</td>
+                                    <td>+5</td>
+                                    <td><span class="status active">Completado</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>VNT002</td>
+                                    <td>María González</td>
+                                    <td>01/07/2025 15:45</td>
+                                    <td>Online</td>
+                                    <td>5</td>
+                                    <td>$78.50</td>
+                                    <td>+8</td>
+                                    <td><span class="status active">Completado</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>VNT003</td>
+                                    <td>Carlos Rodríguez</td>
+                                    <td>01/07/2025 16:20</td>
+                                    <td>Tienda</td>
+                                    <td>2</td>
+                                    <td>$32.25</td>
+                                    <td>+3</td>
+                                    <td><span class="status active">Completado</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>VNT004</td>
+                                    <td>Ana Martínez</td>
+                                    <td>01/07/2025 17:10</td>
+                                    <td>Online</td>
+                                    <td>8</td>
+                                    <td>$120.00</td>
+                                    <td>+12</td>
+                                    <td><span class="status pending">Pendiente</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>VNT005</td>
+                                    <td>Pedro Sánchez</td>
+                                    <td>01/07/2025 18:05</td>
+                                    <td>Tienda</td>
+                                    <td>4</td>
+                                    <td>$65.50</td>
+                                    <td>+7</td>
+                                    <td><span class="status active">Completado</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>VNT006</td>
+                                    <td>Laura Torres</td>
+                                    <td>01/07/2025 18:30</td>
+                                    <td>Online</td>
+                                    <td>3</td>
+                                    <td>$42.75</td>
+                                    <td>+4</td>
+                                    <td><span class="status inactive">Cancelado</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>VNT007</td>
+                                    <td>Roberto Díaz</td>
+                                    <td>30/06/2025 10:15</td>
+                                    <td>Tienda</td>
+                                    <td>6</td>
+                                    <td>$95.25</td>
+                                    <td>+10</td>
+                                    <td><span class="status active">Completado</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>VNT008</td>
+                                    <td>Carmen López</td>
+                                    <td>30/06/2025 14:45</td>
+                                    <td>Online</td>
+                                    <td>4</td>
+                                    <td>$58.50</td>
+                                    <td>+6</td>
+                                    <td><span class="status active">Completado</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>VNT009</td>
+                                    <td>Miguel Fernández</td>
+                                    <td>30/06/2025 16:30</td>
+                                    <td>Tienda</td>
+                                    <td>2</td>
+                                    <td>$28.75</td>
+                                    <td>+3</td>
+                                    <td><span class="status active">Completado</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>VNT010</td>
+                                    <td>Sofía Ramírez</td>
+                                    <td>30/06/2025 17:20</td>
+                                    <td>Online</td>
+                                    <td>7</td>
+                                    <td>$105.25</td>
+                                    <td>+11</td>
+                                    <td><span class="status active">Completado</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="table-footer">
+                        <div class="pagination">
+                            <button class="page-btn prev"><i class="fas fa-chevron-left"></i></button>
+                            <button class="page-btn active">1</button>
+                            <button class="page-btn">2</button>
+                            <button class="page-btn">3</button>
+                            <button class="page-btn next"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                        <div class="page-info">
+                            Mostrando 1-10 de 124 ventas
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Puntos Section -->
+            <section class="content-section" id="puntos-section">
+                <div class="section-header">
+                    <h2>Manejo de Puntos</h2>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Asignar Puntos</h3>
+                            </div>
+                            
+                            <div class="card-body">
+                                <form class="form-grid">
+                                    <div class="form-group full-width">
+                                        <label for="puntos-cliente">Cliente</label>
+                                        <select id="puntos-cliente" required>
+                                            <option value="">Seleccione un cliente</option>
+                                            <option value="CLI001">Juan Pérez</option>
+                                            <option value="CLI002">María González</option>
+                                            <option value="CLI003">Carlos Rodríguez</option>
+                                            <option value="CLI004">Ana Martínez</option>
+                                            <option value="CLI005">Pedro Sánchez</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="puntos-cantidad">Cantidad de Puntos</label>
+                                        <input type="number" id="puntos-cantidad" min="1" value="10" required>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="puntos-tipo">Tipo</label>
+                                        <select id="puntos-tipo" required>
+                                            <option value="asignacion">Asignación</option>
+                                            <option value="bonificacion">Bonificación</option>
+                                            <option value="correccion">Corrección</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group full-width">
+                                        <label for="puntos-motivo">Motivo</label>
+                                        <textarea id="puntos-motivo" rows="3" placeholder="Ingrese el motivo de la asignación de puntos"></textarea>
+                                    </div>
+                                    
+                                    <div class="form-actions full-width">
+                                        <button type="button" class="primary-btn">Asignar Puntos</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Clientes con Más Puntos</h3>
+                            </div>
+                            
+                            <div class="table-responsive">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Cliente</th>
+                                            <th>Puntos Acumulados</th>
+                                            <th>Puntos Canjeados</th>
+                                            <th>Puntos Disponibles</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Pedro Sánchez</td>
+                                            <td>250</td>
+                                            <td>50</td>
+                                            <td>200</td>
+                                            <td class="actions">
+                                                <button class="action-btn view" title="Ver historial"><i class="fas fa-eye"></i></button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Ana Martínez</td>
+                                            <td>220</td>
+                                            <td>20</td>
+                                            <td>200</td>
+                                            <td class="actions">
+                                                <button class="action-btn view" title="Ver historial"><i class="fas fa-eye"></i></button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Carlos Rodríguez</td>
+                                            <td>185</td>
+                                            <td>35</td>
+                                            <td>150</td>
+                                            <td class="actions">
+                                                <button class="action-btn view" title="Ver historial"><i class="fas fa-eye"></i></button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>María González</td>
+                                            <td>160</td>
+                                            <td>10</td>
+                                            <td>150</td>
+                                            <td class="actions">
+                                                <button class="action-btn view" title="Ver historial"><i class="fas fa-eye"></i></button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Juan Pérez</td>
+                                            <td>145</td>
+                                            <td>45</td>
+                                            <td>100</td>
+                                            <td class="actions">
+                                                <button class="action-btn view" title="Ver historial"><i class="fas fa-eye"></i></button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Historial de Puntos</h3>
+                            </div>
+                            
+                            <div class="table-responsive">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Cliente</th>
+                                            <th>Fecha</th>
+                                            <th>Tipo</th>
+                                            <th>Puntos</th>
+                                            <th>Motivo</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Pedro Sánchez</td>
+                                            <td>01/07/2025</td>
+                                            <td><span class="badge success">Asignación</span></td>
+                                            <td>+7</td>
+                                            <td>Compra VNT005</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Ana Martínez</td>
+                                            <td>01/07/2025</td>
+                                            <td><span class="badge success">Asignación</span></td>
+                                            <td>+12</td>
+                                            <td>Compra VNT004</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Juan Pérez</td>
+                                            <td>01/07/2025</td>
+                                            <td><span class="badge success">Asignación</span></td>
+                                            <td>+5</td>
+                                            <td>Compra VNT001</td>
+                                        </tr>
+                                        <tr>
+                                            <td>María González</td>
+                                            <td>01/07/2025</td>
+                                            <td><span class="badge success">Asignación</span></td>
+                                            <td>+8</td>
+                                            <td>Compra VNT002</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Pedro Sánchez</td>
+                                            <td>30/06/2025</td>
+                                            <td><span class="badge warning">Canje</span></td>
+                                            <td>-50</td>
+                                            <td>Descuento en compra</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Configuración Section -->
+            <section class="content-section" id="configuracion-section">
+                <div class="section-header">
+                    <h2>Configuración</h2>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Configuración de Puntos</h3>
+                            </div>
+                            
+                            <div class="card-body">
+                                <form class="form-grid">
+                                    <div class="form-group">
+                                        <label for="config-puntos-por-dolar">Puntos por Dólar</label>
+                                        <input type="number" id="config-puntos-por-dolar" min="0.1" step="0.1" value="0.1">
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="config-min-puntos-canje">Mínimo para Canje</label>
+                                        <input type="number" id="config-min-puntos-canje" min="1" value="50">
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="config-valor-punto">Valor del Punto ($)</label>
+                                        <input type="number" id="config-valor-punto" min="0.01" step="0.01" value="0.05">
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="config-expiracion">Expiración de Puntos (días)</label>
+                                        <input type="number" id="config-expiracion" min="0" value="365">
+                                    </div>
+                                    
+                                    <div class="form-actions full-width">
+                                        <button type="button" class="primary-btn">Guardar Configuración</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Configuración de Alertas</h3>
+                            </div>
+                            
+                            <div class="card-body">
+                                <form class="form-grid">
+                                    <div class="form-group">
+                                        <label for="config-umbral-inventario">Umbral de Inventario Bajo</label>
+                                        <input type="number" id="config-umbral-inventario" min="1" value="10">
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="config-umbral-anaquel">Umbral de Anaquel Bajo</label>
+                                        <input type="number" id="config-umbral-anaquel" min="1" value="3">
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="config-notificaciones">Notificaciones</label>
+                                        <select id="config-notificaciones">
+                                            <option value="todas">Todas las alertas</option>
+                                            <option value="inventario">Solo inventario</option>
+                                            <option value="anaquel">Solo anaquel</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="config-frecuencia">Frecuencia de Verificación (horas)</label>
+                                        <input type="number" id="config-frecuencia" min="1" value="4">
+                                    </div>
+                                    
+                                    <div class="form-actions full-width">
+                                        <button type="button" class="primary-btn">Guardar Configuración</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    
+    <!-- Modal para Nueva Venta -->
+    <div class="modal" id="nueva-venta-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Nueva Venta</h3>
+                <button class="close-modal"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <form class="form-grid">
+                    <div class="form-group">
+                        <label for="venta-cliente">Cliente</label>
+                        <select id="venta-cliente" required>
+                            <option value="">Seleccione un cliente</option>
+                            <option value="CLI001">Juan Pérez</option>
+                            <option value="CLI002">María González</option>
+                            <option value="CLI003">Carlos Rodríguez</option>
+                            <option value="CLI004">Ana Martínez</option>
+                            <option value="CLI005">Pedro Sánchez</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="venta-tipo">Tipo de Venta</label>
+                        <select id="venta-tipo" required>
+                            <option value="tienda">Tienda</option>
+                            <option value="online">Online</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="venta-fecha">Fecha</label>
+                        <input type="date" id="venta-fecha" value="2025-07-01" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="venta-hora">Hora</label>
+                        <input type="time" id="venta-hora" value="14:30" required>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <h4>Productos</h4>
+                        <div class="productos-lista">
+                            <div class="producto-item">
+                                <select class="producto-select">
+                                    <option value="">Seleccione un producto</option>
+                                    <option value="PRD001">IPA Clásica</option>
+                                    <option value="PRD002">Stout Imperial</option>
+                                    <option value="PRD003">Amber Ale</option>
+                                    <option value="PRD004">Lager Tradicional</option>
+                                    <option value="PRD005">Wheat Beer</option>
+                                </select>
+                                <input type="number" class="producto-cantidad" min="1" value="1">
+                                <span class="producto-precio">$15.25</span>
+                                <button type="button" class="producto-eliminar"><i class="fas fa-trash-alt"></i></button>
+                            </div>
+                        </div>
+                        <button type="button" class="secondary-btn" id="agregar-producto"><i class="fas fa-plus"></i> Agregar Producto</button>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="venta-subtotal">Subtotal</label>
+                        <input type="text" id="venta-subtotal" value="$15.25" readonly>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="venta-impuesto">Impuesto</label>
+                        <input type="text" id="venta-impuesto" value="$1.83" readonly>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="venta-total">Total</label>
+                        <input type="text" id="venta-total" value="$17.08" readonly>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="venta-puntos">Puntos a Ganar</label>
+                        <input type="text" id="venta-puntos" value="2" readonly>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label for="venta-notas">Notas</label>
+                        <textarea id="venta-notas" rows="3" placeholder="Notas adicionales para la venta"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="secondary-btn">Cancelar</button>
+                <button class="primary-btn">Guardar Venta</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Cambiar entre secciones
+        document.querySelectorAll('.sidebar-nav a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Actualizar menú activo
+                document.querySelectorAll('.sidebar-nav li').forEach(item => {
+                    item.classList.remove('active');
+                });
+                this.parentElement.classList.add('active');
+                
+                // Mostrar sección correspondiente
+                const sectionId = this.getAttribute('data-section');
+                document.querySelectorAll('.content-section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                document.getElementById(sectionId + '-section').classList.add('active');
+            });
+        });
+        
+        // Toggle sidebar en móvil
+        document.querySelector('.toggle-sidebar').addEventListener('click', function() {
+            document.querySelector('.dashboard-sidebar').classList.toggle('active');
+        });
+        
+        // Modal de nueva venta
+        document.getElementById('add-venta-btn').addEventListener('click', function() {
+            document.getElementById('nueva-venta-modal').classList.add('active');
+        });
+        
+        // Cerrar modales
+        document.querySelectorAll('.close-modal, .modal .secondary-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.modal').forEach(modal => {
+                    modal.classList.remove('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

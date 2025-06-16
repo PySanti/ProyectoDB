@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Gestión de Clientes - ACAUCAB</title>
+    <link rel="stylesheet" href="../css/dashboard_gestion_clientes.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="dashboard-sidebar">
+            <div class="sidebar-header">
+                <h1>ACAUCAB</h1>
+                <p>Panel de Administración</p>
+            </div>
+            
+            <div class="sidebar-user">
+                <div class="user-avatar">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <div class="user-info">
+                    <h3>Ana Martínez</h3>
+                    <p>Gestión de Clientes</p>
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="active"><a href="#clientes" data-section="clientes"><i class="fas fa-users"></i> Clientes</a></li>
+                    <li><a href="#carnets" data-section="carnets"><i class="fas fa-id-card"></i> Carnets</a></li>
+                    <li><a href="#historial" data-section="historial"><i class="fas fa-history"></i> Historial</a></li>
+                    <li><a href="#configuracion" data-section="configuracion"><i class="fas fa-cog"></i> Configuración</a></li>
+                </ul>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <a href="index.html" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="dashboard-content">
+            <header class="content-header">
+                <div class="header-left">
+                    <button class="toggle-sidebar"><i class="fas fa-bars"></i></button>
+                    <h2>Dashboard de Gestión de Clientes</h2>
+                </div>
+                <div class="header-right">
+                    <div class="search-box">
+                        <input type="text" placeholder="Buscar cliente...">
+                        <button><i class="fas fa-search"></i></button>
+                    </div>
+                    <div class="notifications">
+                        <button class="notification-btn"><i class="fas fa-bell"></i><span class="badge">3</span></button>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Clientes Section -->
+            <section class="content-section active" id="clientes-section">
+                <div class="section-header">
+                    <h2>Gestión de Clientes</h2>
+                    <button class="primary-btn" id="add-cliente-btn"><i class="fas fa-plus"></i> Nuevo Cliente</button>
+                </div>
+                
+                <div class="filter-bar">
+                    <div class="filter-group">
+                        <label for="filter-tipo">Tipo:</label>
+                        <select id="filter-tipo">
+                            <option value="all">Todos los tipos</option>
+                            <option value="web">Registro Web</option>
+                            <option value="tienda">Registro Tienda</option>
+                            <option value="distribuidor">Distribuidor</option>
+                            <option value="mayorista">Mayorista</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="filter-estado">Estado:</label>
+                        <select id="filter-estado">
+                            <option value="all">Todos</option>
+                            <option value="activo">Activo</option>
+                            <option value="inactivo">Inactivo</option>
+                            <option value="pendiente">Pendiente</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="filter-ciudad">Ciudad:</label>
+                        <select id="filter-ciudad">
+                            <option value="all">Todas</option>
+                            <option value="caracas">Caracas</option>
+                            <option value="maracaibo">Maracaibo</option>
+                            <option value="valencia">Valencia</option>
+                            <option value="barquisimeto">Barquisimeto</option>
+                            <option value="merida">Mérida</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="filter-fecha">Fecha Registro:</label>
+                        <select id="filter-fecha">
+                            <option value="all">Todas las fechas</option>
+                            <option value="hoy">Hoy</option>
+                            <option value="semana">Esta semana</option>
+                            <option value="mes">Este mes</option>
+                            <option value="trimestre">Último trimestre</option>
+                            <option value="anio">Este año</option>
+                        </select>
+                    </div>
+                    
+                    <button class="secondary-btn"><i class="fas fa-filter"></i> Filtrar</button>
+                    <button class="outline-btn"><i class="fas fa-sync-alt"></i> Reiniciar</button>
+                </div>
+                
+                <div class="dashboard-cards">
+                    <div class="dashboard-card">
+                        <div class="card-icon"><i class="fas fa-users"></i></div>
+                        <div class="card-info">
+                            <h3>98</h3>
+                            <p>Total de Clientes</p>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-icon success"><i class="fas fa-user-check"></i></div>
+                        <div class="card-info">
+                            <h3>75</h3>
+                            <p>Clientes Activos</p>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-icon warning"><i class="fas fa-user-clock"></i></div>
+                        <div class="card-info">
+                            <h3>12</h3>
+                            <p>Clientes Pendientes</p>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-icon danger"><i class="fas fa-user-times"></i></div>
+                        <div class="card-info">
+                            <h3>11</h3>
+                            <p>Clientes Inactivos</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Lista de Clientes</h3>
+                        <div class="card-actions">
+                            <select id="sort-clients">
+                                <option value="name-asc">Nombre (A-Z)</option>
+                                <option value="name-desc">Nombre (Z-A)</option>
+                                <option value="date-asc">Fecha Registro (Antigua a Reciente)</option>
+                                <option value="date-desc">Fecha Registro (Reciente a Antigua)</option>
+                                <option value="purchases-desc">Compras (Mayor a Menor)</option>
+                                <option value="purchases-asc">Compras (Menor a Mayor)</option>
+                            </select>
+                            <button class="export-btn"><i class="fas fa-download"></i> Exportar</button>
+                        </div>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nombre</th>
+                                    <th>Email</th>
+                                    <th>Teléfono</th>
+                                    <th>Ciudad</th>
+                                    <th>Tipo</th>
+                                    <th>Fecha Registro</th>
+                                    <th>Compras</th>
+                                    <th>Última Compra</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>CLI001</td>
+                                    <td>Juan Pérez</td>
+                                    <td>juan.perez@email.com</td>
+                                    <td>+58 412-555-1234</td>
+                                    <td>Caracas</td>
+                                    <td>Web</td>
+                                    <td>15/01/2025</td>
+                                    <td>12</td>
+                                    <td>28/06/2025</td>
+                                    <td><span class="status active">Activo</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>CLI002</td>
+                                    <td>María González</td>
+                                    <td>maria.gonzalez@email.com</td>
+                                    <td>+58 414-555-5678</td>
+                                    <td>Maracaibo</td>
+                                    <td>Tienda</td>
+                                    <td>22/02/2025</td>
+                                    <td>8</td>
+                                    <td>15/06/2025</td>
+                                    <td><span class="status active">Activo</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>CLI003</td>
+                                    <td>Carlos Rodríguez</td>
+                                    <td>carlos.rodriguez@email.com</td>
+                                    <td>+58 416-555-9012</td>
+                                    <td>Valencia</td>
+                                    <td>Web</td>
+                                    <td>10/03/2025</td>
+                                    <td>5</td>
+                                    <td>20/06/2025</td>
+                                    <td><span class="status active">Activo</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>CLI004</td>
+                                    <td>Ana Martínez</td>
+                                    <td>ana.martinez@email.com</td>
+                                    <td>+58 424-555-3456</td>
+                                    <td>Barquisimeto</td>
+                                    <td>Tienda</td>
+                                    <td>05/04/2025</td>
+                                    <td>0</td>
+                                    <td>-</td>
+                                    <td><span class="status inactive">Inactivo</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>CLI005</td>
+                                    <td>Pedro Sánchez</td>
+                                    <td>pedro.sanchez@email.com</td>
+                                    <td>+58 426-555-7890</td>
+                                    <td>Mérida</td>
+                                    <td>Distribuidor</td>
+                                    <td>18/05/2025</td>
+                                    <td>20</td>
+                                    <td>30/06/2025</td>
+                                    <td><span class="status active">Activo</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>CLI006</td>
+                                    <td>Laura Torres</td>
+                                    <td>laura.torres@email.com</td>
+                                    <td>+58 412-555-2468</td>
+                                    <td>Caracas</td>
+                                    <td>Web</td>
+                                    <td>25/06/2025</td>
+                                    <td>1</td>
+                                    <td>25/06/2025</td>
+                                    <td><span class="status pending">Pendiente</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="table-footer">
+                        <div class="pagination">
+                            <button class="page-btn prev"><i class="fas fa-chevron-left"></i></button>
+                            <button class="page-btn active">1</button>
+                            <button class="page-btn">2</button>
+                            <button class="page-btn">3</button>
+                            <span class="page-dots">...</span>
+                            <button class="page-btn">10</button>
+                            <button class="page-btn next"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                        <div class="page-info">
+                            Mostrando 1-6 de 98 clientes
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Carnets Section -->
+            <section class="content-section" id="carnets-section">
+                <div class="section-header">
+                    <h2>Generación de Carnets</h2>
+                    <button class="primary-btn" id="generate-carnet-btn"><i class="fas fa-id-card"></i> Generar Carnet</button>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Generar Carnet</h3>
+                            </div>
+                            
+                            <div class="card-body">
+                                <form class="form-grid">
+                                    <div class="form-group full-width">
+                                        <label for="cliente-carnet">Cliente</label>
+                                        <select id="cliente-carnet" required>
+                                            <option value="">Seleccione un cliente</option>
+                                            <option value="CLI001">Juan Pérez</option>
+                                            <option value="CLI002">María González</option>
+                                            <option value="CLI003">Carlos Rodríguez</option>
+                                            <option value="CLI005">Pedro Sánchez</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="tipo-carnet">Tipo de Carnet</label>
+                                        <select id="tipo-carnet" required>
+                                            <option value="regular">Regular</option>
+                                            <option value="premium">Premium</option>
+                                            <option value="distribuidor">Distribuidor</option>
+                                            <option value="mayorista">Mayorista</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="fecha-emision">Fecha de Emisión</label>
+                                        <input type="date" id="fecha-emision" value="2025-07-01" required>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="fecha-vencimiento">Fecha de Vencimiento</label>
+                                        <input type="date" id="fecha-vencimiento" value="2026-07-01" required>
+                                    </div>
+                                    
+                                    <div class="form-group full-width">
+                                        <label for="foto-carnet">Foto</label>
+                                        <div class="file-upload">
+                                            <input type="file" id="foto-carnet">
+                                            <button type="button" class="upload-btn">Seleccionar archivo</button>
+                                            <span class="file-name">Ningún archivo seleccionado</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group full-width">
+                                        <label for="notas-carnet">Notas</label>
+                                        <textarea id="notas-carnet" rows="3" placeholder="Notas adicionales para el carnet"></textarea>
+                                    </div>
+                                    
+                                    <div class="form-actions full-width">
+                                        <button type="button" class="secondary-btn">Cancelar</button>
+                                        <button type="button" class="primary-btn">Generar Carnet</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Vista Previa del Carnet</h3>
+                            </div>
+                            
+                            <div class="card-body">
+                                <div class="carnet-preview">
+                                    <div class="carnet-container">
+                                        <div class="carnet-header">
+                                            <img src="../img/logo-acaucab.png" alt="Logo ACAUCAB" class="carnet-logo">
+                                            <h3>CARNET DE CLIENTE</h3>
+                                        </div>
+                                        <div class="carnet-body">
+                                            <div class="carnet-photo">
+                                                <i class="fas fa-user"></i>
+                                            </div>
+                                            <div class="carnet-info">
+                                                <p><strong>Nombre:</strong> <span id="preview-nombre">Juan Pérez</span></p>
+                                                <p><strong>ID:</strong> <span id="preview-id">CLI001</span></p>
+                                                <p><strong>Tipo:</strong> <span id="preview-tipo">Regular</span></p>
+                                                <p><strong>Emisión:</strong> <span id="preview-emision">01/07/2025</span></p>
+                                                <p><strong>Vencimiento:</strong> <span id="preview-vencimiento">01/07/2026</span></p>
+                                            </div>
+                                        </div>
+                                        <div class="carnet-footer">
+                                            <div class="carnet-qr">
+                                                <i class="fas fa-qrcode"></i>
+                                            </div>
+                                            <p class="carnet-disclaimer">Este carnet es personal e intransferible. Propiedad de ACAUCAB.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="carnet-actions">
+                                    <button class="secondary-btn"><i class="fas fa-print"></i> Imprimir</button>
+                                    <button class="secondary-btn"><i class="fas fa-download"></i> Descargar PDF</button>
+                                    <button class="secondary-btn"><i class="fas fa-envelope"></i> Enviar por Email</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Carnets Generados Recientemente</h3>
+                            </div>
+                            
+                            <div class="table-responsive">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>ID Carnet</th>
+                                            <th>Cliente</th>
+                                            <th>Tipo</th>
+                                            <th>Fecha Emisión</th>
+                                            <th>Fecha Vencimiento</th>
+                                            <th>Estado</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>CARD001</td>
+                                            <td>Juan Pérez</td>
+                                            <td>Regular</td>
+                                            <td>15/06/2025</td>
+                                            <td>15/06/2026</td>
+                                            <td><span class="status active">Activo</span></td>
+                                            <td class="actions">
+                                                <button class="action-btn view" title="Ver carnet"><i class="fas fa-eye"></i></button>
+                                                <button class="action-btn download" title="Descargar"><i class="fas fa-download"></i></button>
+                                                <button class="action-btn print" title="Imprimir"><i class="fas fa-print"></i></button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>CARD002</td>
+                                            <td>María González</td>
+                                            <td>Premium</td>
+                                            <td>20/06/2025</td>
+                                            <td>20/06/2026</td>
+                                            <td><span class="status active">Activo</span></td>
+                                            <td class="actions">
+                                                <button class="action-btn view" title="Ver carnet"><i class="fas fa-eye"></i></button>
+                                                <button class="action-btn download" title="Descargar"><i class="fas fa-download"></i></button>
+                                                <button class="action-btn print" title="Imprimir"><i class="fas fa-print"></i></button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>CARD003</td>
+                                            <td>Pedro Sánchez</td>
+                                            <td>Distribuidor</td>
+                                            <td>25/06/2025</td>
+                                            <td>25/06/2026</td>
+                                            <td><span class="status active">Activo</span></td>
+                                            <td class="actions">
+                                                <button class="action-btn view" title="Ver carnet"><i class="fas fa-eye"></i></button>
+                                                <button class="action-btn download" title="Descargar"><i class="fas fa-download"></i></button>
+                                                <button class="action-btn print" title="Imprimir"><i class="fas fa-print"></i></button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Historial Section -->
+            <section class="content-section" id="historial-section">
+                <div class="section-header">
+                    <h2>Historial de Clientes</h2>
+                </div>
+                
+                <div class="filter-bar">
+                    <div class="form-group">
+                        <label for="cliente-historial">Cliente:</label>
+                        <select id="cliente-historial">
+                            <option value="all">Todos los clientes</option>
+                            <option value="CLI001">Juan Pérez</option>
+                            <option value="CLI002">María González</option>
+                            <option value="CLI003">Carlos Rodríguez</option>
+                            <option value="CLI004">Ana Martínez</option>
+                            <option value="CLI005">Pedro Sánchez</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="tipo-actividad">Tipo de Actividad:</label>
+                        <select id="tipo-actividad">
+                            <option value="all">Todas las actividades</option>
+                            <option value="registro">Registro</option>
+                            <option value="compra">Compra</option>
+                            <option value="actualizacion">Actualización de datos</option>
+                            <option value="carnet">Generación de carnet</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="fecha-desde">Desde:</label>
+                        <input type="date" id="fecha-desde" value="2025-01-01">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="fecha-hasta">Hasta:</label>
+                        <input type="date" id="fecha-hasta" value="2025-07-01">
+                    </div>
+                    
+                    <button class="secondary-btn"><i class="fas fa-filter"></i> Filtrar</button>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Actividades Recientes</h3>
+                        <div class="card-actions">
+                            <button class="export-btn"><i class="fas fa-download"></i> Exportar</button>
+                        </div>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Cliente</th>
+                                    <th>Tipo de Actividad</th>
+                                    <th>Descripción</th>
+                                    <th>Fecha</th>
+                                    <th>Usuario</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>ACT001</td>
+                                    <td>Laura Torres</td>
+                                    <td><span class="badge success">Registro</span></td>
+                                    <td>Registro de nuevo cliente vía web</td>
+                                    <td>25/06/2025</td>
+                                    <td>Sistema</td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>ACT002</td>
+                                    <td>Pedro Sánchez</td>
+                                    <td><span class="badge info">Carnet</span></td>
+                                    <td>Generación de carnet de distribuidor</td>
+                                    <td>25/06/2025</td>
+                                    <td>Ana Martínez</td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>ACT003</td>
+                                    <td>Juan Pérez</td>
+                                    <td><span class="badge warning">Compra</span></td>
+                                    <td>Compra de productos por $150.25</td>
+                                    <td>28/06/2025</td>
+                                    <td>Sistema</td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>ACT004</td>
+                                    <td>María González</td>
+                                    <td><span class="badge primary">Actualización</span></td>
+                                    <td>Actualización de datos de contacto</td>
+                                    <td>29/06/2025</td>
+                                    <td>Carlos Mendoza</td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>ACT005</td>
+                                    <td>Carlos Rodríguez</td>
+                                    <td><span class="badge warning">Compra</span></td>
+                                    <td>Compra de productos por $85.75</td>
+                                    <td>30/06/2025</td>
+                                    <td>Sistema</td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="table-footer">
+                        <div class="pagination">
+                            <button class="page-btn prev"><i class="fas fa-chevron-left"></i></button>
+                            <button class="page-btn active">1</button>
+                            <button class="page-btn">2</button>
+                            <button class="page-btn">3</button>
+                            <button class="page-btn next"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                        <div class="page-info">
+                            Mostrando 1-5 de 42 actividades
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Configuración Section -->
+            <section class="content-section" id="configuracion-section">
+                <div class="section-header">
+                    <h2>Configuración</h2>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Configuración General</h3>
+                            </div>
+                            
+                            <div class="card-body">
+                                <form class="form-grid">
+                                    <div class="form-group full-width">
+                                        <label for="config-nombre-empresa">Nombre de la Empresa</label>
+                                        <input type="text" id="config-nombre-empresa" value="ACAUCAB">
+                                    </div>
+                                    
+                                    <div class="form-group full-width">
+                                        <label for="config-logo">Logo de la Empresa</label>
+                                        <div class="file-upload">
+                                            <input type="file" id="config-logo">
+                                            <button type="button" class="upload-btn">Seleccionar archivo</button>
+                                            <span class="file-name">logo-acaucab.png</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="config-idioma">Idioma</label>
+                                        <select id="config-idioma">
+                                            <option value="es">Español</option>
+                                            <option value="en">Inglés</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="config-zona-horaria">Zona Horaria</label>
+                                        <select id="config-zona-horaria">
+                                            <option value="america-caracas">América/Caracas</option>
+                                            <option value="america-bogota">América/Bogotá</option>
+                                            <option value="america-lima">América/Lima</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-actions full-width">
+                                        <button type="button" class="primary-btn">Guardar Configuración</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Configuración de Carnets</h3>
+                            </div>
+                            
+                            <div class="card-body">
+                                <form class="form-grid">
+                                    <div class="form-group">
+                                        <label for="config-duracion-carnet">Duración del Carnet (meses)</label>
+                                        <input type="number" id="config-duracion-carnet" value="12" min="1" max="60">
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="config-plantilla-carnet">Plantilla de Carnet</label>
+                                        <select id="config-plantilla-carnet">
+                                            <option value="default">Plantilla Predeterminada</option>
+                                            <option value="premium">Plantilla Premium</option>
+                                            <option value="distribuidor">Plantilla Distribuidor</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group full-width">
+                                        <label for="config-texto-carnet">Texto del Carnet</label>
+                                        <textarea id="config-texto-carnet" rows="3">Este carnet es personal e intransferible. Propiedad de ACAUCAB.</textarea>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="config-incluir-qr">Incluir Código QR</label>
+                                        <select id="config-incluir-qr">
+                                            <option value="si">Sí</option>
+                                            <option value="no">No</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-actions full-width">
+                                        <button type="button" class="primary-btn">Guardar Configuración</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Usuarios del Sistema</h3>
+                        <div class="card-actions">
+                            <button class="primary-btn"><i class="fas fa-plus"></i> Nuevo Usuario</button>
+                        </div>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nombre</th>
+                                    <th>Email</th>
+                                    <th>Rol</th>
+                                    <th>Último Acceso</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>USR001</td>
+                                    <td>Ana Martínez</td>
+                                    <td>ana.martinez@acaucab.com</td>
+                                    <td>Administrador</td>
+                                    <td>01/07/2025 09:15</td>
+                                    <td><span class="status active">Activo</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>USR002</td>
+                                    <td>Carlos Mendoza</td>
+                                    <td>carlos.mendoza@acaucab.com</td>
+                                    <td>Gestor de Clientes</td>
+                                    <td>30/06/2025 16:45</td>
+                                    <td><span class="status active">Activo</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>USR003</td>
+                                    <td>Laura Gómez</td>
+                                    <td>laura.gomez@acaucab.com</td>
+                                    <td>Empleado de Tienda</td>
+                                    <td>29/06/2025 10:30</td>
+                                    <td><span class="status active">Activo</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    
+    <!-- Modal para Nuevo Cliente -->
+    <div class="modal" id="nuevo-cliente-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Nuevo Cliente</h3>
+                <button class="close-modal"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <form class="form-grid">
+                    <div class="form-group">
+                        <label for="nombre-cliente">Nombre</label>
+                        <input type="text" id="nombre-cliente" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="apellido-cliente">Apellido</label>
+                        <input type="text" id="apellido-cliente" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email-cliente">Email</label>
+                        <input type="email" id="email-cliente" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="telefono-cliente">Teléfono</label>
+                        <input type="tel" id="telefono-cliente" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="tipo-cliente">Tipo</label>
+                        <select id="tipo-cliente" required>
+                            <option value="">Seleccione un tipo</option>
+                            <option value="web">Web</option>
+                            <option value="tienda">Tienda</option>
+                            <option value="distribuidor">Distribuidor</option>
+                            <option value="mayorista">Mayorista</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="estado-cliente">Estado</label>
+                        <select id="estado-cliente" required>
+                            <option value="activo">Activo</option>
+                            <option value="inactivo">Inactivo</option>
+                            <option value="pendiente">Pendiente</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="ciudad-cliente">Ciudad</label>
+                        <select id="ciudad-cliente" required>
+                            <option value="">Seleccione una ciudad</option>
+                            <option value="caracas">Caracas</option>
+                            <option value="maracaibo">Maracaibo</option>
+                            <option value="valencia">Valencia</option>
+                            <option value="barquisimeto">Barquisimeto</option>
+                            <option value="merida">Mérida</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="direccion-cliente">Dirección</label>
+                        <input type="text" id="direccion-cliente">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="fecha-nacimiento">Fecha de Nacimiento</label>
+                        <input type="date" id="fecha-nacimiento">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="documento-identidad">Documento de Identidad</label>
+                        <input type="text" id="documento-identidad">
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label for="notas-cliente">Notas</label>
+                        <textarea id="notas-cliente" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="secondary-btn">Cancelar</button>
+                <button class="primary-btn">Guardar Cliente</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal para Generar Carnet -->
+    <div class="modal" id="generar-carnet-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Generar Carnet de Cliente</h3>
+                <button class="close-modal"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <form class="form-grid">
+                    <div class="form-group full-width">
+                        <label for="modal-cliente-carnet">Cliente</label>
+                        <select id="modal-cliente-carnet" required>
+                            <option value="">Seleccione un cliente</option>
+                            <option value="CLI001">Juan Pérez</option>
+                            <option value="CLI002">María González</option>
+                            <option value="CLI003">Carlos Rodríguez</option>
+                            <option value="CLI005">Pedro Sánchez</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="modal-tipo-carnet">Tipo de Carnet</label>
+                        <select id="modal-tipo-carnet" required>
+                            <option value="regular">Regular</option>
+                            <option value="premium">Premium</option>
+                            <option value="distribuidor">Distribuidor</option>
+                            <option value="mayorista">Mayorista</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="modal-fecha-emision">Fecha de Emisión</label>
+                        <input type="date" id="modal-fecha-emision" value="2025-07-01" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="modal-fecha-vencimiento">Fecha de Vencimiento</label>
+                        <input type="date" id="modal-fecha-vencimiento" value="2026-07-01" required>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label for="modal-foto-carnet">Foto</label>
+                        <div class="file-upload">
+                            <input type="file" id="modal-foto-carnet">
+                            <button type="button" class="upload-btn">Seleccionar archivo</button>
+                            <span class="file-name">Ningún archivo seleccionado</span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="secondary-btn">Cancelar</button>
+                <button class="primary-btn">Generar Carnet</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Cambiar entre secciones
+        document.querySelectorAll('.sidebar-nav a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Actualizar menú activo
+                document.querySelectorAll('.sidebar-nav li').forEach(item => {
+                    item.classList.remove('active');
+                });
+                this.parentElement.classList.add('active');
+                
+                // Mostrar sección correspondiente
+                const sectionId = this.getAttribute('data-section');
+                document.querySelectorAll('.content-section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                document.getElementById(sectionId + '-section').classList.add('active');
+            });
+        });
+        
+        // Toggle sidebar en móvil
+        document.querySelector('.toggle-sidebar').addEventListener('click', function() {
+            document.querySelector('.dashboard-sidebar').classList.toggle('active');
+        });
+        
+        // Modal de nuevo cliente
+        document.getElementById('add-cliente-btn').addEventListener('click', function() {
+            document.getElementById('nuevo-cliente-modal').classList.add('active');
+        });
+        
+        // Modal de generar carnet
+        document.getElementById('generate-carnet-btn').addEventListener('click', function() {
+            document.getElementById('generar-carnet-modal').classList.add('active');
+        });
+        
+        // Cerrar modales
+        document.querySelectorAll('.close-modal, .modal .secondary-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.modal').forEach(modal => {
+                    modal.classList.remove('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

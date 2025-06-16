@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Gestión de Proveedores - ACAUCAB</title>
+    <link rel="stylesheet" href="../css/dashboard_proveedores.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="dashboard-sidebar">
+            <div class="sidebar-header">
+                <h1>ACAUCAB</h1>
+                <p>Panel de Administración</p>
+            </div>
+            
+            <div class="sidebar-user">
+                <div class="user-avatar">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <div class="user-info">
+                    <h3>Ana Rodríguez</h3>
+                    <p>Gestión de Proveedores</p>
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="active"><a href="#proveedores" data-section="proveedores"><i class="fas fa-users"></i> Proveedores</a></li>
+                    <li><a href="#fichas" data-section="fichas"><i class="fas fa-file-alt"></i> Fichas de Afiliación</a></li>
+                    <li><a href="#cuotas" data-section="cuotas"><i class="fas fa-money-bill-wave"></i> Cuotas de Afiliación</a></li>
+                    <li><a href="#reportes" data-section="reportes"><i class="fas fa-chart-bar"></i> Reportes</a></li>
+                    <li><a href="#configuracion" data-section="configuracion"><i class="fas fa-cog"></i> Configuración</a></li>
+                </ul>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <a href="index.html" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="dashboard-content">
+            <header class="content-header">
+                <div class="header-left">
+                    <button class="toggle-sidebar"><i class="fas fa-bars"></i></button>
+                    <h2>Dashboard de Gestión de Proveedores</h2>
+                </div>
+                <div class="header-right">
+                    <div class="search-box">
+                        <input type="text" placeholder="Buscar...">
+                        <button><i class="fas fa-search"></i></button>
+                    </div>
+                    <div class="notifications">
+                        <button class="notification-btn"><i class="fas fa-bell"></i><span class="badge">3</span></button>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Proveedores Section -->
+            <section class="content-section active" id="proveedores-section">
+                <div class="section-header">
+                    <h2>Gestión de Proveedores</h2>
+                    <button class="primary-btn" id="add-proveedor-btn"><i class="fas fa-plus"></i> Nuevo Proveedor</button>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Lista de Proveedores</h3>
+                        <div class="card-actions">
+                            <select id="filter-status">
+                                <option value="all">Todos los estados</option>
+                                <option value="active">Activos</option>
+                                <option value="inactive">Inactivos</option>
+                                <option value="pending">Pendientes</option>
+                            </select>
+                            <button class="export-btn"><i class="fas fa-download"></i> Exportar</button>
+                        </div>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nombre</th>
+                                    <th>Contacto</th>
+                                    <th>Email</th>
+                                    <th>Teléfono</th>
+                                    <th>Estado</th>
+                                    <th>Fecha Afiliación</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>PRV001</td>
+                                    <td>Destilo Cervecería</td>
+                                    <td>Carlos Méndez</td>
+                                    <td>contacto@destilo.com</td>
+                                    <td>+58 212 555 1234</td>
+                                    <td><span class="status active">Activo</span></td>
+                                    <td>15/01/2025</td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                        <button class="action-btn generate-form" title="Generar ficha"><i class="fas fa-file-pdf"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>PRV002</td>
+                                    <td>Benitz Brewing Co.</td>
+                                    <td>Laura Benítez</td>
+                                    <td>info@benitz.com</td>
+                                    <td>+58 212 555 5678</td>
+                                    <td><span class="status active">Activo</span></td>
+                                    <td>22/02/2025</td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                        <button class="action-btn generate-form" title="Generar ficha"><i class="fas fa-file-pdf"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>PRV003</td>
+                                    <td>Mito Brewhouse</td>
+                                    <td>Alejandro Torres</td>
+                                    <td>contacto@mitobrewhouse.com</td>
+                                    <td>+58 212 555 9012</td>
+                                    <td><span class="status inactive">Inactivo</span></td>
+                                    <td>10/03/2025</td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                        <button class="action-btn generate-form" title="Generar ficha"><i class="fas fa-file-pdf"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>PRV004</td>
+                                    <td>Cervecería Lago</td>
+                                    <td>Mariana Lagos</td>
+                                    <td>info@cervecerialago.com</td>
+                                    <td>+58 212 555 3456</td>
+                                    <td><span class="status pending">Pendiente</span></td>
+                                    <td>05/04/2025</td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                        <button class="action-btn generate-form" title="Generar ficha"><i class="fas fa-file-pdf"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>PRV005</td>
+                                    <td>Barricas Artesanales</td>
+                                    <td>Roberto Barrios</td>
+                                    <td>contacto@barricas.com</td>
+                                    <td>+58 212 555 7890</td>
+                                    <td><span class="status active">Activo</span></td>
+                                    <td>18/05/2025</td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                        <button class="action-btn generate-form" title="Generar ficha"><i class="fas fa-file-pdf"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="table-footer">
+                        <div class="pagination">
+                            <button class="page-btn prev"><i class="fas fa-chevron-left"></i></button>
+                            <button class="page-btn active">1</button>
+                            <button class="page-btn">2</button>
+                            <button class="page-btn">3</button>
+                            <span class="page-dots">...</span>
+                            <button class="page-btn">10</button>
+                            <button class="page-btn next"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                        <div class="page-info">
+                            Mostrando 1-5 de 48 proveedores
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Fichas de Afiliación Section -->
+            <section class="content-section" id="fichas-section">
+                <div class="section-header">
+                    <h2>Fichas de Afiliación</h2>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Generar Ficha de Afiliación</h3>
+                    </div>
+                    
+                    <div class="card-body">
+                        <form class="form-grid">
+                            <div class="form-group">
+                                <label for="proveedor-select">Seleccionar Proveedor</label>
+                                <select id="proveedor-select" required>
+                                    <option value="">Seleccione un proveedor</option>
+                                    <option value="PRV001">Destilo Cervecería</option>
+                                    <option value="PRV002">Benitz Brewing Co.</option>
+                                    <option value="PRV003">Mito Brewhouse</option>
+                                    <option value="PRV004">Cervecería Lago</option>
+                                    <option value="PRV005">Barricas Artesanales</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="tipo-ficha">Tipo de Ficha</label>
+                                <select id="tipo-ficha" required>
+                                    <option value="nueva">Nueva Afiliación</option>
+                                    <option value="renovacion">Renovación</option>
+                                    <option value="actualizacion">Actualización de Datos</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="fecha-emision">Fecha de Emisión</label>
+                                <input type="date" id="fecha-emision" value="2025-07-01" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="fecha-vencimiento">Fecha de Vencimiento</label>
+                                <input type="date" id="fecha-vencimiento" value="2026-07-01" required>
+                            </div>
+                            
+                            <div class="form-group full-width">
+                                <label for="observaciones-ficha">Observaciones</label>
+                                <textarea id="observaciones-ficha" rows="3"></textarea>
+                            </div>
+                            
+                            <div class="form-actions full-width">
+                                <button type="button" class="secondary-btn">Cancelar</button>
+                                <button type="button" class="primary-btn">Vista Previa</button>
+                                <button type="button" class="success-btn"><i class="fas fa-file-pdf"></i> Generar Ficha PDF</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Fichas Generadas Recientemente</h3>
+                        <div class="card-actions">
+                            <button class="export-btn"><i class="fas fa-download"></i> Exportar</button>
+                        </div>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID Ficha</th>
+                                    <th>Proveedor</th>
+                                    <th>Tipo</th>
+                                    <th>Fecha Emisión</th>
+                                    <th>Fecha Vencimiento</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>FICHA-001</td>
+                                    <td>Destilo Cervecería</td>
+                                    <td>Nueva Afiliación</td>
+                                    <td>15/01/2025</td>
+                                    <td>15/01/2026</td>
+                                    <td><span class="status active">Vigente</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver ficha"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn download" title="Descargar PDF"><i class="fas fa-download"></i></button>
+                                        <button class="action-btn print" title="Imprimir"><i class="fas fa-print"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>FICHA-002</td>
+                                    <td>Benitz Brewing Co.</td>
+                                    <td>Nueva Afiliación</td>
+                                    <td>22/02/2025</td>
+                                    <td>22/02/2026</td>
+                                    <td><span class="status active">Vigente</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver ficha"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn download" title="Descargar PDF"><i class="fas fa-download"></i></button>
+                                        <button class="action-btn print" title="Imprimir"><i class="fas fa-print"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>FICHA-003</td>
+                                    <td>Mito Brewhouse</td>
+                                    <td>Renovación</td>
+                                    <td>10/03/2025</td>
+                                    <td>10/03/2026</td>
+                                    <td><span class="status inactive">Expirada</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver ficha"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn download" title="Descargar PDF"><i class="fas fa-download"></i></button>
+                                        <button class="action-btn print" title="Imprimir"><i class="fas fa-print"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Cuotas de Afiliación Section -->
+            <section class="content-section" id="cuotas-section">
+                <div class="section-header">
+                    <h2>Gestión de Cuotas de Afiliación</h2>
+                </div>
+                
+                <div class="dashboard-cards">
+                    <div class="dashboard-card">
+                        <div class="card-icon"><i class="fas fa-money-bill-wave"></i></div>
+                        <div class="card-info">
+                            <h3>$12,500</h3>
+                            <p>Ingresos por Cuotas (Mes)</p>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-icon"><i class="fas fa-file-invoice-dollar"></i></div>
+                        <div class="card-info">
+                            <h3>28</h3>
+                            <p>Pagos Recibidos (Mes)</p>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-icon"><i class="fas fa-exclamation-circle"></i></div>
+                        <div class="card-info">
+                            <h3>5</h3>
+                            <p>Pagos Pendientes</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="cobros">Cobros de Cuotas</button>
+                    <button class="tab-btn" data-tab="recibos">Recibos de Pago</button>
+                </div>
+                
+                <div class="tab-content active" id="cobros-tab">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Registrar Pago de Cuota</h3>
+                        </div>
+                        
+                        <div class="card-body">
+                            <form class="form-grid">
+                                <div class="form-group">
+                                    <label for="proveedor-pago">Proveedor</label>
+                                    <select id="proveedor-pago" required>
+                                        <option value="">Seleccione un proveedor</option>
+                                        <option value="PRV001">Destilo Cervecería</option>
+                                        <option value="PRV002">Benitz Brewing Co.</option>
+                                        <option value="PRV003">Mito Brewhouse</option>
+                                        <option value="PRV004">Cervecería Lago</option>
+                                        <option value="PRV005">Barricas Artesanales</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="tipo-cuota">Tipo de Cuota</label>
+                                    <select id="tipo-cuota" required>
+                                        <option value="mensual">Mensual</option>
+                                        <option value="trimestral">Trimestral</option>
+                                        <option value="anual">Anual</option>
+                                        <option value="inscripcion">Inscripción</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="monto-pago">Monto</label>
+                                    <input type="number" id="monto-pago" value="500" min="0" step="0.01" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="fecha-pago">Fecha de Pago</label>
+                                    <input type="date" id="fecha-pago" value="2025-07-01" required>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="metodo-pago">Método de Pago</label>
+                                    <select id="metodo-pago" required>
+                                        <option value="efectivo">Efectivo</option>
+                                        <option value="transferencia">Transferencia Bancaria</option>
+                                        <option value="tarjeta">Tarjeta de Crédito/Débito</option>
+                                        <option value="pago-movil">Pago Móvil</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="referencia-pago">Referencia de Pago</label>
+                                    <input type="text" id="referencia-pago" placeholder="Número de referencia">
+                                </div>
+                                
+                                <div class="form-group full-width">
+                                    <label for="observaciones-pago">Observaciones</label>
+                                    <textarea id="observaciones-pago" rows="3"></textarea>
+                                </div>
+                                
+                                <div class="form-actions full-width">
+                                    <button type="button" class="secondary-btn">Cancelar</button>
+                                    <button type="button" class="success-btn">Registrar Pago</button>
+                                    <button type="button" class="primary-btn"><i class="fas fa-file-invoice"></i> Generar Recibo</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="recibos-tab">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Recibos de Pago</h3>
+                            <div class="card-actions">
+                                <select id="filter-recibos">
+                                    <option value="all">Todos los recibos</option>
+                                    <option value="month">Este mes</option>
+                                    <option value="quarter">Este trimestre</option>
+                                    <option value="year">Este año</option>
+                                </select>
+                                <button class="export-btn"><i class="fas fa-download"></i> Exportar</button>
+                            </div>
+                        </div>
+                        
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Nº Recibo</th>
+                                        <th>Proveedor</th>
+                                        <th>Tipo de Cuota</th>
+                                        <th>Monto</th>
+                                        <th>Fecha de Pago</th>
+                                        <th>Método de Pago</th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>REC-001</td>
+                                        <td>Destilo Cervecería</td>
+                                        <td>Mensual</td>
+                                        <td>$500.00</td>
+                                        <td>15/06/2025</td>
+                                        <td>Transferencia Bancaria</td>
+                                        <td><span class="status active">Pagado</span></td>
+                                        <td class="actions">
+                                            <button class="action-btn view" title="Ver recibo"><i class="fas fa-eye"></i></button>
+                                            <button class="action-btn download" title="Descargar PDF"><i class="fas fa-download"></i></button>
+                                            <button class="action-btn print" title="Imprimir"><i class="fas fa-print"></i></button>
+                                            <button class="action-btn email" title="Enviar por email"><i class="fas fa-envelope"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>REC-002</td>
+                                        <td>Benitz Brewing Co.</td>
+                                        <td>Trimestral</td>
+                                        <td>$1,350.00</td>
+                                        <td>22/06/2025</td>
+                                        <td>Tarjeta de Crédito</td>
+                                        <td><span class="status active">Pagado</span></td>
+                                        <td class="actions">
+                                            <button class="action-btn view" title="Ver recibo"><i class="fas fa-eye"></i></button>
+                                            <button class="action-btn download" title="Descargar PDF"><i class="fas fa-download"></i></button>
+                                            <button class="action-btn print" title="Imprimir"><i class="fas fa-print"></i></button>
+                                            <button class="action-btn email" title="Enviar por email"><i class="fas fa-envelope"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>REC-003</td>
+                                        <td>Barricas Artesanales</td>
+                                        <td>Mensual</td>
+                                        <td>$500.00</td>
+                                        <td>18/06/2025</td>
+                                        <td>Efectivo</td>
+                                        <td><span class="status active">Pagado</span></td>
+                                        <td class="actions">
+                                            <button class="action-btn view" title="Ver recibo"><i class="fas fa-eye"></i></button>
+                                            <button class="action-btn download" title="Descargar PDF"><i class="fas fa-download"></i></button>
+                                            <button class="action-btn print" title="Imprimir"><i class="fas fa-print"></i></button>
+                                            <button class="action-btn email" title="Enviar por email"><i class="fas fa-envelope"></i></button>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>REC-004</td>
+                                        <td>Cervecería Lago</td>
+                                        <td>Inscripción</td>
+                                        <td>$1,000.00</td>
+                                        <td>05/06/2025</td>
+                                        <td>Transferencia Bancaria</td>
+                                        <td><span class="status pending">Pendiente</span></td>
+                                        <td class="actions">
+                                            <button class="action-btn view" title="Ver recibo"><i class="fas fa-eye"></i></button>
+                                            <button class="action-btn download" title="Descargar PDF"><i class="fas fa-download"></i></button>
+                                            <button class="action-btn print" title="Imprimir"><i class="fas fa-print"></i></button>
+                                            <button class="action-btn email" title="Enviar por email"><i class="fas fa-envelope"></i></button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        <div class="table-footer">
+                            <div class="pagination">
+                                <button class="page-btn prev"><i class="fas fa-chevron-left"></i></button>
+                                <button class="page-btn active">1</button>
+                                <button class="page-btn">2</button>
+                                <button class="page-btn">3</button>
+                                <button class="page-btn next"><i class="fas fa-chevron-right"></i></button>
+                            </div>
+                            <div class="page-info">
+                                Mostrando 1-4 de 32 recibos
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Reportes Section -->
+            <section class="content-section" id="reportes-section">
+                <div class="section-header">
+                    <h2>Reportes</h2>
+                </div>
+                
+                <div class="dashboard-cards">
+                    <div class="dashboard-card">
+                        <div class="card-icon"><i class="fas fa-users"></i></div>
+                        <div class="card-info">
+                            <h3>48</h3>
+                            <p>Total Proveedores</p>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-icon"><i class="fas fa-file-alt"></i></div>
+                        <div class="card-info">
+                            <h3>35</h3>
+                            <p>Fichas Activas</p>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-icon"><i class="fas fa-money-bill-wave"></i></div>
+                        <div class="card-info">
+                            <h3>$45,750</h3>
+                            <p>Ingresos Totales (Año)</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Generar Reportes</h3>
+                    </div>
+                    
+                    <div class="card-body">
+                        <form class="form-grid">
+                            <div class="form-group">
+                                <label for="tipo-reporte">Tipo de Reporte</label>
+                                <select id="tipo-reporte" required>
+                                    <option value="">Seleccione un tipo de reporte</option>
+                                    <option value="proveedores">Listado de Proveedores</option>
+                                    <option value="fichas">Fichas de Afiliación</option>
+                                    <option value="cuotas">Pagos de Cuotas</option>
+                                    <option value="ingresos">Ingresos por Período</option>
+                                    <option value="morosos">Proveedores con Pagos Pendientes</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="formato-reporte">Formato</label>
+                                <select id="formato-reporte" required>
+                                    <option value="pdf">PDF</option>
+                                    <option value="excel">Excel</option>
+                                    <option value="csv">CSV</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="fecha-inicio">Fecha Inicio</label>
+                                <input type="date" id="fecha-inicio" value="2025-01-01">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="fecha-fin">Fecha Fin</label>
+                                <input type="date" id="fecha-fin" value="2025-07-01">
+                            </div>
+                            
+                            <div class="form-actions full-width">
+                                <button type="button" class="primary-btn"><i class="fas fa-file-download"></i> Generar Reporte</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Reportes Recientes</h3>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Nombre del Reporte</th>
+                                    <th>Tipo</th>
+                                    <th>Formato</th>
+                                    <th>Fecha de Generación</th>
+                                    <th>Generado por</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Listado de Proveedores Activos</td>
+                                    <td>Proveedores</td>
+                                    <td>PDF</td>
+                                    <td>01/07/2025</td>
+                                    <td>Ana Rodríguez</td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver reporte"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn download" title="Descargar"><i class="fas fa-download"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Ingresos por Cuotas Q2-2025</td>
+                                    <td>Ingresos</td>
+                                    <td>Excel</td>
+                                    <td>30/06/2025</td>
+                                    <td>Ana Rodríguez</td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver reporte"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn download" title="Descargar"><i class="fas fa-download"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Proveedores con Pagos Pendientes</td>
+                                    <td>Morosos</td>
+                                    <td>PDF</td>
+                                    <td>28/06/2025</td>
+                                    <td>Ana Rodríguez</td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver reporte"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn download" title="Descargar"><i class="fas fa-download"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Configuración Section -->
+            <section class="content-section" id="configuracion-section">
+                <div class="section-header">
+                    <h2>Configuración</h2>
+                </div>
+                
+                <div class="tabs">
+                    <button class="tab-btn active" data-tab="general">General</button>
+                    <button class="tab-btn" data-tab="cuotas-config">Cuotas</button>
+                    <button class="tab-btn" data-tab="notificaciones">Notificaciones</button>
+                    <button class="tab-btn" data-tab="usuarios">Usuarios</button>
+                </div>
+                
+                <div class="tab-content active" id="general-tab">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Configuración General</h3>
+                        </div>
+                        
+                        <div class="card-body">
+                            <form class="form-grid">
+                                <div class="form-group">
+                                    <label for="nombre-organizacion">Nombre de la Organización</label>
+                                    <input type="text" id="nombre-organizacion" value="ACAUCAB">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="direccion">Dirección</label>
+                                    <input type="text" id="direccion" value="Sede ACAUCAB, Caracas, Venezuela">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="telefono">Teléfono</label>
+                                    <input type="tel" id="telefono" value="+58 212 123 4567">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="email">Email</label>
+                                    <input type="email" id="email" value="info@acaucab.com">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="logo">Logo</label>
+                                    <div class="file-upload">
+                                        <input type="file" id="logo">
+                                        <button type="button" class="upload-btn">Seleccionar archivo</button>
+                                        <span class="file-name">logo-acaucab.png</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-actions full-width">
+                                    <button type="button" class="primary-btn">Guardar Cambios</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tab-content" id="cuotas-config-tab">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Configuración de Cuotas</h3>
+                        </div>
+                        
+                        <div class="card-body">
+                            <form class="form-grid">
+                                <div class="form-group">
+                                    <label for="cuota-inscripcion">Cuota de Inscripción</label>
+                                    <input type="number" id="cuota-inscripcion" value="1000" min="0" step="0.01">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="cuota-mensual">Cuota Mensual</label>
+                                    <input type="number" id="cuota-mensual" value="500" min="0" step="0.01">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="cuota-trimestral">Cuota Trimestral</label>
+                                    <input type="number" id="cuota-trimestral" value="1350" min="0" step="0.01">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="cuota-anual">Cuota Anual</label>
+                                    <input type="number" id="cuota-anual" value="5000" min="0" step="0.01">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="moneda">Moneda</label>
+                                    <select id="moneda">
+                                        <option value="usd">USD - Dólar Estadounidense</option>
+                                        <option value="bs">Bs. - Bolívar</option>
+                                    </select>
+                                </div>
+                                
+                                <div class="form-actions full-width">
+                                    <button type="button" class="primary-btn">Guardar Cambios</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    
+    <!-- Modal para Nuevo Proveedor -->
+    <div class="modal" id="nuevo-proveedor-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Nuevo Proveedor</h3>
+                <button class="close-modal"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <form class="form-grid">
+                    <div class="form-group">
+                        <label for="nombre-proveedor">Nombre del Proveedor</label>
+                        <input type="text" id="nombre-proveedor" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="contacto-proveedor">Nombre de Contacto</label>
+                        <input type="text" id="contacto-proveedor" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="email-proveedor">Email</label>
+                        <input type="email" id="email-proveedor" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="telefono-proveedor">Teléfono</label>
+                        <input type="tel" id="telefono-proveedor" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="direccion-proveedor">Dirección</label>
+                        <input type="text" id="direccion-proveedor" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="rif-proveedor">RIF</label>
+                        <input type="text" id="rif-proveedor" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="tipo-proveedor">Tipo de Proveedor</label>
+                        <select id="tipo-proveedor" required>
+                            <option value="cerveceria">Cervecería</option>
+                            <option value="distribuidor">Distribuidor</option>
+                            <option value="insumos">Proveedor de Insumos</option>
+                            <option value="equipos">Proveedor de Equipos</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="estado-proveedor">Estado</label>
+                        <select id="estado-proveedor" required>
+                            <option value="active">Activo</option>
+                            <option value="inactive">Inactivo</option>
+                            <option value="pending">Pendiente</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label for="observaciones-proveedor">Observaciones</label>
+                        <textarea id="observaciones-proveedor" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="secondary-btn">Cancelar</button>
+                <button class="primary-btn">Guardar Proveedor</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Cambiar entre secciones
+        document.querySelectorAll('.sidebar-nav a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Actualizar menú activo
+                document.querySelectorAll('.sidebar-nav li').forEach(item => {
+                    item.classList.remove('active');
+                });
+                this.parentElement.classList.add('active');
+                
+                // Mostrar sección correspondiente
+                const sectionId = this.getAttribute('data-section');
+                document.querySelectorAll('.content-section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                document.getElementById(sectionId + '-section').classList.add('active');
+            });
+        });
+        
+        // Cambiar entre tabs
+        document.querySelectorAll('.tab-btn').forEach(tab => {
+            tab.addEventListener('click', function() {
+                const tabGroup = this.parentElement;
+                const tabId = this.getAttribute('data-tab');
+                
+                // Actualizar tab activo
+                tabGroup.querySelectorAll('.tab-btn').forEach(t => {
+                    t.classList.remove('active');
+                });
+                this.classList.add('active');
+                
+                // Mostrar contenido de tab correspondiente
+                const tabContentId = tabId + '-tab';
+                const tabContents = tabGroup.nextElementSibling;
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                document.getElementById(tabContentId).classList.add('active');
+            });
+        });
+        
+        // Toggle sidebar en móvil
+        document.querySelector('.toggle-sidebar').addEventListener('click', function() {
+            document.querySelector('.dashboard-sidebar').classList.toggle('active');
+        });
+        
+        // Modal de nuevo proveedor
+        document.getElementById('add-proveedor-btn').addEventListener('click', function() {
+            document.getElementById('nuevo-proveedor-modal').classList.add('active');
+        });
+        
+        document.querySelectorAll('.close-modal, .modal .secondary-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.modal').forEach(modal => {
+                    modal.classList.remove('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

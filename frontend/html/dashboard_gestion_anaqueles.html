@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Gestión de Anaqueles - ACAUCAB</title>
+    <link rel="stylesheet" href="../css/dashboard_gestion_anaqueles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="dashboard-sidebar">
+            <div class="sidebar-header">
+                <h1>ACAUCAB</h1>
+                <p>Panel de Administración</p>
+            </div>
+            
+            <div class="sidebar-user">
+                <div class="user-avatar">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <div class="user-info">
+                    <h3>Carlos Ramírez</h3>
+                    <p>Jefe de Pasillos</p>
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="active"><a href="#reposicion" data-section="reposicion"><i class="fas fa-dolly"></i> Órdenes de Reposición</a></li>
+                    <li><a href="#historial" data-section="historial"><i class="fas fa-history"></i> Historial</a></li>
+                    <li><a href="#anaqueles" data-section="anaqueles"><i class="fas fa-boxes"></i> Estado de Anaqueles</a></li>
+                    <li><a href="#pasillos" data-section="pasillos"><i class="fas fa-map-signs"></i> Pasillos</a></li>
+                    <li><a href="#reportes" data-section="reportes"><i class="fas fa-chart-bar"></i> Reportes</a></li>
+                    <li><a href="#configuracion" data-section="configuracion"><i class="fas fa-cog"></i> Configuración</a></li>
+                </ul>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <a href="index.html" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="dashboard-content">
+            <header class="content-header">
+                <div class="header-left">
+                    <button class="toggle-sidebar"><i class="fas fa-bars"></i></button>
+                    <h2>Dashboard de Gestión de Anaqueles</h2>
+                </div>
+                <div class="header-right">
+                    <div class="search-box">
+                        <input type="text" placeholder="Buscar orden...">
+                        <button><i class="fas fa-search"></i></button>
+                    </div>
+                    <div class="notifications">
+                        <button class="notification-btn"><i class="fas fa-bell"></i><span class="badge">8</span></button>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Órdenes de Reposición Section -->
+            <section class="content-section active" id="reposicion-section">
+                <div class="section-header">
+                    <h2>Órdenes de Reposición de Anaqueles</h2>
+                </div>
+                
+                <div class="dashboard-cards">
+                    <div class="dashboard-card">
+                        <div class="card-icon warning"><i class="fas fa-exclamation-triangle"></i></div>
+                        <div class="card-info">
+                            <h3>8</h3>
+                            <p>Órdenes Pendientes</p>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-icon danger"><i class="fas fa-exclamation-circle"></i></div>
+                        <div class="card-info">
+                            <h3>3</h3>
+                            <p>Órdenes Urgentes</p>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-icon success"><i class="fas fa-check-circle"></i></div>
+                        <div class="card-info">
+                            <h3>42</h3>
+                            <p>Órdenes Atendidas</p>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-icon"><i class="fas fa-boxes"></i></div>
+                        <div class="card-info">
+                            <h3>5</h3>
+                            <p>Pasillos con Alertas</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="filter-bar">
+                    <div class="filter-group">
+                        <label for="filter-estado">Estado:</label>
+                        <select id="filter-estado">
+                            <option value="all">Todos los estados</option>
+                            <option value="pendiente">Pendiente</option>
+                            <option value="urgente">Urgente</option>
+                            <option value="en-proceso">En Proceso</option>
+                            <option value="atendido">Atendido</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="filter-pasillo">Pasillo:</label>
+                        <select id="filter-pasillo">
+                            <option value="all">Todos los pasillos</option>
+                            <option value="1">Pasillo 1</option>
+                            <option value="2">Pasillo 2</option>
+                            <option value="3">Pasillo 3</option>
+                            <option value="4">Pasillo 4</option>
+                            <option value="5">Pasillo 5</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="filter-zona">Zona:</label>
+                        <select id="filter-zona">
+                            <option value="all">Todas las zonas</option>
+                            <option value="1">Zona 1</option>
+                            <option value="2">Zona 2</option>
+                            <option value="3">Zona 3</option>
+                            <option value="4">Zona 4</option>
+                            <option value="5">Zona 5</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="filter-fecha">Fecha:</label>
+                        <select id="filter-fecha">
+                            <option value="all">Todas las fechas</option>
+                            <option value="hoy">Hoy</option>
+                            <option value="semana">Esta semana</option>
+                            <option value="mes">Este mes</option>
+                        </select>
+                    </div>
+                    
+                    <button class="secondary-btn"><i class="fas fa-filter"></i> Filtrar</button>
+                    <button class="outline-btn"><i class="fas fa-sync-alt"></i> Reiniciar</button>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Órdenes Pendientes</h3>
+                        <div class="card-actions">
+                            <select id="sort-orders">
+                                <option value="urgencia-desc">Urgencia (Mayor a Menor)</option>
+                                <option value="fecha-desc">Fecha (Reciente a Antigua)</option>
+                                <option value="fecha-asc">Fecha (Antigua a Reciente)</option>
+                                <option value="pasillo-asc">Pasillo (Ascendente)</option>
+                                <option value="pasillo-desc">Pasillo (Descendente)</option>
+                            </select>
+                            <button class="export-btn"><i class="fas fa-download"></i> Exportar</button>
+                        </div>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID Orden</th>
+                                    <th>Fecha</th>
+                                    <th>Producto</th>
+                                    <th>Pasillo</th>
+                                    <th>Zona</th>
+                                    <th>Anaquel</th>
+                                    <th>Stock Actual</th>
+                                    <th>Cantidad a Reponer</th>
+                                    <th>Urgencia</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>ANA001</td>
+                                    <td>03/07/2025</td>
+                                    <td>Pilsen 355ml</td>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>A</td>
+                                    <td>18</td>
+                                    <td>50</td>
+                                    <td><span class="badge danger">Alta</span></td>
+                                    <td><span class="status pending">Pendiente</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn complete" title="Marcar como atendido"><i class="fas fa-check"></i></button>
+                                        <button class="action-btn process" title="Marcar en proceso"><i class="fas fa-hourglass-half"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>ANA002</td>
+                                    <td>03/07/2025</td>
+                                    <td>Light 355ml</td>
+                                    <td>1</td>
+                                    <td>3</td>
+                                    <td>B</td>
+                                    <td>15</td>
+                                    <td>40</td>
+                                    <td><span class="badge danger">Alta</span></td>
+                                    <td><span class="status pending">Pendiente</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn complete" title="Marcar como atendido"><i class="fas fa-check"></i></button>
+                                        <button class="action-btn process" title="Marcar en proceso"><i class="fas fa-hourglass-half"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>ANA003</td>
+                                    <td>02/07/2025</td>
+                                    <td>Premium 355ml</td>
+                                    <td>2</td>
+                                    <td>1</td>
+                                    <td>C</td>
+                                    <td>19</td>
+                                    <td>30</td>
+                                    <td><span class="badge warning">Media</span></td>
+                                    <td><span class="status process">En Proceso</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn complete" title="Marcar como atendido"><i class="fas fa-check"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>ANA004</td>
+                                    <td>02/07/2025</td>
+                                    <td>Stout 330ml</td>
+                                    <td>3</td>
+                                    <td>4</td>
+                                    <td>B</td>
+                                    <td>12</td>
+                                    <td>40</td>
+                                    <td><span class="badge danger">Alta</span></td>
+                                    <td><span class="status pending">Pendiente</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn complete" title="Marcar como atendido"><i class="fas fa-check"></i></button>
+                                        <button class="action-btn process" title="Marcar en proceso"><i class="fas fa-hourglass-half"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>ANA005</td>
+                                    <td>01/07/2025</td>
+                                    <td>IPA 330ml</td>
+                                    <td>4</td>
+                                    <td>2</td>
+                                    <td>A</td>
+                                    <td>20</td>
+                                    <td>30</td>
+                                    <td><span class="badge warning">Media</span></td>
+                                    <td><span class="status pending">Pendiente</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn complete" title="Marcar como atendido"><i class="fas fa-check"></i></button>
+                                        <button class="action-btn process" title="Marcar en proceso"><i class="fas fa-hourglass-half"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>ANA006</td>
+                                    <td>01/07/2025</td>
+                                    <td>Amber Ale 330ml</td>
+                                    <td>2</td>
+                                    <td>3</td>
+                                    <td>B</td>
+                                    <td>17</td>
+                                    <td>30</td>
+                                    <td><span class="badge warning">Media</span></td>
+                                    <td><span class="status process">En Proceso</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn complete" title="Marcar como atendido"><i class="fas fa-check"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>ANA007</td>
+                                    <td>30/06/2025</td>
+                                    <td>Wheat Beer 330ml</td>
+                                    <td>5</td>
+                                    <td>1</td>
+                                    <td>A</td>
+                                    <td>16</td>
+                                    <td>30</td>
+                                    <td><span class="badge warning">Media</span></td>
+                                    <td><span class="status pending">Pendiente</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn complete" title="Marcar como atendido"><i class="fas fa-check"></i></button>
+                                        <button class="action-btn process" title="Marcar en proceso"><i class="fas fa-hourglass-half"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>ANA008</td>
+                                    <td>30/06/2025</td>
+                                    <td>Porter 330ml</td>
+                                    <td>3</td>
+                                    <td>2</td>
+                                    <td>C</td>
+                                    <td>14</td>
+                                    <td>40</td>
+                                    <td><span class="badge danger">Alta</span></td>
+                                    <td><span class="status pending">Pendiente</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn complete" title="Marcar como atendido"><i class="fas fa-check"></i></button>
+                                        <button class="action-btn process" title="Marcar en proceso"><i class="fas fa-hourglass-half"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="table-footer">
+                        <div class="pagination">
+                            <button class="page-btn prev"><i class="fas fa-chevron-left"></i></button>
+                            <button class="page-btn active">1</button>
+                            <button class="page-btn">2</button>
+                            <button class="page-btn next"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                        <div class="page-info">
+                            Mostrando 1-8 de 8 órdenes pendientes
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Órdenes Recientes Atendidas</h3>
+                        <div class="card-actions">
+                            <button class="export-btn"><i class="fas fa-download"></i> Exportar</button>
+                        </div>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID Orden</th>
+                                    <th>Fecha Creación</th>
+                                    <th>Fecha Atención</th>
+                                    <th>Producto</th>
+                                    <th>Pasillo</th>
+                                    <th>Zona</th>
+                                    <th>Anaquel</th>
+                                    <th>Cantidad Repuesta</th>
+                                    <th>Atendido por</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>ANA-1</td>
+                                    <td>29/06/2025</td>
+                                    <td>30/06/2025</td>
+                                    <td>Pilsen 355ml</td>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>A</td>
+                                    <td>50</td>
+                                    <td>Carlos Ramírez</td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>ANA-2</td>
+                                    <td>28/06/2025</td>
+                                    <td>29/06/2025</td>
+                                    <td>Light 355ml</td>
+                                    <td>2</td>
+                                    <td>2</td>
+                                    <td>B</td>
+                                    <td>40</td>
+                                    <td>María López</td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>ANA-3</td>
+                                    <td>27/06/2025</td>
+                                    <td>28/06/2025</td>
+                                    <td>Premium 355ml</td>
+                                    <td>3</td>
+                                    <td>1</td>
+                                    <td>A</td>
+                                    <td>30</td>
+                                    <td>Carlos Ramírez</td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>ANA-4</td>
+                                    <td>26/06/2025</td>
+                                    <td>27/06/2025</td>
+                                    <td>Stout 330ml</td>
+                                    <td>4</td>
+                                    <td>3</td>
+                                    <td>C</td>
+                                    <td>40</td>
+                                    <td>María López</td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>ANA-5</td>
+                                    <td>25/06/2025</td>
+                                    <td>26/06/2025</td>
+                                    <td>IPA 330ml</td>
+                                    <td>2</td>
+                                    <td>4</td>
+                                    <td>B</td>
+                                    <td>30</td>
+                                    <td>Carlos Ramírez</td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="card-footer">
+                        <a href="#historial" class="view-all">Ver historial completo <i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Historial Section -->
+            <section class="content-section" id="historial-section">
+                <div class="section-header">
+                    <h2>Historial de Órdenes de Reposición</h2>
+                </div>
+                
+                <div class="filter-bar">
+                    <div class="filter-group">
+                        <label for="historial-estado">Estado:</label>
+                        <select id="historial-estado">
+                            <option value="all">Todos los estados</option>
+                            <option value="atendido">Atendido</option>
+                            <option value="cancelado">Cancelado</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="historial-pasillo">Pasillo:</label>
+                        <select id="historial-pasillo">
+                            <option value="all">Todos los pasillos</option>
+                            <option value="1">Pasillo 1</option>
+                            <option value="2">Pasillo 2</option>
+                            <option value="3">Pasillo 3</option>
+                            <option value="4">Pasillo 4</option>
+                            <option value="5">Pasillo 5</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="historial-fecha-inicio">Desde:</label>
+                        <input type="date" id="historial-fecha-inicio">
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="historial-fecha-fin">Hasta:</label>
+                        <input type="date" id="historial-fecha-fin">
+                    </div>
+                    
+                    <button class="secondary-btn"><i class="fas fa-filter"></i> Filtrar</button>
+                    <button class="outline-btn"><i class="fas fa-sync-alt"></i> Reiniciar</button>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Historial Completo</h3>
+                        <div class="card-actions">
+                            <select id="sort-historial">
+                                <option value="fecha-desc">Fecha (Reciente a Antigua)</option>
+                                <option value="fecha-asc">Fecha (Antigua a Reciente)</option>
+                                <option value="pasillo-asc">Pasillo (Ascendente)</option>
+                                <option value="pasillo-desc">Pasillo (Descendente)</option>
+                            </select>
+                            <button class="export-btn"><i class="fas fa-download"></i> Exportar</button>
+                        </div>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID Orden</th>
+                                    <th>Fecha Creación</th>
+                                    <th>Fecha Atención</th>
+                                    <th>Producto</th>
+                                    <th>Pasillo</th>
+                                    <th>Zona</th>
+                                    <th>Anaquel</th>
+                                    <th>Cantidad Repuesta</th>
+                                    <th>Estado</th>
+                                    <th>Atendido por</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>ANA-1</td>
+                                    <td>29/06/2025</td>
+                                    <td>30/06/2025</td>
+                                    <td>Pilsen 355ml</td>
+                                    <td>1</td>
+                                    <td>1</td>
+                                    <td>A</td>
+                                    <td>50</td>
+                                    <td><span class="status success">Atendido</span></td>
+                                    <td>Carlos Ramírez</td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>ANA-2</td>
+                                    <td>28/06/2025</td>
+                                    <td>29/06/2025</td>
+                                    <td>Light 355ml</td>
+                                    <td>2</td>
+                                    <td>2</td>
+                                    <td>B</td>
+                                    <td>40</td>
+                                    <td><span class="status success">Atendido</span></td>
+                                    <td>María López</td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>ANA-3</td>
+                                    <td>27/06/2025</td>
+                                    <td>28/06/2025</td>
+                                    <td>Premium 355ml</td>
+                                    <td>3</td>
+                                    <td>1</td>
+                                    <td>A</td>
+                                    <td>30</td>
+                                    <td><span class="status success">Atendido</span></td>
+                                    <td>Carlos Ramírez</td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>ANA-4</td>
+                                    <td>26/06/2025</td>
+                                    <td>27/06/2025</td>
+                                    <td>Stout 330ml</td>
+                                    <td>4</td>
+                                    <td>3</td>
+                                    <td>C</td>
+                                    <td>40</td>
+                                    <td><span class="status success">Atendido</span></td>
+                                    <td>María López</td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>ANA-5</td>
+                                    <td>25/06/2025</td>
+                                    <td>26/06/2025</td>
+                                    <td>IPA 330ml</td>
+                                    <td>2</td>
+                                    <td>4</td>
+                                    <td>B</td>
+                                    <td>30</td>
+                                    <td><span class="status success">Atendido</span></td>
+                                    <td>Carlos Ramírez</td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>ANA-6</td>
+                                    <td>24/06/2025</td>
+                                    <td>25/06/2025</td>
+                                    <td>Amber Ale 330ml</td>
+                                    <td>5</td>
+                                    <td>2</td>
+                                    <td>A</td>
+                                    <td>35</td>
+                                    <td><span class="status success">Atendido</span></td>
+                                    <td>María López</td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>ANA-7</td>
+                                    <td>23/06/2025</td>
+                                    <td>24/06/2025</td>
+                                    <td>Wheat Beer 330ml</td>
+                                    <td>3</td>
+                                    <td>3</td>
+                                    <td>B</td>
+                                    <td>30</td>
+                                    <td><span class="status success">Atendido</span></td>
+                                    <td>Carlos Ramírez</td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>ANA-8</td>
+                                    <td>22/06/2025</td>
+                                    <td>-</td>
+                                    <td>Porter 330ml</td>
+                                    <td>1</td>
+                                    <td>4</td>
+                                    <td>C</td>
+                                    <td>-</td>
+                                    <td><span class="status inactive">Cancelado</span></td>
+                                    <td>-</td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="table-footer">
+                        <div class="pagination">
+                            <button class="page-btn prev"><i class="fas fa-chevron-left"></i></button>
+                            <button class="page-btn active">1</button>
+                            <button class="page-btn">2</button>
+                            <button class="page-btn">3</button>
+                            <button class="page-btn">4</button>
+                            <button class="page-btn next"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                        <div class="page-info">
+                            Mostrando 1-8 de 42 órdenes
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Anaqueles Section -->
+            <section class="content-section" id="anaqueles-section">
+                <div class="section-header">
+                    <h2>Estado de Anaqueles</h2>
+                </div>
+                
+                <div class="filter-bar">
+                    <div class="filter-group">
+                        <label for="anaquel-pasillo">Pasillo:</label>
+                        <select id="anaquel-pasillo">
+                            <option value="all">Todos los pasillos</option>
+                            <option value="1">Pasillo 1</option>
+                            <option value="2">Pasillo 2</option>
+                            <option value="3">Pasillo 3</option>
+                            <option value="4">Pasillo 4</option>
+                            <option value="5">Pasillo 5</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="anaquel-zona">Zona:</label>
+                        <select id="anaquel-zona">
+                            <option value="all">Todas las zonas</option>
+                            <option value="1">Zona 1</option>
+                            <option value="2">Zona 2</option>
+                            <option value="3">Zona 3</option>
+                            <option value="4">Zona 4</option>
+                            <option value="5">Zona 5</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="anaquel-estado">Estado:</label>
+                        <select id="anaquel-estado">
+                            <option value="all">Todos los estados</option>
+                            <option value="normal">Normal</option>
+                            <option value="alerta">Alerta</option>
+                            <option value="critico">Crítico</option>
+                        </select>
+                    </div>
+                    
+                    <button class="secondary-btn"><i class="fas fa-filter"></i> Filtrar</button>
+                    <button class="outline-btn"><i class="fas fa-sync-alt"></i> Reiniciar</button>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Estado Actual de Anaqueles</h3>
+                        <div class="card-actions">
+                            <button class="export-btn"><i class="fas fa-download"></i> Exportar</button>
+                        </div>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID Anaquel</th>
+                                    <th>Pasillo</th>
+                                    <th>Zona</th>
+                                    <th>Producto</th>
+                                    <th>Capacidad</th>
+                                    <th>Stock Actual</th>
+                                    <th>Ocupación</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>P1-Z2-A</td>
+                                    <td>1</td>
+                                    <td>2</td>
+                                    <td>Pilsen 355ml</td>
+                                    <td>100</td>
+                                    <td>18</td>
+                                    <td>
+                                        <div class="progress-bar">
+                                            <div class="progress danger" style="width: 18%"></div>
+                                        </div>
+                                        <span class="progress-text">18%</span>
+                                    </td>
+                                    <td><span class="status danger">Crítico</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>P1-Z3-B</td>
+                                    <td>1</td>
+                                    <td>3</td>
+                                    <td>Light 355ml</td>
+                                    <td>80</td>
+                                    <td>15</td>
+                                    <td>
+                                        <div class="progress-bar">
+                                            <div class="progress danger" style="width: 19%"></div>
+                                        </div>
+                                        <span class="progress-text">19%</span>
+                                    </td>
+                                    <td><span class="status danger">Crítico</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>P2-Z1-C</td>
+                                    <td>2</td>
+                                    <td>1</td>
+                                    <td>Premium 355ml</td>
+                                    <td>60</td>
+                                    <td>19</td>
+                                    <td>
+                                        <div class="progress-bar">
+                                            <div class="progress warning" style="width: 32%"></div>
+                                        </div>
+                                        <span class="progress-text">32%</span>
+                                    </td>
+                                    <td><span class="status warning">Alerta</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>P3-Z4-B</td>
+                                    <td>3</td>
+                                    <td>4</td>
+                                    <td>Stout 330ml</td>
+                                    <td>50</td>
+                                    <td>12</td>
+                                    <td>
+                                        <div class="progress-bar">
+                                            <div class="progress danger" style="width: 24%"></div>
+                                        </div>
+                                        <span class="progress-text">24%</span>
+                                    </td>
+                                    <td><span class="status danger">Crítico</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>P4-Z2-A</td>
+                                    <td>4</td>
+                                    <td>2</td>
+                                    <td>IPA 330ml</td>
+                                    <td>60</td>
+                                    <td>20</td>
+                                    <td>
+                                        <div class="progress-bar">
+                                            <div class="progress warning" style="width: 33%"></div>
+                                        </div>
+                                        <span class="progress-text">33%</span>
+                                    </td>
+                                    <td><span class="status warning">Alerta</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>P2-Z3-B</td>
+                                    <td>2</td>
+                                    <td>3</td>
+                                    <td>Amber Ale 330ml</td>
+                                    <td>70</td>
+                                    <td>17</td>
+                                    <td>
+                                        <div class="progress-bar">
+                                            <div class="progress warning" style="width: 24%"></div>
+                                        </div>
+                                        <span class="progress-text">24%</span>
+                                    </td>
+                                    <td><span class="status warning">Alerta</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>P5-Z1-A</td>
+                                    <td>5</td>
+                                    <td>1</td>
+                                    <td>Wheat Beer 330ml</td>
+                                    <td>60</td>
+                                    <td>16</td>
+                                    <td>
+                                        <div class="progress-bar">
+                                            <div class="progress warning" style="width: 27%"></div>
+                                        </div>
+                                        <span class="progress-text">27%</span>
+                                    </td>
+                                    <td><span class="status warning">Alerta</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>P3-Z2-C</td>
+                                    <td>3</td>
+                                    <td>2</td>
+                                    <td>Porter 330ml</td>
+                                    <td>50</td>
+                                    <td>14</td>
+                                    <td>
+                                        <div class="progress-bar">
+                                            <div class="progress warning" style="width: 28%"></div>
+                                        </div>
+                                        <span class="progress-text">28%</span>
+                                    </td>
+                                    <td><span class="status warning">Alerta</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="table-footer">
+                        <div class="pagination">
+                            <button class="page-btn prev"><i class="fas fa-chevron-left"></i></button>
+                            <button class="page-btn active">1</button>
+                            <button class="page-btn">2</button>
+                            <button class="page-btn">3</button>
+                            <button class="page-btn next"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                        <div class="page-info">
+                            Mostrando 1-8 de 24 anaqueles
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Pasillos Section -->
+            <section class="content-section" id="pasillos-section">
+                <div class="section-header">
+                    <h2>Pasillos</h2>
+                </div>
+                
+                <div class="dashboard-cards">
+                    <div class="dashboard-card">
+                        <div class="card-icon danger"><i class="fas fa-exclamation-triangle"></i></div>
+                        <div class="card-info">
+                            <h3>Pasillo 1</h3>
+                            <p>2 anaqueles en alerta</p>
+                        </div>
+                        <a href="#" class="card-link"><i class="fas fa-arrow-right"></i></a>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-icon warning"><i class="fas fa-exclamation-circle"></i></div>
+                        <div class="card-info">
+                            <h3>Pasillo 2</h3>
+                            <p>2 anaqueles en alerta</p>
+                        </div>
+                        <a href="#" class="card-link"><i class="fas fa-arrow-right"></i></a>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-icon danger"><i class="fas fa-exclamation-triangle"></i></div>
+                        <div class="card-info">
+                            <h3>Pasillo 3</h3>
+                            <p>2 anaqueles en alerta</p>
+                        </div>
+                        <a href="#" class="card-link"><i class="fas fa-arrow-right"></i></a>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-icon warning"><i class="fas fa-exclamation-circle"></i></div>
+                        <div class="card-info">
+                            <h3>Pasillo 4</h3>
+                            <p>1 anaquel en alerta</p>
+                        </div>
+                        <a href="#" class="card-link"><i class="fas fa-arrow-right"></i></a>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-icon warning"><i class="fas fa-exclamation-circle"></i></div>
+                        <div class="card-info">
+                            <h3>Pasillo 5</h3>
+                            <p>1 anaquel en alerta</p>
+                        </div>
+                        <a href="#" class="card-link"><i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Mapa de Pasillos</h3>
+                    </div>
+                    
+                    <div class="card-body">
+                        <div class="store-map">
+                            <!-- Aquí iría un mapa interactivo de la tienda -->
+                            <div class="map-placeholder">
+                                <i class="fas fa-map"></i>
+                                <p>Mapa interactivo de la tienda</p>
+                                <button class="primary-btn">Ver Mapa Completo</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Reportes Section -->
+            <section class="content-section" id="reportes-section">
+                <div class="section-header">
+                    <h2>Reportes</h2>
+                </div>
+                
+                <div class="dashboard-cards">
+                    <div class="dashboard-card">
+                        <div class="card-icon"><i class="fas fa-chart-line"></i></div>
+                        <div class="card-info">
+                            <h3>Reposiciones por Pasillo</h3>
+                            <p>Análisis de reposiciones por pasillo</p>
+                        </div>
+                        <a href="#" class="card-link"><i class="fas fa-arrow-right"></i></a>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-icon"><i class="fas fa-chart-bar"></i></div>
+                        <div class="card-info">
+                            <h3>Productos más Repuestos</h3>
+                            <p>Top productos con mayor reposición</p>
+                        </div>
+                        <a href="#" class="card-link"><i class="fas fa-arrow-right"></i></a>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-icon"><i class="fas fa-clock"></i></div>
+                        <div class="card-info">
+                            <h3>Tiempos de Reposición</h3>
+                            <p>Análisis de tiempos de respuesta</p>
+                        </div>
+                        <a href="#" class="card-link"><i class="fas fa-arrow-right"></i></a>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                        <div class="card-info">
+                            <h3>Alertas Frecuentes</h3>
+                            <p>Análisis de alertas recurrentes</p>
+                        </div>
+                        <a href="#" class="card-link"><i class="fas fa-arrow-right"></i></a>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Generar Reporte</h3>
+                    </div>
+                    
+                    <div class="card-body">
+                        <form class="form-grid">
+                            <div class="form-group">
+                                <label for="tipo-reporte">Tipo de Reporte</label>
+                                <select id="tipo-reporte" required>
+                                    <option value="">Seleccione un tipo de reporte</option>
+                                    <option value="reposiciones-pasillo">Reposiciones por Pasillo</option>
+                                    <option value="productos-repuestos">Productos más Repuestos</option>
+                                    <option value="tiempos-reposicion">Tiempos de Reposición</option>
+                                    <option value="alertas-frecuentes">Alertas Frecuentes</option>
+                                    <option value="rendimiento-personal">Rendimiento del Personal</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="formato-reporte">Formato</label>
+                                <select id="formato-reporte" required>
+                                    <option value="pdf">PDF</option>
+                                    <option value="excel">Excel</option>
+                                    <option value="csv">CSV</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="fecha-inicio-reporte">Fecha Inicio</label>
+                                <input type="date" id="fecha-inicio-reporte" value="2025-01-01">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="fecha-fin-reporte">Fecha Fin</label>
+                                <input type="date" id="fecha-fin-reporte" value="2025-07-01">
+                            </div>
+                            
+                            <div class="form-actions full-width">
+                                <button type="button" class="primary-btn"><i class="fas fa-file-download"></i> Generar Reporte</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Configuración Section -->
+            <section class="content-section" id="configuracion-section">
+                <div class="section-header">
+                    <h2>Configuración</h2>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Configuración de Alertas</h3>
+                    </div>
+                    
+                    <div class="card-body">
+                        <form class="form-grid">
+                            <div class="form-group">
+                                <label for="umbral-alerta">Umbral de Alerta</label>
+                                <input type="number" id="umbral-alerta" min="1" value="20">
+                                <p class="form-help">Cantidad mínima de unidades para generar alerta de reposición</p>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="notificaciones-email">Notificaciones por Email</label>
+                                <select id="notificaciones-email">
+                                    <option value="si">Activadas</option>
+                                    <option value="no">Desactivadas</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="destinatarios-email">Destinatarios de Notificaciones</label>
+                                <input type="text" id="destinatarios-email" value="pasillos@acaucab.com, almacen@acaucab.com">
+                                <p class="form-help">Separar múltiples emails con comas</p>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="frecuencia-notificaciones">Frecuencia de Notificaciones</label>
+                                <select id="frecuencia-notificaciones">
+                                    <option value="inmediata">Inmediata</option>
+                                    <option value="hora">Cada hora</option>
+                                    <option value="dia">Diaria</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-actions full-width">
+                                <button type="button" class="primary-btn">Guardar Configuración</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    
+    <!-- Modal para Ver Detalles de Orden -->
+    <div class="modal" id="ver-orden-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Detalles de Orden de Reposición</h3>
+                <button class="close-modal"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="order-details">
+                    <div class="order-header">
+                        <div class="order-info">
+                            <h4>Orden #ANA001</h4>
+                            <p><strong>Fecha de Generación:</strong> 03/07/2025</p>
+                            <p><strong>Estado:</strong> <span class="status pending">Pendiente</span></p>
+                        </div>
+                        <div class="order-location">
+                            <h4>Ubicación</h4>
+                            <p><strong>Pasillo:</strong> 1</p>
+                            <p><strong>Zona:</strong> 2</p>
+                            <p><strong>Anaquel:</strong> A</p>
+                        </div>
+                    </div>
+                    
+                    <div class="order-products">
+                        <h4>Producto</h4>
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Producto</th>
+                                    <th>Tipo</th>
+                                    <th>Stock Actual</th>
+                                    <th>Cantidad a Reponer</th>
+                                    <th>Capacidad Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>PRD001</td>
+                                    <td>Pilsen 355ml</td>
+                                    <td>Pilsener</td>
+                                    <td>18</td>
+                                    <td>50</td>
+                                    <td>100</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="order-notes">
+                        <h4>Notas</h4>
+                        <p>Orden generada automáticamente por el sistema debido a que el producto alcanzó el umbral mínimo de stock (20 unidades). Se requiere reposición urgente para evitar anaqueles vacíos.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="secondary-btn">Cerrar</button>
+                <button class="success-btn complete-btn"><i class="fas fa-check"></i> Marcar como Atendido</button>
+                <button class="primary-btn process-btn"><i class="fas fa-hourglass-half"></i> Marcar En Proceso</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal de Confirmación de Atención -->
+    <div class="modal" id="atender-orden-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Marcar Orden como Atendida</h3>
+                <button class="close-modal"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <p>¿Está seguro que desea marcar la orden <strong>#ANA001</strong> como atendida?</p>
+                <p>Esto confirmará que se ha completado la reposición de <strong>50 unidades</strong> de <strong>Pilsen 355ml</strong> en el anaquel <strong>P1-Z2-A</strong>.</p>
+                
+                <div class="form-group full-width">
+                    <label for="cantidad-repuesta">Cantidad Repuesta:</label>
+                    <input type="number" id="cantidad-repuesta" min="1" value="50">
+                </div>
+                
+                <div class="form-group full-width">
+                    <label for="notas-reposicion">Notas:</label>
+                    <textarea id="notas-reposicion" rows="3" placeholder="Notas adicionales sobre la reposición..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="secondary-btn">Cancelar</button>
+                <button class="success-btn"><i class="fas fa-check"></i> Confirmar</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal de Confirmación de En Proceso -->
+    <div class="modal" id="proceso-orden-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Marcar Orden En Proceso</h3>
+                <button class="close-modal"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <p>¿Está seguro que desea marcar la orden <strong>#ANA001</strong> como en proceso?</p>
+                <p>Esto indicará que se está trabajando en la reposición de <strong>Pilsen 355ml</strong> en el anaquel <strong>P1-Z2-A</strong>.</p>
+                
+                <div class="form-group full-width">
+                    <label for="notas-proceso">Notas:</label>
+                    <textarea id="notas-proceso" rows="3" placeholder="Notas adicionales sobre el proceso..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="secondary-btn">Cancelar</button>
+                <button class="primary-btn"><i class="fas fa-hourglass-half"></i> Confirmar</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Cambiar entre secciones
+        document.querySelectorAll('.sidebar-nav a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Actualizar menú activo
+                document.querySelectorAll('.sidebar-nav li').forEach(item => {
+                    item.classList.remove('active');
+                });
+                this.parentElement.classList.add('active');
+                
+                // Mostrar sección correspondiente
+                const sectionId = this.getAttribute('data-section');
+                document.querySelectorAll('.content-section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                document.getElementById(sectionId + '-section').classList.add('active');
+            });
+        });
+        
+        // Toggle sidebar en móvil
+        document.querySelector('.toggle-sidebar').addEventListener('click', function() {
+            document.querySelector('.dashboard-sidebar').classList.toggle('active');
+        });
+        
+        // Ver detalles de orden
+        document.querySelectorAll('.action-btn.view').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.getElementById('ver-orden-modal').classList.add('active');
+            });
+        });
+        
+        // Marcar como atendido
+        document.querySelectorAll('.action-btn.complete, .complete-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.getElementById('atender-orden-modal').classList.add('active');
+            });
+        });
+        
+        // Marcar en proceso
+        document.querySelectorAll('.action-btn.process, .process-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.getElementById('proceso-orden-modal').classList.add('active');
+            });
+        });
+        
+        // Cerrar modales
+        document.querySelectorAll('.close-modal, .modal .secondary-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.modal').forEach(modal => {
+                    modal.classList.remove('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

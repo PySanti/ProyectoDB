@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Gestión de Promociones - ACAUCAB</title>
+    <link rel="stylesheet" href="../css/dashboard_gestion_promociones.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="dashboard-sidebar">
+            <div class="sidebar-header">
+                <h1>ACAUCAB</h1>
+                <p>Panel de Administración</p>
+            </div>
+            
+            <div class="sidebar-user">
+                <div class="user-avatar">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <div class="user-info">
+                    <h3>Laura Gómez</h3>
+                    <p>Gestión de Promociones</p>
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="active"><a href="#promociones" data-section="promociones"><i class="fas fa-percentage"></i> Promociones</a></li>
+                    <li><a href="#diario" data-section="diario"><i class="fas fa-newspaper"></i> DiarioDeUnaCerveza</a></li>
+                    <li><a href="#configuracion" data-section="configuracion"><i class="fas fa-cog"></i> Configuración</a></li>
+                </ul>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <a href="index.html" class="logout-btn"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</a>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="dashboard-content">
+            <header class="content-header">
+                <div class="header-left">
+                    <button class="toggle-sidebar"><i class="fas fa-bars"></i></button>
+                    <h2>Dashboard de Gestión de Promociones</h2>
+                </div>
+                <div class="header-right">
+                    <div class="search-box">
+                        <input type="text" placeholder="Buscar promoción...">
+                        <button><i class="fas fa-search"></i></button>
+                    </div>
+                    <div class="notifications">
+                        <button class="notification-btn"><i class="fas fa-bell"></i><span class="badge">3</span></button>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Promociones Section -->
+            <section class="content-section active" id="promociones-section">
+                <div class="section-header">
+                    <h2>Gestión de Promociones</h2>
+                    <button class="primary-btn" id="add-promocion-btn"><i class="fas fa-plus"></i> Nueva Promoción</button>
+                </div>
+                
+                <div class="dashboard-cards">
+                    <div class="dashboard-card">
+                        <div class="card-icon"><i class="fas fa-tag"></i></div>
+                        <div class="card-info">
+                            <h3>12</h3>
+                            <p>Promociones Activas</p>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-icon warning"><i class="fas fa-clock"></i></div>
+                        <div class="card-info">
+                            <h3>4</h3>
+                            <p>Próximas a Vencer</p>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-icon success"><i class="fas fa-calendar-plus"></i></div>
+                        <div class="card-info">
+                            <h3>5</h3>
+                            <p>Programadas</p>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-icon danger"><i class="fas fa-calendar-times"></i></div>
+                        <div class="card-info">
+                            <h3>8</h3>
+                            <p>Vencidas</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="filter-bar">
+                    <div class="filter-group">
+                        <label for="filter-estado">Estado:</label>
+                        <select id="filter-estado">
+                            <option value="all">Todos los estados</option>
+                            <option value="activa">Activa</option>
+                            <option value="programada">Programada</option>
+                            <option value="vencida">Vencida</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="filter-fecha">Fecha:</label>
+                        <select id="filter-fecha">
+                            <option value="all">Todas las fechas</option>
+                            <option value="vigentes">Vigentes</option>
+                            <option value="semana">Esta semana</option>
+                            <option value="mes">Este mes</option>
+                            <option value="trimestre">Próximo trimestre</option>
+                        </select>
+                    </div>
+                    
+                    <button class="secondary-btn"><i class="fas fa-filter"></i> Filtrar</button>
+                    <button class="outline-btn"><i class="fas fa-sync-alt"></i> Reiniciar</button>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Promociones</h3>
+                        <div class="card-actions">
+                            <select id="sort-promociones">
+                                <option value="date-asc">Fecha Inicio (Próxima a Lejana)</option>
+                                <option value="date-desc">Fecha Inicio (Lejana a Próxima)</option>
+                                <option value="end-asc">Fecha Fin (Próxima a Lejana)</option>
+                                <option value="end-desc">Fecha Fin (Lejana a Próxima)</option>
+                                <option value="name-asc">Nombre (A-Z)</option>
+                                <option value="name-desc">Nombre (Z-A)</option>
+                                <option value="discount-asc">Descuento (Menor a Mayor)</option>
+                                <option value="discount-desc">Descuento (Mayor a Menor)</option>
+                            </select>
+                            <button class="export-btn"><i class="fas fa-download"></i> Exportar</button>
+                        </div>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nombre</th>
+                                    <th>Descuento</th>
+                                    <th>Fecha Inicio</th>
+                                    <th>Fecha Fin</th>
+                                    <th>Productos</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>PROM001</td>
+                                    <td>Verano Refrescante</td>
+                                    <td>15%</td>
+                                    <td>01/07/2025</td>
+                                    <td>31/08/2025</td>
+                                    <td>5</td>
+                                    <td><span class="status active">Activa</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>PROM002</td>
+                                    <td>Happy Hour IPA</td>
+                                    <td>20%</td>
+                                    <td>01/07/2025</td>
+                                    <td>15/07/2025</td>
+                                    <td>2</td>
+                                    <td><span class="status active">Activa</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>PROM003</td>
+                                    <td>Pack Degustación</td>
+                                    <td>20%</td>
+                                    <td>15/07/2025</td>
+                                    <td>15/08/2025</td>
+                                    <td>6</td>
+                                    <td><span class="status pending">Programada</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>PROM004</td>
+                                    <td>Promoción Especial</td>
+                                    <td>25%</td>
+                                    <td>01/06/2025</td>
+                                    <td>30/06/2025</td>
+                                    <td>3</td>
+                                    <td><span class="status inactive">Vencida</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>PROM005</td>
+                                    <td>Descuento Stout</td>
+                                    <td>10%</td>
+                                    <td>05/07/2025</td>
+                                    <td>10/07/2025</td>
+                                    <td>1</td>
+                                    <td><span class="status active">Activa</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>PROM006</td>
+                                    <td>Lanzamiento Amber Ale</td>
+                                    <td>25%</td>
+                                    <td>20/07/2025</td>
+                                    <td>27/07/2025</td>
+                                    <td>1</td>
+                                    <td><span class="status pending">Programada</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="table-footer">
+                        <div class="pagination">
+                            <button class="page-btn prev"><i class="fas fa-chevron-left"></i></button>
+                            <button class="page-btn active">1</button>
+                            <button class="page-btn">2</button>
+                            <button class="page-btn">3</button>
+                            <button class="page-btn next"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                        <div class="page-info">
+                            Mostrando 1-6 de 29 promociones
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Promociones Próximas a Vencer</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="alert-list">
+                                    <div class="alert-item warning">
+                                        <div class="alert-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                                        <div class="alert-content">
+                                            <h4>Happy Hour IPA</h4>
+                                            <p>Vence en 5 días (15/07/2025)</p>
+                                            <span class="alert-time">Descuento del 20%</span>
+                                        </div>
+                                        <button class="alert-action">Extender</button>
+                                    </div>
+                                    <div class="alert-item warning">
+                                        <div class="alert-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                                        <div class="alert-content">
+                                            <h4>Descuento Stout</h4>
+                                            <p>Vence en 3 días (10/07/2025)</p>
+                                            <span class="alert-time">Descuento del 10%</span>
+                                        </div>
+                                        <button class="alert-action">Extender</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Rendimiento de Promociones</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <div class="chart-placeholder">
+                                        <i class="fas fa-chart-bar"></i>
+                                        <p>Efectividad de promociones activas</p>
+                                        <ul class="chart-legend">
+                                            <li><span class="legend-color" style="background-color: var(--primary-color);"></span> Verano Refrescante (45%)</li>
+                                            <li><span class="legend-color" style="background-color: var(--info-color);"></span> Happy Hour IPA (30%)</li>
+                                            <li><span class="legend-color" style="background-color: var(--success-color);"></span> Descuento Stout (15%)</li>
+                                            <li><span class="legend-color" style="background-color: var(--warning-color);"></span> Otras (10%)</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- DiarioDeUnaCerveza Section -->
+            <section class="content-section" id="diario-section">
+                <div class="section-header">
+                    <h2>DiarioDeUnaCerveza</h2>
+                    <button class="primary-btn" id="add-edicion-btn"><i class="fas fa-plus"></i> Nueva Edición</button>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Publicar Edición</h3>
+                            </div>
+                            
+                            <div class="card-body">
+                                <form class="form-grid">
+                                    <div class="form-group full-width">
+                                        <label for="edicion-titulo">Título de la Edición</label>
+                                        <input type="text" id="edicion-titulo" placeholder="Ej: Edición Julio 2025" required>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="edicion-numero">Número de Edición</label>
+                                        <input type="number" id="edicion-numero" min="1" value="24" required>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="edicion-fecha">Fecha de Publicación</label>
+                                        <input type="date" id="edicion-fecha" value="2025-07-01" required>
+                                    </div>
+                                    
+                                    <div class="form-group full-width">
+                                        <label for="edicion-descripcion">Descripción</label>
+                                        <textarea id="edicion-descripcion" rows="3" placeholder="Breve descripción de esta edición"></textarea>
+                                    </div>
+                                    
+                                    <div class="form-group full-width">
+                                        <label for="edicion-archivo">Archivo PDF</label>
+                                        <div class="file-upload">
+                                            <input type="file" id="edicion-archivo" accept=".pdf">
+                                            <button type="button" class="upload-btn">Seleccionar archivo</button>
+                                            <span class="file-name">Ningún archivo seleccionado</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group full-width">
+                                        <label for="edicion-portada">Imagen de Portada</label>
+                                        <div class="file-upload">
+                                            <input type="file" id="edicion-portada" accept="image/*">
+                                            <button type="button" class="upload-btn">Seleccionar imagen</button>
+                                            <span class="file-name">Ningún archivo seleccionado</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="edicion-destacado">Destacar en Inicio</label>
+                                        <select id="edicion-destacado">
+                                            <option value="si">Sí</option>
+                                            <option value="no">No</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="edicion-estado">Estado</label>
+                                        <select id="edicion-estado">
+                                            <option value="publicado">Publicar ahora</option>
+                                            <option value="borrador">Guardar como borrador</option>
+                                            <option value="programado">Programar publicación</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-actions full-width">
+                                        <button type="button" class="secondary-btn">Cancelar</button>
+                                        <button type="button" class="primary-btn">Publicar Edición</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Ediciones Publicadas</h3>
+                                <div class="card-actions">
+                                    <select id="sort-ediciones">
+                                        <option value="date-desc">Fecha (Reciente a Antigua)</option>
+                                        <option value="date-asc">Fecha (Antigua a Reciente)</option>
+                                        <option value="numero-desc">Número (Mayor a Menor)</option>
+                                        <option value="numero-asc">Número (Menor a Mayor)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="table-responsive">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Número</th>
+                                            <th>Título</th>
+                                            <th>Fecha</th>
+                                            <th>Descargas</th>
+                                            <th>Destacado</th>
+                                            <th>Estado</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>23</td>
+                                            <td>Edición Junio 2025</td>
+                                            <td>01/06/2025</td>
+                                            <td>1,245</td>
+                                            <td><i class="fas fa-check text-success"></i></td>
+                                            <td><span class="status active">Publicado</span></td>
+                                            <td class="actions">
+                                                <button class="action-btn view" title="Ver"><i class="fas fa-eye"></i></button>
+                                                <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                                <button class="action-btn download" title="Descargar"><i class="fas fa-download"></i></button>
+                                                <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>22</td>
+                                            <td>Edición Mayo 2025</td>
+                                            <td>01/05/2025</td>
+                                            <td>1,876</td>
+                                            <td><i class="fas fa-times text-muted"></i></td>
+                                            <td><span class="status active">Publicado</span></td>
+                                            <td class="actions">
+                                                <button class="action-btn view" title="Ver"><i class="fas fa-eye"></i></button>
+                                                <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                                <button class="action-btn download" title="Descargar"><i class="fas fa-download"></i></button>
+                                                <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>21</td>
+                                            <td>Edición Abril 2025</td>
+                                            <td>01/04/2025</td>
+                                            <td>2,103</td>
+                                            <td><i class="fas fa-times text-muted"></i></td>
+                                            <td><span class="status active">Publicado</span></td>
+                                            <td class="actions">
+                                                <button class="action-btn view" title="Ver"><i class="fas fa-eye"></i></button>
+                                                <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                                <button class="action-btn download" title="Descargar"><i class="fas fa-download"></i></button>
+                                                <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>20</td>
+                                            <td>Edición Marzo 2025</td>
+                                            <td>01/03/2025</td>
+                                            <td>1,987</td>
+                                            <td><i class="fas fa-times text-muted"></i></td>
+                                            <td><span class="status active">Publicado</span></td>
+                                            <td class="actions">
+                                                <button class="action-btn view" title="Ver"><i class="fas fa-eye"></i></button>
+                                                <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                                <button class="action-btn download" title="Descargar"><i class="fas fa-download"></i></button>
+                                                <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>19</td>
+                                            <td>Edición Febrero 2025</td>
+                                            <td>01/02/2025</td>
+                                            <td>1,756</td>
+                                            <td><i class="fas fa-times text-muted"></i></td>
+                                            <td><span class="status active">Publicado</span></td>
+                                            <td class="actions">
+                                                <button class="action-btn view" title="Ver"><i class="fas fa-eye"></i></button>
+                                                <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                                <button class="action-btn download" title="Descargar"><i class="fas fa-download"></i></button>
+                                                <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <div class="table-footer">
+                                <div class="pagination">
+                                    <button class="page-btn prev"><i class="fas fa-chevron-left"></i></button>
+                                    <button class="page-btn active">1</button>
+                                    <button class="page-btn">2</button>
+                                    <button class="page-btn">3</button>
+                                    <button class="page-btn next"><i class="fas fa-chevron-right"></i></button>
+                                </div>
+                                <div class="page-info">
+                                    Mostrando 1-5 de 23 ediciones
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Vista Previa</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="diario-preview">
+                                    <div class="diario-portada">
+                                        <img src="../img/portada-diario.jpg" alt="Portada DiarioDeUnaCerveza">
+                                    </div>
+                                    <div class="diario-info">
+                                        <h3>Edición Junio 2025</h3>
+                                        <p class="diario-numero">Edición #23</p>
+                                        <p class="diario-fecha">Publicado: 01/06/2025</p>
+                                        <p class="diario-descripcion">En esta edición exploramos el mundo de las cervezas Stout, con entrevistas exclusivas a maestros cerveceros y recomendaciones de maridaje para disfrutar al máximo de estos sabores intensos.</p>
+                                        <div class="diario-actions">
+                                            <button class="secondary-btn"><i class="fas fa-eye"></i> Ver Online</button>
+                                            <button class="secondary-btn"><i class="fas fa-download"></i> Descargar PDF</button>
+                                            <button class="secondary-btn"><i class="fas fa-share-alt"></i> Compartir</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Configuración Section -->
+            <section class="content-section" id="configuracion-section">
+                <div class="section-header">
+                    <h2>Configuración</h2>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Configuración de Promociones</h3>
+                            </div>
+                            
+                            <div class="card-body">
+                                <form class="form-grid">
+                                    <div class="form-group">
+                                        <label for="config-notificacion">Notificación de Vencimiento (días)</label>
+                                        <input type="number" id="config-notificacion" min="1" value="7">
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="config-desactivacion">Desactivación Automática</label>
+                                        <select id="config-desactivacion">
+                                            <option value="si">Activada</option>
+                                            <option value="no">Desactivada</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="config-recordatorio">Recordatorios por Email</label>
+                                        <select id="config-recordatorio">
+                                            <option value="si">Activados</option>
+                                            <option value="no">Desactivados</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="config-destinatarios">Destinatarios de Alertas</label>
+                                        <input type="text" id="config-destinatarios" value="promociones@acaucab.com, gerencia@acaucab.com">
+                                    </div>
+                                    
+                                    <div class="form-actions full-width">
+                                        <button type="button" class="primary-btn">Guardar Configuración</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Configuración del DiarioDeUnaCerveza</h3>
+                            </div>
+                            
+                            <div class="card-body">
+                                <form class="form-grid">
+                                    <div class="form-group">
+                                        <label for="config-diario-titulo">Título del Diario</label>
+                                        <input type="text" id="config-diario-titulo" value="DiarioDeUnaCerveza">
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="config-diario-descripcion">Descripción</label>
+                                        <textarea id="config-diario-descripcion" rows="3">La publicación mensual sobre el mundo de las cervezas artesanales.</textarea>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="config-diario-ediciones">Ediciones a Mostrar</label>
+                                        <input type="number" id="config-diario-ediciones" min="1" value="12">
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="config-diario-destacados">Destacados en Inicio</label>
+                                        <input type="number" id="config-diario-destacados" min="1" max="5" value="3">
+                                    </div>
+                                    
+                                    <div class="form-actions full-width">
+                                        <button type="button" class="primary-btn">Guardar Configuración</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    
+    <!-- Modal para Nueva Promoción -->
+    <div class="modal" id="nueva-promocion-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Nueva Promoción</h3>
+                <button class="close-modal"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <form class="form-grid">
+                    <div class="form-group full-width">
+                        <label for="promocion-nombre">Nombre de la Promoción</label>
+                        <input type="text" id="promocion-nombre" placeholder="Ej: Verano Refrescante" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="promocion-descuento">Porcentaje de Descuento</label>
+                        <input type="number" id="promocion-descuento" min="1" max="100" placeholder="Ej: 15" required>
+                        <span class="input-suffix">%</span>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="promocion-inicio">Fecha de Inicio</label>
+                        <input type="date" id="promocion-inicio" value="2025-07-01" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="promocion-fin">Fecha de Fin</label>
+                        <input type="date" id="promocion-fin" value="2025-08-31" required>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <h4>Productos Aplicables</h4>
+                        <div class="productos-lista">
+                            <div class="producto-item">
+                                <select class="producto-select">
+                                    <option value="">Seleccione un producto</option>
+                                    <option value="PRD001">IPA Clásica</option>
+                                    <option value="PRD002">Stout Imperial</option>
+                                    <option value="PRD003">Amber Ale</option>
+                                    <option value="PRD004">Lager Tradicional</option>
+                                    <option value="PRD005">Wheat Beer</option>
+                                </select>
+                                <button type="button" class="producto-eliminar"><i class="fas fa-trash-alt"></i></button>
+                            </div>
+                        </div>
+                        <button type="button" class="secondary-btn" id="agregar-producto"><i class="fas fa-plus"></i> Agregar Producto</button>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="promocion-limite">Límite por Cliente</label>
+                        <input type="number" id="promocion-limite" min="0" value="0" placeholder="0 = Sin límite">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="promocion-estado">Estado</label>
+                        <select id="promocion-estado" required>
+                            <option value="activa">Activa</option>
+                            <option value="programada">Programada</option>
+                            <option value="inactiva">Inactiva</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label for="promocion-descripcion">Descripción</label>
+                        <textarea id="promocion-descripcion" rows="3" placeholder="Descripción detallada de la promoción"></textarea>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label for="promocion-imagen">Imagen de la Promoción</label>
+                        <div class="file-upload">
+                            <input type="file" id="promocion-imagen" accept="image/*">
+                            <button type="button" class="upload-btn">Seleccionar imagen</button>
+                            <span class="file-name">Ningún archivo seleccionado</span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="secondary-btn">Cancelar</button>
+                <button class="primary-btn">Guardar Promoción</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Cambiar entre secciones
+        document.querySelectorAll('.sidebar-nav a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Actualizar menú activo
+                document.querySelectorAll('.sidebar-nav li').forEach(item => {
+                    item.classList.remove('active');
+                });
+                this.parentElement.classList.add('active');
+                
+                // Mostrar sección correspondiente
+                const sectionId = this.getAttribute('data-section');
+                document.querySelectorAll('.content-section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                document.getElementById(sectionId + '-section').classList.add('active');
+            });
+        });
+        
+        // Toggle sidebar en móvil
+        document.querySelector('.toggle-sidebar').addEventListener('click', function() {
+            document.querySelector('.dashboard-sidebar').classList.toggle('active');
+        });
+        
+        // Modal de nueva promoción
+        document.getElementById('add-promocion-btn').addEventListener('click', function() {
+            document.getElementById('nueva-promocion-modal').classList.add('active');
+        });
+        
+        // Cerrar modales
+        document.querySelectorAll('.close-modal, .modal .secondary-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.modal').forEach(modal => {
+                    modal.classList.remove('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

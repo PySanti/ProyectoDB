@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard de Gestión de Eventos - ACAUCAB</title>
+    <link rel="stylesheet" href="../css/dashboard_gestion_eventos.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="dashboard-sidebar">
+            <div class="sidebar-header">
+                <h1>ACAUCAB</h1>
+                <p>Panel de Administración</p>
+            </div>
+            
+            <div class="sidebar-user">
+                <div class="user-avatar">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <div class="user-info">
+                    <h3>Carlos Mendoza</h3>
+                    <p>Gestión de Eventos</p>
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="active"><a href="#eventos" data-section="eventos"><i class="fas fa-calendar-alt"></i> <span>Eventos</span></a></li>
+                    <li><a href="#reportes" data-section="reportes"><i class="fas fa-chart-bar"></i> <span>Reportes</span></a></li>
+                    <li><a href="#configuracion" data-section="configuracion"><i class="fas fa-cog"></i> <span>Configuración</span></a></li>
+                </ul>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <a href="index.html" class="logout-btn"><i class="fas fa-sign-out-alt"></i> <span>Cerrar Sesión</span></a>
+            </div>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="dashboard-content">
+            <header class="content-header">
+                <div class="header-left">
+                    <button class="toggle-sidebar"><i class="fas fa-bars"></i></button>
+                    <h2>Dashboard de Gestión de Eventos</h2>
+                </div>
+                <div class="header-right">
+                    <div class="search-box">
+                        <input type="text" placeholder="Buscar evento...">
+                        <button><i class="fas fa-search"></i></button>
+                    </div>
+                    <div class="notifications">
+                        <button class="notification-btn"><i class="fas fa-bell"></i><span class="badge">3</span></button>
+                    </div>
+                </div>
+            </header>
+            
+            <!-- Eventos Section -->
+            <section class="content-section active" id="eventos-section">
+                <div class="section-header">
+                    <h2>Gestión de Eventos</h2>
+                    <button class="primary-btn" id="add-evento-btn"><i class="fas fa-plus"></i> Nuevo Evento</button>
+                </div>
+                
+                <div class="dashboard-cards">
+                    <div class="dashboard-card">
+                        <div class="card-icon"><i class="fas fa-calendar-check"></i></div>
+                        <div class="card-info">
+                            <h3>8</h3>
+                            <p>Eventos Programados</p>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-icon warning"><i class="fas fa-clock"></i></div>
+                        <div class="card-info">
+                            <h3>3</h3>
+                            <p>Eventos Esta Semana</p>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-icon success"><i class="fas fa-calendar-day"></i></div>
+                        <div class="card-info">
+                            <h3>2</h3>
+                            <p>Eventos En Curso</p>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-icon info"><i class="fas fa-clipboard-check"></i></div>
+                        <div class="card-info">
+                            <h3>15</h3>
+                            <p>Eventos Finalizados</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="filter-bar">
+                    <div class="filter-group">
+                        <label for="filter-estado">Estado:</label>
+                        <select id="filter-estado">
+                            <option value="all">Todos los estados</option>
+                            <option value="programado">Programado</option>
+                            <option value="en-curso">En curso</option>
+                            <option value="finalizado">Finalizado</option>
+                            <option value="cancelado">Cancelado</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="filter-fecha">Fecha:</label>
+                        <select id="filter-fecha">
+                            <option value="all">Todas las fechas</option>
+                            <option value="hoy">Hoy</option>
+                            <option value="semana">Esta semana</option>
+                            <option value="mes">Este mes</option>
+                            <option value="trimestre">Próximo trimestre</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="filter-locacion">Locación:</label>
+                        <select id="filter-locacion">
+                            <option value="all">Todas las locaciones</option>
+                            <option value="salon-principal">Salón Principal</option>
+                            <option value="terraza">Terraza</option>
+                            <option value="jardin">Jardín</option>
+                            <option value="externo">Evento Externo</option>
+                        </select>
+                    </div>
+                    
+                    <button class="secondary-btn"><i class="fas fa-filter"></i> Filtrar</button>
+                    <button class="outline-btn"><i class="fas fa-sync-alt"></i> Reiniciar</button>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Eventos</h3>
+                        <div class="card-actions">
+                            <select id="sort-eventos">
+                                <option value="date-asc">Fecha (Próxima a Lejana)</option>
+                                <option value="date-desc">Fecha (Lejana a Próxima)</option>
+                                <option value="name-asc">Nombre (A-Z)</option>
+                                <option value="name-desc">Nombre (Z-A)</option>
+                                <option value="capacity-asc">Capacidad (Menor a Mayor)</option>
+                                <option value="capacity-desc">Capacidad (Mayor a Menor)</option>
+                            </select>
+                            <button class="export-btn"><i class="fas fa-download"></i> Exportar</button>
+                        </div>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nombre</th>
+                                    <th>Fecha</th>
+                                    <th>Hora</th>
+                                    <th>Locación</th>
+                                    <th>Capacidad</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>EVT001</td>
+                                    <td>Festival de Cervezas Artesanales</td>
+                                    <td>15/07/2025</td>
+                                    <td>18:00 - 23:00</td>
+                                    <td>Salón Principal</td>
+                                    <td>200</td>
+                                    <td><span class="status active">Programado</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                        <button class="action-btn download" title="Generar reporte"><i class="fas fa-file-alt"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>EVT002</td>
+                                    <td>Cata de Cervezas Premium</td>
+                                    <td>22/07/2025</td>
+                                    <td>19:00 - 21:00</td>
+                                    <td>Terraza</td>
+                                    <td>50</td>
+                                    <td><span class="status active">Programado</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                        <button class="action-btn download" title="Generar reporte"><i class="fas fa-file-alt"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>EVT003</td>
+                                    <td>Lanzamiento Cerveza Temporada</td>
+                                    <td>10/07/2025</td>
+                                    <td>20:00 - 23:00</td>
+                                    <td>Jardín</td>
+                                    <td>100</td>
+                                    <td><span class="status pending">En curso</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                        <button class="action-btn download" title="Generar reporte"><i class="fas fa-file-alt"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>EVT004</td>
+                                    <td>Feria Gastronómica Local</td>
+                                    <td>05/08/2025</td>
+                                    <td>12:00 - 20:00</td>
+                                    <td>Evento Externo</td>
+                                    <td>500</td>
+                                    <td><span class="status active">Programado</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                        <button class="action-btn download" title="Generar reporte"><i class="fas fa-file-alt"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>EVT005</td>
+                                    <td>Workshop de Maridaje</td>
+                                    <td>18/06/2025</td>
+                                    <td>17:00 - 19:00</td>
+                                    <td>Salón Principal</td>
+                                    <td>30</td>
+                                    <td><span class="status inactive">Finalizado</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                        <button class="action-btn download" title="Generar reporte"><i class="fas fa-file-alt"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>EVT006</td>
+                                    <td>Degustación Nuevas Cervezas</td>
+                                    <td>25/06/2025</td>
+                                    <td>18:30 - 21:30</td>
+                                    <td>Terraza</td>
+                                    <td>40</td>
+                                    <td><span class="status inactive">Finalizado</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                        <button class="action-btn download" title="Generar reporte"><i class="fas fa-file-alt"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="table-footer">
+                        <div class="pagination">
+                            <button class="page-btn prev"><i class="fas fa-chevron-left"></i></button>
+                            <button class="page-btn active">1</button>
+                            <button class="page-btn">2</button>
+                            <button class="page-btn">3</button>
+                            <button class="page-btn next"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                        <div class="page-info">
+                            Mostrando 1-6 de 25 eventos
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Eventos Próximos</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="alert-list">
+                                    <div class="alert-item warning">
+                                        <div class="alert-icon"><i class="fas fa-calendar-day"></i></div>
+                                        <div class="alert-content">
+                                            <h4>Festival de Cervezas Artesanales</h4>
+                                            <p>En 5 días (15/07/2025)</p>
+                                            <span class="alert-time">18:00 - 23:00 | Salón Principal</span>
+                                        </div>
+                                        <button class="alert-action">Detalles</button>
+                                    </div>
+                                    <div class="alert-item warning">
+                                        <div class="alert-icon"><i class="fas fa-calendar-day"></i></div>
+                                        <div class="alert-content">
+                                            <h4>Cata de Cervezas Premium</h4>
+                                            <p>En 12 días (22/07/2025)</p>
+                                            <span class="alert-time">19:00 - 21:00 | Terraza</span>
+                                        </div>
+                                        <button class="alert-action">Detalles</button>
+                                    </div>
+                                    <div class="alert-item success">
+                                        <div class="alert-icon"><i class="fas fa-calendar-day"></i></div>
+                                        <div class="alert-content">
+                                            <h4>Feria Gastronómica Local</h4>
+                                            <p>En 26 días (05/08/2025)</p>
+                                            <span class="alert-time">12:00 - 20:00 | Evento Externo</span>
+                                        </div>
+                                        <button class="alert-action">Detalles</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Estadísticas de Eventos</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <div class="chart-placeholder">
+                                        <i class="fas fa-chart-pie"></i>
+                                        <p>Distribución de eventos por tipo</p>
+                                        <ul class="chart-legend">
+                                            <li><span class="legend-color" style="background-color: var(--primary-color);"></span> Festivales (35%)</li>
+                                            <li><span class="legend-color" style="background-color: var(--info-color);"></span> Catas (25%)</li>
+                                            <li><span class="legend-color" style="background-color: var(--success-color);"></span> Lanzamientos (20%)</li>
+                                            <li><span class="legend-color" style="background-color: var(--warning-color);"></span> Workshops (15%)</li>
+                                            <li><span class="legend-color" style="background-color: var(--error-color);"></span> Otros (5%)</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Reportes Section -->
+            <section class="content-section" id="reportes-section">
+                <div class="section-header">
+                    <h2>Reportes de Eventos</h2>
+                    <button class="primary-btn" id="generate-report-btn"><i class="fas fa-file-alt"></i> Generar Nuevo Reporte</button>
+                </div>
+                
+                <div class="filter-bar">
+                    <div class="filter-group">
+                        <label for="report-tipo">Tipo de Reporte:</label>
+                        <select id="report-tipo">
+                            <option value="all">Todos los tipos</option>
+                            <option value="ventas">Ventas de Productos</option>
+                            <option value="asistencia">Asistencia</option>
+                            <option value="financiero">Financiero</option>
+                            <option value="proveedores">Proveedores</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="report-evento">Evento:</label>
+                        <select id="report-evento">
+                            <option value="all">Todos los eventos</option>
+                            <option value="EVT001">Festival de Cervezas Artesanales</option>
+                            <option value="EVT002">Cata de Cervezas Premium</option>
+                            <option value="EVT003">Lanzamiento Cerveza Temporada</option>
+                            <option value="EVT004">Feria Gastronómica Local</option>
+                            <option value="EVT005">Workshop de Maridaje</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="report-fecha">Fecha:</label>
+                        <select id="report-fecha">
+                            <option value="all">Todas las fechas</option>
+                            <option value="mes-actual">Mes actual</option>
+                            <option value="mes-anterior">Mes anterior</option>
+                            <option value="trimestre">Último trimestre</option>
+                            <option value="anual">Anual</option>
+                        </select>
+                    </div>
+                    
+                    <button class="secondary-btn"><i class="fas fa-filter"></i> Filtrar</button>
+                    <button class="outline-btn"><i class="fas fa-sync-alt"></i> Reiniciar</button>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Reportes Generados</h3>
+                        <div class="card-actions">
+                            <select id="sort-reportes">
+                                <option value="date-desc">Fecha (Reciente a Antigua)</option>
+                                <option value="date-asc">Fecha (Antigua a Reciente)</option>
+                                <option value="name-asc">Evento (A-Z)</option>
+                                <option value="name-desc">Evento (Z-A)</option>
+                                <option value="type-asc">Tipo (A-Z)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Evento</th>
+                                    <th>Tipo</th>
+                                    <th>Fecha Evento</th>
+                                    <th>Fecha Reporte</th>
+                                    <th>Generado por</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>REP001</td>
+                                    <td>Workshop de Maridaje</td>
+                                    <td>Ventas de Productos</td>
+                                    <td>18/06/2025</td>
+                                    <td>19/06/2025</td>
+                                    <td>Carlos Mendoza</td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver reporte"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn download" title="Descargar"><i class="fas fa-download"></i></button>
+                                        <button class="action-btn print" title="Imprimir"><i class="fas fa-print"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>REP002</td>
+                                    <td>Workshop de Maridaje</td>
+                                    <td>Asistencia</td>
+                                    <td>18/06/2025</td>
+                                    <td>19/06/2025</td>
+                                    <td>Carlos Mendoza</td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver reporte"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn download" title="Descargar"><i class="fas fa-download"></i></button>
+                                        <button class="action-btn print" title="Imprimir"><i class="fas fa-print"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>REP003</td>
+                                    <td>Workshop de Maridaje</td>
+                                    <td>Financiero</td>
+                                    <td>18/06/2025</td>
+                                    <td>19/06/2025</td>
+                                    <td>Carlos Mendoza</td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver reporte"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn download" title="Descargar"><i class="fas fa-download"></i></button>
+                                        <button class="action-btn print" title="Imprimir"><i class="fas fa-print"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>REP004</td>
+                                    <td>Degustación Nuevas Cervezas</td>
+                                    <td>Ventas de Productos</td>
+                                    <td>25/06/2025</td>
+                                    <td>26/06/2025</td>
+                                    <td>Ana Martínez</td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver reporte"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn download" title="Descargar"><i class="fas fa-download"></i></button>
+                                        <button class="action-btn print" title="Imprimir"><i class="fas fa-print"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>REP005</td>
+                                    <td>Degustación Nuevas Cervezas</td>
+                                    <td>Financiero</td>
+                                    <td>25/06/2025</td>
+                                    <td>26/06/2025</td>
+                                    <td>Ana Martínez</td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver reporte"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn download" title="Descargar"><i class="fas fa-download"></i></button>
+                                        <button class="action-btn print" title="Imprimir"><i class="fas fa-print"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="table-footer">
+                        <div class="pagination">
+                            <button class="page-btn prev"><i class="fas fa-chevron-left"></i></button>
+                            <button class="page-btn active">1</button>
+                            <button class="page-btn">2</button>
+                            <button class="page-btn">3</button>
+                            <button class="page-btn next"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                        <div class="page-info">
+                            Mostrando 1-5 de 18 reportes
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Resumen de Ventas por Evento</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <div class="chart-placeholder">
+                                        <i class="fas fa-chart-bar"></i>
+                                        <p>Ventas de productos por evento (último trimestre)</p>
+                                        <ul class="chart-legend">
+                                            <li><span class="legend-color" style="background-color: var(--primary-color);"></span> Workshop de Maridaje ($2,500)</li>
+                                            <li><span class="legend-color" style="background-color: var(--info-color);"></span> Degustación Nuevas Cervezas ($1,800)</li>
+                                            <li><span class="legend-color" style="background-color: var(--success-color);"></span> Lanzamiento Cerveza Temporada ($3,200)</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Asistencia por Evento</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <div class="chart-placeholder">
+                                        <i class="fas fa-chart-line"></i>
+                                        <p>Porcentaje de asistencia vs. capacidad</p>
+                                        <ul class="chart-legend">
+                                            <li><span class="legend-color" style="background-color: var(--primary-color);"></span> Workshop de Maridaje (95%)</li>
+                                            <li><span class="legend-color" style="background-color: var(--info-color);"></span> Degustación Nuevas Cervezas (85%)</li>
+                                            <li><span class="legend-color" style="background-color: var(--success-color);"></span> Lanzamiento Cerveza Temporada (78%)</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <!-- Configuración Section -->
+            <section class="content-section" id="configuracion-section">
+                <div class="section-header">
+                    <h2>Configuración</h2>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Configuración de Eventos</h3>
+                            </div>
+                            
+                            <div class="card-body">
+                                <form class="form-grid">
+                                    <div class="form-group">
+                                        <label for="config-notificacion">Notificación de Eventos (días)</label>
+                                        <input type="number" id="config-notificacion" min="1" value="7">
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="config-recordatorio">Recordatorios por Email</label>
+                                        <select id="config-recordatorio">
+                                            <option value="si">Activados</option>
+                                            <option value="no">Desactivados</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="config-destinatarios">Destinatarios de Alertas</label>
+                                        <input type="text" id="config-destinatarios" value="eventos@acaucab.com, gerencia@acaucab.com">
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="config-locaciones">Locaciones Disponibles</label>
+                                        <textarea id="config-locaciones" rows="3">Salón Principal, Terraza, Jardín, Evento Externo</textarea>
+                                    </div>
+                                    
+                                    <div class="form-actions full-width">
+                                        <button type="button" class="primary-btn">Guardar Configuración</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Configuración de Reportes</h3>
+                            </div>
+                            
+                            <div class="card-body">
+                                <form class="form-grid">
+                                    <div class="form-group">
+                                        <label for="config-logo">Logo para Reportes</label>
+                                        <div class="file-upload">
+                                            <input type="file" id="config-logo" accept="image/*">
+                                            <button type="button" class="upload-btn">Seleccionar imagen</button>
+                                            <span class="file-name">logo-acaucab.png</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="config-formato">Formato de Reporte Predeterminado</label>
+                                        <select id="config-formato">
+                                            <option value="pdf">PDF</option>
+                                            <option value="excel">Excel</option>
+                                            <option value="csv">CSV</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="config-auto-reporte">Generar Reporte Automático</label>
+                                        <select id="config-auto-reporte">
+                                            <option value="si">Activado</option>
+                                            <option value="no">Desactivado</option>
+                                        </select>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label for="config-pie-pagina">Pie de Página para Reportes</label>
+                                        <textarea id="config-pie-pagina" rows="3">ACAUCAB - Distribuidora de Cervezas Artesanales | Tel: (123) 456-7890 | www.acaucab.com</textarea>
+                                    </div>
+                                    
+                                    <div class="form-actions full-width">
+                                        <button type="button" class="primary-btn">Guardar Configuración</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    
+    <!-- Modal para Nuevo Evento -->
+    <div class="modal" id="nuevo-evento-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Nuevo Evento</h3>
+                <button class="close-modal"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <form class="form-grid">
+                    <div class="form-group full-width">
+                        <label for="evento-nombre">Nombre del Evento</label>
+                        <input type="text" id="evento-nombre" placeholder="Ej: Festival de Cervezas Artesanales" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="evento-fecha">Fecha</label>
+                        <input type="date" id="evento-fecha" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="evento-hora-inicio">Hora Inicio</label>
+                        <input type="time" id="evento-hora-inicio" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="evento-hora-fin">Hora Fin</label>
+                        <input type="time" id="evento-hora-fin" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="evento-locacion">Locación</label>
+                        <select id="evento-locacion" required>
+                            <option value="">Seleccionar</option>
+                            <option value="salon-principal">Salón Principal</option>
+                            <option value="terraza">Terraza</option>
+                            <option value="jardin">Jardín</option>
+                            <option value="externo">Evento Externo</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="evento-capacidad">Capacidad</label>
+                        <input type="number" id="evento-capacidad" min="1" required>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label for="evento-descripcion">Descripción</label>
+                        <textarea id="evento-descripcion" rows="3" placeholder="Descripción detallada del evento"></textarea>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="evento-entradas">Venta de Entradas</label>
+                        <select id="evento-entradas">
+                            <option value="si">Sí</option>
+                            <option value="no">No</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="evento-precio-entrada">Precio Entrada</label>
+                        <input type="number" id="evento-precio-entrada" min="0" step="0.01">
+                        <span class="input-suffix">$</span>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <h4>Productos para el Evento</h4>
+                        <div class="productos-lista">
+                            <div class="producto-item">
+                                <select class="producto-select">
+                                    <option value="">Seleccione un producto</option>
+                                    <option value="PRD001">IPA Clásica</option>
+                                    <option value="PRD002">Stout Imperial</option>
+                                    <option value="PRD003">Amber Ale</option>
+                                    <option value="PRD004">Lager Tradicional</option>
+                                    <option value="PRD005">Wheat Beer</option>
+                                </select>
+                                <input type="number" min="1" value="1" placeholder="Cantidad">
+                                <button type="button" class="producto-eliminar"><i class="fas fa-trash-alt"></i></button>
+                            </div>
+                        </div>
+                        <button type="button" class="secondary-btn" id="agregar-producto"><i class="fas fa-plus"></i> Agregar Producto</button>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <h4>Proveedores para el Evento</h4>
+                        <div class="productos-lista">
+                            <div class="producto-item">
+                                <select class="producto-select">
+                                    <option value="">Seleccione un proveedor</option>
+                                    <option value="PRV001">Catering "El Gourmet"</option>
+                                    <option value="PRV002">Sonido y Luces "AudioPro"</option>
+                                    <option value="PRV003">Decoración "Eventos Mágicos"</option>
+                                    <option value="PRV004">Seguridad "Guardian"</option>
+                                </select>
+                                <input type="text" placeholder="Detalles del servicio">
+                                <button type="button" class="producto-eliminar"><i class="fas fa-trash-alt"></i></button>
+                            </div>
+                        </div>
+                        <button type="button" class="secondary-btn" id="agregar-proveedor"><i class="fas fa-plus"></i> Agregar Proveedor</button>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="evento-estado">Estado</label>
+                        <select id="evento-estado" required>
+                            <option value="programado">Programado</option>
+                            <option value="en-curso">En curso</option>
+                            <option value="finalizado">Finalizado</option>
+                            <option value="cancelado">Cancelado</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="secondary-btn">Cancelar</button>
+                <button class="primary-btn">Guardar Evento</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal para Generar Reporte -->
+    <div class="modal" id="generar-reporte-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Generar Reporte de Evento</h3>
+                <button class="close-modal"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <form class="form-grid">
+                    <div class="form-group">
+                        <label for="reporte-evento">Evento</label>
+                        <select id="reporte-evento" required>
+                            <option value="">Seleccionar evento</option>
+                            <option value="EVT001">Festival de Cervezas Artesanales</option>
+                            <option value="EVT002">Cata de Cervezas Premium</option>
+                            <option value="EVT003">Lanzamiento Cerveza Temporada</option>
+                            <option value="EVT004">Feria Gastronómica Local</option>
+                            <option value="EVT005">Workshop de Maridaje</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label>Tipo de Reporte</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="reporte-ventas" checked>
+                                <label for="reporte-ventas">Ventas de Productos</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="reporte-entradas" checked>
+                                <label for="reporte-entradas">Ventas de Entradas</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="reporte-gastos" checked>
+                                <label for="reporte-gastos">Gastos de Proveedores</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="reporte-asistencia">
+                                <label for="reporte-asistencia">Asistencia</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="checkbox" id="reporte-financiero" checked>
+                                <label for="reporte-financiero">Resumen Financiero</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="reporte-formato">Formato</label>
+                        <select id="reporte-formato">
+                            <option value="pdf">PDF</option>
+                            <option value="excel">Excel</option>
+                            <option value="csv">CSV</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label for="reporte-comentarios">Comentarios Adicionales</label>
+                        <textarea id="reporte-comentarios" rows="3" placeholder="Añada cualquier comentario o nota para incluir en el reporte..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="secondary-btn">Cancelar</button>
+                <button class="primary-btn">Generar Reporte</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Cambiar entre secciones
+        document.querySelectorAll('.sidebar-nav a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                
+                // Actualizar menú activo
+                document.querySelectorAll('.sidebar-nav li').forEach(item => {
+                    item.classList.remove('active');
+                });
+                this.parentElement.classList.add('active');
+                
+                // Mostrar sección correspondiente
+                const sectionId = this.getAttribute('data-section');
+                document.querySelectorAll('.content-section').forEach(section => {
+                    section.classList.remove('active');
+                });
+                document.getElementById(sectionId + '-section').classList.add('active');
+            });
+        });
+        
+        // Toggle sidebar en móvil
+        document.querySelector('.toggle-sidebar').addEventListener('click', function() {
+            document.querySelector('.dashboard-sidebar').classList.toggle('active');
+        });
+        
+        // Modal de nuevo evento
+        document.getElementById('add-evento-btn').addEventListener('click', function() {
+            document.getElementById('nuevo-evento-modal').classList.add('active');
+        });
+        
+        // Modal de generar reporte
+        document.getElementById('generate-report-btn').addEventListener('click', function() {
+            document.getElementById('generar-reporte-modal').classList.add('active');
+        });
+        
+        // Cerrar modales
+        document.querySelectorAll('.close-modal, .modal .secondary-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.modal').forEach(modal => {
+                    modal.classList.remove('active');
+                });
+            });
+        });
+        
+        // Agregar producto
+        document.getElementById('agregar-producto').addEventListener('click', function() {
+            const container = document.querySelector('.productos-lista');
+            const newItem = document.querySelector('.producto-item').cloneNode(true);
+            
+            // Limpiar valores
+            newItem.querySelector('select').value = '';
+            newItem.querySelector('input').value = '1';
+            
+            // Agregar evento para eliminar
+            newItem.querySelector('.producto-eliminar').addEventListener('click', function() {
+                container.removeChild(newItem);
+            });
+            
+            container.appendChild(newItem);
+        });
+        
+        // Agregar proveedor
+        document.getElementById('agregar-proveedor').addEventListener('click', function() {
+            const container = document.querySelectorAll('.productos-lista')[1];
+            const newItem = document.querySelectorAll('.producto-item')[1].cloneNode(true);
+            
+            // Limpiar valores
+            newItem.querySelector('select').value = '';
+            newItem.querySelector('input').value = '';
+            
+            // Agregar evento para eliminar
+            newItem.querySelector('.producto-eliminar').addEventListener('click', function() {
+                container.removeChild(newItem);
+            });
+            
+            container.appendChild(newItem);
+        });
+    </script>
+</body>
+</html>
