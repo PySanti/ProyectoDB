@@ -1,4 +1,4 @@
--- Insertar Estados de Venezuela (fk_lugar es NULL para los estados)
+-- Insertar Estados de Venezuela (lugar_relacion_idar es NULL para los estados)
 INSERT INTO Lugar (nombre, tipo) VALUES
 ('Anzoátegui', 'Estado'),
 ('Amazonas', 'Estado'),
@@ -25,8 +25,7 @@ INSERT INTO Lugar (nombre, tipo) VALUES
 ('Yaracuy', 'Estado'),
 ('Zulia', 'Estado');
 
--- Insertar Municipios por Estado (fk_lugar es la id del Estado correspondiente)
-INSERT INTO Lugar (nombre, tipo, fk_lugar) VALUES
+INSERT INTO Lugar (nombre, tipo, lugar_relacion_id) VALUES
 -- Amazonas (id de Estado: 1)
 ('Alto Orinoco', 'Municipio', 1),
 ('Atabapo', 'Municipio', 1),
@@ -410,9 +409,9 @@ INSERT INTO Lugar (nombre, tipo, fk_lugar) VALUES
 ('Sucre', 'Municipio', 24),
 ('Valmore Rodríguez', 'Municipio', 24);
 
--- Insertar Parroquias por Municipio (fk_lugar es la id del Municipio correspondiente)
+-- Insertar Parroquias por Municipio (lugar_relacion_idar es la id del Municipio correspondiente)
 -- ids de parroquias inician después de la última id de municipio (360)
-INSERT INTO Lugar (nombre, tipo, fk_lugar) VALUES
+INSERT INTO Lugar (nombre, tipo, lugar_relacion_id) VALUES
 -- Parroquias del Distrito Capital (Municipio Libertador, id: 128)
 ('23 de Enero', 'Parroquia', 128),
 ('Altagracia', 'Parroquia', 128),
