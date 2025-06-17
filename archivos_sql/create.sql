@@ -14,6 +14,12 @@ CREATE TABLE Beneficio (
     activo       CHAR(1)
 );
 
+CREATE TABLE Cliente (
+    id_cliente       SERIAL PRIMARY KEY,
+    correo_id_correo INTEGER NOT NULL
+);
+
+
 CREATE TABLE Asistencia (
     id_asistencia        SERIAL PRIMARY KEY,
     fecha_hora_entrada   TIMESTAMP NOT NULL,
@@ -63,10 +69,6 @@ CREATE TABLE Cheque (
     banco      VARCHAR(30)      
 );
 
-CREATE TABLE Cliente (
-    id_cliente       SERIAL PRIMARY KEY,
-    correo_id_correo INTEGER NOT NULL
-);
 
 CREATE TABLE Cliente_Juridico (
     id_cliente             SERIAL PRIMARY KEY,
@@ -338,7 +340,7 @@ CREATE TABLE Invitado (
     nombre          VARCHAR(100) NOT NULL,
     lugar_id        INTEGER NOT NULL,
     tipo_invitado_id INTEGER NOT NULL,
-    rif             VARCHAR(20) NOT NULL,
+    rif             INTEGER NOT NULL,
     direccion       TEXT NOT NULL
 );
 
@@ -488,7 +490,7 @@ CREATE TABLE Proveedor (
     id_proveedor     SERIAL PRIMARY KEY,
     razon_social     VARCHAR(100) NOT NULL,
     denominacion     VARCHAR(100) NOT NULL,
-    rif              VARCHAR(15) NOT NULL,
+    rif              INTEGER NOT NULL,
     direccion_fiscal TEXT NOT NULL,
     direccion_fisica TEXT NOT NULL,
     id_lugar         INTEGER NOT NULL,
