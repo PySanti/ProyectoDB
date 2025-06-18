@@ -128,17 +128,6 @@ ALTER TABLE Cliente
 ;
 
 ALTER TABLE Cliente_Juridico 
-    ADD CONSTRAINT Cliente_Juridico_Cliente_FK FOREIGN KEY 
-    ( 
-     id_cliente
-    ) 
-    REFERENCES Cliente 
-    ( 
-     id_cliente
-    ) 
-;
-
-ALTER TABLE Cliente_Juridico 
     ADD CONSTRAINT Cliente_Juridico_Lugar_FK FOREIGN KEY 
     ( 
      Lugar_id_lugar
@@ -160,16 +149,7 @@ ALTER TABLE Cliente_Juridico
     ) 
 ;
 
-ALTER TABLE Cliente_Natural 
-    ADD CONSTRAINT Cliente_Natural_Cliente_FK FOREIGN KEY 
-    ( 
-     id_cliente
-    ) 
-    REFERENCES Cliente 
-    ( 
-     id_cliente
-    ) 
-;
+
 
 ALTER TABLE Cliente_Natural 
     ADD CONSTRAINT Cliente_Natural_Lugar_FK FOREIGN KEY 

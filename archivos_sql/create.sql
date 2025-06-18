@@ -14,11 +14,6 @@ CREATE TABLE Beneficio (
     activo       CHAR(1)
 );
 
-CREATE TABLE Cliente (
-    id_cliente       SERIAL PRIMARY KEY,
-    correo_id_correo INTEGER NOT NULL
-);
-
 
 CREATE TABLE Asistencia (
     id_asistencia        SERIAL PRIMARY KEY,
@@ -97,7 +92,8 @@ CREATE TABLE Cliente_Natural (
 
 CREATE TABLE Compra (
     id_compra               SERIAL PRIMARY KEY,
-    cliente_id_cliente      INTEGER,
+    id_cliente_juridico      INTEGER,
+    id_cliente_natural      INTEGER,
     monto_total             DECIMAL NOT NULL,
     usuario_id_usuario      INTEGER,
     tienda_web_id_tienda    INTEGER,
@@ -109,8 +105,9 @@ CREATE TABLE Compra (
     ),
     
     CONSTRAINT arc_comprador CHECK (
-        (cliente_id_cliente IS NOT NULL AND usuario_id_usuario IS NULL) OR
-        (usuario_id_usuario IS NOT NULL AND cliente_id_cliente IS NULL)
+        (id_cliente_juridico IS NOT NULL AND usuario_id_usuario IS NULL AND id_cliente_natural IS NULL) OR
+        (id_cliente_juridico IS NULL AND usuario_id_usuario IS NOT NULL AND id_cliente_natural IS NULL) OR
+        (id_cliente_juridico IS NULL AND usuario_id_usuario IS  NULL AND id_cliente_natural IS NOT NULL) 
     )
 );
 
@@ -127,11 +124,13 @@ CREATE TABLE Correo (
     nombre                 VARCHAR(50) NOT NULL,
     extension_pag              VARCHAR(10) NOT NULL,
     id_proveedor_proveedor INTEGER,
-    cliente_id_cliente     INTEGER,
+    id_cliente_natural     INTEGER,
+    id_cliente_juridico     INTEGER,
     
     CONSTRAINT arc_propietario CHECK (
-        (cliente_id_cliente IS NOT NULL AND id_proveedor_proveedor IS NULL) OR
-        (id_proveedor_proveedor IS NOT NULL AND cliente_id_cliente IS NULL)
+        (id_cliente_juridico IS NOT NULL AND id_cliente_natural IS NULL AND id_proveedor_proveedor IS NULL) OR
+        (id_cliente_juridico IS NULL AND id_cliente_natural IS NOT NULL AND id_proveedor_proveedor IS NULL) OR
+        (id_cliente_juridico IS NULL AND id_cliente_natural IS NULL AND id_proveedor_proveedor IS NOT NULL) 
     )
 );
 
@@ -213,14 +212,21 @@ CREATE TABLE Detalle_Venta_Evento (
     precio_unitario    DECIMAL NOT NULL,
     cantidad           INTEGER NOT NULL,
     id_evento          INTEGER NOT NULL,
-    id_cliente         INTEGER NOT NULL,
+    id_cliente_natural         INTEGER,
+    id_cliente_juridico         INTEGER,
     id_cerveza         INTEGER NOT NULL,
     id_proveedor       INTEGER NOT NULL,
     id_proveedor_evento INTEGER NOT NULL,
     id_tipo_cerveza    INTEGER NOT NULL,
     id_presentacion    INTEGER NOT NULL,
     id_cerveza_inv     INTEGER NOT NULL,
-    PRIMARY KEY (id_evento, id_cliente, id_cerveza, id_proveedor, id_proveedor_evento, id_tipo_cerveza, id_presentacion, id_cerveza_inv)
+
+    PRIMARY KEY (id_evento,  id_cerveza, id_proveedor, id_proveedor_evento, id_tipo_cerveza, id_presentacion, id_cerveza_inv),
+
+    CONSTRAINT arc_comprador CHECK (
+        (id_cliente_juridico IS NOT NULL AND id_cliente_natural IS NULL) OR
+        (id_cliente_juridico IS  NULL AND id_cliente_natural IS NOT NULL) 
+    )
 );
 
 CREATE TABLE Efectivo (
@@ -505,13 +511,19 @@ CREATE TABLE Punto (
 );
 
 CREATE TABLE Punto_Cliente (
-    id_cliente       INTEGER NOT NULL,
+    id_cliente_natural       INTEGER,
+    id_cliente_juridico       INTEGER,
     id_metodo        INTEGER NOT NULL,
     cantidad_actual  INTEGER NOT NULL,
     cantidad_mov     INTEGER NOT NULL,
     fecha            DATE NOT NULL,
     tipo_movimiento  VARCHAR(20) NOT NULL,
-    PRIMARY KEY (id_cliente, id_metodo)
+    PRIMARY KEY (id_metodo),
+
+    CONSTRAINT arc_comprador CHECK (
+        (id_cliente_juridico IS NOT NULL AND id_cliente_natural IS NULL) OR
+        (id_cliente_juridico IS  NULL AND id_cliente_natural IS NOT NULL) 
+    )
 );
 
 CREATE TABLE Receta (
@@ -561,13 +573,15 @@ CREATE TABLE Telefono (
     id_proveedor    INTEGER,
     id_contacto     INTEGER,
     id_invitado     INTEGER,
-    id_cliente      INTEGER,
+    id_cliente_juridico      INTEGER,
+    id_cliente_natural      INTEGER,
     
     CONSTRAINT arc_propietario_telefono CHECK (
-        (id_invitado IS NOT NULL AND id_proveedor IS NULL AND id_contacto IS NULL AND id_cliente IS NULL) OR
-        (id_proveedor IS NOT NULL AND id_invitado IS NULL AND id_contacto IS NULL AND id_cliente IS NULL) OR
-        (id_contacto IS NOT NULL AND id_invitado IS NULL AND id_proveedor IS NULL AND id_cliente IS NULL) OR
-        (id_cliente IS NOT NULL AND id_invitado IS NULL AND id_proveedor IS NULL AND id_contacto IS NULL)
+        (id_invitado IS NOT NULL AND id_proveedor IS NULL AND id_contacto IS NULL AND id_cliente_natural IS NULL AND id_cliente_juridico IS NULL) OR
+        (id_proveedor IS NOT NULL AND id_invitado IS NULL AND id_contacto IS NULL AND id_cliente_natural IS NULL AND id_cliente_juridico IS NULL) OR
+        (id_contacto IS NOT NULL AND id_invitado IS NULL AND id_proveedor IS NULL AND id_cliente_natural IS NULL AND id_cliente_juridico IS NULL) OR
+        (id_cliente_juridico IS NOT NULL AND id_cliente_natural IS NULL AND id_invitado IS NULL AND id_proveedor IS NULL AND id_contacto IS NULL) OR
+        (id_cliente_natural IS NOT NULL AND id_cliente_juridico IS NULL AND id_invitado IS NULL AND id_proveedor IS NULL AND id_contacto IS NULL)
     )
 );
 

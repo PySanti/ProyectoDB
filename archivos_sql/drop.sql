@@ -25,8 +25,6 @@ DROP TABLE Cerveza CASCADE
 DROP TABLE Cheque CASCADE   
 ;
 
-DROP TABLE Cliente CASCADE   
-;
 
 DROP TABLE Cliente_Juridico CASCADE   
 ;
