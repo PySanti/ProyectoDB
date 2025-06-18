@@ -599,7 +599,6 @@ CREATE TABLE Tipo_Actividad (
 CREATE TABLE Tipo_Cerveza (
     id_tipo_cerveza   SERIAL PRIMARY KEY,
     nombre            VARCHAR(50) NOT NULL,
-    valor             DECIMAL NOT NULL,
     tipo_padre_id     INTEGER
 );
 
