@@ -461,9 +461,8 @@ CREATE TABLE Persona_Contacto (
 
 CREATE TABLE Presentacion (
     id_presentacion SERIAL,
-    id_cerveza      INTEGER NOT NULL,
     nombre          VARCHAR(20) NOT NULL,
-    PRIMARY KEY (id_presentacion, id_cerveza)
+    PRIMARY KEY (id_presentacion)
 );
 
 CREATE TABLE Presentacion_Tipo_Cerveza (
