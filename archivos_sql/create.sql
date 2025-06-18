@@ -122,7 +122,7 @@ CREATE TABLE Compra_Estatus (
 CREATE TABLE Correo (
     id_correo              SERIAL PRIMARY KEY,
     nombre                 VARCHAR(50) NOT NULL,
-    extension_pag              VARCHAR(10) NOT NULL,
+    extension_pag              VARCHAR(20) NOT NULL,
     id_proveedor_proveedor INTEGER,
     id_cliente_natural     INTEGER,
     id_cliente_juridico     INTEGER,
