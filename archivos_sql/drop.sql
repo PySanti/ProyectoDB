@@ -154,7 +154,7 @@ DROP TABLE Persona_Contacto CASCADE
 DROP TABLE Presentacion CASCADE   
 ;
 
-DROP TABLE Presentacion_Tipo_Cerveza CASCADE   
+DROP TABLE Presentacion_Cerveza CASCADE   
 ;
 
 DROP TABLE Privilegio CASCADE   

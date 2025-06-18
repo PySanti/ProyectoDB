@@ -465,13 +465,12 @@ CREATE TABLE Presentacion (
     PRIMARY KEY (id_presentacion)
 );
 
-CREATE TABLE Presentacion_Tipo_Cerveza (
-    id_tipo_cerveza INTEGER NOT NULL,
+CREATE TABLE Presentacion_Cerveza (
     id_presentacion     INTEGER NOT NULL,
     id_cerveza          INTEGER NOT NULL,
     cantidad            INTEGER NOT NULL,
     descripcion         TEXT,
-    PRIMARY KEY (id_tipo_cerveza, id_presentacion, id_cerveza)
+    PRIMARY KEY (id_presentacion, id_cerveza)
 );
 
 CREATE TABLE Privilegio (

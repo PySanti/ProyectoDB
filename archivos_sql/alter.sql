@@ -310,15 +310,13 @@ ALTER TABLE Departamento_Empleado
 
 --  ERROR: FK name length exceeds maximum allowed length(30) 
 ALTER TABLE Descuento 
-    ADD CONSTRAINT Descuento_Presentacion_Tipo_Cerveza_FK FOREIGN KEY 
-    ( 
-     id_tipo_cerveza,
+    ADD CONSTRAINT Descuento_Presentacion_Cerveza_FK FOREIGN KEY 
+    (
      id_presentacion,
      id_cerveza
     ) 
-    REFERENCES Presentacion_Tipo_Cerveza 
+    REFERENCES Presentacion_Cerveza 
     ( 
-     id_tipo_cerveza,
      id_presentacion,
      id_cerveza
     ) 
@@ -399,15 +397,13 @@ ALTER TABLE Detalle_Orden_Reposicion_Anaquel
 
 --  ERROR: FK name length exceeds maximum allowed length(30) 
 ALTER TABLE Detalle_Orden_Reposicion_Anaquel 
-    ADD CONSTRAINT Detalle_Orden_Reposicion_Anaquel_Presentacion_Tipo_Cerveza_FK FOREIGN KEY 
+    ADD CONSTRAINT Detalle_Orden_Reposicion_Anaquel_Presentacion_Cerveza_FK FOREIGN KEY 
     ( 
-     id_tipo_cerveza,
      id_presentacion,
      id_cerveza
     ) 
-    REFERENCES Presentacion_Tipo_Cerveza 
+    REFERENCES Presentacion_Cerveza 
     ( 
-     id_tipo_cerveza,
      id_presentacion,
      id_cerveza
     ) 
@@ -456,15 +452,13 @@ ALTER TABLE Detalle_Orden_Reposicion
 
 --  ERROR: FK name length exceeds maximum allowed length(30) 
 ALTER TABLE Detalle_Orden_Reposicion 
-    ADD CONSTRAINT Detalle_Orden_Reposicion_Presentacion_Tipo_Cerveza_FK FOREIGN KEY 
+    ADD CONSTRAINT Detalle_Orden_Reposicion_Presentacion_Cerveza_FK FOREIGN KEY 
     ( 
-     id_tipo_cerveza,
      id_presentacion,
      id_cerveza
     ) 
-    REFERENCES Presentacion_Tipo_Cerveza 
+    REFERENCES Presentacion_Cerveza 
     ( 
-     id_tipo_cerveza,
      id_presentacion,
      id_cerveza
     ) 
@@ -687,15 +681,13 @@ ALTER TABLE Inventario_Evento_Proveedor
 
 --  ERROR: FK name length exceeds maximum allowed length(30) 
 ALTER TABLE Inventario_Evento_Proveedor 
-    ADD CONSTRAINT Inventario_Evento_Proveedor_Presentacion_Tipo_Cerveza_FK FOREIGN KEY 
+    ADD CONSTRAINT Inventario_Evento_Proveedor_Presentacion_Cerveza_FK FOREIGN KEY 
     ( 
-     id_tipo_cerveza,
      id_presentacion,
      id_cerveza
     ) 
-    REFERENCES Presentacion_Tipo_Cerveza 
+    REFERENCES Presentacion_Cerveza 
     ( 
-     id_tipo_cerveza,
      id_presentacion,
      id_cerveza
     ) 
@@ -703,15 +695,13 @@ ALTER TABLE Inventario_Evento_Proveedor
 
 --  ERROR: FK name length exceeds maximum allowed length(30) 
 ALTER TABLE Inventario 
-    ADD CONSTRAINT Inventario_Presentacion_Tipo_Cerveza_FK FOREIGN KEY 
+    ADD CONSTRAINT Inventario_Presentacion_Cerveza_FK FOREIGN KEY 
     ( 
-     id_tipo_cerveza,
      id_presentacion,
      id_cerveza
     ) 
-    REFERENCES Presentacion_Tipo_Cerveza 
+    REFERENCES Presentacion_Cerveza 
     ( 
-     id_tipo_cerveza,
      id_presentacion,
      id_cerveza
     ) 
@@ -1029,42 +1019,29 @@ ALTER TABLE Persona_Contacto
 ;
 
 --  ERROR: FK name length exceeds maximum allowed length(30) 
-ALTER TABLE Presentacion_Tipo_Cerveza 
-    ADD CONSTRAINT Presentacion_Tipo_Cerveza_Presentacion_FK FOREIGN KEY 
+ALTER TABLE Presentacion_Cerveza 
+    ADD CONSTRAINT Presentacion_Cerveza_Presentacion_FK FOREIGN KEY 
     ( 
-     id_presentacion,
-     id_cerveza
+     id_presentacion
     ) 
     REFERENCES Presentacion 
     ( 
-     id_presentacion,
+     id_presentacion
+    ) 
+;
+
+ALTER TABLE Presentacion_Cerveza 
+    ADD CONSTRAINT Presentacion_Cerveza_Cerveza_FK FOREIGN KEY 
+    ( 
+     id_cerveza
+    ) 
+    REFERENCES Cerveza 
+    ( 
      id_cerveza
     ) 
 ;
 
 --  ERROR: FK name length exceeds maximum allowed length(30) 
-ALTER TABLE Presentacion_Tipo_Cerveza 
-    ADD CONSTRAINT Presentacion_Tipo_Cerveza_Tipo_Cerveza_FK FOREIGN KEY 
-    ( 
-     id_tipo_cerveza
-    ) 
-    REFERENCES Tipo_Cerveza 
-    ( 
-     id_tipo_cerveza
-    ) 
-;
-
---  ERROR: FK name length exceeds maximum allowed length(30) 
-ALTER TABLE Presentacion_Tipo_Cerveza 
-    ADD CONSTRAINT Presentacion_Tipo_Cerveza_Tipo_Cerveza_FKv2 FOREIGN KEY 
-    ( 
-     id_tipo_cerveza
-    ) 
-    REFERENCES Tipo_Cerveza 
-    ( 
-     id_tipo_cerveza
-    ) 
-;
 
 ALTER TABLE Promocion 
     ADD CONSTRAINT Promocion_Departamento_FK FOREIGN KEY 
