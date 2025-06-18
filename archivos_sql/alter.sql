@@ -116,16 +116,7 @@ ALTER TABLE Cheque
     ) 
 ;
 
-ALTER TABLE Cliente 
-    ADD CONSTRAINT Cliente_Correo_FK FOREIGN KEY 
-    ( 
-     Correo_id_correo
-    ) 
-    REFERENCES Correo 
-    ( 
-     id_correo
-    ) 
-;
+
 
 ALTER TABLE Cliente_Juridico 
     ADD CONSTRAINT Cliente_Juridico_Lugar_FK FOREIGN KEY 
@@ -240,11 +231,21 @@ ALTER TABLE Compra
 ;
 
 ALTER TABLE Correo 
-    ADD CONSTRAINT Correo_Cliente_FK FOREIGN KEY 
+    ADD CONSTRAINT Correo_Cliente_N_FK FOREIGN KEY 
     ( 
-     Cliente_id_cliente
+     id_cliente_natural
     ) 
-    REFERENCES Cliente 
+    REFERENCES Cliente_Natural 
+    ( 
+     id_cliente
+    ) 
+;
+ALTER TABLE Correo 
+    ADD CONSTRAINT Correo_Cliente_J_FK FOREIGN KEY 
+    ( 
+     id_cliente_juridico
+    ) 
+    REFERENCES Cliente_Juridico
     ( 
      id_cliente
     ) 
@@ -494,12 +495,12 @@ ALTER TABLE Detalle_Venta_Evento
     ADD CONSTRAINT Detalle_Venta_Evento_Venta_Evento_FK FOREIGN KEY 
     ( 
      id_evento,
-     id_cliente
+     id_cliente_natural
     ) 
     REFERENCES Venta_Evento 
     ( 
      evento_id,
-     cliente_id
+     id_cliente_natural
     ) 
 ;
 
@@ -944,12 +945,12 @@ ALTER TABLE Pago_Evento
     ADD CONSTRAINT Pago_Evento_Venta_Evento_FK FOREIGN KEY 
     ( 
      evento_id,
-     cliente_id
+     id_cliente_natural
     ) 
     REFERENCES Venta_Evento 
     ( 
      evento_id,
-     cliente_id
+     id_cliente_natural
     ) 
 ;
 
@@ -1123,9 +1124,9 @@ ALTER TABLE Proveedor
 ALTER TABLE Punto_Cliente 
     ADD CONSTRAINT Punto_Cliente_Cliente_FK FOREIGN KEY 
     ( 
-     id_cliente
+     id_cliente_natural
     ) 
-    REFERENCES Cliente 
+    REFERENCES Cliente_Natural 
     ( 
      id_cliente
     ) 
@@ -1221,15 +1222,27 @@ ALTER TABLE Tasa
 ;
 
 ALTER TABLE Telefono 
-    ADD CONSTRAINT Telefono_Cliente_FK FOREIGN KEY 
+    ADD CONSTRAINT Telefono_Cliente_N_FK FOREIGN KEY 
     ( 
-     id_cliente
+     id_cliente_natural
     ) 
-    REFERENCES Cliente 
+    REFERENCES Cliente_Natural
     ( 
      id_cliente
     ) 
 ;
+ALTER TABLE Telefono 
+    ADD CONSTRAINT Telefono_Cliente_J_FK FOREIGN KEY 
+    ( 
+     id_cliente_juridico
+    ) 
+    REFERENCES Cliente_Juridico
+    ( 
+     id_cliente
+    ) 
+;
+
+
 
 ALTER TABLE Telefono 
     ADD CONSTRAINT Telefono_Invitado_FK FOREIGN KEY 
@@ -1322,11 +1335,21 @@ ALTER TABLE Ubicacion_Tienda
 ;
 
 ALTER TABLE Usuario 
-    ADD CONSTRAINT Usuario_Cliente_FK FOREIGN KEY 
+    ADD CONSTRAINT Usuario_Cliente_N_FK FOREIGN KEY 
     ( 
-     cliente_id
+     id_cliente_natural
     ) 
-    REFERENCES Cliente 
+    REFERENCES Cliente_Natural 
+    ( 
+     id_cliente
+    ) 
+;
+ALTER TABLE Usuario 
+    ADD CONSTRAINT Usuario_Cliente_J_FK FOREIGN KEY 
+    ( 
+     id_cliente_juridico
+    ) 
+    REFERENCES Cliente_Juridico
     ( 
      id_cliente
     ) 
@@ -1379,9 +1402,9 @@ ALTER TABLE Vacacion
 ALTER TABLE Venta_Evento 
     ADD CONSTRAINT Venta_Evento_Cliente_FK FOREIGN KEY 
     ( 
-     cliente_id
+     id_cliente_natural
     ) 
-    REFERENCES Cliente 
+    REFERENCES Cliente_Natural
     ( 
      id_cliente
     ) 
