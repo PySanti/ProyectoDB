@@ -212,8 +212,7 @@ CREATE TABLE Detalle_Venta_Evento (
     precio_unitario    DECIMAL NOT NULL,
     cantidad           INTEGER NOT NULL,
     id_evento          INTEGER NOT NULL,
-    id_cliente_natural         INTEGER,
-    id_cliente_juridico         INTEGER,
+    id_cliente_natural         INTEGER NOT NULL,
     id_cerveza         INTEGER NOT NULL,
     id_proveedor       INTEGER NOT NULL,
     id_proveedor_evento INTEGER NOT NULL,
@@ -221,12 +220,9 @@ CREATE TABLE Detalle_Venta_Evento (
     id_presentacion    INTEGER NOT NULL,
     id_cerveza_inv     INTEGER NOT NULL,
 
-    PRIMARY KEY (id_evento,  id_cerveza, id_proveedor, id_proveedor_evento, id_tipo_cerveza, id_presentacion, id_cerveza_inv),
+    PRIMARY KEY (id_evento,  id_cliente_natural, id_cerveza, id_proveedor, id_proveedor_evento, id_tipo_cerveza, id_presentacion, id_cerveza_inv)
 
-    CONSTRAINT arc_comprador CHECK (
-        (id_cliente_juridico IS NOT NULL AND id_cliente_natural IS NULL) OR
-        (id_cliente_juridico IS  NULL AND id_cliente_natural IS NOT NULL) 
-    )
+
 );
 
 CREATE TABLE Efectivo (
@@ -422,12 +418,13 @@ CREATE TABLE Pago_Cuota_Afiliacion (
 CREATE TABLE Pago_Evento (
     metodo_id      INTEGER NOT NULL,
     evento_id      INTEGER NOT NULL,
-    cliente_id     INTEGER NOT NULL,
+    id_cliente_natural     INTEGER NOT NULL,
     fecha_hora     TIMESTAMP NOT NULL,
     monto          DECIMAL NOT NULL,
     tasa_id        INTEGER,
     referencia     VARCHAR(50) NOT NULL,
-    PRIMARY KEY (metodo_id, evento_id, cliente_id)
+
+    PRIMARY KEY (metodo_id, evento_id, id_cliente_natural)
 );
 
 CREATE TABLE Pago_Orden_Reposicion (
@@ -511,19 +508,15 @@ CREATE TABLE Punto (
 );
 
 CREATE TABLE Punto_Cliente (
-    id_cliente_natural       INTEGER,
-    id_cliente_juridico       INTEGER,
+    id_cliente_natural       INTEGER NOT NULL,
     id_metodo        INTEGER NOT NULL,
     cantidad_actual  INTEGER NOT NULL,
     cantidad_mov     INTEGER NOT NULL,
     fecha            DATE NOT NULL,
     tipo_movimiento  VARCHAR(20) NOT NULL,
-    PRIMARY KEY (id_metodo),
 
-    CONSTRAINT arc_comprador CHECK (
-        (id_cliente_juridico IS NOT NULL AND id_cliente_natural IS NULL) OR
-        (id_cliente_juridico IS  NULL AND id_cliente_natural IS NOT NULL) 
-    )
+    PRIMARY KEY (id_metodo, id_cliente_natural)
+
 );
 
 CREATE TABLE Receta (
@@ -632,16 +625,18 @@ CREATE TABLE Ubicacion_Tienda (
 
 CREATE TABLE Usuario (
     id_usuario      SERIAL PRIMARY KEY,
-    cliente_id      INTEGER,
+    id_cliente_juridico      INTEGER,
+    id_cliente_natural      INTEGER,
     id_rol          INTEGER NOT NULL,
     fecha_creacion  DATE NOT NULL,
     id_proveedor    INTEGER,
     empleado_id     INTEGER,
     
     CONSTRAINT arc_tipo_usuario CHECK (
-        (cliente_id IS NOT NULL AND empleado_id IS NULL AND id_proveedor IS NULL) OR
-        (empleado_id IS NOT NULL AND cliente_id IS NULL AND id_proveedor IS NULL) OR
-        (id_proveedor IS NOT NULL AND cliente_id IS NULL AND empleado_id IS NULL)
+        (id_cliente_natural IS NOT NULL AND id_cliente_juridico IS NULL AND empleado_id IS NULL AND id_proveedor IS NULL) OR
+        (id_cliente_natural IS NULL AND id_cliente_juridico IS NOT NULL AND empleado_id IS NULL AND id_proveedor IS NULL) OR
+        (id_cliente_natural IS NULL AND id_cliente_juridico IS NULL AND empleado_id IS NOT NULL AND id_proveedor IS NULL) OR
+        (id_cliente_natural IS NULL AND id_cliente_juridico IS NULL AND empleado_id IS NULL AND id_proveedor IS NOT NULL) 
     )
 );
 
@@ -655,9 +650,9 @@ CREATE TABLE Vacacion (
 
 CREATE TABLE Venta_Evento (
     evento_id       INTEGER NOT NULL,
-    cliente_id      INTEGER NOT NULL,
+    id_cliente_natural      INTEGER NOT NULL,
     fecha_compra    TIMESTAMP NOT NULL,
     total           DECIMAL(12,2) NOT NULL,
-    PRIMARY KEY (evento_id, cliente_id)
+    PRIMARY KEY (evento_id, id_cliente_natural)
 );
 

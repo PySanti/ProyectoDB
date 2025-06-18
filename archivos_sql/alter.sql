@@ -163,15 +163,26 @@ ALTER TABLE Cliente_Natural
 ;
 
 ALTER TABLE Compra 
-    ADD CONSTRAINT Compra_Cliente_FK FOREIGN KEY 
+    ADD CONSTRAINT Compra_Cliente_N_FK FOREIGN KEY 
     ( 
-     Cliente_id_cliente
+     id_cliente_natural
     ) 
-    REFERENCES Cliente 
+    REFERENCES Cliente_Natural
     ( 
      id_cliente
     ) 
 ;
+ALTER TABLE Compra 
+    ADD CONSTRAINT Compra_Cliente_J_FK FOREIGN KEY 
+    ( 
+     id_cliente_juridico
+    ) 
+    REFERENCES Cliente_Juridico
+    ( 
+     id_cliente
+    ) 
+;
+
 
 ALTER TABLE Compra_Estatus 
     ADD CONSTRAINT Compra_Estatus_Compra_FK FOREIGN KEY 
