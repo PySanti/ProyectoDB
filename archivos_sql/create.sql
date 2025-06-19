@@ -619,7 +619,8 @@ CREATE TABLE Usuario (
     fecha_creacion  DATE NOT NULL,
     id_proveedor    INTEGER,
     empleado_id     INTEGER,
-    
+    contraseña      VARCHAR(255) NOT NULL,
+
     CONSTRAINT arc_tipo_usuario CHECK (
         (id_cliente_natural IS NOT NULL AND id_cliente_juridico IS NULL AND empleado_id IS NULL AND id_proveedor IS NULL) OR
         (id_cliente_natural IS NULL AND id_cliente_juridico IS NOT NULL AND empleado_id IS NULL AND id_proveedor IS NULL) OR
