@@ -2283,12 +2283,14 @@ INSERT INTO tipo_cerveza (id_tipo_cerveza,nombre,tipo_padre_id) VALUES
 (46,'Weizen-Weissbier',22),
 (47,'Witbier',22),
 (48,'Düsseldorf Altbier',2),
-(49,'Extra-Strong Bitter',12);  
+(49,'Extra-Strong Bitter',12);
+
+
 
 INSERT INTO presentacion (nombre) VALUES
 ('Botella 330ml'),
 ('Botella 500ml'),
-('Lata 330ml')
+('Lata 330ml');
 
 /** Inserción de cervezas específicas con tipos correctos según nueva numeración **/
 INSERT INTO cerveza (nombre_cerveza, id_tipo_cerveza, id_proveedor) VALUES
@@ -2334,8 +2336,8 @@ INSERT INTO presentacion_cerveza (cantidad, id_presentacion, id_cerveza) VALUES
 (1, 1, 8),
 (1, 1, 9);
 
-INSERT INTO Inventario (id_tienda_fisica, id_tienda_web, id_presentacion, id_cerveza, cantidad) VALUES
-(NULL, 1, 1, 1, 1000);
+INSERT INTO Inventario (cantidad, id_tienda_fisica, id_tienda_web, id_presentacion, id_cerveza, id_ubicacion) VALUES
+(1000, NULL, 1, 1, 1, NULL);
 
 INSERT INTO Tipo_Actividad (nombre) VALUES
 ('Taller Técnico'),

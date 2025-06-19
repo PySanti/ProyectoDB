@@ -358,16 +358,7 @@ ALTER TABLE Inventario
     ) 
 ;
 
-ALTER TABLE Inventario 
-    ADD CONSTRAINT Inventario_Tipo_Cerveza_FK FOREIGN KEY 
-    ( 
-     id_tipo_cerveza
-    ) 
-    REFERENCES Tipo_Cerveza 
-    ( 
-     id_tipo_cerveza
-    ) 
-;
+
 
 ALTER TABLE Inventario 
     ADD CONSTRAINT Inventario_Tienda_Fisica_FK FOREIGN KEY 

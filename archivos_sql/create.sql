@@ -308,10 +308,9 @@ CREATE TABLE Inventario (
     cantidad        INTEGER NOT NULL,
     id_tienda_web   INTEGER ,
     id_tienda_fisica INTEGER ,
-    id_tipo_cerveza INTEGER NOT NULL ,
+    id_ubicacion    INTEGER ,
     id_presentacion INTEGER NOT NULL ,
     id_cerveza      INTEGER NOT NULL,
-    id_ubicacion    INTEGER ,
 
     CONSTRAINT arc_ubicacion CHECK (
         (id_tienda_web IS NOT NULL AND id_tienda_fisica IS NULL AND id_ubicacion IS NULL) OR
