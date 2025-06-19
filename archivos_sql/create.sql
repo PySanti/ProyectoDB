@@ -170,16 +170,10 @@ CREATE TABLE Descuento (
 
 CREATE TABLE Detalle_Compra (
     precio_unitario DECIMAL NOT NULL,
-    id_cerveza      INTEGER NOT NULL,
+    id_inventario   INTEGER NOT NULL,
     id_compra       INTEGER NOT NULL,
     cantidad        INTEGER NOT NULL,
-    id_cerveza1     INTEGER NOT NULL,
-    id_tienda_web   INTEGER NOT NULL,
-    id_tienda_fisica INTEGER NOT NULL,
-    id_tipo_cerveza INTEGER NOT NULL,
-    id_presentacion INTEGER NOT NULL,
-    id_cerveza_inv  INTEGER NOT NULL,
-    PRIMARY KEY (id_cerveza, id_compra, id_cerveza1, id_tienda_web, id_tienda_fisica, id_tipo_cerveza, id_presentacion, id_cerveza_inv)
+    PRIMARY KEY (id_inventario, id_compra)
 );
 
 CREATE TABLE Detalle_Orden_Reposicion (
@@ -196,16 +190,9 @@ CREATE TABLE Detalle_Orden_Reposicion (
 
 CREATE TABLE Detalle_Orden_Reposicion_Anaquel (
     id_orden_reposicion INTEGER NOT NULL,
-    id_tienda_web       INTEGER NOT NULL,
-    id_tienda_fisica    INTEGER NOT NULL,
-    id_tipo_cerveza     INTEGER NOT NULL,
-    id_presentacion     INTEGER NOT NULL,
-    id_cerveza          INTEGER NOT NULL,
+    id_inventario      INTEGER NOT NULL,
     cantidad            INTEGER NOT NULL,
-    id_tipo_cerveza_p   INTEGER NOT NULL,
-    id_presentacion_p   INTEGER NOT NULL,
-    id_cerveza_p        INTEGER NOT NULL,
-    PRIMARY KEY (id_orden_reposicion, id_tienda_web, id_tienda_fisica, id_tipo_cerveza, id_presentacion, id_cerveza)
+    PRIMARY KEY (id_orden_reposicion, id_inventario)
 );
 
 CREATE TABLE Detalle_Venta_Evento (
@@ -321,11 +308,10 @@ CREATE TABLE Inventario (
     cantidad        INTEGER NOT NULL,
     id_tienda_web   INTEGER ,
     id_tienda_fisica INTEGER ,
-    id_tipo_cerveza INTEGER NOT NULL,
-    id_presentacion INTEGER NOT NULL,
+    id_tipo_cerveza INTEGER NOT NULL ,
+    id_presentacion INTEGER NOT NULL ,
     id_cerveza      INTEGER NOT NULL,
     id_ubicacion    INTEGER ,
-    PRIMARY KEY (id_inventario),
 
     CONSTRAINT arc_ubicacion CHECK (
         (id_tienda_web IS NOT NULL AND id_tienda_fisica IS NULL AND id_ubicacion IS NULL) OR

@@ -344,22 +344,73 @@ ALTER TABLE Detalle_Compra
     ) 
 ;
 
-ALTER TABLE Detalle_Compra 
-    ADD CONSTRAINT Detalle_Compra_Inventario_FK FOREIGN KEY 
+--  ERROR: FK name length exceeds maximum allowed length(30) 
+ALTER TABLE Inventario 
+    ADD CONSTRAINT Inventario_Presentacion_Cerveza_FK FOREIGN KEY 
     ( 
-     id_tienda_web,
-     id_tienda_fisica,
-     id_tipo_cerveza,
      id_presentacion,
      id_cerveza
     ) 
-    REFERENCES Inventario 
+    REFERENCES Presentacion_Cerveza 
     ( 
-     id_tienda_web,
-     id_tienda_fisica,
-     id_tipo_cerveza,
      id_presentacion,
      id_cerveza
+    ) 
+;
+
+ALTER TABLE Inventario 
+    ADD CONSTRAINT Inventario_Tipo_Cerveza_FK FOREIGN KEY 
+    ( 
+     id_tipo_cerveza
+    ) 
+    REFERENCES Tipo_Cerveza 
+    ( 
+     id_tipo_cerveza
+    ) 
+;
+
+ALTER TABLE Inventario 
+    ADD CONSTRAINT Inventario_Tienda_Fisica_FK FOREIGN KEY 
+    ( 
+     id_tienda_fisica
+    ) 
+    REFERENCES Tienda_Fisica 
+    ( 
+     id_tienda_fisica
+    ) 
+;
+
+ALTER TABLE Inventario 
+    ADD CONSTRAINT Inventario_Tienda_Web_FK FOREIGN KEY 
+    ( 
+     id_tienda_web
+    ) 
+    REFERENCES Tienda_Web 
+    ( 
+     id_tienda_web
+    ) 
+;
+
+ALTER TABLE Inventario 
+    ADD CONSTRAINT Inventario_Ubicacion_Tienda_FK FOREIGN KEY 
+    ( 
+     id_ubicacion
+    ) 
+    REFERENCES Ubicacion_Tienda 
+    ( 
+     id_ubicacion
+    ) 
+;
+
+
+ALTER TABLE Detalle_Compra 
+    ADD CONSTRAINT Detalle_Compra_Inventario_FK FOREIGN KEY 
+    ( 
+        id_inventario
+    ) 
+    REFERENCES Inventario 
+    ( 
+     id_inventario
     ) 
 ;
 
@@ -367,19 +418,11 @@ ALTER TABLE Detalle_Compra
 ALTER TABLE Detalle_Orden_Reposicion_Anaquel 
     ADD CONSTRAINT Detalle_Orden_Reposicion_Anaquel_Inventario_FK FOREIGN KEY 
     ( 
-     id_tienda_web,
-     id_tienda_fisica,
-     id_tipo_cerveza,
-     id_presentacion,
-     id_cerveza
+     id_inventario
     ) 
     REFERENCES Inventario 
     ( 
-     id_tienda_web,
-     id_tienda_fisica,
-     id_tipo_cerveza,
-     id_presentacion,
-     id_cerveza
+     id_inventario
     ) 
 ;
 
@@ -395,21 +438,6 @@ ALTER TABLE Detalle_Orden_Reposicion_Anaquel
     ) 
 ;
 
---  ERROR: FK name length exceeds maximum allowed length(30) 
-ALTER TABLE Detalle_Orden_Reposicion_Anaquel 
-    ADD CONSTRAINT Detalle_Orden_Reposicion_Anaquel_Presentacion_Cerveza_FK FOREIGN KEY 
-    ( 
-     id_presentacion,
-     id_cerveza
-    ) 
-    REFERENCES Presentacion_Cerveza 
-    ( 
-     id_presentacion,
-     id_cerveza
-    ) 
-;
-
---  ERROR: FK name length exceeds maximum allowed length(30) 
 
 ALTER TABLE orden_reposicion 
 ADD CONSTRAINT orden_reposicion_unq 
@@ -693,52 +721,6 @@ ALTER TABLE Inventario_Evento_Proveedor
     ) 
 ;
 
---  ERROR: FK name length exceeds maximum allowed length(30) 
-ALTER TABLE Inventario 
-    ADD CONSTRAINT Inventario_Presentacion_Cerveza_FK FOREIGN KEY 
-    ( 
-     id_presentacion,
-     id_cerveza
-    ) 
-    REFERENCES Presentacion_Cerveza 
-    ( 
-     id_presentacion,
-     id_cerveza
-    ) 
-;
-
-ALTER TABLE Inventario 
-    ADD CONSTRAINT Inventario_Tienda_Fisica_FK FOREIGN KEY 
-    ( 
-     id_tienda_fisica
-    ) 
-    REFERENCES Tienda_Fisica 
-    ( 
-     id_tienda_fisica
-    ) 
-;
-
-ALTER TABLE Inventario 
-    ADD CONSTRAINT Inventario_Tienda_Web_FK FOREIGN KEY 
-    ( 
-     id_tienda_web
-    ) 
-    REFERENCES Tienda_Web 
-    ( 
-     id_tienda_web
-    ) 
-;
-
-ALTER TABLE Inventario 
-    ADD CONSTRAINT Inventario_Ubicacion_Tienda_FK FOREIGN KEY 
-    ( 
-     id_ubicacion
-    ) 
-    REFERENCES Ubicacion_Tienda 
-    ( 
-     id_ubicacion
-    ) 
-;
 
 ALTER TABLE Invitado_Evento 
     ADD CONSTRAINT Invitado_Evento_Evento_FK FOREIGN KEY 
