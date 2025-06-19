@@ -2390,16 +2390,16 @@ INSERT INTO presentacion_cerveza (cantidad, id_presentacion, id_cerveza) VALUES
 ;
 
 INSERT INTO Inventario (cantidad, id_tienda_fisica, id_tienda_web, id_presentacion, id_cerveza, id_ubicacion) VALUES
-(1000, NULL, 1, 1, 1, NULL),
-(1000, NULL, 1, 2, 2, NULL),
-(1000, NULL, 1, 3, 3, NULL),
-(1000, NULL, 1, 3, 4, NULL),
-(1000, NULL, 1, 2, 5, NULL),
-(1000, NULL, 1, 1, 6, NULL),
-(1000, NULL, 1, 1, 7, NULL),
-(1000, NULL, 1, 1, 8, NULL),
-(1000, NULL, 1, 1, 9, NULL),
-(1000, NULL, 1, 1, 10, NULL);
+(100000, NULL, 1, 1, 1, NULL),
+(100000, NULL, 1, 2, 2, NULL),
+(100000, NULL, 1, 3, 3, NULL),
+(100000, NULL, 1, 3, 4, NULL),
+(100000, NULL, 1, 2, 5, NULL),
+(100000, NULL, 1, 1, 6, NULL),
+(100000, NULL, 1, 1, 7, NULL),
+(100000, NULL, 1, 1, 8, NULL),
+(100000, NULL, 1, 1, 9, NULL),
+(100000, NULL, 1, 1, 10, NULL);
 
 --- Compras de usuarios de clientes naturales
 
@@ -2445,6 +2445,26 @@ INSERT INTO Compra (monto_total, id_cliente_juridico, id_cliente_natural, usuari
 (0, NULL, NULL, 40, 1, NULL),
 (0, NULL, NULL, 40, 1, NULL),
 
+-- Detalles de compras de clientes naturales
+
+INSERT INTO Detalle_Compra (precio_unitario, cantidad, id_inventario, id_compra) VALUES
+(10.00, 1, 1, 1),
+(10.00, 1, 2, 1),
+(10.00, 1, 3, 1),
+(10.00, 1, 4, 1),
+(10.00, 1, 5, 1),
+(10.00, 1, 6, 1),
+(10.00, 1, 7, 1),
+(10.00, 1, 8, 1),
+(10.00, 1, 9, 1),
+(10.00, 1, 10, 1),
+(10.00, 1, 1, 2),
+(10.00, 1, 2, 2),
+(10.00, 1, 3, 2),
+(10.00, 1, 4, 2),
+(10.00, 1, 5, 2),
+(10.00, 1, 6, 2),
+(10.00, 1, 7, 2),
 
 
 INSERT INTO Tipo_Actividad (nombre) VALUES
