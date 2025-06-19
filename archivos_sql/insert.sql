@@ -2334,10 +2334,21 @@ INSERT INTO presentacion_cerveza (cantidad, id_presentacion, id_cerveza) VALUES
 (1, 1, 6),
 (1, 1, 7),
 (1, 1, 8),
-(1, 1, 9);
+(1, 1, 9),
+(1, 1, 10)
+;
 
 INSERT INTO Inventario (cantidad, id_tienda_fisica, id_tienda_web, id_presentacion, id_cerveza, id_ubicacion) VALUES
-(1000, NULL, 1, 1, 1, NULL);
+(1000, NULL, 1, 1, 1, NULL),
+(1000, NULL, 1, 2, 2, NULL),
+(1000, NULL, 1, 3, 3, NULL),
+(1000, NULL, 1, 3, 4, NULL),
+(1000, NULL, 1, 2, 5, NULL),
+(1000, NULL, 1, 1, 6, NULL),
+(1000, NULL, 1, 1, 7, NULL),
+(1000, NULL, 1, 1, 8, NULL),
+(1000, NULL, 1, 1, 9, NULL),
+(1000, NULL, 1, 1, 10, NULL);
 
 INSERT INTO Tipo_Actividad (nombre) VALUES
 ('Taller Técnico'),
