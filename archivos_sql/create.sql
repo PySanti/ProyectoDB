@@ -317,14 +317,21 @@ CREATE TABLE Instruccion (
 );
 
 CREATE TABLE Inventario (
+    id_inventario   SERIAL PRIMARY KEY,
     cantidad        INTEGER NOT NULL,
-    id_tienda_web   INTEGER NOT NULL,
-    id_tienda_fisica INTEGER NOT NULL,
+    id_tienda_web   INTEGER ,
+    id_tienda_fisica INTEGER ,
     id_tipo_cerveza INTEGER NOT NULL,
     id_presentacion INTEGER NOT NULL,
     id_cerveza      INTEGER NOT NULL,
-    id_ubicacion    INTEGER NOT NULL,
-    PRIMARY KEY (id_tienda_web, id_tienda_fisica, id_tipo_cerveza, id_presentacion, id_cerveza)
+    id_ubicacion    INTEGER ,
+    PRIMARY KEY (id_inventario),
+
+    CONSTRAINT arc_ubicacion CHECK (
+        (id_tienda_web IS NOT NULL AND id_tienda_fisica IS NULL AND id_ubicacion IS NULL) OR
+        (id_tienda_web IS NULL AND id_tienda_fisica IS NOT NULL AND id_ubicacion IS NULL) OR
+        (id_tienda_web IS NULL AND id_tienda_fisica IS NULL AND id_ubicacion IS NOT NULL)
+    )
 );
 
 CREATE TABLE Inventario_Evento_Proveedor (
