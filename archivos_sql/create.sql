@@ -94,7 +94,7 @@ CREATE TABLE Compra (
     id_compra               SERIAL PRIMARY KEY,
     id_cliente_juridico      INTEGER,
     id_cliente_natural      INTEGER,
-    monto_total             DECIMAL NOT NULL,
+    monto_total             DECIMAL,
     usuario_id_usuario      INTEGER,
     tienda_web_id_tienda    INTEGER,
     tienda_fisica_id_tienda INTEGER,
@@ -170,9 +170,9 @@ CREATE TABLE Descuento (
 
 CREATE TABLE Detalle_Compra (
     precio_unitario DECIMAL NOT NULL,
+    cantidad        INTEGER NOT NULL,
     id_inventario   INTEGER NOT NULL,
     id_compra       INTEGER NOT NULL,
-    cantidad        INTEGER NOT NULL,
     PRIMARY KEY (id_inventario, id_compra)
 );
 
@@ -488,8 +488,7 @@ CREATE TABLE Proveedor (
     direccion_fisica TEXT NOT NULL,
     id_lugar         INTEGER NOT NULL,
     lugar_id2        INTEGER NOT NULL,
-    url_web          VARCHAR(200) NOT NULL,
-    usuario_id       INTEGER NOT NULL
+    url_web          VARCHAR(200) NOT NULL
 );
 
 CREATE TABLE Punto (

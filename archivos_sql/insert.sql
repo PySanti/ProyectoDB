@@ -3,7 +3,9 @@ VALUES (1, 'Orden Iniciada'),
        (2, 'Orden Procesada');
 
 INSERT INTO Rol (id_rol, nombre)
-VALUES (1, 'Proveedor');
+VALUES (1, 'Proveedor'),
+       (2, 'Cliente'),
+       (3, 'Administrador');
 
 -- Insertar Estados de Venezuela (lugar_relacion_idar es NULL para los estados)
 INSERT INTO Lugar (nombre, tipo) VALUES
@@ -2013,51 +2015,30 @@ INSERT INTO Lugar (nombre, tipo, lugar_relacion_id) VALUES
 ('Eleazar López Contreras', 'Parroquia', 360),
 ('La Victoria', 'Parroquia', 360);
 
--- Insertar usuarios para los proveedores
-INSERT INTO Usuario (id_cliente_juridico, id_cliente_natural, id_rol, fecha_creacion, id_proveedor, empleado_id) VALUES
-(NULL, NULL, 1, CURRENT_DATE, 1, NULL),
-(NULL, NULL, 1, CURRENT_DATE, 2, NULL),
-(NULL, NULL, 1, CURRENT_DATE, 3, NULL),
-(NULL, NULL, 1, CURRENT_DATE, 4, NULL),
-(NULL, NULL, 1, CURRENT_DATE, 5, NULL),
-(NULL, NULL, 1, CURRENT_DATE, 6, NULL),
-(NULL, NULL, 1, CURRENT_DATE, 7, NULL),
-(NULL, NULL, 1, CURRENT_DATE, 8, NULL),
-(NULL, NULL, 1, CURRENT_DATE, 9, NULL),
-(NULL, NULL, 1, CURRENT_DATE, 10, NULL),
-(NULL, NULL, 1, CURRENT_DATE, 11, NULL),
-(NULL, NULL, 1, CURRENT_DATE, 12, NULL),
-(NULL, NULL, 1, CURRENT_DATE, 13, NULL),
-(NULL, NULL, 1, CURRENT_DATE, 14, NULL),
-(NULL, NULL, 1, CURRENT_DATE, 15, NULL),
-(NULL, NULL, 1, CURRENT_DATE, 16, NULL),
-(NULL, NULL, 1, CURRENT_DATE, 17, NULL),
-(NULL, NULL, 1, CURRENT_DATE, 18, NULL),
-(NULL, NULL, 1, CURRENT_DATE, 19, NULL),
-(NULL, NULL, 1, CURRENT_DATE, 20, NULL); 
 
 -- Insertar proveedores de cerveza artesanal
-INSERT INTO Proveedor (razon_social, denominacion, rif, direccion_fiscal, direccion_fisica, id_lugar, lugar_id2, url_web, usuario_id) VALUES
-('Cervecería Artesanal del Valle, C.A.', 'Cerveza del Valle', 123456789, 'Avenida Principal del Valle, Edificio Cervecero, Piso 3, Local 5', 'Calle Los Mangos, Zona Industrial del Valle, Galpón 12', 370, 371, 'www.cervezadelvalle.com', 1),
-('Cerveza Premium de La Candelaria, S.A.', 'Cerveza Premium', 234567890, 'Calle La Candelaria, Edificio Premium, Piso 2, Local 8', 'Avenida Principal, Zona Industrial La Candelaria, Galpón 15', 365, 366, 'www.cervezapremium.com', 2),
-('Cervecería Artesanal El Paraíso, C.A.', 'Cerveza El Paraíso', 345678901, 'Avenida El Paraíso, Edificio Artesanal, Piso 4, Local 12', 'Calle Los Pinos, Zona Industrial El Paraíso, Galpón 8', 368, 369, 'www.cervezaelparaiso.com', 3),
-('Cerveza Gourmet de San Bernardino, S.A.', 'Cerveza Gourmet', 456789012, 'Calle San Bernardino, Edificio Gourmet, Piso 3, Local 6', 'Avenida Principal, Zona Industrial San Bernardino, Galpón 10', 376, 377, 'www.cervezagourmet.com', 4),
-('Cervecería Artesanal de La Pastora, C.A.', 'Cerveza La Pastora', 567890123, 'Avenida La Pastora, Edificio Artesanal, Piso 2, Local 9', 'Calle Los Cedros, Zona Industrial La Pastora, Galpón 14', 372, 373, 'www.cervezalapastora.com', 5),
-('Cerveza Premium de San Agustín, S.A.', 'Cerveza San Agustín', 678901234, 'Calle San Agustín, Edificio Premium, Piso 5, Local 15', 'Avenida Principal, Zona Industrial San Agustín, Galpón 7', 375, 376, 'www.cervezasanagustin.com', 6),
-('Cervecería Artesanal de La Vega, C.A.', 'Cerveza La Vega', 789012345, 'Avenida La Vega, Edificio Artesanal, Piso 3, Local 11', 'Calle Los Mangos, Zona Industrial La Vega, Galpón 9', 373, 374, 'www.cervezalavega.com', 7),
-('Cerveza Gourmet de San José, S.A.', 'Cerveza San José', 890123456, 'Calle San José, Edificio Gourmet, Piso 4, Local 7', 'Avenida Principal, Zona Industrial San José, Galpón 13', 377, 378, 'www.cervezasanjose.com', 8),
-('Cervecería Artesanal de San Juan, C.A.', 'Cerveza San Juan', 901234567, 'Avenida San Juan, Edificio Artesanal, Piso 2, Local 10', 'Calle Los Pinos, Zona Industrial San Juan, Galpón 11', 378, 379, 'www.cervezasanjuan.com', 9),
-('Cerveza Premium de San Pedro, S.A.', 'Cerveza San Pedro', 012345678, 'Calle San Pedro, Edificio Premium, Piso 3, Local 8', 'Avenida Principal, Zona Industrial San Pedro, Galpón 6', 379, 380, 'www.cervezasanpedro.com', 10),
-('Cervecería Artesanal de Santa Rosalía, C.A.', 'Cerveza Santa Rosalía', 123456780, 'Avenida Santa Rosalía, Edificio Artesanal, Piso 4, Local 13', 'Calle Los Cedros, Zona Industrial Santa Rosalía, Galpón 16', 380, 381, 'www.cervezasantarosalia.com', 11),
-('Cerveza Gourmet de Santa Teresa, S.A.', 'Cerveza Santa Teresa', 234567801, 'Calle Santa Teresa, Edificio Gourmet, Piso 2, Local 9', 'Avenida Principal, Zona Industrial Santa Teresa, Galpón 8', 381, 382, 'www.cervezasantateresa.com', 12),
-('Cervecería Artesanal de Sucre, C.A.', 'Cerveza Sucre', 345678012, 'Avenida Sucre, Edificio Artesanal, Piso 3, Local 7', 'Calle Los Mangos, Zona Industrial Sucre, Galpón 12', 382, 361, 'www.cervezasucre.com', 13),
-('Cerveza Premium de 23 de Enero, S.A.', 'Cerveza 23 de Enero', 456780123, 'Calle 23 de Enero, Edificio Premium, Piso 5, Local 14', 'Avenida Principal, Zona Industrial 23 de Enero, Galpón 9', 361, 362, 'www.cerveza23deenero.com', 14),
-('Cervecería Artesanal de Altagracia, C.A.', 'Cerveza Altagracia', 567801234, 'Avenida Altagracia, Edificio Artesanal, Piso 2, Local 11', 'Calle Los Pinos, Zona Industrial Altagracia, Galpón 15', 362, 363, 'www.cervezaaltagracia.com', 15),
-('Cerveza Gourmet de Antímano, S.A.', 'Cerveza Antímano', 678012345, 'Calle Antímano, Edificio Gourmet, Piso 4, Local 8', 'Avenida Principal, Zona Industrial Antímano, Galpón 10', 363, 364, 'www.cervezaantimano.com', 16),
-('Cervecería Artesanal de Caricuao, C.A.', 'Cerveza Caricuao', 780123456, 'Avenida Caricuao, Edificio Artesanal, Piso 3, Local 12', 'Calle Los Cedros, Zona Industrial Caricuao, Galpón 7', 364, 365, 'www.cervezacaricuao.com', 17),
-('Cerveza Premium de Catedral, S.A.', 'Cerveza Catedral', 801234567, 'Calle Catedral, Edificio Premium, Piso 2, Local 10', 'Avenida Principal, Zona Industrial Catedral, Galpón 14', 365, 366, 'www.cervezacatedral.com', 18),
-('Cervecería Artesanal de Coche, C.A.', 'Cerveza Coche', 901234568, 'Avenida Coche, Edificio Artesanal, Piso 5, Local 15', 'Calle Los Mangos, Zona Industrial Coche, Galpón 11', 366, 367, 'www.cervezacoche.com', 19),
-('Cerveza Gourmet de El Junquito, S.A.', 'Cerveza El Junquito', 012345689, 'Calle El Junquito, Edificio Gourmet, Piso 3, Local 9', 'Avenida Principal, Zona Industrial El Junquito, Galpón 13', 367, 368, 'www.cervezaeljunquito.com', 20); 
+INSERT INTO Proveedor (razon_social, denominacion, rif, direccion_fiscal, direccion_fisica, id_lugar, lugar_id2, url_web) VALUES
+('Cervecería Artesanal del Valle, C.A.', 'Cerveza del Valle', 123456789, 'Avenida Principal del Valle, Edificio Cervecero, Piso 3, Local 5', 'Calle Los Mangos, Zona Industrial del Valle, Galpón 12', 370, 371, 'www.cervezadelvalle.com'),
+('Cerveza Premium de La Candelaria, S.A.', 'Cerveza Premium', 234567890, 'Calle La Candelaria, Edificio Premium, Piso 2, Local 8', 'Avenida Principal, Zona Industrial La Candelaria, Galpón 15', 365, 366, 'www.cervezapremium.com'),
+('Cervecería Artesanal El Paraíso, C.A.', 'Cerveza El Paraíso', 345678901, 'Avenida El Paraíso, Edificio Artesanal, Piso 4, Local 12', 'Calle Los Pinos, Zona Industrial El Paraíso, Galpón 8', 368, 369, 'www.cervezaelparaiso.com'),
+('Cerveza Gourmet de San Bernardino, S.A.', 'Cerveza Gourmet', 456789012, 'Calle San Bernardino, Edificio Gourmet, Piso 3, Local 6', 'Avenida Principal, Zona Industrial San Bernardino, Galpón 10', 376, 377, 'www.cervezagourmet.com'),
+('Cervecería Artesanal de La Pastora, C.A.', 'Cerveza La Pastora', 567890123, 'Avenida La Pastora, Edificio Artesanal, Piso 2, Local 9', 'Calle Los Cedros, Zona Industrial La Pastora, Galpón 14', 372, 373, 'www.cervezalapastora.com'),
+('Cerveza Premium de San Agustín, S.A.', 'Cerveza San Agustín', 678901234, 'Calle San Agustín, Edificio Premium, Piso 5, Local 15', 'Avenida Principal, Zona Industrial San Agustín, Galpón 7', 375, 376, 'www.cervezasanagustin.com'),
+('Cervecería Artesanal de La Vega, C.A.', 'Cerveza La Vega', 789012345, 'Avenida La Vega, Edificio Artesanal, Piso 3, Local 11', 'Calle Los Mangos, Zona Industrial La Vega, Galpón 9', 373, 374, 'www.cervezalavega.com'),
+('Cerveza Gourmet de San José, S.A.', 'Cerveza San José', 890123456, 'Calle San José, Edificio Gourmet, Piso 4, Local 7', 'Avenida Principal, Zona Industrial San José, Galpón 13', 377, 378, 'www.cervezasanjose.com'),
+('Cervecería Artesanal de San Juan, C.A.', 'Cerveza San Juan', 901234567, 'Avenida San Juan, Edificio Artesanal, Piso 2, Local 10', 'Calle Los Pinos, Zona Industrial San Juan, Galpón 11', 378, 379, 'www.cervezasanjuan.com'),
+('Cerveza Premium de San Pedro, S.A.', 'Cerveza San Pedro', 012345678, 'Calle San Pedro, Edificio Premium, Piso 3, Local 8', 'Avenida Principal, Zona Industrial San Pedro, Galpón 6', 379, 380, 'www.cervezasanpedro.com'),
+('Cervecería Artesanal de Santa Rosalía, C.A.', 'Cerveza Santa Rosalía', 123456780, 'Avenida Santa Rosalía, Edificio Artesanal, Piso 4, Local 13', 'Calle Los Cedros, Zona Industrial Santa Rosalía, Galpón 16', 380, 381, 'www.cervezasantarosalia.com'),
+('Cerveza Gourmet de Santa Teresa, S.A.', 'Cerveza Santa Teresa', 234567801, 'Calle Santa Teresa, Edificio Gourmet, Piso 2, Local 9', 'Avenida Principal, Zona Industrial Santa Teresa, Galpón 8', 381, 382, 'www.cervezasantateresa.com'),
+('Cervecería Artesanal de Sucre, C.A.', 'Cerveza Sucre', 345678012, 'Avenida Sucre, Edificio Artesanal, Piso 3, Local 7', 'Calle Los Mangos, Zona Industrial Sucre, Galpón 12', 382, 361, 'www.cervezasucre.com'),
+('Cerveza Premium de 23 de Enero, S.A.', 'Cerveza 23 de Enero', 456780123, 'Calle 23 de Enero, Edificio Premium, Piso 5, Local 14', 'Avenida Principal, Zona Industrial 23 de Enero, Galpón 9', 361, 362, 'www.cerveza23deenero.com'),
+('Cervecería Artesanal de Altagracia, C.A.', 'Cerveza Altagracia', 567801234, 'Avenida Altagracia, Edificio Artesanal, Piso 2, Local 11', 'Calle Los Pinos, Zona Industrial Altagracia, Galpón 15', 362, 363, 'www.cervezaaltagracia.com'),
+('Cerveza Gourmet de Antímano, S.A.', 'Cerveza Antímano', 678012345, 'Calle Antímano, Edificio Gourmet, Piso 4, Local 8', 'Avenida Principal, Zona Industrial Antímano, Galpón 10', 363, 364, 'www.cervezaantimano.com'),
+('Cervecería Artesanal de Caricuao, C.A.', 'Cerveza Caricuao', 780123456, 'Avenida Caricuao, Edificio Artesanal, Piso 3, Local 12', 'Calle Los Cedros, Zona Industrial Caricuao, Galpón 7', 364, 365, 'www.cervezacaricuao.com'),
+('Cerveza Premium de Catedral, S.A.', 'Cerveza Catedral', 801234567, 'Calle Catedral, Edificio Premium, Piso 2, Local 10', 'Avenida Principal, Zona Industrial Catedral, Galpón 14', 365, 366, 'www.cervezacatedral.com'),
+('Cervecería Artesanal de Coche, C.A.', 'Cerveza Coche', 901234568, 'Avenida Coche, Edificio Artesanal, Piso 5, Local 15', 'Calle Los Mangos, Zona Industrial Coche, Galpón 11', 366, 367, 'www.cervezacoche.com'),
+('Cerveza Gourmet de El Junquito, S.A.', 'Cerveza El Junquito', 012345689, 'Calle El Junquito, Edificio Gourmet, Piso 3, Local 9', 'Avenida Principal, Zona Industrial El Junquito, Galpón 13', 367, 368, 'www.cervezaeljunquito.com'); 
+
 
 -- Insertar clientes jurídicos
 INSERT INTO Cliente_Juridico (rif_cliente, razon_social, denominacion_comercial, capital_disponible, direccion_fiscal, direccion_fisica, pagina_web, lugar_id_lugar, lugar_id_lugar2) VALUES
@@ -2104,6 +2085,76 @@ INSERT INTO Cliente_Natural (rif_cliente, ci_cliente, primer_nombre, segundo_nom
 (801234567, 80123456, 'Gabriela', 'Alejandra', 'Silva', 'Reyes', 'Calle Coche, Residencia Gourmet, Piso 4, Apartamento 15', 366),
 (012345670, 01234560, 'Daniel', 'Alberto', 'Navarro', 'Acosta', 'Avenida El Junquito, Edificio Comercial, Piso 3, Apartamento 9', 367),
 (123456701, 12345601, 'Valentina', 'María', 'Medina', 'Paredes', 'Calle del Valle, Residencia Premium, Piso 2, Apartamento 7', 370); 
+
+
+INSERT INTO Usuario (id_cliente_juridico, id_cliente_natural, id_rol, fecha_creacion, id_proveedor, empleado_id) VALUES
+
+-- Insertar usuarios para los proveedores
+
+(NULL, NULL, 1, CURRENT_DATE, 1, NULL),
+(NULL, NULL, 1, CURRENT_DATE, 2, NULL),
+(NULL, NULL, 1, CURRENT_DATE, 3, NULL),
+(NULL, NULL, 1, CURRENT_DATE, 4, NULL),
+(NULL, NULL, 1, CURRENT_DATE, 5, NULL),
+(NULL, NULL, 1, CURRENT_DATE, 6, NULL),
+(NULL, NULL, 1, CURRENT_DATE, 7, NULL),
+(NULL, NULL, 1, CURRENT_DATE, 8, NULL),
+(NULL, NULL, 1, CURRENT_DATE, 9, NULL),
+(NULL, NULL, 1, CURRENT_DATE, 10, NULL),
+(NULL, NULL, 1, CURRENT_DATE, 11, NULL),
+(NULL, NULL, 1, CURRENT_DATE, 12, NULL),
+(NULL, NULL, 1, CURRENT_DATE, 13, NULL),
+(NULL, NULL, 1, CURRENT_DATE, 14, NULL),
+(NULL, NULL, 1, CURRENT_DATE, 15, NULL),
+(NULL, NULL, 1, CURRENT_DATE, 16, NULL),
+(NULL, NULL, 1, CURRENT_DATE, 17, NULL),
+(NULL, NULL, 1, CURRENT_DATE, 18, NULL),
+(NULL, NULL, 1, CURRENT_DATE, 19, NULL),
+(NULL, NULL, 1, CURRENT_DATE, 20, NULL),
+-- Insertar usuarios para los clientes NATURALES
+(NULL, 1, 2, CURRENT_DATE, NULL, NULL),
+(NULL, 2, 2, CURRENT_DATE, NULL, NULL),
+(NULL, 3, 2, CURRENT_DATE, NULL, NULL),
+(NULL, 4, 2, CURRENT_DATE, NULL, NULL),
+(NULL, 5, 2, CURRENT_DATE, NULL, NULL),
+(NULL, 6, 2, CURRENT_DATE, NULL, NULL),
+(NULL, 7, 2, CURRENT_DATE, NULL, NULL),
+(NULL, 8, 2, CURRENT_DATE, NULL, NULL),
+(NULL, 9, 2, CURRENT_DATE, NULL, NULL),
+(NULL, 10, 2, CURRENT_DATE, NULL, NULL),
+(NULL, 11, 2, CURRENT_DATE, NULL, NULL),
+(NULL, 12, 2, CURRENT_DATE, NULL, NULL),
+(NULL, 13, 2, CURRENT_DATE, NULL, NULL),
+(NULL, 14, 2, CURRENT_DATE, NULL, NULL),
+(NULL, 15, 2, CURRENT_DATE, NULL, NULL),
+(NULL, 16, 2, CURRENT_DATE, NULL, NULL),
+(NULL, 17, 2, CURRENT_DATE, NULL, NULL),
+(NULL, 18, 2, CURRENT_DATE, NULL, NULL),
+(NULL, 19, 2, CURRENT_DATE, NULL, NULL),
+(NULL, 20, 2, CURRENT_DATE, NULL, NULL),
+-- Insertar usuarios para los administradores
+(1, NULL, 2, CURRENT_DATE, NULL, NULL),
+(2, NULL, 2, CURRENT_DATE, NULL, NULL),
+(3, NULL, 2, CURRENT_DATE, NULL, NULL),
+(4, NULL, 2, CURRENT_DATE, NULL, NULL),
+(5, NULL, 2, CURRENT_DATE, NULL, NULL),
+(6, NULL, 2, CURRENT_DATE, NULL, NULL),
+(7, NULL, 2, CURRENT_DATE, NULL, NULL),
+(8, NULL, 2, CURRENT_DATE, NULL, NULL),
+(9, NULL, 2, CURRENT_DATE, NULL, NULL),
+(10, NULL, 2, CURRENT_DATE, NULL, NULL),
+(11, NULL, 2, CURRENT_DATE, NULL, NULL),
+(12, NULL, 2, CURRENT_DATE, NULL, NULL),
+(13, NULL, 2, CURRENT_DATE, NULL, NULL),
+(14, NULL, 2, CURRENT_DATE, NULL, NULL),
+(15, NULL, 2, CURRENT_DATE, NULL, NULL),
+(16, NULL, 2, CURRENT_DATE, NULL, NULL),
+(17, NULL, 2, CURRENT_DATE, NULL, NULL),
+(18, NULL, 2, CURRENT_DATE, NULL, NULL),
+(19, NULL, 2, CURRENT_DATE, NULL, NULL),
+(20, NULL, 2, CURRENT_DATE, NULL, NULL);
+
+
 
 -- Insertar correos de proveedores
 INSERT INTO Correo (nombre, extension_pag, id_proveedor_proveedor, id_cliente_natural, id_cliente_juridico) VALUES
@@ -2349,6 +2400,52 @@ INSERT INTO Inventario (cantidad, id_tienda_fisica, id_tienda_web, id_presentaci
 (1000, NULL, 1, 1, 8, NULL),
 (1000, NULL, 1, 1, 9, NULL),
 (1000, NULL, 1, 1, 10, NULL);
+
+--- Compras de usuarios de clientes naturales
+
+INSERT INTO Compra (monto_total, id_cliente_juridico, id_cliente_natural, usuario_id_usuario, tienda_web_id_tienda, tienda_fisica_id_tienda) VALUES
+(0, NULL, NULL, 21, 1, NULL),
+(0, NULL, NULL, 21, 1, NULL),
+(0, NULL, NULL, 22, 1, NULL),
+(0, NULL, NULL, 22, 1, NULL),
+(0, NULL, NULL, 23, 1, NULL),
+(0, NULL, NULL, 23, 1, NULL),
+(0, NULL, NULL, 24, 1, NULL),
+(0, NULL, NULL, 24, 1, NULL),
+(0, NULL, NULL, 25, 1, NULL),
+(0, NULL, NULL, 25, 1, NULL);
+(0, NULL, NULL, 26, 1, NULL),
+(0, NULL, NULL, 26, 1, NULL),
+(0, NULL, NULL, 27, 1, NULL),
+(0, NULL, NULL, 27, 1, NULL),
+(0, NULL, NULL, 28, 1, NULL),
+(0, NULL, NULL, 28, 1, NULL),
+(0, NULL, NULL, 29, 1, NULL),
+(0, NULL, NULL, 29, 1, NULL),
+(0, NULL, NULL, 30, 1, NULL),
+(0, NULL, NULL, 30, 1, NULL),
+(0, NULL, NULL, 31, 1, NULL),
+(0, NULL, NULL, 31, 1, NULL),
+(0, NULL, NULL, 32, 1, NULL),
+(0, NULL, NULL, 32, 1, NULL),
+(0, NULL, NULL, 33, 1, NULL),
+(0, NULL, NULL, 33, 1, NULL),
+(0, NULL, NULL, 34, 1, NULL),
+(0, NULL, NULL, 34, 1, NULL),
+(0, NULL, NULL, 35, 1, NULL),
+(0, NULL, NULL, 35, 1, NULL),
+(0, NULL, NULL, 36, 1, NULL),
+(0, NULL, NULL, 36, 1, NULL),
+(0, NULL, NULL, 37, 1, NULL),
+(0, NULL, NULL, 37, 1, NULL),
+(0, NULL, NULL, 38, 1, NULL),
+(0, NULL, NULL, 38, 1, NULL),
+(0, NULL, NULL, 39, 1, NULL),
+(0, NULL, NULL, 39, 1, NULL),
+(0, NULL, NULL, 40, 1, NULL),
+(0, NULL, NULL, 40, 1, NULL),
+
+
 
 INSERT INTO Tipo_Actividad (nombre) VALUES
 ('Taller Técnico'),

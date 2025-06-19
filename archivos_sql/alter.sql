@@ -1060,16 +1060,6 @@ ALTER TABLE Proveedor
     ) 
 ;
 
-ALTER TABLE Proveedor 
-    ADD CONSTRAINT Proveedor_Usuario_FK FOREIGN KEY 
-    ( 
-     usuario_id
-    ) 
-    REFERENCES Usuario 
-    ( 
-     id_usuario
-    ) 
-;
 
 ALTER TABLE Punto_Cliente 
     ADD CONSTRAINT Punto_Cliente_Cliente_FK FOREIGN KEY 
