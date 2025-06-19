@@ -369,8 +369,8 @@ CREATE TABLE Orden_Reposicion (
     id_departamento     INTEGER NOT NULL,
     id_proveedor        INTEGER NOT NULL,
     fecha_emision       DATE NOT NULL,
-    id_empleado         INTEGER NOT NULL,
-    fecha_fin           DATE NOT NULL
+    id_empleado         INTEGER,
+    fecha_fin           DATE
 );
 
 CREATE TABLE Orden_Reposicion_Anaquel (

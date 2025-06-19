@@ -7,6 +7,19 @@ VALUES (1, 'Proveedor'),
        (2, 'Cliente'),
        (3, 'Administrador');
 
+
+INSERT INTO Departamento (nombre, fecha_creacion, descripcion, activo) VALUES
+('Gerencia General', '2012-10-01', 'Departamento responsable de la dirección estratégica y operativa general de ACAUCAB', 'S'),
+('Ventas en Línea', '2013-03-15', 'Departamento encargado de gestionar presupuestos y compras vía correo electrónico e internet', 'S'),
+('Despacho', '2012-11-20', 'Departamento responsable de procesar pedidos y tenerlos listos para entrega en máximo 2 horas', 'S'),
+('Entrega', '2012-12-01', 'Departamento encargado de la entrega de pedidos a clientes y cambio de estatus a "Entregado"', 'S'),
+('Compras', '2013-01-10', 'Departamento responsable de órdenes de reposición de inventario y aprobación de compras a proveedores', 'S'),
+('Promociones', '2013-02-14', 'Departamento encargado de la creación del DiarioDeUnaCerveza y gestión de ofertas cada 30 días', 'S'),
+('Talento Humano', '2012-10-15', 'Departamento responsable del control de nómina, horarios, vacaciones, salarios y beneficios del personal', 'S'),
+('Gestión de Miembros', '2012-10-01', 'Departamento encargado de la gestión de miembros proveedores, afiliaciones y cuotas mensuales', 'S'),
+('Gestión de Clientes', '2013-01-05', 'Departamento responsable de la emisión de carnets, gestión de puntos y atención a clientes', 'S'),
+('Sostenibilidad', '2020-01-01', 'Departamento encargado de informes de sostenibilidad, auditorías y cumplimiento de ODS', 'S');
+
 -- Insertar Estados de Venezuela (lugar_relacion_idar es NULL para los estados)
 INSERT INTO Lugar (nombre, tipo) VALUES
 ('Anzoátegui', 'Estado'),
@@ -3373,7 +3386,84 @@ INSERT INTO Detalle_Compra (precio_unitario, cantidad, id_inventario, id_compra)
 (10.00, 1, 7, 80),
 (10.00, 1, 8, 80),
 (10.00, 1, 9, 80),
-(10.00, 1, 10, 80); 
+(10.00, 1, 10, 80);
+
+-- Insertar 10 órdenes de reposición
+INSERT INTO Orden_Reposicion (id_departamento, id_proveedor, fecha_emision) VALUES
+(3, 1, CURRENT_DATE),
+(3, 2, CURRENT_DATE),
+(3, 3, CURRENT_DATE),
+(3, 4, CURRENT_DATE),
+(3, 5, CURRENT_DATE),
+(3, 6, CURRENT_DATE),
+(3, 7, CURRENT_DATE),
+(3, 8, CURRENT_DATE),
+(3, 9, CURRENT_DATE),
+(3, 10, CURRENT_DATE); 
+
+
+-- Detalles de órdenes de reposición (solo combinaciones válidas de id_presentacion y id_cerveza)
+INSERT INTO Detalle_Orden_Reposicion (cantidad, id_orden_reposicion, id_proveedor, id_departamento, precio, id_tipo_cerveza, id_presentacion, id_cerveza) VALUES
+-- Detalles para la orden 1
+(5, 1, 1, 3, 5, 7, 1, 1),
+(5, 1, 1, 3, 5, 15, 2, 2),
+(5, 1, 1, 3, 5, 22, 3, 3),
+(5, 1, 1, 3, 5, 4, 3, 4),
+(5, 1, 1, 3, 5, 29, 2, 5),
+-- Detalles para la orden 2
+(5, 2, 2, 3, 5, 11, 1, 6),
+(5, 2, 2, 3, 5, 18, 1, 7),
+(5, 2, 2, 3, 5, 25, 1, 8),
+(5, 2, 2, 3, 5, 6, 1, 9),
+(5, 2, 2, 3, 5, 30, 1, 10),
+-- Detalles para la orden 3
+(5, 3, 3, 3, 5, 2, 1, 1),
+(5, 3, 3, 3, 5, 13, 2, 2),
+(5, 3, 3, 3, 5, 21, 3, 3),
+(5, 3, 3, 3, 5, 8, 3, 4),
+(5, 3, 3, 3, 5, 27, 2, 5),
+-- Detalles para la orden 4
+(5, 4, 4, 3, 5, 5, 1, 6),
+(5, 4, 4, 3, 5, 19, 1, 7),
+(5, 4, 4, 3, 5, 23, 1, 8),
+(5, 4, 4, 3, 5, 10, 1, 9),
+(5, 4, 4, 3, 5, 28, 1, 10),
+-- Detalles para la orden 5
+(5, 5, 5, 3, 5, 12, 1, 1),
+(5, 5, 5, 3, 5, 16, 2, 2),
+(5, 5, 5, 3, 5, 24, 3, 3),
+(5, 5, 5, 3, 5, 3, 3, 4),
+(5, 5, 5, 3, 5, 26, 2, 5),
+-- Detalles para la orden 6
+(5, 6, 6, 3, 5, 9, 1, 6),
+(5, 6, 6, 3, 5, 20, 1, 7),
+(5, 6, 6, 3, 5, 14, 1, 8),
+(5, 6, 6, 3, 5, 1, 1, 9),
+(5, 6, 6, 3, 5, 17, 1, 10),
+-- Detalles para la orden 7
+(5, 7, 7, 3, 5, 6, 1, 1),
+(5, 7, 7, 3, 5, 28, 2, 2),
+(5, 7, 7, 3, 5, 11, 3, 3),
+(5, 7, 7, 3, 5, 24, 3, 4),
+(5, 7, 7, 3, 5, 15, 2, 5),
+-- Detalles para la orden 8
+(5, 8, 8, 3, 5, 7, 1, 6),
+(5, 8, 8, 3, 5, 18, 1, 7),
+(5, 8, 8, 3, 5, 22, 1, 8),
+(5, 8, 8, 3, 5, 13, 1, 9),
+(5, 8, 8, 3, 5, 29, 1, 10),
+-- Detalles para la orden 9
+(5, 9, 9, 3, 5, 2, 1, 1),
+(5, 9, 9, 3, 5, 17, 2, 2),
+(5, 9, 9, 3, 5, 25, 3, 3),
+(5, 9, 9, 3, 5, 8, 3, 4),
+(5, 9, 9, 3, 5, 30, 2, 5),
+-- Detalles para la orden 10
+(5, 10, 10, 3, 5, 10, 1, 6),
+(5, 10, 10, 3, 5, 21, 1, 7),
+(5, 10, 10, 3, 5, 14, 1, 8),
+(5, 10, 10, 3, 5, 4, 1, 9),
+(5, 10, 10, 3, 5, 27, 1, 10); 
 
 INSERT INTO Tipo_Actividad (nombre) VALUES
 ('Taller Técnico'),
@@ -3658,17 +3748,6 @@ INSERT INTO Cargo (nombre, descripcion) VALUES
 ('Cajero de Tienda', 'Maneja ventas en tienda física, descuento de inventario, control y canjeo de puntos de clientes'),
 ('Especialista en Afiliaciones', 'Gestiona fichas de afiliación de miembros proveedores y cobro de cuotas mensuales');
 
-INSERT INTO Departamento (nombre, fecha_creacion, descripcion, activo) VALUES
-('Gerencia General', '2012-10-01', 'Departamento responsable de la dirección estratégica y operativa general de ACAUCAB', 'S'),
-('Ventas en Línea', '2013-03-15', 'Departamento encargado de gestionar presupuestos y compras vía correo electrónico e internet', 'S'),
-('Despacho', '2012-11-20', 'Departamento responsable de procesar pedidos y tenerlos listos para entrega en máximo 2 horas', 'S'),
-('Entrega', '2012-12-01', 'Departamento encargado de la entrega de pedidos a clientes y cambio de estatus a "Entregado"', 'S'),
-('Compras', '2013-01-10', 'Departamento responsable de órdenes de reposición de inventario y aprobación de compras a proveedores', 'S'),
-('Promociones', '2013-02-14', 'Departamento encargado de la creación del DiarioDeUnaCerveza y gestión de ofertas cada 30 días', 'S'),
-('Talento Humano', '2012-10-15', 'Departamento responsable del control de nómina, horarios, vacaciones, salarios y beneficios del personal', 'S'),
-('Gestión de Miembros', '2012-10-01', 'Departamento encargado de la gestión de miembros proveedores, afiliaciones y cuotas mensuales', 'S'),
-('Gestión de Clientes', '2013-01-05', 'Departamento responsable de la emisión de carnets, gestión de puntos y atención a clientes', 'S'),
-('Sostenibilidad', '2020-01-01', 'Departamento encargado de informes de sostenibilidad, auditorías y cumplimiento de ODS', 'S');
 
 INSERT INTO Departamento_Empleado (fecha_inicio, fecha_final, salario, id_empleado, id_departamento, id_cargo) VALUES
 ('2023-01-15', NULL, 8500.00, 1, 1, 1),  -- Carlos González - Gerencia General - Gerente General
