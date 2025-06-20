@@ -1,7 +1,13 @@
-// controllers/userController.js
-const loginController = (req, res) => {
-  console.log("Llamada desde login controller")
-  res.json({ message: "Obtener usuario con ID: " + req.params.id });
+const {pool} = require("../db_connection/index.js")
+
+const loginController = async (req, res) => {
+  console.log("Llamando a login controller")
+  try{
+    const {rows} = await pool.query("SELECT * FROM estatus")
+    console.log(rows)
+  } catch(e){
+    console.log(e)
+  }
 };
 
 
