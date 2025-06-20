@@ -421,7 +421,6 @@ CREATE TABLE Pago_Evento (
 
 CREATE TABLE Pago_Orden_Reposicion (
     id_pago        SERIAL PRIMARY KEY,
-    id_orden       INTEGER NOT NULL,
     id_proveedor   INTEGER NOT NULL,
     id_departamento INTEGER NOT NULL,
     id_orden_reposicion INTEGER NOT NULL,
