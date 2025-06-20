@@ -1,17 +1,29 @@
-const {pool} = require("../db_connection/index.js")
+const db = require('../db_connection/db');
 
-const loginController = async (req, res) => {
-  console.log("Llamando a login controller")
-  try{
-    const {rows} = await pool.query("SELECT * FROM estatus")
-    console.log(rows)
-  } catch(e){
-    console.log(e)
-  }
+exports.login = async (req, res) => {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+        return res.status(400).json({ error: 'Email and password are required' });
+    }
+
+    try {
+        const query = 'SELECT * FROM verificar_credenciales($1, $2)';
+        const { rows } = await db.query(query, [email, password]);
+
+        if (rows.length > 0) {
+            // Usuario autenticado
+            res.status(200).json({ message: 'Login successful', user: rows[0] });
+        } else {
+            // Credenciales incorrectas
+            res.status(401).json({ error: 'Invalid credentials' });
+        }
+    } catch (error) {
+        console.error('Error during login:', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
 };
 
-
-
 module.exports = {
-  loginController
+  login
 };

@@ -33,7 +33,7 @@
 
         <!-- Formulario de Inicio de Sesión -->
         <div id="login" class="tab-content active">
-          <form id="login-form" >
+          <form id="login-form" onsubmit="return loginForm(event)">
             <div class="form-group">
               <label for="login-email">Correo Electrónico</label>
               <input
@@ -400,15 +400,7 @@
     </div>
 
     <script>
-        console.log("Probando")
-        axios.get('http://localhost:3000/', async (e)=>{
-          console.log("Respuesta")
-          console.log(e)
-        })
-
       function openTab(tabName) {
-
-
         const tabContents = document.getElementsByClassName("tab-content");
         for (let i = 0; i < tabContents.length; i++) {
           tabContents[i].classList.remove("active");
@@ -459,6 +451,31 @@
           icon.classList.remove("fa-eye-slash");
           icon.classList.add("fa-eye");
         }
+      }
+
+      function loginForm(event) {
+        event.preventDefault(); 
+
+        const email = document.getElementById('login-email').value;
+        const password = document.getElementById('login-password').value;
+
+        axios.post('/user/login', {
+            email: email,
+            password: password
+        })
+        .then(function (response) {
+            console.log(response);
+            // Aquí puedes manejar la respuesta exitosa, por ejemplo, redirigiendo al usuario
+            alert('Login successful!');
+            // window.location.href = '/home'; // Redirigir a la página de inicio
+        })
+        .catch(function (error) {
+            console.error(error);
+            // Aquí puedes manejar los errores, por ejemplo, mostrando un mensaje al usuario
+            alert('Error en el login: ' + (error.response ? error.response.data.error : error.message));
+        });
+
+        return false; 
       }
     </script>
   </body>
