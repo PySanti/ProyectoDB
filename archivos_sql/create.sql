@@ -441,7 +441,6 @@ CREATE TABLE Persona_Contacto (
     nombre          VARCHAR(50) NOT NULL,
     apellido        VARCHAR(50) NOT NULL,
     id_proveedor    INTEGER,
-    id_telefono     INTEGER NOT NULL,
     id_cliente_juridico INTEGER,
     
     CONSTRAINT arc_propietario_contacto CHECK (

@@ -980,16 +980,7 @@ ALTER TABLE Persona_Contacto
     ) 
 ;
 
-ALTER TABLE Persona_Contacto 
-    ADD CONSTRAINT Persona_Contacto_Telefono_FK FOREIGN KEY 
-    ( 
-     id_telefono
-    ) 
-    REFERENCES Telefono 
-    ( 
-     id_telefono
-    ) 
-;
+
 
 --  ERROR: FK name length exceeds maximum allowed length(30) 
 ALTER TABLE Presentacion_Cerveza 
