@@ -3,28 +3,26 @@ const app = express();
 const userRoutes = require('./routes/userRoutes.js');
 const cors = require('cors');
 
-// Habilitar CORS para todas las rutas
-app.use(cors()); // ← Así de simple
-
-// O con configuración personalizada (recomendado para producción)
+// Configuración CORS para permitir peticiones desde archivos locales (file://)
 app.use(cors({
-  origin: 'file://', // Reemplaza con tu URL frontend
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  origin: function (origin, callback) {
+    // Permitir peticiones desde archivos locales (sin origen o null)
+    if (!origin || origin === 'null') {
+      callback(null, true);
+    } else {
+      callback(null, true); // Puedes restringir aquí si lo deseas
+    }
+  },
+  credentials: true, // Si usas cookies o autenticación
 }));
-
-// Tus rutas
-app.post('/user/login', (req, res) => {
-  res.json({ message: "Login exitoso" });
-});
-
-app.listen(3000, () => console.log('Server running on port 3000'));
 
 // Middleware para parsear JSON
 app.use(express.json());
 
 // Asignar rutas
-app.use('/user', userRoutes);  // Las rutas empezarán con /users
+app.use('/user', userRoutes);
+
+
 
 // Iniciar servidor
 const PORT = 3000;

@@ -1,6 +1,6 @@
-const db = require('../db_connection/db');
+const db = require('../db_connection/index.js');
 
-exports.login = async (req, res) => {
+const loginController = async (req, res) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
@@ -25,5 +25,5 @@ exports.login = async (req, res) => {
 };
 
 module.exports = {
-  login
+  loginController
 };
