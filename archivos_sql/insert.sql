@@ -2607,8 +2607,8 @@ INSERT INTO Usuario (id_cliente_juridico, id_cliente_natural, id_rol, fecha_crea
 (17, NULL, 2, CURRENT_DATE, NULL, NULL, 'empresa017'),
 (18, NULL, 2, CURRENT_DATE, NULL, NULL, 'empresa018'),
 (19, NULL, 2, CURRENT_DATE, NULL, NULL, 'empresa019'),
-(20, NULL, 2, CURRENT_DATE, NULL, NULL, 'empresa020');
-
+(20, NULL, 2, CURRENT_DATE, NULL, NULL, 'empresa020'),
+(NULL, NULL, 3, CURRENT_DATE, NULL, 1, 'empleado123');
 
 -- Insertar correos de proveedores
 INSERT INTO Correo (nombre, extension_pag, id_proveedor_proveedor, id_cliente_natural, id_cliente_juridico) VALUES
@@ -2652,6 +2652,7 @@ INSERT INTO Correo (nombre, extension_pag, id_proveedor_proveedor, id_cliente_na
 ('ventas.cervezacoche', 'gmail.com', 19, NULL, NULL),
 ('cervezaeljunquito', 'yahoo.com', 20, NULL, NULL),
 ('ventas.cervezaeljunquito', 'hotmail.com', 20, NULL, NULL);
+
 
 -- Insertar correos para clientes jurídicos
 INSERT INTO Correo (nombre, extension_pag, id_cliente_juridico, id_cliente_natural, id_proveedor_proveedor) VALUES
@@ -2738,6 +2739,11 @@ INSERT INTO Correo (nombre, extension_pag, id_cliente_juridico, id_cliente_natur
 ('daniel.a.navarro', 'outlook.com', NULL, 19, NULL),
 ('valentina.medina', 'hotmail.com', NULL, 20, NULL),
 ('valentina.m.medina', 'yahoo.com', NULL, 20, NULL); 
+
+-- Insertar correos para empleados
+
+INSERT INTO Correo (nombre, extension_pag, id_empleado, id_cliente_juridico, id_cliente_natural, id_proveedor_proveedor) VALUES
+('admin', 'gmail.com', 1, NULL, NULL, NULL);
 
 INSERT INTO Persona_Contacto (nombre, apellido, id_proveedor, id_cliente_juridico) VALUES
 ('María', 'González', 1,  NULL),

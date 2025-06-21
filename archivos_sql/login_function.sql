@@ -26,7 +26,10 @@ BEGIN
     JOIN
         Rol r ON u.id_rol = r.id_rol
     JOIN
-        Correo c ON u.id_usuario = COALESCE(c.id_proveedor_proveedor, c.id_cliente_natural, c.id_cliente_juridico) -- Esta lógica puede necesitar ajuste según la estructura de FK en Correo
+        Correo c ON (
+            u.id_usuario = COALESCE(c.id_proveedor_proveedor, c.id_cliente_natural, c.id_cliente_juridico)
+            OR (u.empleado_id IS NOT NULL AND c.id_empleado = u.empleado_id)
+        )
     WHERE
         c.nombre = SPLIT_PART(p_correo, '@', 1) AND c.extension_pag = SPLIT_PART(p_correo, '@', 2)
         AND u.contraseña = p_contrasena;

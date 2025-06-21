@@ -126,11 +126,13 @@ CREATE TABLE Correo (
     id_proveedor_proveedor INTEGER,
     id_cliente_natural     INTEGER,
     id_cliente_juridico     INTEGER,
+    id_empleado             INTEGER,
     
     CONSTRAINT arc_propietario CHECK (
-        (id_cliente_juridico IS NOT NULL AND id_cliente_natural IS NULL AND id_proveedor_proveedor IS NULL) OR
-        (id_cliente_juridico IS NULL AND id_cliente_natural IS NOT NULL AND id_proveedor_proveedor IS NULL) OR
-        (id_cliente_juridico IS NULL AND id_cliente_natural IS NULL AND id_proveedor_proveedor IS NOT NULL) 
+        (id_cliente_juridico IS NOT NULL AND id_cliente_natural IS NULL AND id_proveedor_proveedor IS NULL AND id_empleado IS NULL) OR
+        (id_cliente_juridico IS NULL AND id_cliente_natural IS NOT NULL AND id_proveedor_proveedor IS NULL AND id_empleado IS NULL) OR
+        (id_cliente_juridico IS NULL AND id_cliente_natural IS NULL AND id_proveedor_proveedor IS NOT NULL AND id_empleado IS NULL) OR
+        (id_empleado IS NOT NULL AND id_cliente_juridico IS NULL AND id_cliente_natural IS NULL AND id_proveedor_proveedor IS NULL)
     )
 );
 

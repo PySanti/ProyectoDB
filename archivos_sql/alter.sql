@@ -262,6 +262,17 @@ ALTER TABLE Correo
     ) 
 ;
 
+ALTER TABLE Correo 
+    ADD CONSTRAINT Correo_Empleado_FK FOREIGN KEY 
+    ( 
+     id_empleado
+    ) 
+    REFERENCES Empleado 
+    ( 
+     id_empleado
+    ) 
+;
+
 ALTER TABLE Cuota_Afiliacion 
     ADD CONSTRAINT Cuota_Afiliacion_Membresia_FK FOREIGN KEY 
     ( 
