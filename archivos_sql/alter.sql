@@ -946,8 +946,8 @@ ALTER TABLE Pago_Orden_Reposicion
     ) 
 ;
 
-ALTER TABLE Permiso 
-    ADD CONSTRAINT Permiso_Privilegio_FK FOREIGN KEY 
+ALTER TABLE Rol_Privilegio 
+    ADD CONSTRAINT Rpl_Privilegio_Privilegio_FK FOREIGN KEY 
     ( 
      id_privilegio
     ) 
@@ -957,8 +957,8 @@ ALTER TABLE Permiso
     ) 
 ;
 
-ALTER TABLE Permiso 
-    ADD CONSTRAINT Permiso_Rol_FK FOREIGN KEY 
+ALTER TABLE Rol_Privilegio
+    ADD CONSTRAINT Rol_Privilegio_Rol_FK FOREIGN KEY 
     ( 
      id_rol
     ) 

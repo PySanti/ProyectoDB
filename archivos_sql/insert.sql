@@ -2019,119 +2019,21 @@ INSERT INTO Rol (id_rol, nombre) VALUES
 (2, 'Cliente'),
 (3, 'Administrador');
 
+
 INSERT INTO Privilegio (nombre) VALUES
--- === GESTIÓN DE USUARIOS Y SEGURIDAD ===
-('Crear Usuario'),
-('Consultar Usuario'),
-('Actualizar Usuario'),
-('Eliminar Usuario'),
-('Asignar Roles'),
-('Gestionar Permisos'),
-
--- === GESTIÓN DE EMPLEADOS ===
-('Crear Empleado'),
-('Consultar Empleado'),
-('Actualizar Empleado'),
-('Eliminar Empleado'),
-('Gestionar Horarios'),
-('Registrar Asistencia'),
-('Aprobar Vacaciones'),
-('Consultar Nómina'),
-
--- === GESTIÓN DE CLIENTES ===
-('Crear Cliente'),
-('Consultar Cliente'),
-('Actualizar Cliente'),
-('Eliminar Cliente'),
-('Gestionar Membresías'),
-('Consultar Historial Cliente'),
-
--- === GESTIÓN DE PROVEEDORES ===
-('Crear Proveedor'),
-('Consultar Proveedor'),
-('Actualizar Proveedor'),
-('Eliminar Proveedor'),
-('Evaluar Proveedor'),
-
--- === GESTIÓN DE PRODUCTOS ===
-('Crear Producto'),
-('Consultar Producto'),
-('Actualizar Producto'),
-('Eliminar Producto'),
-('Gestionar Recetas'),
-('Gestionar Presentaciones'),
-
--- === GESTIÓN DE INVENTARIO ===
-('Consultar Inventario'),
-('Actualizar Inventario'),
-('Crear Orden Reposición'),
-('Aprobar Orden Reposición'),
-('Gestionar Orden Anaquel'),
-('Aprobar Orden Anaquel'),
-('Realizar Auditoría Inventario'),
-
--- === GESTIÓN DE COMPRAS ===
-('Crear Compra'),
-('Consultar Compra'),
-('Actualizar Compra'),
-('Aprobar Compra'),
-('Cancelar Compra'),
-('Registrar Pago Compra'),
-
--- === GESTIÓN DE VENTAS ===
-('Crear Venta'),
-('Consultar Venta'),
-('Actualizar Venta'),
-('Cancelar Venta'),
-('Aplicar Descuentos'),
-('Procesar Pagos'),
-('Gestionar Puntos Cliente'),
-
--- === GESTIÓN DE EVENTOS ===
-('Crear Evento'),
-('Consultar Evento'),
-('Actualizar Evento'),
-('Cancelar Evento'),
-('Gestionar Invitados'),
-('Registrar Venta Evento'),
-('Aprobar Evento'),
-
--- === GESTIÓN DE PROMOCIONES ===
-('Crear Promoción'),
-('Consultar Promoción'),
-('Actualizar Promoción'),
-('Eliminar Promoción'),
-('Activar Promoción'),
-
--- === REPORTES Y ANÁLISIS ===
-('Generar Reporte Ventas'),
-('Generar Reporte Inventario'),
-('Generar Reporte Compras'),
-('Generar Reporte Empleados'),
-('Generar Reporte Clientes'),
-('Generar Reporte Financiero'),
-('Consultar Dashboard'),
-
--- === CONFIGURACIÓN DEL SISTEMA ===
-('Configurar Sistema'),
-('Gestionar Métodos Pago'),
-('Configurar Tasas Cambio'),
-('Gestionar Ubicaciones'),
-('Configurar Departamentos'),
-('Gestionar Beneficios');
+('crear'),
+('actualizar'),
+('eliminar'),
+('insertar');
 
 
-INSERT INTO Permiso (id_rol, id_privilegio, fecha_asignacion, motivo) VALUES
-(1, 2, '2025-01-15', 'Permiso básico para consultar usuarios del sistema'),
-(1, 22, '2025-01-15', 'Consultar información de proveedores registrados'),
-(1, 27, '2025-01-15', 'Consultar productos disponibles en catálogo'),
-(1, 34, '2025-01-15', 'Consultar compras realizadas por la empresa'),
-(2, 2, '2025-01-15', 'Consultar información básica de usuarios'),
-(2, 16, '2025-01-15', 'Consultar información de clientes registrados'),
-(2, 27, '2025-01-15', 'Consultar catálogo de productos disponibles'),
-(2, 41, '2025-01-15', 'Crear ventas y realizar compras'),
-(2, 47, '2025-01-15', 'Consultar eventos disponibles'),
-(3, 73, '2025-01-15', 'Acceso total al sistema como administrador principal');
+
+
+INSERT INTO Rol_Privilegio (id_rol, id_privilegio, fecha_asignacion, motivo) VALUES
+(3, 1, '2025-01-15', 'Consultar catálogo de productos disponibles'),
+(3, 2, '2025-01-15', 'Crear ventas y realizar compras'),
+(3, 3, '2025-01-15', 'Consultar eventos disponibles'),
+(3, 4, '2025-01-15', 'Acceso total al sistema como administrador principal');
 
 INSERT INTO TipoEvento (nombre, descripcion) VALUES
 ('Festival de Cerveza', 'Evento masivo de degustación y venta de cervezas artesanales con múltiples proveedores'),

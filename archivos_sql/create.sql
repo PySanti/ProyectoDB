@@ -430,7 +430,7 @@ CREATE TABLE Pago_Orden_Reposicion (
     monto          DECIMAL NOT NULL
 );
 
-CREATE TABLE Permiso (
+CREATE TABLE Rol_Privilegio (
     id_rol          INTEGER NOT NULL,
     id_privilegio   INTEGER NOT NULL,
     fecha_asignacion DATE NOT NULL,

@@ -145,7 +145,7 @@ DROP TABLE Pago_Evento CASCADE
 DROP TABLE Pago_Orden_Reposicion CASCADE   
 ;
 
-DROP TABLE Permiso CASCADE   
+DROP TABLE Rol_Privilegio CASCADE   
 ;
 
 DROP TABLE Persona_Contacto CASCADE   
