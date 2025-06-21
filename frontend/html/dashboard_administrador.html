@@ -32,7 +32,7 @@
                 </ul>
             </nav>
             <div class="sidebar-footer">
-                <a href="index.html" class="logout-btn"><i class="fas fa-sign-out-alt"></i> <span>Cerrar Sesión</span></a>
+                <a href="#" class="logout-btn" id="logout-btn"><i class="fas fa-sign-out-alt"></i> <span>Cerrar Sesión</span></a>
             </div>
         </aside>
         <!-- Main Content -->
@@ -282,6 +282,7 @@
             const datosUsuario = localStorage.getItem("user");
             if (datosUsuario) {
                 const usuario = JSON.parse(datosUsuario);
+                console.log(usuario)
                 // Mostrar datos en el HTML (si existen)
                 if(usuario.nombre) document.getElementById("nombre-usuario").textContent = usuario.nombre;
                 if(usuario.email) document.getElementById("email-usuario").textContent = usuario.email;
@@ -289,6 +290,15 @@
                 console.log("NO hay usuario en el localstorage")
                 // Si no hay usuario, puedes redirigir a inicio.html o mostrar por defecto
                 // window.location.href = "inicio.html";
+            }
+            // Logout handler
+            const logoutBtn = document.getElementById("logout-btn");
+            if (logoutBtn) {
+                logoutBtn.addEventListener("click", function(e) {
+                    e.preventDefault();
+                    localStorage.removeItem("user");
+                    window.location.href = "inicio.html";
+                });
             }
         });
     </script>
