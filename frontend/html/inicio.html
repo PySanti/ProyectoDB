@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="../js/lugares.js"></script>
     <title>ACAUCAB - Asociación de Cerveceros Artesanales UCAB</title>
     <link rel="stylesheet" href="../css/inicio.css" />
     <link
@@ -26,9 +27,7 @@
           <button class="tab-btn" onclick="openTab('register')">
             Registrarse
           </button>
-          <button class="tab-btn" onclick="openTab('recover')">
-            Recuperar Contraseña
-          </button>
+
         </div>
 
         <!-- Formulario de Inicio de Sesión -->
@@ -81,132 +80,53 @@
             >
               Persona Jurídica
             </button>
+            <button class="client-type-btn" onclick="toggleClientType('proveedor')">Proveedor</button>
           </div>
 
           <!-- Formulario para Persona Natural -->
           <form id="natural-form" class="client-form active">
             <div class="form-group">
-              <label for="natural-cedula">Cédula de Identidad</label>
-              <input
-                type="text"
-                id="natural-cedula"
-                name="natural-cedula"
-                required
-              />
+              <label for="natural-cedula">Cédula</label>
+              <input type="text" id="natural-cedula" name="natural-cedula" required />
             </div>
             <div class="form-group">
               <label for="natural-rif">RIF</label>
               <input type="text" id="natural-rif" name="natural-rif" required />
             </div>
-            <div class="form-row">
-              <div class="form-group">
-                <label for="natural-nombre">Nombres</label>
-                <input
-                  type="text"
-                  id="natural-nombre"
-                  name="natural-nombre"
-                  required
-                />
-              </div>
-              <div class="form-group">
-                <label for="natural-apellido">Apellidos</label>
-                <input
-                  type="text"
-                  id="natural-apellido"
-                  name="natural-apellido"
-                  required
-                />
-              </div>
+            <div class="form-group">
+              <label for="natural-primer-nombre">Primer Nombre</label>
+              <input type="text" id="natural-primer-nombre" name="natural-primer-nombre" required />
             </div>
             <div class="form-group">
-              <label for="natural-telefono">Teléfono</label>
-              <input
-                type="tel"
-                id="natural-telefono"
-                name="natural-telefono"
-                required
-              />
+              <label for="natural-segundo-nombre">Segundo Nombre</label>
+              <input type="text" id="natural-segundo-nombre" name="natural-segundo-nombre" />
+            </div>
+            <div class="form-group">
+              <label for="natural-primer-apellido">Primer Apellido</label>
+              <input type="text" id="natural-primer-apellido" name="natural-primer-apellido" required />
+            </div>
+            <div class="form-group">
+              <label for="natural-segundo-apellido">Segundo Apellido</label>
+              <input type="text" id="natural-segundo-apellido" name="natural-segundo-apellido" />
             </div>
             <div class="form-group">
               <label for="natural-email">Correo Electrónico</label>
-              <input
-                type="email"
-                id="natural-email"
-                name="natural-email"
-                required
-              />
-            </div>
-            <div class="form-group">
-              <label for="natural-direccion">Dirección de Habitación</label>
-              <textarea
-                id="natural-direccion"
-                name="natural-direccion"
-                required
-              ></textarea>
-            </div>
-            <div class="form-group">
-              <label for="natural-metodo-pago">Métodos de Pago</label>
-              <select
-                id="natural-metodo-pago"
-                name="natural-metodo-pago"
-                multiple
-                required
-              >
-                <option value="efectivo">Efectivo</option>
-                <option value="debito">Tarjeta de Débito</option>
-                <option value="credito">Tarjeta de Crédito</option>
-                <option value="cheque">Cheque</option>
-              </select>
-              <small
-                >Mantenga presionado Ctrl (o Cmd en Mac) para seleccionar
-                múltiples opciones</small
-              >
+              <input type="email" id="natural-email" name="natural-email" required />
             </div>
             <div class="form-group">
               <label for="natural-password">Contraseña</label>
               <div class="password-input">
-                <input
-                  type="password"
-                  id="natural-password"
-                  name="natural-password"
-                  required
-                />
-                <i
-                  class="fas fa-eye toggle-password"
-                  onclick="togglePassword('natural-password')"
-                ></i>
+                <input type="password" id="natural-password" name="natural-password" required />
+                <i class="fas fa-eye toggle-password" onclick="togglePassword('natural-password')"></i>
               </div>
-              <small
-                >La contraseña debe tener al menos 8 caracteres, incluyendo
-                letras, números y símbolos</small
-              >
             </div>
             <div class="form-group">
-              <label for="natural-confirm-password">Confirmar Contraseña</label>
-              <div class="password-input">
-                <input
-                  type="password"
-                  id="natural-confirm-password"
-                  name="natural-confirm-password"
-                  required
-                />
-                <i
-                  class="fas fa-eye toggle-password"
-                  onclick="togglePassword('natural-confirm-password')"
-                ></i>
-              </div>
+              <label>Dirección de Habitación</label>
+              <div id="natural-direccion-group"></div>
             </div>
             <div class="form-group terms">
-              <input
-                type="checkbox"
-                id="natural-terms"
-                name="natural-terms"
-                required
-              />
-              <label for="natural-terms"
-                >Acepto los <a href="#">Términos y Condiciones</a> y la
-                <a href="#">Política de Privacidad</a></label
-              >
+              <input type="checkbox" id="natural-terms" name="natural-terms" required />
+              <label for="natural-terms">Acepto los <a href="#">Términos y Condiciones</a> y la <a href="#">Política de Privacidad</a></label>
             </div>
             <button type="submit" class="submit-btn">Registrarse</button>
           </form>
@@ -215,155 +135,90 @@
           <form id="juridica-form" class="client-form">
             <div class="form-group">
               <label for="juridica-rif">RIF</label>
-              <input
-                type="text"
-                id="juridica-rif"
-                name="juridica-rif"
-                required
-              />
-            </div>
-            <div class="form-group">
-              <label for="juridica-denominacion">Denominación Comercial</label>
-              <input
-                type="text"
-                id="juridica-denominacion"
-                name="juridica-denominacion"
-                required
-              />
+              <input type="text" id="juridica-rif" name="juridica-rif" required />
             </div>
             <div class="form-group">
               <label for="juridica-razon">Razón Social</label>
-              <input
-                type="text"
-                id="juridica-razon"
-                name="juridica-razon"
-                required
-              />
+              <input type="text" id="juridica-razon" name="juridica-razon" required />
             </div>
             <div class="form-group">
-              <label for="juridica-telefono">Teléfonos</label>
-              <input
-                type="tel"
-                id="juridica-telefono"
-                name="juridica-telefono"
-                required
-              />
-            </div>
-            <div class="form-group">
-              <label for="juridica-email">Correo Electrónico</label>
-              <input
-                type="email"
-                id="juridica-email"
-                name="juridica-email"
-                required
-              />
-            </div>
-            <div class="form-group">
-              <label for="juridica-web">Página Web</label>
-              <input type="url" id="juridica-web" name="juridica-web" />
+              <label for="juridica-denominacion">Denominación Comercial</label>
+              <input type="text" id="juridica-denominacion" name="juridica-denominacion" required />
             </div>
             <div class="form-group">
               <label for="juridica-capital">Capital Disponible (Bs)</label>
-              <input
-                type="number"
-                id="juridica-capital"
-                name="juridica-capital"
-                required
-              />
+              <input type="number" id="juridica-capital" name="juridica-capital" required />
             </div>
             <div class="form-group">
-              <label for="juridica-contacto">Personas de Contacto</label>
-              <textarea
-                id="juridica-contacto"
-                name="juridica-contacto"
-                required
-                placeholder="Nombre, Cargo, Teléfono, Email (uno por línea)"
-              ></textarea>
+              <label for="juridica-web">Página Web</label>
+              <input type="url" id="juridica-web" name="juridica-web" required />
             </div>
             <div class="form-group">
-              <label for="juridica-metodo-pago">Métodos de Pago</label>
-              <select
-                id="juridica-metodo-pago"
-                name="juridica-metodo-pago"
-                multiple
-                required
-              >
-                <option value="efectivo">Efectivo</option>
-                <option value="debito">Tarjeta de Débito</option>
-                <option value="credito">Tarjeta de Crédito</option>
-                <option value="cheque">Cheque</option>
-                <option value="transferencia">Transferencia Bancaria</option>
-              </select>
-              <small
-                >Mantenga presionado Ctrl (o Cmd en Mac) para seleccionar
-                múltiples opciones</small
-              >
-            </div>
-            <div class="form-group">
-              <label for="juridica-direccion-fiscal">Dirección Fiscal</label>
-              <textarea
-                id="juridica-direccion-fiscal"
-                name="juridica-direccion-fiscal"
-                required
-              ></textarea>
-            </div>
-            <div class="form-group">
-              <label for="juridica-direccion-fisica"
-                >Dirección Física Principal</label
-              >
-              <textarea
-                id="juridica-direccion-fisica"
-                name="juridica-direccion-fisica"
-                required
-              ></textarea>
+              <label for="juridica-email">Correo Electrónico</label>
+              <input type="email" id="juridica-email" name="juridica-email" required />
             </div>
             <div class="form-group">
               <label for="juridica-password">Contraseña</label>
               <div class="password-input">
-                <input
-                  type="password"
-                  id="juridica-password"
-                  name="juridica-password"
-                  required
-                />
-                <i
-                  class="fas fa-eye toggle-password"
-                  onclick="togglePassword('juridica-password')"
-                ></i>
+                <input type="password" id="juridica-password" name="juridica-password" required />
+                <i class="fas fa-eye toggle-password" onclick="togglePassword('juridica-password')"></i>
               </div>
-              <small
-                >La contraseña debe tener al menos 8 caracteres, incluyendo
-                letras, números y símbolos</small
-              >
             </div>
             <div class="form-group">
-              <label for="juridica-confirm-password"
-                >Confirmar Contraseña</label
-              >
-              <div class="password-input">
-                <input
-                  type="password"
-                  id="juridica-confirm-password"
-                  name="juridica-confirm-password"
-                  required
-                />
-                <i
-                  class="fas fa-eye toggle-password"
-                  onclick="togglePassword('juridica-confirm-password')"
-                ></i>
-              </div>
+              <label>Dirección Fiscal</label>
+              <div id="juridica-direccion-fiscal-group"></div>
+            </div>
+            <div class="form-group">
+              <label>Dirección Física</label>
+              <div id="juridica-direccion-fisica-group"></div>
             </div>
             <div class="form-group terms">
-              <input
-                type="checkbox"
-                id="juridica-terms"
-                name="juridica-terms"
-                required
-              />
-              <label for="juridica-terms"
-                >Acepto los <a href="#">Términos y Condiciones</a> y la
-                <a href="#">Política de Privacidad</a></label
-              >
+              <input type="checkbox" id="juridica-terms" name="juridica-terms" required />
+              <label for="juridica-terms">Acepto los <a href="#">Términos y Condiciones</a> y la <a href="#">Política de Privacidad</a></label>
+            </div>
+            <button type="submit" class="submit-btn">Registrarse</button>
+          </form>
+
+          <!-- Formulario para Proveedor -->
+          <form id="proveedor-form" class="client-form">
+            <div class="form-group">
+              <label for="proveedor-razon">Razón Social</label>
+              <input type="text" id="proveedor-razon" name="proveedor-razon" required />
+            </div>
+            <div class="form-group">
+              <label for="proveedor-denominacion">Denominación Comercial</label>
+              <input type="text" id="proveedor-denominacion" name="proveedor-denominacion" required />
+            </div>
+            <div class="form-group">
+              <label for="proveedor-rif">RIF</label>
+              <input type="text" id="proveedor-rif" name="proveedor-rif" required />
+            </div>
+            <div class="form-group">
+              <label for="proveedor-web">Página Web</label>
+              <input type="url" id="proveedor-web" name="proveedor-web" />
+            </div>
+            <div class="form-group">
+              <label for="proveedor-email">Correo Electrónico</label>
+              <input type="email" id="proveedor-email" name="proveedor-email" required />
+            </div>
+            <div class="form-group">
+              <label for="proveedor-password">Contraseña</label>
+              <div class="password-input">
+                <input type="password" id="proveedor-password" name="proveedor-password" required />
+                <i class="fas fa-eye toggle-password" onclick="togglePassword('proveedor-password')"></i>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Dirección Fiscal</label>
+              <div id="proveedor-direccion-fiscal-group"></div>
+            </div>
+            <div class="form-group">
+              <label>Dirección Física</label>
+              <div id="proveedor-direccion-fisica-group"></div>
+            </div>
+            <div class="form-group terms">
+              <input type="checkbox" id="proveedor-terms" name="proveedor-terms" required />
+              <label for="proveedor-terms">Acepto los <a href="#">Términos y Condiciones</a> y la <a href="#">Política de Privacidad</a></label>
             </div>
             <button type="submit" class="submit-btn">Registrarse</button>
           </form>
@@ -435,8 +290,10 @@
 
         if (type === "natural") {
           document.getElementById("natural-form").classList.add("active");
-        } else {
+        } else if (type === "juridica") {
           document.getElementById("juridica-form").classList.add("active");
+        } else if (type === "proveedor") {
+          document.getElementById("proveedor-form").classList.add("active");
         }
 
         event.currentTarget.classList.add("active");
@@ -489,6 +346,123 @@
 
         return false; 
       }
+
+      // Inicializar selects de lugar para cada grupo
+      function initDireccionSelects(containerId) {
+        const container = document.getElementById(containerId);
+        container.innerHTML = `
+          <label>Estado:</label><select class="select-estado"></select>
+          <label>Municipio:</label><select class="select-municipio"></select>
+          <label>Parroquia:</label><select class="select-parroquia"></select>
+          <label>Dirección específica:</label><input type="text" class="direccion-especifica" />
+        `;
+        const estado = container.querySelector('.select-estado');
+        const municipio = container.querySelector('.select-municipio');
+        const parroquia = container.querySelector('.select-parroquia');
+        poblarEstados(estado, function() {
+          poblarMunicipios(municipio, estado.value, function() {
+            poblarParroquias(parroquia, estado.value, municipio.value);
+          });
+          parroquia.innerHTML = '<option value="">Seleccione Parroquia</option>';
+        });
+        estado.dispatchEvent(new Event('change'));
+      }
+
+      // Natural: solo dirección física
+      initDireccionSelects('natural-direccion-group');
+      // Jurídico: dirección fiscal y física
+      initDireccionSelects('juridica-direccion-fiscal-group');
+      initDireccionSelects('juridica-direccion-fisica-group');
+      // Proveedor: dirección fiscal y física
+      initDireccionSelects('proveedor-direccion-fiscal-group');
+      initDireccionSelects('proveedor-direccion-fisica-group');
+
+      // Función para obtener datos de dirección
+      function getDireccionData(containerId) {
+        const container = document.getElementById(containerId);
+        return {
+          parroquia: container.querySelector('.select-parroquia').value,
+          direccion: container.querySelector('.direccion-especifica').value
+        };
+      }
+
+      document.getElementById('natural-form').onsubmit = async function(e) {
+        e.preventDefault();
+        const dir = getDireccionData('natural-direccion-group');
+        const payload = {
+          tipo_usuario: 'cliente_natural',
+          cedula: document.getElementById('natural-cedula').value,
+          rif: document.getElementById('natural-rif').value,
+          primer_nombre: document.getElementById('natural-primer-nombre').value,
+          segundo_nombre: document.getElementById('natural-segundo-nombre').value,
+          primer_apellido: document.getElementById('natural-primer-apellido').value,
+          segundo_apellido: document.getElementById('natural-segundo-apellido').value,
+          email: document.getElementById('natural-email').value,
+          password: document.getElementById('natural-password').value,
+          id_lugar: dir.parroquia,
+          direccion_fisica: dir.direccion
+        };
+        try {
+          await axios.post('http://localhost:3000/user/signup', payload);
+          alert('Registro exitoso');
+          window.location.href = 'inicio.html';
+        } catch (err) {
+          alert('Error en el registro: ' + (err.response?.data?.error || err.message));
+        }
+      };
+
+      document.getElementById('juridica-form').onsubmit = async function(e) {
+        e.preventDefault();
+        const dirFiscal = getDireccionData('juridica-direccion-fiscal-group');
+        const dirFisica = getDireccionData('juridica-direccion-fisica-group');
+        const payload = {
+          tipo_usuario: 'cliente_juridico',
+          rif: document.getElementById('juridica-rif').value,
+          razon_social: document.getElementById('juridica-razon').value,
+          denominacion_comercial: document.getElementById('juridica-denominacion').value,
+          capital_disponible: document.getElementById('juridica-capital').value,
+          pagina_web: document.getElementById('juridica-web').value,
+          email: document.getElementById('juridica-email').value,
+          password: document.getElementById('juridica-password').value,
+          direccion_fiscal: dirFiscal.direccion,
+          id_lugar2: dirFiscal.parroquia,
+          direccion_fisica: dirFisica.direccion,
+          id_lugar: dirFisica.parroquia
+        };
+        try {
+          await axios.post('http://localhost:3000/user/signup', payload);
+          alert('Registro exitoso');
+          window.location.href = 'inicio.html';
+        } catch (err) {
+          alert('Error en el registro: ' + (err.response?.data?.error || err.message));
+        }
+      };
+
+      document.getElementById('proveedor-form').onsubmit = async function(e) {
+        e.preventDefault();
+        const dirFiscal = getDireccionData('proveedor-direccion-fiscal-group');
+        const dirFisica = getDireccionData('proveedor-direccion-fisica-group');
+        const payload = {
+          tipo_usuario: 'proveedor',
+          razon_social: document.getElementById('proveedor-razon').value,
+          denominacion: document.getElementById('proveedor-denominacion').value,
+          rif: document.getElementById('proveedor-rif').value,
+          url_web: document.getElementById('proveedor-web').value,
+          email: document.getElementById('proveedor-email').value,
+          password: document.getElementById('proveedor-password').value,
+          id_lugar: dirFisica.parroquia,
+          direccion_fisica: dirFisica.direccion,
+          id_lugar2: dirFiscal.parroquia,
+          direccion_fiscal: dirFiscal.direccion
+        };
+        try {
+          await axios.post('http://localhost:3000/user/signup', payload);
+          alert('Registro exitoso');
+          window.location.href = 'inicio.html';
+        } catch (err) {
+          alert('Error en el registro: ' + (err.response?.data?.error || err.message));
+        }
+      };
     </script>
   </body>
 </html>

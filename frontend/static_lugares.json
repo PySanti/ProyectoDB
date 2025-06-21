@@ -1,0 +1,156 @@
+{
+  "estados": [
+    { "id": 1, "nombre": "Amazonas", "municipios": [
+      { "id": 25, "nombre": "Alto Orinoco", "parroquias": [
+        { "id": 361, "nombre": "La Esmeralda" },
+        { "id": 362, "nombre": "Huachamacare" },
+        { "id": 363, "nombre": "Marawaka" },
+        { "id": 364, "nombre": "Mavaka" },
+        { "id": 365, "nombre": "Sierra Parima" }
+      ] },
+      { "id": 26, "nombre": "Atabapo", "parroquias": [
+        { "id": 366, "nombre": "San Fernando de Atabapo" },
+        { "id": 367, "nombre": "Ucata" },
+        { "id": 368, "nombre": "Yapacana" },
+        { "id": 369, "nombre": "Caname" },
+        { "id": 370, "nombre": "Guayapo" }
+      ] },
+      { "id": 27, "nombre": "Atures", "parroquias": [
+        { "id": 371, "nombre": "Puerto Ayacucho" },
+        { "id": 372, "nombre": "Fernando Girón Tovar" },
+        { "id": 373, "nombre": "Luis Alberto Gómez" },
+        { "id": 374, "nombre": "Parhueña" },
+        { "id": 375, "nombre": "Platanillal" },
+        { "id": 376, "nombre": "Samariapo" },
+        { "id": 377, "nombre": "Sipapo" },
+        { "id": 378, "nombre": "Tablones" },
+        { "id": 379, "nombre": "Coromoto" }
+      ] },
+      { "id": 28, "nombre": "Autana", "parroquias": [
+        { "id": 380, "nombre": "Isla Ratón" },
+        { "id": 381, "nombre": "Samán de Atabapo" },
+        { "id": 382, "nombre": "Sipapo" }
+      ] },
+      { "id": 29, "nombre": "Manapiare", "parroquias": [
+        { "id": 383, "nombre": "San Juan de Manapiare" },
+        { "id": 384, "nombre": "Alto Ventuari" },
+        { "id": 385, "nombre": "Medio Ventuari" },
+        { "id": 386, "nombre": "Bajo Ventuari" },
+        { "id": 387, "nombre": "Casiquiare" }
+      ] },
+      { "id": 30, "nombre": "Maroa", "parroquias": [
+        { "id": 388, "nombre": "Maroa" },
+        { "id": 389, "nombre": "Victorino" },
+        { "id": 390, "nombre": "Comunidad" }
+      ] },
+      { "id": 31, "nombre": "Río Negro", "parroquias": [
+        { "id": 391, "nombre": "San Carlos de Río Negro" },
+        { "id": 392, "nombre": "Solano" },
+        { "id": 393, "nombre": "Casiquiare" }
+      ] }
+    ] },
+    { "id": 2, "nombre": "Anzoátegui", "municipios": [
+      { "id": 32, "nombre": "Anaco", "parroquias": [
+        { "id": 394, "nombre": "Anaco" },
+        { "id": 395, "nombre": "San Joaquín" },
+        { "id": 396, "nombre": "San Mateo" }
+      ] },
+      { "id": 33, "nombre": "Aragua", "parroquias": [
+        { "id": 397, "nombre": "Aragua de Barcelona" },
+        { "id": 398, "nombre": "Cachipo" }
+      ] },
+      { "id": 34, "nombre": "Diego Bautista Urbaneja", "parroquias": [
+        { "id": 399, "nombre": "Lechería" },
+        { "id": 400, "nombre": "El Morro" }
+      ] },
+      { "id": 35, "nombre": "Fernando de Peñalver", "parroquias": [
+        { "id": 401, "nombre": "Puerto Píritu" },
+        { "id": 402, "nombre": "San Miguel" },
+        { "id": 403, "nombre": "Sucre" }
+      ] },
+      { "id": 36, "nombre": "Francisco del Carmen Carvajal", "parroquias": [
+        { "id": 404, "nombre": "Valle de Guanape" },
+        { "id": 405, "nombre": "Uveral" }
+      ] },
+      { "id": 37, "nombre": "Francisco de Miranda", "parroquias": [
+        { "id": 406, "nombre": "Pariaguán" },
+        { "id": 407, "nombre": "Atapirire" },
+        { "id": 408, "nombre": "Bocas de Uchire" },
+        { "id": 409, "nombre": "El Pao" },
+        { "id": 410, "nombre": "San Diego de Cabrutica" }
+      ] },
+      { "id": 38, "nombre": "Guanta", "parroquias": [
+        { "id": 411, "nombre": "Guanta" },
+        { "id": 412, "nombre": "Chorrerón" }
+      ] },
+      { "id": 39, "nombre": "Independencia", "parroquias": [
+        { "id": 413, "nombre": "Soledad" },
+        { "id": 414, "nombre": "Mamo" },
+        { "id": 415, "nombre": "Carapa" }
+      ] },
+      { "id": 40, "nombre": "José Gregorio Monagas", "parroquias": [
+        { "id": 416, "nombre": "Mapire" },
+        { "id": 417, "nombre": "Piar" },
+        { "id": 418, "nombre": "Santa Cruz" },
+        { "id": 419, "nombre": "San Diego de Cabrutica" }
+      ] },
+      { "id": 41, "nombre": "Juan Antonio Sotillo", "parroquias": [
+        { "id": 420, "nombre": "Puerto La Cruz" },
+        { "id": 421, "nombre": "El Morro" },
+        { "id": 422, "nombre": "Pozuelos" },
+        { "id": 423, "nombre": "Santa Ana" }
+      ] },
+      { "id": 42, "nombre": "Juan Manuel Cajigal", "parroquias": [
+        { "id": 424, "nombre": "Onoto" },
+        { "id": 425, "nombre": "San Pablo" }
+      ] },
+      { "id": 43, "nombre": "Libertad", "parroquias": [
+        { "id": 426, "nombre": "San Mateo" },
+        { "id": 427, "nombre": "Bergantín" },
+        { "id": 428, "nombre": "Santa Rosa" }
+      ] },
+      { "id": 44, "nombre": "Manuel Ezequiel Bruzual", "parroquias": [
+        { "id": 429, "nombre": "Clarines" },
+        { "id": 430, "nombre": "Guanape" },
+        { "id": 431, "nombre": "Sabana de Uchire" }
+      ] },
+      { "id": 45, "nombre": "Pedro María Freites", "parroquias": [
+        { "id": 432, "nombre": "Cantaura" },
+        { "id": 433, "nombre": "Libertador" },
+        { "id": 434, "nombre": "Santa Rosa" },
+        { "id": 435, "nombre": "Sucre" }
+      ] },
+      { "id": 46, "nombre": "Píritu", "parroquias": [
+        { "id": 436, "nombre": "Píritu" },
+        { "id": 437, "nombre": "San Francisco" }
+      ] },
+      { "id": 47, "nombre": "San José de Guanipa", "parroquias": [
+        { "id": 438, "nombre": "San José de Guanipa" }
+      ] },
+      { "id": 48, "nombre": "San Juan de Capistrano", "parroquias": [
+        { "id": 439, "nombre": "Boca de Uchire" },
+        { "id": 440, "nombre": "Puerto Píritu" }
+      ] },
+      { "id": 49, "nombre": "Santa Ana", "parroquias": [
+        { "id": 441, "nombre": "Santa Ana" }
+      ] },
+      { "id": 50, "nombre": "Simón Bolívar", "parroquias": [
+        { "id": 442, "nombre": "El Carmen" },
+        { "id": 443, "nombre": "San Cristóbal" },
+        { "id": 444, "nombre": "Bergantín" },
+        { "id": 445, "nombre": "Caigua" },
+        { "id": 446, "nombre": "Naricual" },
+        { "id": 447, "nombre": "El Pilar" }
+      ] },
+      { "id": 51, "nombre": "Simón Rodríguez", "parroquias": [
+        { "id": 448, "nombre": "El Tigre" },
+        { "id": 449, "nombre": "Guanipa" },
+        { "id": 450, "nombre": "Edmundo Barrios" }
+      ] },
+      { "id": 52, "nombre": "Sir Artur McGregor", "parroquias": [
+        { "id": 451, "nombre": "El Chaparro" },
+        { "id": 452, "nombre": "Tomás Alfaro" }
+      ] }
+    ] }
+  ]
+} 
