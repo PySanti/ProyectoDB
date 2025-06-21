@@ -223,4 +223,7 @@ DROP TABLE Vacacion CASCADE
 DROP TABLE Venta_Evento CASCADE   
 ;
 
-DROP FUNCTION IF EXISTS verificar_credenciales(character varying,character varying);
+DROP FUNCTION IF EXISTS verificar_credenciales;
+DROP FUNCTION IF EXISTS create_cliente_juridico;
+DROP FUNCTION IF EXISTS create_cliente_natural;
+DROP FUNCTION IF EXISTS create_proveedor;
