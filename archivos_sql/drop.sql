@@ -227,3 +227,8 @@ DROP FUNCTION IF EXISTS verificar_credenciales;
 DROP FUNCTION IF EXISTS create_cliente_juridico;
 DROP FUNCTION IF EXISTS create_cliente_natural;
 DROP FUNCTION IF EXISTS create_proveedor;
+
+DROP FUNCTION IF EXISTS get_usuarios_clientes_juridicos;
+DROP FUNCTION IF EXISTS get_usuarios_clientes_naturales;
+DROP FUNCTION IF EXISTS get_usuarios_empleados;
+DROP FUNCTION IF EXISTS get_usuarios_proveedores;

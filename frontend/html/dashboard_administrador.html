@@ -63,10 +63,10 @@
                         <h3>Lista de Usuarios</h3>
                         <div class="card-actions">
                             <select id="filter-rol">
-                                <option value="all">Todos los roles</option>
-                                <option value="admin">Administrador</option>
+                                <option value="admin">Empleado</option>
                                 <option value="proveedor">Proveedor</option>
-                                <option value="cliente">Cliente</option>
+                                <option value="cliente_natural">Cliente Natural</option>
+                                <option value="cliente_juridico">Cliente Juridico</option>
                             </select>
                             <button class="export-btn"><i class="fas fa-download"></i> Exportar</button>
                         </div>
@@ -78,7 +78,6 @@
                                     <th>ID</th>
                                     <th>Nombre</th>
                                     <th>Email</th>
-                                    <th>Rol</th>
                                     <th>Estado</th>
                                     <th>Fecha Creación</th>
                                     <th>Acciones</th>
@@ -89,7 +88,6 @@
                                     <td>USR001</td>
                                     <td>Juan Pérez</td>
                                     <td>juan.perez@acaucab.com</td>
-                                    <td>Administrador</td>
                                     <td><span class="status active">Activo</span></td>
                                     <td>10/01/2025</td>
                                     <td class="actions">
@@ -102,7 +100,6 @@
                                     <td>USR002</td>
                                     <td>María González</td>
                                     <td>maria.gonzalez@acaucab.com</td>
-                                    <td>Proveedor</td>
                                     <td><span class="status active">Activo</span></td>
                                     <td>12/01/2025</td>
                                     <td class="actions">
@@ -115,7 +112,6 @@
                                     <td>USR003</td>
                                     <td>Carlos Ramírez</td>
                                     <td>carlos.ramirez@acaucab.com</td>
-                                    <td>Cliente</td>
                                     <td><span class="status inactive">Inactivo</span></td>
                                     <td>15/01/2025</td>
                                     <td class="actions">
@@ -277,19 +273,28 @@
             </section>
         </main>
     </div>
+    <div id="usuario-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" id="close-modal">&times;</span>
+            <h2>Detalles del Usuario</h2>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+    <style>
+        .modal { position: fixed; z-index: 9999; left: 0; top: 0; width: 100vw; height: 100vh; overflow: auto; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; }
+        .modal-content { background: #fff; padding: 2rem; border-radius: 8px; max-width: 95vw; width: 100%; max-width: 500px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); position: relative; }
+        .close-modal { position: absolute; top: 10px; right: 20px; font-size: 2rem; cursor: pointer; }
+        @media (max-width: 600px) {
+            .modal-content { padding: 1rem; max-width: 98vw; }
+        }
+    </style>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const datosUsuario = localStorage.getItem("user");
             if (datosUsuario) {
                 const usuario = JSON.parse(datosUsuario);
-                console.log(usuario)
-                // Mostrar datos en el HTML (si existen)
                 if(usuario.nombre) document.getElementById("nombre-usuario").textContent = usuario.nombre;
                 if(usuario.email) document.getElementById("email-usuario").textContent = usuario.email;
-            } else {
-                console.log("NO hay usuario en el localstorage")
-                // Si no hay usuario, puedes redirigir a inicio.html o mostrar por defecto
-                // window.location.href = "inicio.html";
             }
             // Logout handler
             const logoutBtn = document.getElementById("logout-btn");
@@ -297,8 +302,136 @@
                 logoutBtn.addEventListener("click", function(e) {
                     e.preventDefault();
                     localStorage.removeItem("user");
+                    localStorage.removeItem("users_list");
                     window.location.href = "inicio.html";
                 });
+            }
+
+            // --- Cargar usuarios al montar ---
+            fetch('http://localhost:3000/user/usuarios')
+                .then(res => res.json())
+                .then(data => {
+                    console.log(data)
+                    localStorage.setItem('users_list', JSON.stringify(data));
+                    renderUsuariosTable();
+                })
+                .catch(err => {
+                    console.error('Error cargando usuarios:', err);
+                });
+
+            // --- Filtro de roles ---
+            document.getElementById('filter-rol').addEventListener('change', renderUsuariosTable);
+        });
+
+        function renderUsuariosTable() {
+            const filter = document.getElementById('filter-rol').value;
+            const tbody = document.querySelector('#usuarios-section .data-table tbody');
+            const thead = document.querySelector('#usuarios-section .data-table thead tr');
+            tbody.innerHTML = '';
+            usuarios = JSON.parse(localStorage.getItem('users_list')) || [];
+            // Cambiar encabezados y renderizar filas según filtro
+            if (filter === 'admin') {
+                thead.innerHTML = `
+                    <th>Nombre completo</th>
+                    <th>Email</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                `;
+                usuarios['empleados'].forEach((u, idx) => {
+                    tbody.innerHTML += `
+                    <tr>
+                        <td>${u.nombre_completo}</td>
+                        <td>${u.email}</td>
+                        <td><span class="status ${u.activo === 'S' ? 'active' : 'inactive'}">${u.activo === 'S' ? 'Activo' : 'Inactivo'}</span></td>
+                        <td class="actions">
+                            <button class="action-btn view" title="Ver detalles" onclick="mostrarModal('empleado', ${idx})"><i class="fas fa-eye"></i></button>
+                        </td>
+                    </tr>`;
+                });
+            } else if (filter === 'proveedor') {
+                thead.innerHTML = `
+                    <th>Denominación comercial</th>
+                    <th>Email</th>
+                    <th>Página web</th>
+                    <th>Acciones</th>
+                `;
+                usuarios['proveedores'].forEach((u, idx) => {
+                    tbody.innerHTML += `
+                    <tr>
+                        <td>${u.denominacion_comercial || ''}</td>
+                        <td>${u.email}</td>
+                        <td>${u.pagina_web || ''}</td>
+                        <td class="actions">
+                            <button class="action-btn view" title="Ver detalles" onclick="mostrarModal('proveedor', ${idx})"><i class="fas fa-eye"></i></button>
+                        </td>
+                    </tr>`;
+                });
+            } else if (filter === 'cliente_natural') {
+                thead.innerHTML = `
+                    <th>Nombre completo</th>
+                    <th>RIF</th>
+                    <th>Cédula</th>
+                    <th>Acciones</th>
+                `;
+                usuarios['clientes_naturales'].forEach((u, idx) => {
+                    tbody.innerHTML += `
+                    <tr>
+                        <td>${u.nombre_completo}</td>
+                        <td>${u.rif || ''}</td>
+                        <td>${u.cedula || ''}</td>
+                        <td class="actions">
+                            <button class="action-btn view" title="Ver detalles" onclick="mostrarModal('cliente_natural', ${idx})"><i class="fas fa-eye"></i></button>
+                        </td>
+                    </tr>`;
+                });
+            } else if (filter === 'cliente_juridico') {
+                thead.innerHTML = `
+                    <th>Email</th>
+                    <th>Razón social</th>
+                    <th>Denominación comercial</th>
+                    <th>RIF</th>
+                    <th>Acciones</th>
+                `;
+                usuarios['clientes_juridicos'].forEach((u, idx) => {
+                    tbody.innerHTML += `
+                    <tr>
+                        <td>${u.email}</td>
+                        <td>${u.razon_social || ''}</td>
+                        <td>${u.denominacion_comercial || ''}</td>
+                        <td>${u.rif || ''}</td>
+                        <td class="actions">
+                            <button class="action-btn view" title="Ver detalles" onclick="mostrarModal('cliente_juridico', ${idx})"><i class="fas fa-eye"></i></button>
+                        </td>
+                    </tr>`;
+                });
+            }
+        }
+
+        function mostrarModal(tipo, idx) {
+            const usuarios = JSON.parse(localStorage.getItem('users_list'));
+            let u = null;
+            if (tipo === 'empleado') u = usuarios['empleados'][idx];
+            if (tipo === 'proveedor') u = usuarios['proveedores'][idx];
+            if (tipo === 'cliente_natural') u = usuarios['clientes_naturales'][idx];
+            if (tipo === 'cliente_juridico') u = usuarios['clientes_juridicos'][idx];
+            if (!u) return;
+            let html = '<table style="width:100%">';
+            for (const key in u) {
+                // Mostrar los campos de estado, municipio y parroquia de forma legible
+                if (key.includes('estado') || key.includes('municipio') || key.includes('parroquia')) {
+                    html += `<tr><td style='font-weight:bold;text-transform:capitalize;'>${key.replace(/_/g,' ')}</td><td>${u[key] ?? ''}</td></tr>`;
+                } else {
+                    html += `<tr><td style='font-weight:bold;text-transform:capitalize;'>${key.replace(/_/g,' ')}</td><td>${u[key] ?? ''}</td></tr>`;
+                }
+            }
+            html += '</table>';
+            document.getElementById('modal-body').innerHTML = html;
+            document.getElementById('usuario-modal').classList.add('active');
+        }
+        window.mostrarModal = mostrarModal;
+        document.addEventListener('click', function(e) {
+            if (e.target.id === 'close-modal' || e.target.id === 'usuario-modal') {
+                document.getElementById('usuario-modal').classList.remove('active');
             }
         });
     </script>

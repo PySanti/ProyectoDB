@@ -255,10 +255,21 @@
     </div>
 
     <script>
-
-      if (localStorage.getItem('user')) {
-        
+      function redirectUser(){
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (user.rol.toLowerCase() === 'administrador') {
+          window.location.href = './dashboard_administrador.html';
+        } else {
+          window.location.href = './catalog.html';
+        }
       }
+
+      document.addEventListener('DOMContentLoaded', function() {
+          if (localStorage.getItem('user')) {
+            redirectUser();    
+          }
+      });
+
 
       function openTab(tabName) {
         const tabContents = document.getElementsByClassName("tab-content");
@@ -312,14 +323,6 @@
           passwordInput.type = "password";
           icon.classList.remove("fa-eye-slash");
           icon.classList.add("fa-eye");
-        }
-      }
-      function redirectUser(){
-        const user = JSON.parse(localStorage.getItem('user'));
-        if (user.rol.toLowerCase() === 'administrador') {
-          window.location.href = './dashboard_administrador.html';
-        } else {
-          window.location.href = './catalog.html';
         }
       }
 

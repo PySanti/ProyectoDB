@@ -131,3 +131,172 @@ BEGIN
   VALUES (split_part(p_correo, '@', 1), split_part(p_correo, '@', 2), new_usuario_id);
 END;
 $$ LANGUAGE plpgsql; 
+
+CREATE OR REPLACE FUNCTION get_usuarios_clientes_juridicos()
+RETURNS TABLE (
+    id_usuario INTEGER,
+    email VARCHAR(100),
+    pagina_web VARCHAR(100),
+    rif VARCHAR(20),
+    razon_social VARCHAR(100),
+    denominacion_comercial VARCHAR(100),
+    capital_disponible DECIMAL,
+    estado_fiscal VARCHAR(100),
+    municipio_fiscal VARCHAR(100),
+    parroquia_fiscal VARCHAR(100),
+    direccion_fiscal_especifica TEXT,
+    estado_fisica VARCHAR(100),
+    municipio_fisica VARCHAR(100),
+    parroquia_fisica VARCHAR(100),
+    direccion_fisica_especifica TEXT
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+        u.id_usuario,
+        CONCAT(cor.nombre, '@', cor.extension_pag)::VARCHAR(100) AS email,
+        cj.pagina_web::VARCHAR(100),
+        cj.rif_cliente::VARCHAR(20) AS rif,
+        cj.razon_social::VARCHAR(100),
+        cj.denominacion_comercial::VARCHAR(100),
+        cj.capital_disponible,
+        l_estado_fiscal.nombre::VARCHAR(100) AS estado_fiscal,
+        l_municipio_fiscal.nombre::VARCHAR(100) AS municipio_fiscal,
+        l_parroquia_fiscal.nombre::VARCHAR(100) AS parroquia_fiscal,
+        cj.direccion_fiscal AS direccion_fiscal_especifica,
+        l_estado_fisica.nombre::VARCHAR(100) AS estado_fisica,
+        l_municipio_fisica.nombre::VARCHAR(100) AS municipio_fisica,
+        l_parroquia_fisica.nombre::VARCHAR(100) AS parroquia_fisica,
+        cj.direccion_fisica AS direccion_fisica_especifica
+    FROM Usuario u
+    JOIN Cliente_Juridico cj ON u.id_cliente_juridico = cj.id_cliente
+    LEFT JOIN Correo cor ON cor.id_cliente_juridico = cj.id_cliente
+    -- Fiscal
+    LEFT JOIN Lugar l_parroquia_fiscal ON cj.lugar_id_lugar2 = l_parroquia_fiscal.id_lugar
+    LEFT JOIN Lugar l_municipio_fiscal ON l_parroquia_fiscal.lugar_relacion_id = l_municipio_fiscal.id_lugar AND l_municipio_fiscal.tipo = 'Municipio'
+    LEFT JOIN Lugar l_estado_fiscal ON l_municipio_fiscal.lugar_relacion_id = l_estado_fiscal.id_lugar AND l_estado_fiscal.tipo = 'Estado'
+    -- Física
+    LEFT JOIN Lugar l_parroquia_fisica ON cj.lugar_id_lugar = l_parroquia_fisica.id_lugar
+    LEFT JOIN Lugar l_municipio_fisica ON l_parroquia_fisica.lugar_relacion_id = l_municipio_fisica.id_lugar AND l_municipio_fisica.tipo = 'Municipio'
+    LEFT JOIN Lugar l_estado_fisica ON l_municipio_fisica.lugar_relacion_id = l_estado_fisica.id_lugar AND l_estado_fisica.tipo = 'Estado'
+    WHERE u.id_cliente_juridico IS NOT NULL;
+END;
+$$ LANGUAGE plpgsql; 
+
+CREATE OR REPLACE FUNCTION get_usuarios_clientes_naturales()
+RETURNS TABLE (
+    id_usuario INTEGER,
+    email VARCHAR(100),
+    rif VARCHAR(20),
+    cedula VARCHAR(20),
+    nombre_completo VARCHAR(100),
+    estado VARCHAR(100),
+    municipio VARCHAR(100),
+    parroquia VARCHAR(100),
+    direccion_especifica TEXT
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+        u.id_usuario,
+        CONCAT(cor.nombre, '@', cor.extension_pag)::VARCHAR(100) AS email,
+        cn.rif_cliente::VARCHAR(20) AS rif,
+        cn.ci_cliente::VARCHAR(20) AS cedula,
+        CONCAT(cn.primer_nombre, ' ', cn.segundo_nombre, ' ', cn.primer_apellido, ' ', cn.segundo_apellido)::VARCHAR(100) AS nombre_completo,
+        l_estado.nombre::VARCHAR(100) AS estado,
+        l_municipio.nombre::VARCHAR(100) AS municipio,
+        l_parroquia.nombre::VARCHAR(100) AS parroquia,
+        cn.direccion AS direccion_especifica
+    FROM Usuario u
+    JOIN Cliente_Natural cn ON u.id_cliente_natural = cn.id_cliente
+    LEFT JOIN Correo cor ON cor.id_cliente_natural = cn.id_cliente
+    LEFT JOIN Lugar l_parroquia ON cn.lugar_id_lugar = l_parroquia.id_lugar
+    LEFT JOIN Lugar l_municipio ON l_parroquia.lugar_relacion_id = l_municipio.id_lugar AND l_municipio.tipo = 'Municipio'
+    LEFT JOIN Lugar l_estado ON l_municipio.lugar_relacion_id = l_estado.id_lugar AND l_estado.tipo = 'Estado'
+    WHERE u.id_cliente_natural IS NOT NULL;
+END;
+$$ LANGUAGE plpgsql; 
+
+CREATE OR REPLACE FUNCTION get_usuarios_empleados()
+RETURNS TABLE (
+    id_usuario INTEGER,
+    email VARCHAR(100),
+    nombre_completo VARCHAR(100),
+    cedula VARCHAR(20),
+    estado VARCHAR(100),
+    ciudad VARCHAR(100),
+    municipio VARCHAR(100),
+    direccion_especifica TEXT,
+    activo CHAR(1)
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+        u.id_usuario,
+        CONCAT(cor.nombre, '@', cor.extension_pag)::VARCHAR(100) AS email,
+        CONCAT(e.primer_nombre, ' ', e.segundo_nombre, ' ', e.primer_apellido, ' ', e.segundo_apellido)::VARCHAR(100) AS nombre_completo,
+        e.cedula::VARCHAR(20) AS cedula,
+        l_estado.nombre::VARCHAR(100) AS estado,
+        l_ciudad.nombre::VARCHAR(100) AS ciudad,
+        l_municipio.nombre::VARCHAR(100) AS municipio,
+        e.direccion AS direccion_especifica,
+        e.activo
+    FROM Usuario u
+    JOIN Empleado e ON u.empleado_id = e.id_empleado
+    LEFT JOIN Correo cor ON cor.id_empleado = e.id_empleado
+    LEFT JOIN Lugar l_parroquia ON e.lugar_id_lugar = l_parroquia.id_lugar
+    LEFT JOIN Lugar l_municipio ON l_parroquia.lugar_relacion_id = l_municipio.id_lugar AND l_municipio.tipo = 'Municipio'
+    LEFT JOIN Lugar l_ciudad ON l_municipio.lugar_relacion_id = l_ciudad.id_lugar AND l_ciudad.tipo = 'Ciudad'
+    LEFT JOIN Lugar l_estado ON l_ciudad.lugar_relacion_id = l_estado.id_lugar AND l_estado.tipo = 'Estado'
+    WHERE u.empleado_id IS NOT NULL;
+END;
+$$ LANGUAGE plpgsql; 
+
+CREATE OR REPLACE FUNCTION get_usuarios_proveedores()
+RETURNS TABLE (
+    id_usuario INTEGER,
+    email VARCHAR(100),
+    pagina_web VARCHAR(200),
+    rif VARCHAR(20),
+    razon_social VARCHAR(100),
+    denominacion_comercial VARCHAR(100),
+    estado_fiscal VARCHAR(100),
+    municipio_fiscal VARCHAR(100),
+    parroquia_fiscal VARCHAR(100),
+    direccion_fiscal_especifica TEXT,
+    estado_fisica VARCHAR(100),
+    municipio_fisica VARCHAR(100),
+    parroquia_fisica VARCHAR(100),
+    direccion_fisica_especifica TEXT
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+        u.id_usuario,
+        CONCAT(cor.nombre, '@', cor.extension_pag)::VARCHAR(100) AS email,
+        p.url_web::VARCHAR(200),
+        p.rif::VARCHAR(20) AS rif,
+        p.razon_social::VARCHAR(100),
+        p.denominacion::VARCHAR(100) AS denominacion_comercial,
+        l_estado_fiscal.nombre::VARCHAR(100) AS estado_fiscal,
+        l_municipio_fiscal.nombre::VARCHAR(100) AS municipio_fiscal,
+        l_parroquia_fiscal.nombre::VARCHAR(100) AS parroquia_fiscal,
+        p.direccion_fiscal AS direccion_fiscal_especifica,
+        l_estado_fisica.nombre::VARCHAR(100) AS estado_fisica,
+        l_municipio_fisica.nombre::VARCHAR(100) AS municipio_fisica,
+        l_parroquia_fisica.nombre::VARCHAR(100) AS parroquia_fisica,
+        p.direccion_fisica AS direccion_fisica_especifica
+    FROM Usuario u
+    JOIN Proveedor p ON u.id_proveedor = p.id_proveedor
+    LEFT JOIN Correo cor ON cor.id_proveedor_proveedor = p.id_proveedor
+    -- Fiscal
+    LEFT JOIN Lugar l_parroquia_fiscal ON p.lugar_id2 = l_parroquia_fiscal.id_lugar
+    LEFT JOIN Lugar l_municipio_fiscal ON l_parroquia_fiscal.lugar_relacion_id = l_municipio_fiscal.id_lugar AND l_municipio_fiscal.tipo = 'Municipio'
+    LEFT JOIN Lugar l_estado_fiscal ON l_municipio_fiscal.lugar_relacion_id = l_estado_fiscal.id_lugar AND l_estado_fiscal.tipo = 'Estado'
+    -- Física
+    LEFT JOIN Lugar l_parroquia_fisica ON p.id_lugar = l_parroquia_fisica.id_lugar
+    LEFT JOIN Lugar l_municipio_fisica ON l_parroquia_fisica.lugar_relacion_id = l_municipio_fisica.id_lugar AND l_municipio_fisica.tipo = 'Municipio'
+    LEFT JOIN Lugar l_estado_fisica ON l_municipio_fisica.lugar_relacion_id = l_estado_fisica.id_lugar AND l_estado_fisica.tipo = 'Estado'
+    WHERE u.id_proveedor IS NOT NULL;
+END;
+$$ LANGUAGE plpgsql; 
