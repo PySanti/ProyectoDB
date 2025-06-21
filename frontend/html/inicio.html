@@ -459,6 +459,11 @@
       }
       function redirectUser(){
         const user = JSON.parse(localStorage.getItem('user'));
+        if (user.rol.toLowerCase() === 'administrador') {
+          window.location.href = './dashboard_administrador.html';
+        } else {
+          window.location.href = './dashboard_administrador.html';
+        }
       }
 
       function loginForm(event) {
