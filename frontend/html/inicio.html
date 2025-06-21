@@ -462,7 +462,7 @@
         if (user.rol.toLowerCase() === 'administrador') {
           window.location.href = './dashboard_administrador.html';
         } else {
-          window.location.href = './dashboard_administrador.html';
+          window.location.href = './dashboard_catalog.html';
         }
       }
 
@@ -477,7 +477,8 @@
             password: password
         })
         .then(function (response) {
-          localStorage.setItem('user', JSON.stringify(response.data.user));
+          let user = response.data.user;
+          localStorage.setItem('user', JSON.stringify(user));
           redirectUser();
         })
         .catch(function (error) {

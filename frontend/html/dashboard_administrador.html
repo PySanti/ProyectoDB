@@ -20,8 +20,8 @@
                     <i class="fas fa-user-shield"></i>
                 </div>
                 <div class="user-info">
-                    <h3>Administrador</h3>
-                    <p>Superusuario</p>
+                    <h3 id="nombre-usuario">Administrador</h3>
+                    <p id="email-usuario">Superusuario</p>
                 </div>
             </div>
             <nav class="sidebar-nav">
@@ -277,5 +277,21 @@
             </section>
         </main>
     </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const datosUsuario = localStorage.getItem("user");
+            if (datosUsuario) {
+                const usuario = JSON.parse(datosUsuario);
+                // Mostrar datos en el HTML (si existen)
+                if(usuario.nombre) document.getElementById("nombre-usuario").textContent = usuario.nombre;
+                if(usuario.email) document.getElementById("email-usuario").textContent = usuario.email;
+            } else {
+                console.log("NO hay usuario en el localstorage")
+                // Si no hay usuario, puedes redirigir a inicio.html o mostrar por defecto
+                // window.location.href = "inicio.html";
+            }
+        });
+    </script>
 </body>
+
 </html> 
