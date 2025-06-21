@@ -459,7 +459,7 @@
         const email = document.getElementById('login-email').value;
         const password = document.getElementById('login-password').value;
 
-        axios.post('/user/login', {
+        axios.post('http://localhost:3000/user/login', {
             email: email,
             password: password
         })
