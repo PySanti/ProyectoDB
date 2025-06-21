@@ -615,7 +615,7 @@ CREATE TABLE Usuario (
     id_usuario      SERIAL PRIMARY KEY,
     id_cliente_juridico      INTEGER,
     id_cliente_natural      INTEGER,
-    id_rol          INTEGER NOT NULL,
+    id_rol          INTEGER,
     fecha_creacion  DATE NOT NULL,
     id_proveedor    INTEGER,
     empleado_id     INTEGER,

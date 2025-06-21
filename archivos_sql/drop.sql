@@ -234,3 +234,4 @@ DROP FUNCTION IF EXISTS get_usuarios_empleados;
 DROP FUNCTION IF EXISTS get_usuarios_proveedores;
 DROP FUNCTION IF EXISTS get_roles;
 DROP FUNCTION IF EXISTS create_roles;
+DROP FUNCTION IF EXISTS update_role_privileges;
