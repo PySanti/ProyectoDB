@@ -26,7 +26,7 @@ BEGIN
     FROM
         Usuario u
     JOIN
-        Correo c ON u.id_usuario = COALESCE(c.id_proveedor, c.id_cliente_natural, c.id_cliente_juridico) -- Esta lógica puede necesitar ajuste según la estructura de FK en Correo
+        Correo c ON u.id_usuario = COALESCE(c.id_proveedor_proveedor, c.id_cliente_natural, c.id_cliente_juridico) -- Esta lógica puede necesitar ajuste según la estructura de FK en Correo
     WHERE
         c.nombre = SPLIT_PART(p_correo, '@', 1) AND c.extension_pag = SPLIT_PART(p_correo, '@', 2)
         AND u.contraseña = p_contrasena;
