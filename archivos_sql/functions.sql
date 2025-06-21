@@ -301,7 +301,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql; 
 
-
 -- Function to get all roles with their associated privileges
 CREATE OR REPLACE FUNCTION get_roles()
 RETURNS TABLE (
@@ -318,9 +317,9 @@ BEGIN
     FROM
         Rol r
     LEFT JOIN
-        Permiso perm ON r.id_rol = perm.id_rol
+        Rol_Privilegio rp ON r.id_rol = rp.id_rol
     LEFT JOIN
-        Privilegio p ON perm.id_privilegio = p.id_privilegio
+        Privilegio p ON rp.id_privilegio = p.id_privilegio
     GROUP BY
         r.id_rol, r.nombre
     ORDER BY
@@ -343,36 +342,36 @@ BEGIN
     -- Insert the new role and get its ID
     INSERT INTO Rol (nombre) VALUES (p_nombre_rol) RETURNING id_rol INTO new_rol_id;
 
-    -- Assign 'Creacion' privilege if selected
+    -- Assign 'crear' privilege if selected
     IF p_crear THEN
-        SELECT id_privilegio INTO priv_id FROM Privilegio WHERE nombre = 'Creacion';
+        SELECT id_privilegio INTO priv_id FROM Privilegio WHERE nombre = 'crear';
         IF FOUND THEN
-            INSERT INTO Permiso (id_rol, id_privilegio, fecha_asignacion) VALUES (new_rol_id, priv_id, CURRENT_DATE);
+            INSERT INTO Rol_Privilegio (id_rol, id_privilegio, fecha_asignacion) VALUES (new_rol_id, priv_id, CURRENT_DATE);
         END IF;
     END IF;
 
-    -- Assign 'Eliminacion' privilege if selected
+    -- Assign 'eliminar' privilege if selected
     IF p_eliminar THEN
-        SELECT id_privilegio INTO priv_id FROM Privilegio WHERE nombre = 'Eliminacion';
+        SELECT id_privilegio INTO priv_id FROM Privilegio WHERE nombre = 'eliminar';
         IF FOUND THEN
-            INSERT INTO Permiso (id_rol, id_privilegio, fecha_asignacion) VALUES (new_rol_id, priv_id, CURRENT_DATE);
+            INSERT INTO Rol_Privilegio (id_rol, id_privilegio, fecha_asignacion) VALUES (new_rol_id, priv_id, CURRENT_DATE);
         END IF;
     END IF;
 
-    -- Assign 'Actualizacion' privilege if selected
+    -- Assign 'actualizar' privilege if selected
     IF p_actualizar THEN
-        SELECT id_privilegio INTO priv_id FROM Privilegio WHERE nombre = 'Actualizacion';
+        SELECT id_privilegio INTO priv_id FROM Privilegio WHERE nombre = 'actualizar';
         IF FOUND THEN
-            INSERT INTO Permiso (id_rol, id_privilegio, fecha_asignacion) VALUES (new_rol_id, priv_id, CURRENT_DATE);
+            INSERT INTO Rol_Privilegio (id_rol, id_privilegio, fecha_asignacion) VALUES (new_rol_id, priv_id, CURRENT_DATE);
         END IF;
     END IF;
 
-    -- Assign 'Insercion' privilege if selected
+    -- Assign 'insertar' privilege if selected
     IF p_insertar THEN
-        SELECT id_privilegio INTO priv_id FROM Privilegio WHERE nombre = 'Insercion';
+        SELECT id_privilegio INTO priv_id FROM Privilegio WHERE nombre = 'insertar';
         IF FOUND THEN
-            INSERT INTO Permiso (id_rol, id_privilegio, fecha_asignacion) VALUES (new_rol_id, priv_id, CURRENT_DATE);
+            INSERT INTO Rol_Privilegio (id_rol, id_privilegio, fecha_asignacion) VALUES (new_rol_id, priv_id, CURRENT_DATE);
         END IF;
     END IF;
 END;
-$$ LANGUAGE plpgsql; 
+$$ LANGUAGE plpgsql;

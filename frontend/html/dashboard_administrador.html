@@ -128,7 +128,7 @@
             <!-- Roles Section -->
             <section class="content-section" id="roles-section">
                 <div class="section-header">
-                    <h2>Roles y Permisos</h2>
+                    <h2>Roles y Privilegios</h2>
                     <button class="primary-btn" id="add-rol-btn"><i class="fas fa-plus"></i> Nuevo Rol</button>
                 </div>
                 <div class="card">
@@ -144,7 +144,7 @@
                                 <tr>
                                     <th>ID Rol</th>
                                     <th>Nombre</th>
-                                    <th>Permisos</th>
+                                    <th>Privilegios</th>
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
@@ -388,7 +388,7 @@
                             <tr>
                                 <td>${rol.id_rol}</td>
                                 <td>${rol.nombre_rol}</td>
-                                <td>${rol.privilegios.join(', ') || 'Sin permisos'}</td>
+                                <td>${rol.privilegios.join(', ') || 'Sin privilegios'}</td>
                                 <td class="actions">
                                     <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
                                     <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
