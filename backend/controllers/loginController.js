@@ -9,7 +9,7 @@ const loginController = async (req, res) => {
 
     try {
         const query = 'SELECT * FROM verificar_credenciales($1, $2)';
-        const { rows } = await db.query(query, [email, password]);
+        const { rows } = await db.pool.query(query, [email, password]);
 
         if (rows.length > 0) {
             // Usuario autenticado
