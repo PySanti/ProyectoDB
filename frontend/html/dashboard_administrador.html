@@ -280,6 +280,31 @@
             <div id="modal-body"></div>
         </div>
     </div>
+    <!-- Modal para Nuevo Rol -->
+    <div id="rol-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" id="close-rol-modal">&times;</span>
+            <h2>Nuevo Rol</h2>
+            <form id="rol-form">
+                <div class="form-group">
+                    <label for="rol-nombre">Nombre del Rol</label>
+                    <input type="text" id="rol-nombre" required />
+                </div>
+                <div class="form-group">
+                    <label>Permisos</label>
+                    <div class="permisos-checkboxes" style="display:flex; flex-direction:column;">
+                        <label><input type="checkbox" name="crear" /> Crear</label>
+                        <label><input type="checkbox" name="eliminar" /> Eliminar</label>
+                        <label><input type="checkbox" name="actualizar" /> Actualizar</label>
+                        <label><input type="checkbox" name="insertar" /> Insertar</label>
+                    </div>
+                </div>
+                <div class="modal-footer" style="padding-top: 1rem;">
+                    <button type="submit" class="primary-btn">Guardar Rol</button>
+                </div>
+            </form>
+        </div>
+    </div>
     <style>
         .modal { position: fixed; z-index: 9999; left: 0; top: 0; width: 100vw; height: 100vh; overflow: auto; background: rgba(0,0,0,0.4); display: flex; align-items: center; justify-content: center; }
         .modal-content { background: #fff; padding: 2rem; border-radius: 8px; max-width: 95vw; width: 100%; max-width: 500px; box-shadow: 0 2px 8px rgba(0,0,0,0.2); position: relative; }
@@ -321,6 +346,100 @@
 
             // --- Filtro de roles ---
             document.getElementById('filter-rol').addEventListener('change', renderUsuariosTable);
+
+            // --- Section Navigation ---
+            const navLinks = document.querySelectorAll('.sidebar-nav a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+
+                    // Update active link
+                    navLinks.forEach(l => l.parentElement.classList.remove('active'));
+                    this.parentElement.classList.add('active');
+
+                    // Show correct section
+                    const sectionId = this.getAttribute('data-section');
+                    document.querySelectorAll('.content-section').forEach(section => {
+                        section.classList.remove('active');
+                    });
+                    document.getElementById(sectionId + '-section').classList.add('active');
+
+                    // Load data if it's the roles section
+                    if (sectionId === 'roles') {
+                        renderRolesTable();
+                    }
+                });
+            });
+
+            // --- Roles Section Logic ---
+            const rolesSection = document.getElementById('roles-section');
+            const rolesTbody = rolesSection.querySelector('.data-table tbody');
+            const addRolBtn = document.getElementById('add-rol-btn');
+
+            async function renderRolesTable() {
+                try {
+                    const res = await fetch('http://localhost:3000/roles');
+                    if (!res.ok) throw new Error('Error al cargar roles');
+                    const { roles } = await res.json();
+                    
+                    rolesTbody.innerHTML = '';
+                    roles.forEach(rol => {
+                        rolesTbody.innerHTML += `
+                            <tr>
+                                <td>${rol.id_rol}</td>
+                                <td>${rol.nombre_rol}</td>
+                                <td>${rol.privilegios.join(', ') || 'Sin permisos'}</td>
+                                <td class="actions">
+                                    <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                    <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                </td>
+                            </tr>
+                        `;
+                    });
+                } catch (err) {
+                    console.error('Error al cargar roles:', err);
+                    rolesTbody.innerHTML = '<tr><td colspan="4">Error al cargar roles.</td></tr>';
+                }
+            }
+            
+            addRolBtn.addEventListener('click', () => {
+                document.getElementById('rol-modal').classList.add('active');
+            });
+
+            document.getElementById('close-rol-modal').addEventListener('click', () => {
+                document.getElementById('rol-modal').classList.remove('active');
+            });
+
+            document.getElementById('rol-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const nombre = document.getElementById('rol-nombre').value;
+                const permisos = {
+                    crear: document.querySelector('#rol-form input[name="crear"]').checked,
+                    eliminar: document.querySelector('#rol-form input[name="eliminar"]').checked,
+                    actualizar: document.querySelector('#rol-form input[name="actualizar"]').checked,
+                    insertar: document.querySelector('#rol-form input[name="insertar"]').checked
+                };
+
+                try {
+                    const res = await fetch('http://localhost:3000/roles', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ nombre, permisos })
+                    });
+
+                    if (res.ok) {
+                        document.getElementById('rol-modal').classList.remove('active');
+                        document.getElementById('rol-form').reset();
+                        await renderRolesTable(); // Refresh the list
+                    } else {
+                        const errorData = await res.json();
+                        alert(`Error al crear el rol: ${errorData.error}`);
+                    }
+                } catch (err) {
+                    console.error('Error de conexión al crear el rol:', err);
+                    alert('Error de conexión al crear el rol.');
+                }
+            });
         });
 
         function renderUsuariosTable() {

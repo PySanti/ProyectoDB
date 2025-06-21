@@ -232,3 +232,5 @@ DROP FUNCTION IF EXISTS get_usuarios_clientes_juridicos;
 DROP FUNCTION IF EXISTS get_usuarios_clientes_naturales;
 DROP FUNCTION IF EXISTS get_usuarios_empleados;
 DROP FUNCTION IF EXISTS get_usuarios_proveedores;
+DROP FUNCTION IF EXISTS get_roles;
+DROP FUNCTION IF EXISTS create_roles;
