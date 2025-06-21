@@ -375,3 +375,55 @@ BEGIN
     END IF;
 END;
 $$ LANGUAGE plpgsql;
+
+-- Function to update role privileges
+CREATE OR REPLACE FUNCTION update_role_privileges(
+    p_id_rol INTEGER,
+    p_nombre_rol VARCHAR,
+    p_crear BOOLEAN,
+    p_eliminar BOOLEAN,
+    p_actualizar BOOLEAN,
+    p_insertar BOOLEAN
+) RETURNS VOID AS $$
+DECLARE
+    priv_id INTEGER;
+BEGIN
+    -- Update role name if different
+    UPDATE Rol SET nombre = p_nombre_rol WHERE id_rol = p_id_rol;
+    
+    -- Delete all current privileges for this role
+    DELETE FROM Rol_Privilegio WHERE id_rol = p_id_rol;
+    
+    -- Assign 'crear' privilege if selected
+    IF p_crear THEN
+        SELECT id_privilegio INTO priv_id FROM Privilegio WHERE nombre = 'crear';
+        IF FOUND THEN
+            INSERT INTO Rol_Privilegio (id_rol, id_privilegio, fecha_asignacion) VALUES (p_id_rol, priv_id, CURRENT_DATE);
+        END IF;
+    END IF;
+
+    -- Assign 'eliminar' privilege if selected
+    IF p_eliminar THEN
+        SELECT id_privilegio INTO priv_id FROM Privilegio WHERE nombre = 'eliminar';
+        IF FOUND THEN
+            INSERT INTO Rol_Privilegio (id_rol, id_privilegio, fecha_asignacion) VALUES (p_id_rol, priv_id, CURRENT_DATE);
+        END IF;
+    END IF;
+
+    -- Assign 'actualizar' privilege if selected
+    IF p_actualizar THEN
+        SELECT id_privilegio INTO priv_id FROM Privilegio WHERE nombre = 'actualizar';
+        IF FOUND THEN
+            INSERT INTO Rol_Privilegio (id_rol, id_privilegio, fecha_asignacion) VALUES (p_id_rol, priv_id, CURRENT_DATE);
+        END IF;
+    END IF;
+
+    -- Assign 'insertar' privilege if selected
+    IF p_insertar THEN
+        SELECT id_privilegio INTO priv_id FROM Privilegio WHERE nombre = 'insertar';
+        IF FOUND THEN
+            INSERT INTO Rol_Privilegio (id_rol, id_privilegio, fecha_asignacion) VALUES (p_id_rol, priv_id, CURRENT_DATE);
+        END IF;
+    END IF;
+END;
+$$ LANGUAGE plpgsql;

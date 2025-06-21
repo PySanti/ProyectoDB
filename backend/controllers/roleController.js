@@ -21,4 +21,20 @@ exports.createRole = async (req, res) => {
     console.error(err);
     res.status(500).json({ error: 'Error al crear el rol' });
   }
+};
+
+exports.updateRole = async (req, res) => {
+  const { id } = req.params;
+  const { nombre, permisos } = req.body;
+  const { crear, eliminar, actualizar, insertar } = permisos;
+
+  try {
+    await db.pool.query('SELECT update_role_privileges($1, $2, $3, $4, $5, $6)', [
+      parseInt(id), nombre, !!crear, !!eliminar, !!actualizar, !!insertar
+    ]);
+    res.json({ message: 'Rol actualizado exitosamente' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error al actualizar el rol' });
+  }
 }; 
