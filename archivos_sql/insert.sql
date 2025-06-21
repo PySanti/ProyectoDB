@@ -2014,10 +2014,10 @@ INSERT INTO Lugar (nombre, tipo, lugar_relacion_id) VALUES
 ('La Victoria', 'Parroquia', 360);
 
 
-INSERT INTO Rol (id_rol, nombre) VALUES 
-(1, 'Proveedor'),
-(2, 'Cliente'),
-(3, 'Administrador');
+INSERT INTO Rol (nombre) VALUES 
+('Proveedor'),
+('Cliente'),
+('Administrador');
 
 
 INSERT INTO Privilegio (nombre) VALUES
