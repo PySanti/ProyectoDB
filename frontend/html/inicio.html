@@ -400,6 +400,11 @@
     </div>
 
     <script>
+
+      if (localStorage.getItem('user')) {
+        
+      }
+
       function openTab(tabName) {
         const tabContents = document.getElementsByClassName("tab-content");
         for (let i = 0; i < tabContents.length; i++) {
@@ -452,6 +457,9 @@
           icon.classList.add("fa-eye");
         }
       }
+      function redirectUser(){
+        const user = JSON.parse(localStorage.getItem('user'));
+      }
 
       function loginForm(event) {
         event.preventDefault(); 
@@ -464,10 +472,8 @@
             password: password
         })
         .then(function (response) {
-            console.log(response);
-            // Aquí puedes manejar la respuesta exitosa, por ejemplo, redirigiendo al usuario
-            alert('Login successful!');
-            // window.location.href = '/home'; // Redirigir a la página de inicio
+          localStorage.setItem('user', JSON.stringify(response.data.user));
+          redirectUser();
         })
         .catch(function (error) {
             console.error(error);

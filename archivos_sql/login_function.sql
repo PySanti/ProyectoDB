@@ -6,11 +6,10 @@ RETURNS TABLE (
     id_usuario INTEGER,
     id_cliente_juridico INTEGER,
     id_cliente_natural INTEGER,
-    id_rol INTEGER,
+    rol VARCHAR(50),
     fecha_creacion DATE,
     id_proveedor INTEGER,
-    empleado_id INTEGER,
-    contraseña VARCHAR
+    empleado_id INTEGER
 ) AS $$
 BEGIN
     RETURN QUERY
@@ -18,13 +17,14 @@ BEGIN
         u.id_usuario,
         u.id_cliente_juridico,
         u.id_cliente_natural,
-        u.id_rol,
+        r.nombre AS rol,
         u.fecha_creacion,
         u.id_proveedor,
-        u.empleado_id,
-        u.contraseña
+        u.empleado_id
     FROM
         Usuario u
+    JOIN
+        Rol r ON u.id_rol = r.id_rol
     JOIN
         Correo c ON u.id_usuario = COALESCE(c.id_proveedor_proveedor, c.id_cliente_natural, c.id_cliente_juridico) -- Esta lógica puede necesitar ajuste según la estructura de FK en Correo
     WHERE
