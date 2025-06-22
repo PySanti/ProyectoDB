@@ -156,12 +156,13 @@
                                 <tr>
                                     <th>ID Orden</th>
                                     <th>Fecha de Generación</th>
+                                    <th>Ubicación en Tienda</th>
                                     <th>Estatus Actual</th>
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr><td colspan="4">Cargando...</td></tr>
+                                <tr><td colspan="5">Cargando...</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -291,6 +292,28 @@
             <span class="close-modal" id="close-modal-cambiar-estatus">&times;</span>
             <h2>Cambiar Estatus de Orden</h2>
             <div id="estatus-lista"></div>
+        </div>
+    </div>
+    
+    <!-- Modal para detalles de orden de anaquel -->
+    <div id="modal-detalles-orden-anaquel" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" id="close-modal-detalles-orden-anaquel">&times;</span>
+            <h2>Detalles de la Orden de Reposición</h2>
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Presentación</th>
+                            <th>Cerveza</th>
+                            <th>Cantidad a Reponer</th>
+                        </tr>
+                    </thead>
+                    <tbody id="detalles-orden-anaquel-tbody">
+                        <!-- Los detalles se cargarán aquí -->
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
     
@@ -979,12 +1002,12 @@
         // Renderizar tabla de órdenes de reposición de anaqueles
         async function renderOrdenesAnaquel() {
             const tbody = document.querySelector('#tabla-ordenes-anaquel tbody');
-            tbody.innerHTML = '<tr><td colspan="4">Cargando...</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="5">Cargando...</td></tr>';
             try {
                 const res = await fetch('http://localhost:3000/ordenes/anaquel');
                 const ordenes = await res.json();
                 if (!ordenes.length) {
-                    tbody.innerHTML = '<tr><td colspan="4">No hay órdenes registradas.</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="5">No hay órdenes registradas.</td></tr>';
                     return;
                 }
                 tbody.innerHTML = '';
@@ -993,17 +1016,21 @@
                         <tr>
                             <td>${orden.id_orden_reposicion}</td>
                             <td>${orden.fecha_hora_generacion ? orden.fecha_hora_generacion.replace('T', ' ').slice(0, 16) : ''}</td>
+                            <td>${orden.ubicacion_completa || 'No especificada'}</td>
                             <td>${orden.estatus_actual}</td>
                             <td>
                                 <button class="action-btn assign-role" title="Modificar estatus" onclick="abrirModalCambiarEstatusAnaquel(${orden.id_orden_reposicion}, ${orden.id_estatus_actual})">
-                                    <i class="fas fa-exchange-alt"></i> Modificar estatus
+                                    <i class="fas fa-exchange-alt"></i>
+                                </button>
+                                <button class="action-btn view" title="Ver Detalles" onclick="abrirModalDetallesOrdenAnaquel(${orden.id_orden_reposicion})">
+                                    <i class="fas fa-eye"></i>
                                 </button>
                             </td>
                         </tr>
                     `;
                 });
             } catch (err) {
-                tbody.innerHTML = '<tr><td colspan="4">Error al cargar las órdenes.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="5">Error al cargar las órdenes.</td></tr>';
             }
         }
 
@@ -1095,6 +1122,41 @@
                 alternarTablasOrdenes();
             }
         });
+
+        // Abrir modal de detalles de la orden de anaquel
+        async function abrirModalDetallesOrdenAnaquel(idOrden) {
+            const modal = document.getElementById('modal-detalles-orden-anaquel');
+            const tbody = document.getElementById('detalles-orden-anaquel-tbody');
+            tbody.innerHTML = '<tr><td colspan="3">Cargando detalles...</td></tr>';
+            modal.classList.add('active');
+
+            try {
+                const res = await fetch(`http://localhost:3000/ordenes/anaquel/${idOrden}/detalles`);
+                const detalles = await res.json();
+
+                if (!detalles.length) {
+                    tbody.innerHTML = '<tr><td colspan="3">No se encontraron detalles para esta orden.</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = '';
+                detalles.forEach(detalle => {
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${detalle.presentacion}</td>
+                            <td>${detalle.cerveza}</td>
+                            <td>${detalle.cantidad}</td>
+                        </tr>
+                    `;
+                });
+            } catch (err) {
+                tbody.innerHTML = '<tr><td colspan="3">Error al cargar los detalles.</td></tr>';
+            }
+        }
+
+        document.getElementById('close-modal-detalles-orden-anaquel').onclick = function() {
+            document.getElementById('modal-detalles-orden-anaquel').classList.remove('active');
+        };
     </script>
 </body>
 </html> 

@@ -2904,16 +2904,16 @@ INSERT INTO Inventario (cantidad, id_tienda_fisica, id_tienda_web, id_ubicacion,
 (100000, NULL, 1, NULL, 1, 8),
 (100000, NULL, 1, NULL, 1, 9),
 (100000, NULL, 1, NULL, 1, 10),
-(100000, 1, NULL, NULL, 1, 1),   
-(100000, 1, NULL, NULL, 2, 2),   
-(100000, 1, NULL, NULL, 3, 3),   
-(100000, 1, NULL, NULL, 3, 4),   
-(100000, 1, NULL, NULL, 2, 5),   
-(100000, 1, NULL, NULL, 1, 6),   
-(100000, 1, NULL, NULL, 1, 7),   
-(100000, 1, NULL, NULL, 1, 8),   
-(100000, 1, NULL, NULL, 1, 9),   
-(100000, 1, NULL, NULL, 1, 10);
+(100000, NULL, NULL, 1, 1, 1),   
+(100000, NULL, NULL, 2, 2, 2),   
+(100000, NULL, NULL, 3, 3, 3),   
+(100000, NULL, NULL, 4, 3, 4),   
+(100000, NULL, NULL, 5, 2, 5),   
+(100000, NULL, NULL, 6, 1, 6),   
+(100000, NULL, NULL, 7, 1, 7),   
+(100000, NULL, NULL, 8, 1, 8),   
+(100000, NULL, NULL, 9, 1, 9),   
+(100000, NULL, NULL, 10, 1, 10);
 
 
 
