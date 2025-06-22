@@ -435,3 +435,46 @@ BEGIN
     UPDATE Usuario SET id_rol = p_id_rol WHERE id_usuario = p_id_usuario;
 END;
 $$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION create_empleado(
+    p_cedula VARCHAR,
+    p_primer_nombre VARCHAR,
+    p_segundo_nombre VARCHAR,
+    p_primer_apellido VARCHAR,
+    p_segundo_apellido VARCHAR,
+    p_direccion TEXT,
+    p_lugar_id_lugar INTEGER,
+    p_correo_nombre VARCHAR,
+    p_correo_extension VARCHAR,
+    p_contrasena VARCHAR
+) RETURNS VOID AS $$
+DECLARE
+    new_empleado_id INTEGER;
+    new_usuario_id INTEGER;
+    rol_empleado_id INTEGER;
+BEGIN
+    -- Buscar el id_rol correspondiente a 'Empleado'
+    SELECT id_rol INTO rol_empleado_id FROM Rol WHERE LOWER(nombre) = 'empleado' LIMIT 1;
+
+    -- Insertar en Empleado
+    INSERT INTO Empleado (
+        cedula, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, direccion, activo, lugar_id_lugar
+    ) VALUES (
+        p_cedula, p_primer_nombre, p_segundo_nombre, p_primer_apellido, p_segundo_apellido, p_direccion, 'S', p_lugar_id_lugar
+    ) RETURNING id_empleado INTO new_empleado_id;
+
+    -- Insertar en Usuario
+    INSERT INTO Usuario (
+        empleado_id, id_rol, fecha_creacion, contraseña
+    ) VALUES (
+        new_empleado_id, rol_empleado_id, CURRENT_DATE, p_contrasena
+    ) RETURNING id_usuario INTO new_usuario_id;
+
+    -- Insertar en Correo
+    INSERT INTO Correo (
+        nombre, extension_pag, id_empleado
+    ) VALUES (
+        p_correo_nombre, p_correo_extension, new_empleado_id
+    );
+END;
+$$ LANGUAGE plpgsql;

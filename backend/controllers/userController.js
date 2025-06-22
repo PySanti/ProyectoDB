@@ -11,4 +11,41 @@ exports.getUsuarios = async (req, res) => {
     console.error(err);
     res.status(500).json({ error: 'Error al obtener la lista de usuarios' });
   }
+};
+
+exports.createEmpleado = async (req, res) => {
+  const {
+    cedula,
+    primer_nombre,
+    segundo_nombre,
+    primer_apellido,
+    segundo_apellido,
+    direccion,
+    lugar_id_lugar,
+    correo_nombre,
+    correo_extension,
+    contrasena
+  } = req.body;
+
+  try {
+    await db.pool.query(
+      'SELECT create_empleado($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)',
+      [
+        cedula,
+        primer_nombre,
+        segundo_nombre,
+        primer_apellido,
+        segundo_apellido,
+        direccion,
+        lugar_id_lugar,
+        correo_nombre,
+        correo_extension,
+        contrasena
+      ]
+    );
+    res.status(201).json({ message: 'Empleado creado exitosamente' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error al crear el empleado' });
+  }
 }; 

@@ -791,6 +791,74 @@
                 alert('Error de conexión');
             }
         };
+
+        document.getElementById('nuevo-empleado-form').onsubmit = async function(e) {
+            e.preventDefault();
+            const cedula = document.getElementById('nuevo-empleado-cedula').value.trim();
+            const primer_nombre = document.getElementById('nuevo-empleado-primer-nombre').value.trim();
+            const segundo_nombre = document.getElementById('nuevo-empleado-segundo-nombre').value.trim();
+            const primer_apellido = document.getElementById('nuevo-empleado-primer-apellido').value.trim();
+            const segundo_apellido = document.getElementById('nuevo-empleado-segundo-apellido').value.trim();
+            const direccion = document.getElementById('nuevo-empleado-direccion').value.trim();
+            const lugar_id_lugar = document.getElementById('nuevo-empleado-parroquia').value;
+            const correo = document.getElementById('nuevo-usuario-correo').value.trim();
+            const contrasena = document.getElementById('nuevo-usuario-contrasena').value;
+
+            // Separar correo en nombre y extension
+            const [correo_nombre, correo_extension] = correo.split('@');
+            if (!correo_nombre || !correo_extension) {
+                alert('Correo inválido. Debe tener formato usuario@dominio');
+                return;
+            }
+
+            const data = {
+                cedula,
+                primer_nombre,
+                segundo_nombre,
+                primer_apellido,
+                segundo_apellido,
+                direccion,
+                lugar_id_lugar,
+                correo_nombre,
+                correo_extension,
+                contrasena
+            };
+
+            try {
+                const res = await fetch('http://localhost:3000/user/empleados', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                if (res.ok) {
+                    alert('Empleado creado exitosamente');
+                    document.getElementById('nuevo-empleado-modal').classList.remove('active');
+                    // Agregar el nuevo empleado al localStorage y refrescar la tabla
+                    // 1. Obtener el objeto actual de usuarios
+                    let usuariosLS = JSON.parse(localStorage.getItem('users_list')) || {};
+                    if (!usuariosLS['empleados']) usuariosLS['empleados'] = [];
+                    // 2. Crear el objeto del nuevo empleado (con los campos mínimos para la tabla)
+                    const nuevoEmpleado = {
+                        nombre_completo: primer_nombre + (segundo_nombre ? ' ' + segundo_nombre : '') + ' ' + primer_apellido + (segundo_apellido ? ' ' + segundo_apellido : ''),
+                        email: correo_nombre + '@' + correo_extension,
+                        cedula: cedula,
+                        direccion_especifica: direccion,
+                        activo: 'S',
+                        // Los siguientes campos pueden quedar vacíos o null si no se tienen en el frontend
+                        id_usuario: null, // No lo tenemos hasta recargar desde backend
+                        id_rol: null // No lo tenemos hasta recargar desde backend
+                    };
+                    usuariosLS['empleados'].push(nuevoEmpleado);
+                    localStorage.setItem('users_list', JSON.stringify(usuariosLS));
+                    renderUsuariosTable();
+                } else {
+                    const errorData = await res.json();
+                    alert('Error al crear el empleado: ' + (errorData.error || ''));
+                }
+            } catch (err) {
+                alert('Error de conexión al crear el empleado');
+            }
+        };
     </script>
 </body>
 </html> 

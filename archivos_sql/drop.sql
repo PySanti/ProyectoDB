@@ -237,3 +237,4 @@ DROP FUNCTION IF EXISTS create_roles;
 DROP FUNCTION IF EXISTS update_role_privileges;
 
 DROP FUNCTION IF EXISTS set_rol_usuario;
+DROP FUNCTION IF EXISTS create_empleado;
