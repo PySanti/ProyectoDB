@@ -221,7 +221,7 @@
                         <label><input type="checkbox" name="crear" /> Crear</label>
                         <label><input type="checkbox" name="eliminar" /> Eliminar</label>
                         <label><input type="checkbox" name="actualizar" /> Actualizar</label>
-                        <label><input type="checkbox" name="insertar" /> Insertar</label>
+                        <label><input type="checkbox" name="leer" /> Leer</label>
                     </div>
                 </div>
                 <div class="modal-footer" style="padding-top: 1rem;">
@@ -290,7 +290,7 @@
             document.querySelector('#rol-form input[name="crear"]').checked = privilegios.includes('crear');
             document.querySelector('#rol-form input[name="eliminar"]').checked = privilegios.includes('eliminar');
             document.querySelector('#rol-form input[name="actualizar"]').checked = privilegios.includes('actualizar');
-            document.querySelector('#rol-form input[name="insertar"]').checked = privilegios.includes('insertar');
+            document.querySelector('#rol-form input[name="leer"]').checked = privilegios.includes('leer');
             
             // Cambiar el título del modal
             document.getElementById('rol-modal-title').textContent = 'Editar Rol';
@@ -536,7 +536,7 @@
                     crear: document.querySelector('#rol-form input[name="crear"]').checked,
                     eliminar: document.querySelector('#rol-form input[name="eliminar"]').checked,
                     actualizar: document.querySelector('#rol-form input[name="actualizar"]').checked,
-                    insertar: document.querySelector('#rol-form input[name="insertar"]').checked
+                    leer: document.querySelector('#rol-form input[name="leer"]').checked
                 };
 
                 console.log('Datos del formulario:', { nombre, permisos, editingRoleId });

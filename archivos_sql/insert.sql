@@ -2024,7 +2024,7 @@ INSERT INTO Privilegio (nombre) VALUES
 ('crear'),
 ('actualizar'),
 ('eliminar'),
-('insertar');
+('leer');
 
 
 

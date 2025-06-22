@@ -333,7 +333,7 @@ CREATE OR REPLACE FUNCTION create_role(
     p_crear BOOLEAN,
     p_eliminar BOOLEAN,
     p_actualizar BOOLEAN,
-    p_insertar BOOLEAN
+    p_leer BOOLEAN
 ) RETURNS VOID AS $$
 DECLARE
     new_rol_id INTEGER;
@@ -366,9 +366,9 @@ BEGIN
         END IF;
     END IF;
 
-    -- Assign 'insertar' privilege if selected
-    IF p_insertar THEN
-        SELECT id_privilegio INTO priv_id FROM Privilegio WHERE nombre = 'insertar';
+    -- Assign 'leer' privilege if selected
+    IF p_leer THEN
+        SELECT id_privilegio INTO priv_id FROM Privilegio WHERE nombre = 'leer';
         IF FOUND THEN
             INSERT INTO Rol_Privilegio (id_rol, id_privilegio, fecha_asignacion) VALUES (new_rol_id, priv_id, CURRENT_DATE);
         END IF;
@@ -383,7 +383,7 @@ CREATE OR REPLACE FUNCTION update_role_privileges(
     p_crear BOOLEAN,
     p_eliminar BOOLEAN,
     p_actualizar BOOLEAN,
-    p_insertar BOOLEAN
+    p_leer BOOLEAN
 ) RETURNS VOID AS $$
 DECLARE
     priv_id INTEGER;
@@ -418,9 +418,9 @@ BEGIN
         END IF;
     END IF;
 
-    -- Assign 'insertar' privilege if selected
-    IF p_insertar THEN
-        SELECT id_privilegio INTO priv_id FROM Privilegio WHERE nombre = 'insertar';
+    -- Assign 'leer' privilege if selected
+    IF p_leer THEN
+        SELECT id_privilegio INTO priv_id FROM Privilegio WHERE nombre = 'leer';
         IF FOUND THEN
             INSERT INTO Rol_Privilegio (id_rol, id_privilegio, fecha_asignacion) VALUES (p_id_rol, priv_id, CURRENT_DATE);
         END IF;
