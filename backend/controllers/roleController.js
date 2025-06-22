@@ -37,4 +37,17 @@ exports.updateRole = async (req, res) => {
     console.error(err);
     res.status(500).json({ error: 'Error al actualizar el rol' });
   }
+};
+
+// Cambiar el rol de un usuario
+exports.setRolUsuario = async (req, res) => {
+  const { id } = req.params; // id_usuario
+  const { id_rol } = req.body;
+  try {
+    await db.pool.query('SELECT set_rol_usuario($1, $2)', [id, id_rol]);
+    res.json({ message: 'Rol actualizado correctamente' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error al actualizar el rol del usuario' });
+  }
 }; 

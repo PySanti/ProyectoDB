@@ -427,3 +427,11 @@ BEGIN
     END IF;
 END;
 $$ LANGUAGE plpgsql;
+
+-- Cambiar el rol de un usuario
+CREATE OR REPLACE FUNCTION set_rol_usuario(p_id_usuario INTEGER, p_id_rol INTEGER)
+RETURNS VOID AS $$
+BEGIN
+    UPDATE Usuario SET id_rol = p_id_rol WHERE id_usuario = p_id_usuario;
+END;
+$$ LANGUAGE plpgsql;
