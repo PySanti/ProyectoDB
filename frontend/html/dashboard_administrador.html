@@ -122,32 +122,36 @@
             <section class="content-section" id="ordenes-section">
                 <div class="section-header">
                     <h2>Órdenes</h2>
-                </div>
-                <div class="dashboard-cards">
-                    <div class="dashboard-card">
-                        <div class="card-icon info"><i class="fas fa-warehouse"></i></div>
-                        <div class="card-info">
-                            <h3>Órdenes de Reposición de Anaqueles</h3>
-                            <p>Gestión y seguimiento de reposición en anaqueles.</p>
-                        </div>
-                    </div>
-                    <div class="dashboard-card">
-                        <div class="card-icon warning"><i class="fas fa-truck"></i></div>
-                        <div class="card-info">
-                            <h3>Órdenes de Reposición a Proveedores</h3>
-                            <p>Gestión y seguimiento de reposición a proveedores.</p>
-                        </div>
+                    <div class="card-actions">
+                        <select id="filter-orden">
+                            <option value="reposicion">Órdenes de Reposición a Proveedores</option>
+                            <option value="anaquel">Órdenes de Reposición de Anaquel</option>
+                        </select>
+                        <button class="export-btn"><i class="fas fa-download"></i> Exportar</button>
                     </div>
                 </div>
                 <div class="card">
                     <div class="card-header">
-                        <h3>Órdenes Recientes</h3>
-                        <div class="card-actions">
-                            <button class="export-btn"><i class="fas fa-download"></i> Exportar</button>
-                        </div>
+                        <h3 id="ordenes-titulo">Órdenes de Reposición a Proveedores</h3>
                     </div>
                     <div class="table-responsive">
-                        <table class="data-table">
+                        <table class="data-table" id="tabla-ordenes-reposicion">
+                            <thead>
+                                <tr>
+                                    <th>ID Orden</th>
+                                    <th>Departamento</th>
+                                    <th>Proveedor</th>
+                                    <th>Fecha Emisión</th>
+                                    <th>Fecha Fin</th>
+                                    <th>Estatus Actual</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td colspan="7">(Aquí irán las órdenes de reposición)</td></tr>
+                            </tbody>
+                        </table>
+                        <table class="data-table" id="tabla-ordenes-anaquel" style="display:none;">
                             <thead>
                                 <tr>
                                     <th>ID Orden</th>
@@ -158,36 +162,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>ORD-ANA-001</td>
-                                    <td>Anaqueles</td>
-                                    <td>20/06/2025</td>
-                                    <td><span class="status pending">Pendiente</span></td>
-                                    <td class="actions">
-                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
-                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>ORD-PROV-002</td>
-                                    <td>Proveedor</td>
-                                    <td>19/06/2025</td>
-                                    <td><span class="status success">Completada</span></td>
-                                    <td class="actions">
-                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
-                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>ORD-ANA-003</td>
-                                    <td>Anaqueles</td>
-                                    <td>18/06/2025</td>
-                                    <td><span class="status pending">Pendiente</span></td>
-                                    <td class="actions">
-                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
-                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
-                                    </td>
-                                </tr>
+                                <tr><td colspan="5">(Aquí irán las órdenes de reposición de anaquel)</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -311,6 +286,15 @@
         </div>
     </div>
     
+    <!-- Modal para modificar estatus de orden de reposición a proveedores -->
+    <div id="modal-cambiar-estatus" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" id="close-modal-cambiar-estatus">&times;</span>
+            <h2>Cambiar Estatus de Orden</h2>
+            <div id="estatus-lista"></div>
+        </div>
+    </div>
+    
     <style>
         .modal { 
             position: fixed; 
@@ -377,6 +361,23 @@
             color: #333;
             padding: 0 0.5rem;
         }
+        #modal-cambiar-estatus .estatus-btn {
+            display: block;
+            width: 100%;
+            margin: 0.5rem 0;
+            padding: 0.7rem 1rem;
+            background: #f0ad4e;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: left;
+            transition: background 0.2s;
+        }
+        #modal-cambiar-estatus .estatus-btn:hover {
+            background: #ec971f;
+        }
     </style>
     
     <script src="../js/lugares.js"></script>
@@ -385,6 +386,8 @@
         let usuarios = [];
         let editingRoleId = null;
         let usuarioSeleccionadoId = null;
+        let ordenSeleccionadaId = null;
+        let estatusActualId = null;
 
         // Función global para editar un rol
         function editRole(id, nombre, privilegios) {
@@ -564,6 +567,120 @@
                 rolesTbody.innerHTML = '<tr><td colspan="4">Error al cargar roles.</td></tr>';
             }
         }
+
+        // Renderizar tabla de órdenes de reposición a proveedores
+        async function renderOrdenesReposicion() {
+            const tbody = document.querySelector('#tabla-ordenes-reposicion tbody');
+            tbody.innerHTML = '<tr><td colspan="7">Cargando...</td></tr>';
+            try {
+                const res = await fetch('http://localhost:3000/ordenes/reposicion');
+                const ordenes = await res.json();
+                if (!ordenes.length) {
+                    tbody.innerHTML = '<tr><td colspan="7">No hay órdenes registradas.</td></tr>';
+                    return;
+                }
+                tbody.innerHTML = '';
+                ordenes.forEach(orden => {
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${orden.id_orden_reposicion}</td>
+                            <td>${orden.nombre_departamento}</td>
+                            <td>${orden.razon_social_proveedor}</td>
+                            <td>${orden.fecha_emision ? orden.fecha_emision.split('T')[0] : ''}</td>
+                            <td>${orden.fecha_fin ? orden.fecha_fin.split('T')[0] : ''}</td>
+                            <td>${orden.estatus_actual}</td>
+                            <td>
+                                <button class="action-btn assign-role" title="Modificar estatus" onclick="abrirModalCambiarEstatus(${orden.id_orden_reposicion}, ${orden.id_estatus_actual})">
+                                    <i class="fas fa-exchange-alt"></i> Modificar estatus
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } catch (err) {
+                tbody.innerHTML = '<tr><td colspan="7">Error al cargar las órdenes.</td></tr>';
+            }
+        }
+
+        // Abrir modal de cambio de estatus
+        async function abrirModalCambiarEstatus(idOrden, idEstatusActual) {
+            ordenSeleccionadaId = idOrden;
+            estatusActualId = idEstatusActual;
+            const lista = document.getElementById('estatus-lista');
+            lista.innerHTML = 'Cargando estatus...';
+            document.getElementById('modal-cambiar-estatus').classList.add('active');
+            try {
+                const res = await fetch('http://localhost:3000/ordenes/estatus');
+                const estatus = await res.json();
+                // Filtrar: mostrar todos menos el actual
+                const disponibles = estatus.filter(e => e.id_estatus !== idEstatusActual);
+                if (!disponibles.length) {
+                    lista.innerHTML = '<p>No hay otros estatus disponibles.</p>';
+                    return;
+                }
+                lista.innerHTML = '';
+                disponibles.forEach(e => {
+                    const btn = document.createElement('button');
+                    btn.className = 'estatus-btn';
+                    btn.textContent = e.nombre;
+                    btn.onclick = () => cambiarEstatusOrden(ordenSeleccionadaId, e.id_estatus, e.nombre);
+                    lista.appendChild(btn);
+                });
+            } catch (err) {
+                lista.innerHTML = '<p>Error al cargar los estatus.</p>';
+            }
+        }
+
+        // Cerrar modal
+        const closeModalCambiarEstatus = document.getElementById('close-modal-cambiar-estatus');
+        if (closeModalCambiarEstatus) {
+            closeModalCambiarEstatus.onclick = function() {
+                document.getElementById('modal-cambiar-estatus').classList.remove('active');
+            };
+        }
+
+        // Cambiar estatus de la orden
+        async function cambiarEstatusOrden(idOrden, idEstatusNuevo, nombreEstatusNuevo) {
+            try {
+                const res = await fetch(`http://localhost:3000/ordenes/reposicion/${idOrden}/estatus`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id_estatus: idEstatusNuevo })
+                });
+                if (res.ok) {
+                    alert('Estatus actualizado a: ' + nombreEstatusNuevo);
+                    document.getElementById('modal-cambiar-estatus').classList.remove('active');
+                    await renderOrdenesReposicion();
+                } else {
+                    alert('Error al actualizar el estatus');
+                }
+            } catch (err) {
+                alert('Error de conexión al actualizar el estatus');
+            }
+        }
+
+        // Inicializar tabla de órdenes al cargar la sección de órdenes
+        // (y también al alternar el filtro de órdenes)
+        function inicializarOrdenesReposicion() {
+            const filterOrden = document.getElementById('filter-orden');
+            if (filterOrden && filterOrden.value === 'reposicion') {
+                renderOrdenesReposicion();
+            }
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+            // ... (otras inicializaciones)
+            // Cargar órdenes de reposición a proveedores al mostrar la sección
+            inicializarOrdenesReposicion();
+            // Si tienes navegación por tabs, puedes llamar inicializarOrdenesReposicion() al cambiar a la sección de órdenes
+            const filterOrden = document.getElementById('filter-orden');
+            if (filterOrden) {
+                filterOrden.addEventListener('change', function() {
+                    if (filterOrden.value === 'reposicion') {
+                        renderOrdenesReposicion();
+                    }
+                });
+            }
+        });
 
         // Inicialización cuando el DOM esté listo
         document.addEventListener('DOMContentLoaded', function() {

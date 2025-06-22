@@ -233,8 +233,10 @@ DROP FUNCTION IF EXISTS get_usuarios_clientes_naturales;
 DROP FUNCTION IF EXISTS get_usuarios_empleados;
 DROP FUNCTION IF EXISTS get_usuarios_proveedores;
 DROP FUNCTION IF EXISTS get_roles;
-DROP FUNCTION IF EXISTS create_roles;
+DROP FUNCTION IF EXISTS create_role;
 DROP FUNCTION IF EXISTS update_role_privileges;
 
 DROP FUNCTION IF EXISTS set_rol_usuario;
 DROP FUNCTION IF EXISTS create_empleado;
+DROP FUNCTION IF EXISTS get_ordenes_reposicion_proveedores;
+DROP FUNCTION IF EXISTS set_estatus_orden_reposicion;

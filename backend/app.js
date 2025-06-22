@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const userRoutes = require('./routes/userRoutes.js');
 const roleRoutes = require('./routes/roleRoutes.js');
+const ordenesRoutes = require('./routes/ordenesRoutes.js');
 const cors = require('cors');
 
 // Configuración CORS para permitir peticiones desde archivos locales (file://)
@@ -23,6 +24,7 @@ app.use(express.json());
 // Asignar rutas
 app.use('/user', userRoutes);
 app.use('/roles', roleRoutes);
+app.use('/ordenes', ordenesRoutes);
 
 // Iniciar servidor
 const PORT = process.env.PORT || 3000;

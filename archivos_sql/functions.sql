@@ -478,3 +478,69 @@ BEGIN
     );
 END;
 $$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION get_ordenes_reposicion_proveedores()
+RETURNS TABLE (
+    id_orden_reposicion INTEGER,
+    nombre_departamento VARCHAR,
+    razon_social_proveedor VARCHAR,
+    fecha_emision DATE,
+    fecha_fin DATE,
+    estatus_actual VARCHAR,
+    id_estatus_actual INTEGER
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+        o.id_orden_reposicion,
+        d.nombre AS nombre_departamento,
+        p.razon_social AS razon_social_proveedor,
+        o.fecha_emision,
+        o.fecha_fin,
+        e2.nombre AS estatus_actual,
+        oe.id_estatus AS id_estatus_actual
+    FROM Orden_Reposicion o
+    JOIN Departamento d ON o.id_departamento = d.id_departamento
+    JOIN Proveedor p ON o.id_proveedor = p.id_proveedor
+    LEFT JOIN LATERAL (
+        SELECT oe2.id_estatus, es.nombre
+        FROM Orden_Reposicion_Estatus oe2
+        JOIN Estatus es ON oe2.id_estatus = es.id_estatus
+        WHERE oe2.id_orden_reposicion = o.id_orden_reposicion
+        ORDER BY oe2.fecha_asignacion DESC
+        LIMIT 1
+    ) oe ON TRUE
+    LEFT JOIN Estatus e2 ON oe.id_estatus = e2.id_estatus
+    ORDER BY o.id_orden_reposicion DESC;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION set_estatus_orden_reposicion(
+    p_id_orden_reposicion INTEGER,
+    p_id_estatus INTEGER
+) RETURNS VOID AS $$
+DECLARE
+    v_id_proveedor INTEGER;
+    v_id_departamento INTEGER;
+    v_nombre_estatus VARCHAR;
+BEGIN
+    -- Obtener proveedor y departamento
+    SELECT id_proveedor, id_departamento
+    INTO v_id_proveedor, v_id_departamento
+    FROM Orden_Reposicion
+    WHERE id_orden_reposicion = p_id_orden_reposicion;
+
+    -- Insertar nuevo estatus
+    INSERT INTO Orden_Reposicion_Estatus (
+        id_orden_reposicion, id_proveedor, id_departamento, id_estatus, fecha_asignacion
+    ) VALUES (
+        p_id_orden_reposicion, v_id_proveedor, v_id_departamento, p_id_estatus, NOW()
+    );
+
+    -- Si el estatus es 'Atendida', actualizar fecha_fin
+    SELECT nombre INTO v_nombre_estatus FROM Estatus WHERE id_estatus = p_id_estatus;
+    IF LOWER(v_nombre_estatus) = 'atendida' THEN
+        UPDATE Orden_Reposicion SET fecha_fin = NOW() WHERE id_orden_reposicion = p_id_orden_reposicion;
+    END IF;
+END;
+$$ LANGUAGE plpgsql;

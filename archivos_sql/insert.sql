@@ -2073,18 +2073,9 @@ INSERT INTO Tipo_Invitado (nombre) VALUES
 
 
 INSERT INTO Estatus (id_estatus, nombre) VALUES
-(1, 'Orden Iniciada'),
-(2, 'Orden Procesada'),
-(3, 'Pendiente Aprobación'),
-(4, 'Aprobada'),
-(5, 'Enviada al Proveedor'),
-(6, 'En Preparación'),
-(7, 'Lista para Despacho'),
-(8, 'En Despacho'),
-(9, 'Listo para Entrega'),
-(10, 'Entregado'),
-(11, 'Cancelada'),
-(12, 'Rechazada');
+(1, 'Iniciada'),
+(2, 'En proceso'),
+(3, 'Atendida');
 
 
 INSERT INTO Horario (dia, hora_entrada, hora_salida) VALUES
@@ -3000,6 +2991,36 @@ INSERT INTO Cuota_Afiliacion (monto, membresia_id_membresia, fecha_pago) VALUES
 (180.00, 10, '2024-04-15');
 
 
+
+
+
+
+
+INSERT INTO Orden_Reposicion_Anaquel (fecha_hora_generacion) VALUES
+('2025-01-15 08:30:00'),  
+('2025-01-15 14:45:00'),  
+('2025-01-16 09:15:00'),  
+('2025-01-16 16:20:00'),  
+('2025-01-17 10:00:00'),  
+('2025-01-17 13:30:00'),  
+('2025-01-18 11:45:00'),  
+('2025-01-18 17:10:00'),  
+('2025-01-19 08:00:00'),  
+('2025-01-19 15:25:00');
+
+
+INSERT INTO Detalle_Orden_Reposicion_Anaquel (id_orden_reposicion, id_inventario, cantidad) VALUES
+(1, 11, 50),  
+(1, 12, 30),  
+(2, 13, 75),  
+(2, 14, 25),  
+(3, 15, 40), 
+(4, 16, 60),  
+(4, 17, 45), 
+(5, 18, 35), 
+(6, 19, 80),  
+(7, 20, 20);
+
 -- Insertar 10 órdenes de reposición
 INSERT INTO Orden_Reposicion (id_departamento, id_proveedor, fecha_emision) VALUES
 (3, 1, CURRENT_DATE),
@@ -3012,7 +3033,6 @@ INSERT INTO Orden_Reposicion (id_departamento, id_proveedor, fecha_emision) VALU
 (3, 8, CURRENT_DATE),
 (3, 9, CURRENT_DATE),
 (3, 10, CURRENT_DATE); 
-
 
 -- Detalles de órdenes de reposición (solo combinaciones válidas de id_presentacion y id_cerveza)
 INSERT INTO Detalle_Orden_Reposicion (cantidad, id_orden_reposicion, id_proveedor, id_departamento, precio, id_tipo_cerveza, id_presentacion, id_cerveza) VALUES
@@ -3078,58 +3098,30 @@ INSERT INTO Detalle_Orden_Reposicion (cantidad, id_orden_reposicion, id_proveedo
 (5, 10, 10, 3, 5, 27, 1, 10); 
 
 
-INSERT INTO Orden_Reposicion_Anaquel (fecha_hora_generacion) VALUES
-('2025-01-15 08:30:00'),  
-('2025-01-15 14:45:00'),  
-('2025-01-16 09:15:00'),  
-('2025-01-16 16:20:00'),  
-('2025-01-17 10:00:00'),  
-('2025-01-17 13:30:00'),  
-('2025-01-18 11:45:00'),  
-('2025-01-18 17:10:00'),  
-('2025-01-19 08:00:00'),  
-('2025-01-19 15:25:00');
-
-
-INSERT INTO Detalle_Orden_Reposicion_Anaquel (id_orden_reposicion, id_inventario, cantidad) VALUES
-(1, 11, 50),  
-(1, 12, 30),  
-(2, 13, 75),  
-(2, 14, 25),  
-(3, 15, 40), 
-(4, 16, 60),  
-(4, 17, 45), 
-(5, 18, 35), 
-(6, 19, 80),  
-(7, 20, 20);
-
-
 INSERT INTO Orden_Reposicion_Estatus (id_orden_reposicion, id_proveedor, id_departamento, id_estatus, fecha_asignacion, fecha_fin) VALUES
 (1, 1, 3, 1, '2025-01-15 14:00:00', '2025-01-15 14:01:00'),  
-(1, 1, 3, 2, '2025-01-15 14:01:00', '2025-01-15 14:05:00'),  
-(1, 1, 3, 3, '2025-01-15 14:05:00', '2025-01-15 15:30:00'),  
-(1, 1, 3, 4, '2025-01-15 15:30:00', '2025-01-15 15:35:00'),  
-(2, 2, 3, 1, '2025-01-16 09:00:00', '2025-01-16 09:01:00'),  
-(2, 2, 3, 2, '2025-01-16 09:01:00', '2025-01-16 09:05:00'),  
-(2, 2, 3, 3, '2025-01-16 09:05:00', '2025-01-16 18:00:00'),  
-(3, 3, 3, 1, '2025-01-17 11:00:00', '2025-01-17 11:01:00'),  
-(3, 3, 3, 2, '2025-01-17 11:01:00', '2025-01-17 11:05:00'),  
-(3, 3, 3, 3, '2025-01-17 11:05:00', '2025-01-17 16:20:00'),  
-(3, 3, 3, 12, '2025-01-17 16:20:00', '2025-01-17 16:25:00'); 
+(2, 2, 3, 2, '2025-01-16 09:00:00', '2025-01-16 09:01:00'),  
+(3, 3, 3, 2, '2025-01-17 11:00:00', '2025-01-17 11:01:00'),  
+(4, 4, 3, 2, '2025-01-17 11:00:00', '2025-01-17 11:01:00'),  
+(5, 5, 3, 2, '2025-01-17 11:00:00', '2025-01-17 11:01:00'),  
+(6, 6, 3, 2, '2025-01-17 11:00:00', '2025-01-17 11:01:00'),  
+(7, 7, 3, 1, '2025-01-17 11:00:00', '2025-01-17 11:01:00'),  
+(8, 8, 3, 1, '2025-01-17 11:00:00', '2025-01-17 11:01:00'),  
+(9, 9, 3, 1, '2025-01-17 11:00:00', '2025-01-17 11:01:00'),  
+(10, 10, 3, 2, '2025-01-17 11:00:00', '2025-01-17 11:01:00') ;
 
 
 INSERT INTO Estatus_Orden_Anaquel (id_orden_reposicion, id_estatus, fecha_hora_asignacion) VALUES
 (1, 1, '2025-01-15 08:30:00'),  
 (1, 2, '2025-01-15 08:45:00'),  
-(1, 4, '2025-01-15 09:00:00'),  
-(1, 10, '2025-01-15 10:30:00'), 
+(1, 3, '2025-01-15 10:30:00'), 
 (2, 1, '2025-01-15 14:45:00'),  
 (2, 2, '2025-01-15 15:00:00'),  
-(2, 4, '2025-01-15 15:15:00'),  
+(2, 3, '2025-01-15 15:15:00'),  
 (3, 1, '2025-01-16 09:15:00'),  
 (3, 3, '2025-01-16 09:30:00'),  
 (4, 1, '2025-01-16 16:20:00'),  
-(4, 12, '2025-01-16 16:35:00'); 
+(4, 2, '2025-01-16 16:35:00'); 
 
 
 -- =====================================================
@@ -4178,14 +4170,12 @@ INSERT INTO Detalle_Compra (precio_unitario, cantidad, id_inventario, id_compra)
 INSERT INTO Compra_Estatus (compra_id_compra, estatus_id_estatus, fecha_hora_asignacion, fecha_hora_fin) VALUES
 (1, 1, '2025-01-15 08:00:00', '2025-01-15 08:30:00'), 
 (1, 2, '2025-01-15 08:30:00', '2025-01-15 09:00:00'),
-(1, 4, '2025-01-15 09:00:00', '2025-01-15 09:15:00'),
-(1, 5, '2025-01-15 09:15:00', '2025-01-15 10:00:00'),  
+(1, 3, '2025-01-15 09:00:00', '2025-01-15 09:15:00'),
 (2, 1, '2025-01-16 10:00:00', '2025-01-16 10:20:00'), 
-(2, 2, '2025-01-16 10:20:00', '2025-01-16 11:00:00'),  
-(2, 4, '2025-01-16 11:00:00', '2025-01-16 11:10:00'), 
-(2, 9, '2025-01-16 11:10:00', '2025-01-16 13:10:00'), 
+(2, 3, '2025-01-16 11:00:00', '2025-01-16 11:10:00'), 
+(2, 2, '2025-01-16 11:10:00', '2025-01-16 13:10:00'), 
 (3, 1, '2025-01-17 14:00:00', '2025-01-17 14:15:00'),  
-(3, 11, '2025-01-17 14:15:00', '2025-01-17 14:30:00'); 
+(3, 2, '2025-01-17 14:15:00', '2025-01-17 14:30:00'); 
 
 
 INSERT INTO Venta_Evento (evento_id, id_cliente_natural, fecha_compra, total) VALUES

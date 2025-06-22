@@ -386,7 +386,7 @@ CREATE TABLE Orden_Reposicion_Estatus (
     id_departamento     INTEGER NOT NULL,
     id_estatus          INTEGER NOT NULL,
     fecha_asignacion    TIMESTAMP NOT NULL,
-    fecha_fin           TIMESTAMP NOT NULL,
+    fecha_fin           TIMESTAMP,
     PRIMARY KEY (id_orden_reposicion, id_proveedor, id_departamento, id_estatus)
 );
 
