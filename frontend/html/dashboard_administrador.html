@@ -56,7 +56,7 @@
             <section class="content-section active" id="usuarios-section">
                 <div class="section-header">
                     <h2>Usuarios</h2>
-                    <button class="primary-btn" id="add-usuario-btn"><i class="fas fa-plus"></i> Nuevo Usuario</button>
+                    <button class="primary-btn" id="add-usuario-btn"><i class="fas fa-plus"></i> Nuevo Empleado</button>
                 </div>
                 <div class="card">
                     <div class="card-header">
@@ -521,7 +521,10 @@
                 });
 
             // Filtro de roles
-            document.getElementById('filter-rol').addEventListener('change', renderUsuariosTable);
+            document.getElementById('filter-rol').addEventListener('change', function() {
+                renderUsuariosTable();
+                actualizarBotonNuevoUsuario();
+            });
 
             // Navegación de secciones
             const navLinks = document.querySelectorAll('.sidebar-nav a');
@@ -617,6 +620,19 @@
                     document.getElementById('usuario-modal').classList.remove('active');
                 }
             });
+
+            // Cambia el texto y visibilidad del botón de nuevo usuario según el filtro
+            function actualizarBotonNuevoUsuario() {
+                const btn = document.getElementById('add-usuario-btn');
+                const filter = document.getElementById('filter-rol').value;
+                if (filter === 'admin') {
+                    btn.style.display = '';
+                    btn.textContent = 'Nuevo Empleado';
+                } else {
+                    btn.style.display = 'none';
+                }
+            }
+            actualizarBotonNuevoUsuario();
         });
 
         // Hacer funciones globales
