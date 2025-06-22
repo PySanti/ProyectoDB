@@ -244,3 +244,4 @@ DROP FUNCTION IF EXISTS get_ordenes_anaquel;
 DROP FUNCTION IF EXISTS set_estatus_orden_anaquel;
 DROP FUNCTION IF EXISTS get_full_location_path;
 DROP FUNCTION IF exists get_detalle_orden_anaquel;
+DROP FUNCTION IF EXISTS get_detalle_orden_proveedor;

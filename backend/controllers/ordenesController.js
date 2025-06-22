@@ -75,4 +75,16 @@ exports.getDetalleOrdenAnaquel = async (req, res) => {
     console.error(err);
     res.status(500).json({ error: 'Error al obtener los detalles de la orden de anaquel' });
   }
+};
+
+// Obtener detalles de una orden de reposición a proveedor
+exports.getDetalleOrdenProveedor = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const { rows } = await db.pool.query('SELECT * FROM get_detalle_orden_proveedor($1)', [id]);
+    res.json(rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error al obtener los detalles de la orden de reposición' });
+  }
 }; 

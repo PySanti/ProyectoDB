@@ -8,5 +8,6 @@ router.post('/reposicion/:id/estatus', ordenesController.setEstatusOrdenReposici
 router.get('/anaquel', ordenesController.getOrdenesAnaquel);
 router.post('/anaquel/:id/estatus', ordenesController.setEstatusOrdenAnaquel);
 router.get('/anaquel/:id/detalles', ordenesController.getDetalleOrdenAnaquel);
+router.get('/reposicion/:id/detalles', ordenesController.getDetalleOrdenProveedor);
 
 module.exports = router; 

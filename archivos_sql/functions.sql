@@ -650,3 +650,22 @@ BEGIN
     WHERE dora.id_orden_reposicion = p_id_orden_reposicion;
 END;
 $$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION get_detalle_orden_proveedor(p_id_orden_reposicion INTEGER)
+RETURNS TABLE (
+    presentacion VARCHAR,
+    cerveza VARCHAR,
+    cantidad INTEGER
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        p.nombre AS presentacion,
+        c.nombre_cerveza AS cerveza,
+        dor.cantidad
+    FROM Detalle_Orden_Reposicion dor
+    JOIN Presentacion p ON dor.id_presentacion = p.id_presentacion
+    JOIN Cerveza c ON dor.id_cerveza = c.id_cerveza
+    WHERE dor.id_orden_reposicion = p_id_orden_reposicion;
+END;
+$$ LANGUAGE plpgsql;
