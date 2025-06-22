@@ -248,6 +248,69 @@
         </div>
     </div>
     
+    <!-- Modal para crear nuevo empleado -->
+    <div id="nuevo-empleado-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" id="close-nuevo-empleado-modal">&times;</span>
+            <h2>Nuevo Empleado</h2>
+            <form id="nuevo-empleado-form">
+                <fieldset>
+                    <legend>Datos de usuario</legend>
+                    <div class="form-group">
+                        <label for="nuevo-usuario-correo">Correo electrónico</label>
+                        <input type="email" id="nuevo-usuario-correo" name="correo" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="nuevo-usuario-contrasena">Contraseña</label>
+                        <input type="password" id="nuevo-usuario-contrasena" name="contrasena" required>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>Datos del empleado</legend>
+                    <div class="form-group">
+                        <label for="nuevo-empleado-cedula">Cédula</label>
+                        <input type="text" id="nuevo-empleado-cedula" name="cedula" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="nuevo-empleado-primer-nombre">Primer nombre</label>
+                        <input type="text" id="nuevo-empleado-primer-nombre" name="primer_nombre" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="nuevo-empleado-segundo-nombre">Segundo nombre</label>
+                        <input type="text" id="nuevo-empleado-segundo-nombre" name="segundo_nombre">
+                    </div>
+                    <div class="form-group">
+                        <label for="nuevo-empleado-primer-apellido">Primer apellido</label>
+                        <input type="text" id="nuevo-empleado-primer-apellido" name="primer_apellido" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="nuevo-empleado-segundo-apellido">Segundo apellido</label>
+                        <input type="text" id="nuevo-empleado-segundo-apellido" name="segundo_apellido">
+                    </div>
+                    <div class="form-group">
+                        <label for="nuevo-empleado-direccion">Dirección específica</label>
+                        <textarea id="nuevo-empleado-direccion" name="direccion" rows="2" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="nuevo-empleado-estado">Estado</label>
+                        <select id="nuevo-empleado-estado" name="estado" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="nuevo-empleado-municipio">Municipio</label>
+                        <select id="nuevo-empleado-municipio" name="municipio" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="nuevo-empleado-parroquia">Parroquia</label>
+                        <select id="nuevo-empleado-parroquia" name="parroquia" required></select>
+                    </div>
+                </fieldset>
+                <div class="modal-footer" style="padding-top: 1rem;">
+                    <button type="submit" class="primary-btn">Crear Empleado</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
     <style>
         .modal { 
             position: fixed; 
@@ -300,8 +363,23 @@
         .action-btn.assign-role i {
             font-size: 1.1em;
         }
+        #nuevo-empleado-modal .form-group {
+            margin-bottom: 1rem;
+        }
+        #nuevo-empleado-modal fieldset {
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+        }
+        #nuevo-empleado-modal legend {
+            font-weight: bold;
+            color: #333;
+            padding: 0 0.5rem;
+        }
     </style>
     
+    <script src="../js/lugares.js"></script>
     <script>
         // Variables globales
         let usuarios = [];
@@ -633,6 +711,34 @@
                 }
             }
             actualizarBotonNuevoUsuario();
+
+            // Abrir modal de nuevo empleado
+            const addUsuarioBtn = document.getElementById('add-usuario-btn');
+            if (addUsuarioBtn) {
+                addUsuarioBtn.onclick = function() {
+                    document.getElementById('nuevo-empleado-form').reset();
+                    document.getElementById('nuevo-empleado-modal').classList.add('active');
+                    // Cargar selects de estado, municipio y parroquia usando lugares.js
+                    const estadoSelect = document.getElementById('nuevo-empleado-estado');
+                    const municipioSelect = document.getElementById('nuevo-empleado-municipio');
+                    const parroquiaSelect = document.getElementById('nuevo-empleado-parroquia');
+                    poblarEstados(estadoSelect, function() {
+                        poblarMunicipios(municipioSelect, estadoSelect.value, function() {
+                            poblarParroquias(parroquiaSelect, estadoSelect.value, municipioSelect.value);
+                        });
+                        parroquiaSelect.innerHTML = '<option value="">Seleccione Parroquia</option>';
+                    });
+                    municipioSelect.innerHTML = '<option value="">Seleccione Municipio</option>';
+                    parroquiaSelect.innerHTML = '<option value="">Seleccione Parroquia</option>';
+                };
+            }
+            // Cerrar modal de nuevo empleado
+            const closeNuevoEmpleadoBtn = document.getElementById('close-nuevo-empleado-modal');
+            if (closeNuevoEmpleadoBtn) {
+                closeNuevoEmpleadoBtn.onclick = function() {
+                    document.getElementById('nuevo-empleado-modal').classList.remove('active');
+                };
+            }
         });
 
         // Hacer funciones globales
