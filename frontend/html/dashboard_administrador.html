@@ -148,21 +148,20 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr><td colspan="7">(Aquí irán las órdenes de reposición)</td></tr>
+                                <tr><td colspan="7">(Aquí irán las órdenes de reposición a proveedores)</td></tr>
                             </tbody>
                         </table>
-                        <table class="data-table" id="tabla-ordenes-anaquel" style="display:none;">
+                        <table class="data-table" id="tabla-ordenes-anaquel" style="display: none;">
                             <thead>
                                 <tr>
                                     <th>ID Orden</th>
-                                    <th>Tipo</th>
-                                    <th>Fecha</th>
-                                    <th>Estado</th>
+                                    <th>Fecha de Generación</th>
+                                    <th>Estatus Actual</th>
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr><td colspan="5">(Aquí irán las órdenes de reposición de anaquel)</td></tr>
+                                <tr><td colspan="4">Cargando...</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -976,6 +975,126 @@
                 alert('Error de conexión al crear el empleado');
             }
         };
+
+        // Renderizar tabla de órdenes de reposición de anaqueles
+        async function renderOrdenesAnaquel() {
+            const tbody = document.querySelector('#tabla-ordenes-anaquel tbody');
+            tbody.innerHTML = '<tr><td colspan="4">Cargando...</td></tr>';
+            try {
+                const res = await fetch('http://localhost:3000/ordenes/anaquel');
+                const ordenes = await res.json();
+                if (!ordenes.length) {
+                    tbody.innerHTML = '<tr><td colspan="4">No hay órdenes registradas.</td></tr>';
+                    return;
+                }
+                tbody.innerHTML = '';
+                ordenes.forEach(orden => {
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${orden.id_orden_reposicion}</td>
+                            <td>${orden.fecha_hora_generacion ? orden.fecha_hora_generacion.replace('T', ' ').slice(0, 16) : ''}</td>
+                            <td>${orden.estatus_actual}</td>
+                            <td>
+                                <button class="action-btn assign-role" title="Modificar estatus" onclick="abrirModalCambiarEstatusAnaquel(${orden.id_orden_reposicion}, ${orden.id_estatus_actual})">
+                                    <i class="fas fa-exchange-alt"></i> Modificar estatus
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } catch (err) {
+                tbody.innerHTML = '<tr><td colspan="4">Error al cargar las órdenes.</td></tr>';
+            }
+        }
+
+        // Abrir modal de cambio de estatus para anaquel
+        async function abrirModalCambiarEstatusAnaquel(idOrden, idEstatusActual) {
+            ordenSeleccionadaId = idOrden;
+            estatusActualId = idEstatusActual;
+            const lista = document.getElementById('estatus-lista');
+            lista.innerHTML = 'Cargando estatus...';
+            document.getElementById('modal-cambiar-estatus').classList.add('active');
+            try {
+                const res = await fetch('http://localhost:3000/ordenes/estatus');
+                const estatus = await res.json();
+                // Filtrar: mostrar todos menos el actual
+                const disponibles = estatus.filter(e => e.id_estatus !== idEstatusActual);
+                if (!disponibles.length) {
+                    lista.innerHTML = '<p>No hay otros estatus disponibles.</p>';
+                    return;
+                }
+                lista.innerHTML = '';
+                disponibles.forEach(e => {
+                    const btn = document.createElement('button');
+                    btn.className = 'estatus-btn';
+                    btn.textContent = e.nombre;
+                    btn.onclick = () => cambiarEstatusOrdenAnaquel(ordenSeleccionadaId, e.id_estatus, e.nombre);
+                    lista.appendChild(btn);
+                });
+            } catch (err) {
+                lista.innerHTML = '<p>Error al cargar los estatus.</p>';
+            }
+        }
+
+        // Cambiar estatus de la orden de anaquel
+        async function cambiarEstatusOrdenAnaquel(idOrden, idEstatusNuevo, nombreEstatusNuevo) {
+            try {
+                const res = await fetch(`http://localhost:3000/ordenes/anaquel/${idOrden}/estatus`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id_estatus: idEstatusNuevo })
+                });
+                if (res.ok) {
+                    alert('Estatus actualizado a: ' + nombreEstatusNuevo);
+                    document.getElementById('modal-cambiar-estatus').classList.remove('active');
+                    await renderOrdenesAnaquel();
+                } else {
+                    alert('Error al actualizar el estatus');
+                }
+            } catch (err) {
+                alert('Error de conexión al actualizar el estatus');
+            }
+        }
+
+        // Inicializar tabla de órdenes de anaquel al alternar el filtro
+        function inicializarOrdenesAnaquel() {
+            const filterOrden = document.getElementById('filter-orden');
+            if (filterOrden && filterOrden.value === 'anaquel') {
+                renderOrdenesAnaquel();
+            }
+            if (filterOrden) {
+            filterOrden.addEventListener('change', function() {
+                if (filterOrden.value === 'anaquel') {
+                    renderOrdenesAnaquel();
+                }
+            });
+        }
+        }
+
+
+        // Alternar visualización de tablas de órdenes según el filtro
+        function alternarTablasOrdenes() {
+            const filterOrden = document.getElementById('filter-orden');
+            const tablaReposicion = document.getElementById('tabla-ordenes-reposicion');
+            const tablaAnaquel = document.getElementById('tabla-ordenes-anaquel');
+            if (filterOrden.value === 'reposicion') {
+                tablaReposicion.style.display = '';
+                tablaAnaquel.style.display = 'none';
+                renderOrdenesReposicion();
+            } else {
+                tablaReposicion.style.display = 'none';
+                tablaAnaquel.style.display = '';
+                renderOrdenesAnaquel();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const filterOrden = document.getElementById('filter-orden');
+            if (filterOrden) {
+                filterOrden.addEventListener('change', alternarTablasOrdenes);
+                alternarTablasOrdenes();
+            }
+        });
     </script>
 </body>
 </html> 

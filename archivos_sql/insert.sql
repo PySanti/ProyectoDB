@@ -3008,6 +3008,18 @@ INSERT INTO Orden_Reposicion_Anaquel (fecha_hora_generacion) VALUES
 ('2025-01-19 08:00:00'),  
 ('2025-01-19 15:25:00');
 
+INSERT INTO Estatus_Orden_Anaquel (id_orden_reposicion, id_estatus, fecha_hora_asignacion) VALUES
+(1, 1, '2025-01-15 08:30:00'),  
+(2, 2, '2025-01-15 08:45:00'),  
+(3, 3, '2025-01-15 10:30:00'), 
+(4, 1, '2025-01-15 14:45:00'),  
+(5, 2, '2025-01-15 15:00:00'),  
+(6, 3, '2025-01-15 15:15:00'),  
+(7, 1, '2025-01-16 09:15:00'),  
+(8, 3, '2025-01-16 09:30:00'),  
+(9, 1, '2025-01-16 16:20:00'),  
+(10, 2, '2025-01-16 16:35:00'); 
+
 
 INSERT INTO Detalle_Orden_Reposicion_Anaquel (id_orden_reposicion, id_inventario, cantidad) VALUES
 (1, 11, 50),  
@@ -3111,17 +3123,7 @@ INSERT INTO Orden_Reposicion_Estatus (id_orden_reposicion, id_proveedor, id_depa
 (10, 10, 3, 2, '2025-01-17 11:00:00', '2025-01-17 11:01:00') ;
 
 
-INSERT INTO Estatus_Orden_Anaquel (id_orden_reposicion, id_estatus, fecha_hora_asignacion) VALUES
-(1, 1, '2025-01-15 08:30:00'),  
-(1, 2, '2025-01-15 08:45:00'),  
-(1, 3, '2025-01-15 10:30:00'), 
-(2, 1, '2025-01-15 14:45:00'),  
-(2, 2, '2025-01-15 15:00:00'),  
-(2, 3, '2025-01-15 15:15:00'),  
-(3, 1, '2025-01-16 09:15:00'),  
-(3, 3, '2025-01-16 09:30:00'),  
-(4, 1, '2025-01-16 16:20:00'),  
-(4, 2, '2025-01-16 16:35:00'); 
+
 
 
 -- =====================================================

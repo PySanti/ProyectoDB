@@ -36,4 +36,31 @@ exports.setEstatusOrdenReposicion = async (req, res) => {
     console.error(err);
     res.status(500).json({ error: 'Error al actualizar el estatus de la orden' });
   }
+};
+
+// Obtener todas las órdenes de reposición de anaqueles con estatus actual
+exports.getOrdenesAnaquel = async (req, res) => {
+  try {
+    const { rows } = await db.pool.query('SELECT * FROM get_ordenes_anaquel()');
+    res.json(rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error al obtener las órdenes de anaquel' });
+  }
+};
+
+// Cambiar el estatus de una orden de anaquel
+exports.setEstatusOrdenAnaquel = async (req, res) => {
+  const { id } = req.params; // id_orden_reposicion
+  const { id_estatus } = req.body;
+  try {
+    await db.pool.query(
+      'SELECT set_estatus_orden_anaquel($1, $2)',
+      [id, id_estatus]
+    );
+    res.json({ message: 'Estatus actualizado correctamente' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error al actualizar el estatus de la orden de anaquel' });
+  }
 }; 

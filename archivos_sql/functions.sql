@@ -544,3 +544,53 @@ BEGIN
     END IF;
 END;
 $$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION get_ordenes_anaquel()
+RETURNS TABLE (
+    id_orden_reposicion INTEGER,
+    fecha_hora_generacion TIMESTAMP,
+    estatus_actual VARCHAR,
+    id_estatus_actual INTEGER
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+        o.id_orden_reposicion,
+        o.fecha_hora_generacion,
+        e2.nombre AS estatus_actual,
+        eo.id_estatus AS id_estatus_actual
+    FROM Orden_Reposicion_Anaquel o
+    LEFT JOIN LATERAL (
+        SELECT eo2.id_estatus, es.nombre
+        FROM Estatus_Orden_Anaquel eo2
+        JOIN Estatus es ON eo2.id_estatus = es.id_estatus
+        WHERE eo2.id_orden_reposicion = o.id_orden_reposicion
+        ORDER BY eo2.fecha_hora_asignacion DESC
+        LIMIT 1
+    ) eo ON TRUE
+    LEFT JOIN Estatus e2 ON eo.id_estatus = e2.id_estatus
+    ORDER BY o.id_orden_reposicion DESC;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION set_estatus_orden_anaquel(
+    p_id_orden_reposicion INTEGER,
+    p_id_estatus INTEGER
+) RETURNS VOID AS $$
+DECLARE
+    v_nombre_estatus VARCHAR;
+BEGIN
+    -- Insertar nuevo estatus
+    INSERT INTO Estatus_Orden_Anaquel (
+        id_orden_reposicion, id_estatus, fecha_hora_asignacion
+    ) VALUES (
+        p_id_orden_reposicion, p_id_estatus, NOW()
+    );
+
+    -- Si el estatus es 'Atendida', actualizar fecha_fin en la orden si existe ese campo
+    SELECT nombre INTO v_nombre_estatus FROM Estatus WHERE id_estatus = p_id_estatus;
+    IF LOWER(v_nombre_estatus) = 'atendida' THEN
+        UPDATE Orden_Reposicion_Anaquel SET fecha_hora_fin = NOW() WHERE id_orden_reposicion = p_id_orden_reposicion;
+    END IF;
+END;
+$$ LANGUAGE plpgsql;

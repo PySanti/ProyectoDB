@@ -240,3 +240,5 @@ DROP FUNCTION IF EXISTS set_rol_usuario;
 DROP FUNCTION IF EXISTS create_empleado;
 DROP FUNCTION IF EXISTS get_ordenes_reposicion_proveedores;
 DROP FUNCTION IF EXISTS set_estatus_orden_reposicion;
+DROP FUNCTION IF EXISTS get_ordenes_anaquel;
+DROP FUNCTION IF EXISTS set_estatus_orden_anaquel;
