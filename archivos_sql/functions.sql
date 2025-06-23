@@ -593,9 +593,7 @@ BEGIN
 
     -- Si el estatus es 'Atendida', actualizar fecha_fin en la orden si existe ese campo
     SELECT nombre INTO v_nombre_estatus FROM Estatus WHERE id_estatus = p_id_estatus;
-    IF LOWER(v_nombre_estatus) = 'atendida' THEN
-        UPDATE Orden_Reposicion_Anaquel SET fecha_hora_fin = NOW() WHERE id_orden_reposicion = p_id_orden_reposicion;
-    END IF;
+
 END;
 $$ LANGUAGE plpgsql;
 
