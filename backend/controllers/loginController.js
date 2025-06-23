@@ -2,16 +2,13 @@ const db = require('../db_connection/index.js');
 
 const loginController = async (req, res) => {
     const { email, password } = req.body;
-
-console.log("me gusta la cuca")
-
     if (!email || !password) {
         return res.status(400).json({ error: 'Email and password are required' });
     }
 
     try {
         const query = 'SELECT * FROM verificar_credenciales($1, $2)';
-        const { rows } = await db.pool.query(query, [email, password]);
+        const { rows } = await db.query(query, [email, password]);
 
         if (rows.length > 0) {
             // Usuario autenticado

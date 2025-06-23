@@ -7,7 +7,6 @@ const roleRoutes = require('./routes/roleRoutes.js');
 const cartRoutes = require('./routes/cartRoutes.js');
 const productRoutes = require('./routes/productRoutes.js');
 const ordenesRoutes = require('./routes/ordenesRoutes.js');
-const cors = require('cors');
 
 // Middleware para Favicon
 app.get('/favicon.ico', (req, res) => res.status(204).send());
