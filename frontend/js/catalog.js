@@ -80,7 +80,7 @@ function setupEventListeners() {
     }
 
     // Listener para el selector de ordenamiento
-    const sortSelect = document.getElementById('sort-select');
+    const sortSelect = document.getElementById('sort-by');
     if (sortSelect) {
         sortSelect.addEventListener('change', (event) => {
             const sortBy = event.target.value;
