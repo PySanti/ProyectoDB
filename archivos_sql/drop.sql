@@ -246,3 +246,7 @@ DROP FUNCTION IF EXISTS set_estatus_orden_anaquel;
 DROP FUNCTION IF EXISTS get_full_location_path;
 DROP FUNCTION IF exists get_detalle_orden_anaquel;
 DROP FUNCTION IF EXISTS get_detalle_orden_proveedor;
+DROP FUNCTION IF EXISTS limpiar_carrito_usuario(INTEGER);
+DROP FUNCTION IF EXISTS eliminar_del_carrito(INTEGER, INTEGER);
+DROP FUNCTION IF EXISTS actualizar_cantidad_carrito(INTEGER, INTEGER, INTEGER);
+DROP FUNCTION IF EXISTS agregar_al_carrito(INTEGER, INTEGER, INTEGER);
