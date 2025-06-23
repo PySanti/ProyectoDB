@@ -2984,16 +2984,16 @@ INSERT INTO Inventario (cantidad, id_tienda_fisica, id_tienda_web, id_ubicacion,
 (100000, NULL, 1, NULL, 1, 8),
 (100000, NULL, 1, NULL, 1, 9),
 (100000, NULL, 1, NULL, 1, 10),
-(100000, 1, NULL, NULL, 1, 1),   
-(100000, 1, NULL, NULL, 2, 2),   
-(100000, 1, NULL, NULL, 3, 3),   
-(100000, 1, NULL, NULL, 3, 4),   
-(100000, 1, NULL, NULL, 2, 5),   
-(100000, 1, NULL, NULL, 1, 6),   
-(100000, 1, NULL, NULL, 1, 7),   
-(100000, 1, NULL, NULL, 1, 8),   
-(100000, 1, NULL, NULL, 1, 9),   
-(100000, 1, NULL, NULL, 1, 10);
+(100000, NULL, NULL, 1, 1, 1),   
+(100000, NULL, NULL, 2, 2, 2),   
+(100000, NULL, NULL, 3, 3, 3),   
+(100000, NULL, NULL, 4, 3, 4),   
+(100000, NULL, NULL, 5, 2, 5),   
+(100000, NULL, NULL, 6, 1, 6),   
+(100000, NULL, NULL, 7, 1, 7),   
+(100000, NULL, NULL, 8, 1, 8),   
+(100000, NULL, NULL, 9, 1, 9),   
+(100000, NULL, NULL, 10, 1, 10);
 
 
 
@@ -3087,6 +3087,18 @@ INSERT INTO Orden_Reposicion_Anaquel (fecha_hora_generacion) VALUES
 ('2025-01-18 17:10:00'),  
 ('2025-01-19 08:00:00'),  
 ('2025-01-19 15:25:00');
+
+INSERT INTO Estatus_Orden_Anaquel (id_orden_reposicion, id_estatus, fecha_hora_asignacion) VALUES
+(1, 1, '2025-01-15 08:30:00'),  
+(2, 2, '2025-01-15 08:45:00'),  
+(3, 3, '2025-01-15 10:30:00'), 
+(4, 1, '2025-01-15 14:45:00'),  
+(5, 2, '2025-01-15 15:00:00'),  
+(6, 3, '2025-01-15 15:15:00'),  
+(7, 1, '2025-01-16 09:15:00'),  
+(8, 3, '2025-01-16 09:30:00'),  
+(9, 1, '2025-01-16 16:20:00'),  
+(10, 2, '2025-01-16 16:35:00'); 
 
 
 INSERT INTO Detalle_Orden_Reposicion_Anaquel (id_orden_reposicion, id_inventario, cantidad) VALUES
