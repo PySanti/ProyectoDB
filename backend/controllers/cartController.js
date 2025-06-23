@@ -29,6 +29,25 @@ async function addToCart(req, res) {
 }
 
 // =================================================================
+// AGREGAR PRODUCTO AL CARRITO POR NOMBRE Y PRESENTACIÓN (FUNCIÓN)
+// =================================================================
+async function addToCartByProduct(req, res) {
+    const { id_usuario, nombre_cerveza, nombre_presentacion, cantidad } = req.body;
+    try {
+        await db.query('SELECT agregar_al_carrito_por_producto($1, $2, $3, $4)', [
+            id_usuario, 
+            nombre_cerveza, 
+            nombre_presentacion, 
+            cantidad
+        ]);
+        res.json({ success: true, message: 'Producto agregado al carrito' });
+    } catch (error) {
+        console.error('Error al agregar al carrito:', error);
+        res.status(500).json({ success: false, message: error.message });
+    }
+}
+
+// =================================================================
 // ACTUALIZAR CANTIDAD EN CARRITO (FUNCIÓN)
 // =================================================================
 async function updateCart(req, res) {
@@ -90,6 +109,26 @@ async function getCartSummary(req, res) {
 }
 
 // =================================================================
+// ACTUALIZAR MONTO DE COMPRA AL PROCEDER AL PAGO (FUNCIÓN)
+// =================================================================
+async function updatePurchaseAmount(req, res) {
+    const { id_usuario } = req.body;
+    try {
+        const result = await db.query('SELECT actualizar_monto_compra($1)', [id_usuario]);
+        const montoTotal = result.rows[0].actualizar_monto_compra;
+        
+        res.json({ 
+            success: true, 
+            message: 'Monto de compra actualizado correctamente',
+            monto_total: montoTotal
+        });
+    } catch (error) {
+        console.error('Error al actualizar monto de compra:', error);
+        res.status(500).json({ success: false, message: error.message });
+    }
+}
+
+// =================================================================
 // VERIFICAR STOCK (CONSULTA)
 // =================================================================
 async function verifyStock(req, res) {
@@ -106,9 +145,11 @@ async function verifyStock(req, res) {
 module.exports = {
     getCart,
     addToCart,
+    addToCartByProduct,
     updateCart,
     removeFromCart,
     clearCart,
     getCartSummary,
     verifyStock,
+    updatePurchaseAmount,
 }; 

@@ -77,9 +77,41 @@ function renderSummary(summary) {
             <span>Total</span>
             <span>$${Number(summary.monto_total || 0).toFixed(2)}</span>
         </div>
-        <button class="checkout-btn">Proceder al Pago</button>
+        <button class="checkout-btn" onclick="proceedToCheckout()">Proceder al Pago</button>
         <a href="catalog.html" class="continue-shopping-btn">← Continuar Comprando</a>
     `;
+}
+
+// Función directa para el checkout
+async function proceedToCheckout() {
+    console.log('Función proceedToCheckout llamada');
+    
+    try {
+        // Primero actualizar el monto de la compra
+        const response = await fetch(`${API_BASE_URL}/carrito/actualizar-monto`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                id_usuario: GUEST_USER_ID
+            }),
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            console.log('Monto actualizado:', result.monto_total);
+            showNotification('Monto de compra actualizado correctamente', 'success');
+            // Redirigir al checkout
+            window.location.href = 'checkout.html';
+        } else {
+            showNotification(result.message || 'Error al actualizar el monto', 'error');
+        }
+    } catch (error) {
+        console.error('Error al actualizar monto:', error);
+        showNotification('Error de conexión al actualizar el monto', 'error');
+    }
 }
 
 function renderEmptyCart() {
@@ -99,10 +131,16 @@ function renderEmptyCart() {
 function setupCartEventListeners() {
     document.body.addEventListener('click', event => {
         const target = event.target;
+        console.log('Click detectado en:', target);
+        console.log('Clases del elemento:', target.className);
+        
         const removeBtn = target.closest('.remove-item-btn');
         const decreaseBtn = target.closest('.decrease-btn');
         const increaseBtn = target.closest('.increase-btn');
         const clearCartBtn = target.closest('.clear-cart-btn');
+        const checkoutBtn = target.closest('.checkout-btn');
+
+        console.log('checkoutBtn encontrado:', checkoutBtn);
 
         if (removeBtn) {
             const inventarioId = removeBtn.dataset.inventarioId;
@@ -120,6 +158,10 @@ function setupCartEventListeners() {
             updateQuantity(input.dataset.inventarioId, parseInt(input.value) + 1);
         } else if (clearCartBtn) {
             if(confirm('¿Estás seguro de que quieres vaciar el carrito?')) clearCart();
+        } else if (checkoutBtn) {
+            console.log('Redirigiendo al checkout...');
+            // Redirigir al checkout
+            proceedToCheckout();
         }
     });
 }

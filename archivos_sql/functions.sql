@@ -794,6 +794,57 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- =====================================================
+-- FUNCIÓN PARA BUSCAR INVENTARIO POR NOMBRE Y PRESENTACIÓN
+-- =====================================================
+
+CREATE OR REPLACE FUNCTION buscar_inventario_por_producto(
+    p_nombre_cerveza VARCHAR(50),
+    p_nombre_presentacion VARCHAR(50)
+)
+RETURNS INTEGER AS $$
+DECLARE
+    v_id_inventario INTEGER;
+BEGIN
+    SELECT i.id_inventario INTO v_id_inventario
+    FROM Inventario i
+    JOIN Cerveza c ON i.id_cerveza = c.id_cerveza
+    JOIN Presentacion p ON i.id_presentacion = p.id_presentacion
+    WHERE c.nombre_cerveza = p_nombre_cerveza 
+      AND p.nombre = p_nombre_presentacion
+      AND i.cantidad > 0
+    LIMIT 1;
+    
+    RETURN v_id_inventario;
+END;
+$$ LANGUAGE plpgsql;
+
+-- =====================================================
+-- FUNCIÓN MODIFICADA PARA AGREGAR AL CARRITO POR NOMBRE Y PRESENTACIÓN
+-- =====================================================
+
+CREATE OR REPLACE FUNCTION agregar_al_carrito_por_producto(
+    p_id_usuario INTEGER,
+    p_nombre_cerveza VARCHAR(50),
+    p_nombre_presentacion VARCHAR(50),
+    p_cantidad INTEGER
+)
+RETURNS VOID LANGUAGE plpgsql AS $$
+DECLARE
+    v_id_inventario INTEGER;
+BEGIN
+    -- Buscar el inventario correcto por nombre y presentación
+    v_id_inventario := buscar_inventario_por_producto(p_nombre_cerveza, p_nombre_presentacion);
+    
+    IF v_id_inventario IS NULL THEN
+        RAISE EXCEPTION 'Producto no encontrado o sin stock disponible';
+    END IF;
+    
+    -- Llamar a la función original con el id_inventario correcto
+    PERFORM agregar_al_carrito(p_id_usuario, v_id_inventario, p_cantidad);
+END;
+$$;
+
+-- =====================================================
 -- FUNCIÓN (antes Procedimiento) PARA AGREGAR PRODUCTO AL CARRITO
 -- =====================================================
 
@@ -1110,6 +1161,39 @@ COMMENT ON FUNCTION eliminar_del_carrito IS 'Función: Elimina un producto del c
 COMMENT ON FUNCTION limpiar_carrito_usuario IS 'Función: Vacía el carrito del usuario.';
 COMMENT ON FUNCTION obtener_resumen_carrito IS 'Función: Obtiene el resumen del carrito.';
 COMMENT ON FUNCTION verificar_stock_carrito IS 'Función: Verifica el stock de los productos en el carrito.'; 
+
+-- =====================================================
+-- FUNCIÓN PARA ACTUALIZAR MONTO DE COMPRA AL PROCEDER AL PAGO
+-- =====================================================
+
+CREATE OR REPLACE FUNCTION actualizar_monto_compra(
+    p_id_usuario INTEGER
+)
+RETURNS DECIMAL AS $$
+DECLARE
+    v_id_compra INTEGER;
+    v_monto_total DECIMAL;
+BEGIN
+    -- Obtener el carrito del usuario
+    v_id_compra := obtener_o_crear_carrito_usuario(p_id_usuario);
+    
+    IF v_id_compra IS NULL THEN
+        RAISE EXCEPTION 'No se encontró carrito para el usuario';
+    END IF;
+    
+    -- Calcular el monto total de los detalles
+    SELECT COALESCE(SUM(dc.cantidad * dc.precio_unitario), 0) INTO v_monto_total
+    FROM Detalle_Compra dc
+    WHERE dc.id_compra = v_id_compra;
+    
+    -- Actualizar el monto total en la tabla Compra
+    UPDATE Compra 
+    SET monto_total = v_monto_total
+    WHERE id_compra = v_id_compra;
+    
+    RETURN v_monto_total;
+END;
+$$ LANGUAGE plpgsql;
 
 
 

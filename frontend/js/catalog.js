@@ -71,7 +71,15 @@ function setupEventListeners() {
                 
                 if (selectedPresentation) {
                     const inventarioId = selectedPresentation.value;
-                    addToCart(inventarioId);
+                    // Buscar el producto y presentación correspondientes
+                    const product = catalogState.products.find(p => p.id_cerveza == card.dataset.cervezaId);
+                    const presentation = product.presentaciones.find(p => p.id_inventario == inventarioId);
+                    
+                    if (product && presentation) {
+                        addToCart(product.nombre_cerveza, presentation.nombre_presentacion);
+                    } else {
+                        showNotification('Error al obtener información del producto.', 'error');
+                    }
                 } else {
                     showNotification('Por favor, selecciona una presentación.', 'info');
                 }
@@ -187,21 +195,22 @@ function updateProductCount() {
 /**
  * Agrega un producto al carrito en la base de datos para un usuario genérico.
  */
-async function addToCart(inventarioId, cantidad = 1) {
-    if (!inventarioId) {
+async function addToCart(nombre_cerveza, nombre_presentacion, cantidad = 1) {
+    if (!nombre_cerveza || !nombre_presentacion) {
         showNotification('Por favor, selecciona una presentación.', 'info');
         return;
     }
 
     try {
-        const response = await fetch(`${API_BASE_URL}/carrito/agregar`, {
+        const response = await fetch(`${API_BASE_URL}/carrito/agregar-por-producto`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
                 id_usuario: 1, // Asumiendo ID de usuario 1
-                id_inventario: inventarioId,
+                nombre_cerveza: nombre_cerveza,
+                nombre_presentacion: nombre_presentacion,
                 cantidad: cantidad,
             }),
         });
@@ -270,7 +279,7 @@ function createProductCard(product) {
             priceElement.textContent = `$${price.toFixed(2)}`;
             addToCartButton.disabled = false;
             addToCartButton.textContent = 'Añadir al carrito';
-            addToCartButton.onclick = () => addToCart(selectedPresentation.id_inventario, 1);
+            addToCartButton.onclick = () => addToCart(product.nombre_cerveza, selectedPresentation.nombre_presentacion, 1);
         }
     }
 
