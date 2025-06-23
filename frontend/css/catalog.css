@@ -171,6 +171,20 @@ body {
     gap: 30px;
 }
 
+/* Layout del catálogo SIN sidebar */
+.catalog-layout-no-sidebar {
+    display: block; /* Simplemente un bloque, sin grid complejo */
+}
+
+.catalog-products {
+    width: 100%; /* Ocupa todo el ancho */
+}
+
+/* Limpieza de estilos de filtros no usados */
+.filter-group, .price-range, .search-box, .filter-apply-btn, .filter-reset-btn {
+    display: none !important; /* Oculta permanentemente los filtros viejos */
+}
+
 /* Catalog Sidebar */
 .catalog-sidebar {
     width: 280px;
@@ -318,10 +332,6 @@ body {
 }
 
 /* Catalog Products */
-.catalog-products {
-    flex: 1;
-}
-
 .catalog-header {
     display: flex;
     justify-content: space-between;
@@ -711,4 +721,9 @@ body {
         padding-bottom: 15px;
         margin-bottom: 15px;
     }
+}
+
+/* Estilos para el contenedor principal de la página de catálogo */
+.catalog-section .section-container {
+    /* ... existing code ... */
 }

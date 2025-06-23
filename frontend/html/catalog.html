@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Catálogo de Productos - ACAUCAB</title>
     <link rel="stylesheet" href="../css/catalog.css">
+    <link rel="stylesheet" href="../css/new-catalog.css">
+    <link rel="stylesheet" href="../css/notifications.css">
+    <link rel="stylesheet" href="../css/catalog-dynamic.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
@@ -44,123 +47,7 @@
     <!-- Catalog Content -->
     <section class="catalog-section">
         <div class="section-container">
-            <div class="catalog-layout">
-                <!-- Filters Sidebar -->
-                <div class="catalog-sidebar">
-                    <div class="filter-group">
-                        <h3>Buscar</h3>
-                        <div class="search-box">
-                            <input type="text" placeholder="Buscar productos...">
-                            <button><i class="fas fa-search"></i></button>
-                        </div>
-                    </div>
-                    
-                    <div class="filter-group">
-                        <h3>Categorías</h3>
-                        <ul class="filter-list">
-                            <li>
-                                <input type="checkbox" id="cat-all">
-                                <label for="cat-all">Todas las cervezas</label>
-                            </li>
-                            <li>
-                                <input type="checkbox" id="cat-amber">
-                                <label for="cat-amber">Amber Ale</label>
-                            </li>
-                            <li>
-                                <input type="checkbox" id="cat-ipa">
-                                <label for="cat-ipa">American IPA</label>
-                            </li>
-                            <li>
-                                <input type="checkbox" id="cat-pale">
-                                <label for="cat-pale">American Pale Ale</label>
-                            </li>
-                            <li>
-                                <input type="checkbox" id="cat-dubbel">
-                                <label for="cat-dubbel">Belgian Dubbel</label>
-                            </li>
-                            <li>
-                                <input type="checkbox" id="cat-golden">
-                                <label for="cat-golden">Belgian Golden Strong Ale</label>
-                            </li>
-                            <li>
-                                <input type="checkbox" id="cat-specialty">
-                                <label for="cat-specialty">Belgian Specialty Ale</label>
-                            </li>
-                            <li>
-                                <input type="checkbox" id="cat-blonde">
-                                <label for="cat-blonde">Blonde Ale</label>
-                            </li>
-                        </ul>
-                    </div>
-                    
-                    <div class="filter-group">
-                        <h3>Precio</h3>
-                        <div class="price-range">
-                            <input type="range" min="0" max="20" step="0.5" value="20">
-                            <div class="price-inputs">
-                                <input type="number" min="0" max="20" value="0">
-                                <span>-</span>
-                                <input type="number" min="0" max="20" value="20">
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="filter-group">
-                        <h3>Fabricante</h3>
-                        <ul class="filter-list">
-                            <li>
-                                <input type="checkbox" id="brand-all">
-                                <label for="brand-all">Todos</label>
-                            </li>
-                            <li>
-                                <input type="checkbox" id="brand-destilo">
-                                <label for="brand-destilo">Destilo</label>
-                            </li>
-                            <li>
-                                <input type="checkbox" id="brand-benitz">
-                                <label for="brand-benitz">Benitz</label>
-                            </li>
-                            <li>
-                                <input type="checkbox" id="brand-mito">
-                                <label for="brand-mito">Mito Brewhouse</label>
-                            </li>
-                            <li>
-                                <input type="checkbox" id="brand-lago">
-                                <label for="brand-lago">Cervecería Lago</label>
-                            </li>
-                            <li>
-                                <input type="checkbox" id="brand-barricas">
-                                <label for="brand-barricas">Barricas</label>
-                            </li>
-                            <li>
-                                <input type="checkbox" id="brand-aldarra">
-                                <label for="brand-aldarra">Aldarra</label>
-                            </li>
-                        </ul>
-                    </div>
-                    
-                    <div class="filter-group">
-                        <h3>Disponibilidad</h3>
-                        <ul class="filter-list">
-                            <li>
-                                <input type="radio" name="availability" id="avail-all" checked>
-                                <label for="avail-all">Todos</label>
-                            </li>
-                            <li>
-                                <input type="radio" name="availability" id="avail-instock">
-                                <label for="avail-instock">En stock</label>
-                            </li>
-                            <li>
-                                <input type="radio" name="availability" id="avail-outstock">
-                                <label for="avail-outstock">Agotado</label>
-                            </li>
-                        </ul>
-                    </div>
-                    
-                    <button class="filter-apply-btn">Aplicar Filtros</button>
-                    <button class="filter-reset-btn">Restablecer</button>
-                </div>
-                
+            <div class="catalog-layout-no-sidebar">
                 <!-- Products Grid -->
                 <div class="catalog-products">
                     <div class="catalog-header">
@@ -179,7 +66,7 @@
                     
                     <div class="product-grid catalog-grid">
                         <!-- Product 1 -->
-                        <div class="product-card">
+                        <div class="product-card" data-product-id="1">
                             <div class="product-badge">Nuevo</div>
                             <img src="https://images.unsplash.com/photo-1566633806327-68e152aaf26d?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Cerveza Artesanal" class="product-image">
                             <div class="product-info">
@@ -201,7 +88,7 @@
                         </div>
                         
                         <!-- Product 2 -->
-                        <div class="product-card">
+                        <div class="product-card" data-product-id="2">
                             <div class="product-badge sale">Oferta</div>
                             <img src="https://images.unsplash.com/photo-1600788886242-5c96aabe3757?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Cerveza Artesanal" class="product-image">
                             <div class="product-info">
@@ -224,7 +111,7 @@
                         </div>
                         
                         <!-- Product 3 -->
-                        <div class="product-card">
+                        <div class="product-card" data-product-id="3">
                             <img src="https://images.unsplash.com/photo-1612528443702-f6741f70a049?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Cerveza Artesanal" class="product-image">
                             <div class="product-info">
                                 <h3 class="product-title">Mito Brewhouse Candileja</h3>
@@ -245,7 +132,7 @@
                         </div>
                         
                         <!-- Product 4 -->
-                        <div class="product-card">
+                        <div class="product-card" data-product-id="4">
                             <img src="https://images.unsplash.com/photo-1618183479302-1e0aa382c36b?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Cerveza Artesanal" class="product-image">
                             <div class="product-info">
                                 <h3 class="product-title">Cervecería Lago Ángel o Demonio</h3>
@@ -266,7 +153,7 @@
                         </div>
                         
                         <!-- Product 5 -->
-                        <div class="product-card">
+                        <div class="product-card" data-product-id="5">
                             <img src="https://images.unsplash.com/photo-1596424773667-11d2f98ad6b1?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Cerveza Artesanal" class="product-image">
                             <div class="product-info">
                                 <h3 class="product-title">Barricas Saison Belga</h3>
@@ -287,7 +174,7 @@
                         </div>
                         
                         <!-- Product 6 -->
-                        <div class="product-card">
+                        <div class="product-card" data-product-id="6">
                             <div class="product-badge sale">Oferta</div>
                             <img src="https://images.unsplash.com/photo-1613989969925-d64b5a1fcf11?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Cerveza Artesanal" class="product-image">
                             <div class="product-info">
@@ -368,5 +255,11 @@
             <p>&copy; 2025 ACAUCAB. Todos los derechos reservados.</p>
         </div>
     </footer>
+
+    <!-- Scripts -->
+    <script src="../js/config.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/cart.js"></script>
+    <script src="../js/catalog.js"></script>
 </body>
 </html>

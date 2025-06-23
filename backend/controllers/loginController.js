@@ -3,6 +3,8 @@ const db = require('../db_connection/index.js');
 const loginController = async (req, res) => {
     const { email, password } = req.body;
 
+console.log("me gusta la cuca")
+
     if (!email || !password) {
         return res.status(400).json({ error: 'Email and password are required' });
     }
@@ -22,6 +24,8 @@ const loginController = async (req, res) => {
         console.error('Error during login:', error);
         res.status(500).json({ error: 'Internal server error' });
     }
+
+
 };
 
 module.exports = {

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Carrito de Compras - ACAUCAB</title>
     <link rel="stylesheet" href="../css/cart.css" />
+    <link rel="stylesheet" href="../css/notifications.css" />
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
@@ -28,7 +29,7 @@
         <div class="user-actions">
           <a href="cart.html" class="cart-icon active"
             ><i class="fas fa-shopping-cart"></i>
-            <span class="cart-count">3</span></a
+            <span class="cart-count">0</span></a
           >
           <a href="index.html" class="login-btn">Iniciar Sesión</a>
           <a href="profile.html" class="profile-btn"
@@ -62,145 +63,21 @@
               <div class="cart-header-action"></div>
             </div>
 
-            <!-- Cart Item 1 -->
-            <div class="cart-item">
-              <div class="cart-item-product">
-                <img
-                  src="https://images.unsplash.com/photo-1566633806327-68e152aaf26d?ixlib=rb-1.2.1&auto=format&fit=crop&w=150&q=80"
-                  alt="Destilo Amber Ale"
-                />
-                <div class="cart-item-details">
-                  <h3>Destilo Amber Ale</h3>
-                  <p>Amber Ale</p>
-                </div>
-              </div>
-              <div class="cart-item-price">$8.50</div>
-              <div class="cart-item-quantity">
-                <button class="quantity-btn minus">
-                  <i class="fas fa-minus"></i>
-                </button>
-                <input type="number" value="2" min="1" max="99" />
-                <button class="quantity-btn plus">
-                  <i class="fas fa-plus"></i>
-                </button>
-              </div>
-              <div class="cart-item-total">$17.00</div>
-              <div class="cart-item-action">
-                <button class="remove-item">
-                  <i class="fas fa-trash-alt"></i>
-                </button>
-              </div>
+            <!-- Los items del carrito se cargarán dinámicamente aquí -->
+            <div class="cart-items-list">
+                <!-- Los items se cargarán dinámicamente aquí -->
             </div>
-
-            <!-- Cart Item 2 -->
-            <div class="cart-item">
-              <div class="cart-item-product">
-                <img
-                  src="https://images.unsplash.com/photo-1600788886242-5c96aabe3757?ixlib=rb-1.2.1&auto=format&fit=crop&w=150&q=80"
-                  alt="Benitz Pale Ale"
-                />
-                <div class="cart-item-details">
-                  <h3>Benitz Pale Ale</h3>
-                  <p>American Pale Ale</p>
-                </div>
-              </div>
-              <div class="cart-item-price">$7.50</div>
-              <div class="cart-item-quantity">
-                <button class="quantity-btn minus">
-                  <i class="fas fa-minus"></i>
-                </button>
-                <input type="number" value="1" min="1" max="99" />
-                <button class="quantity-btn plus">
-                  <i class="fas fa-plus"></i>
-                </button>
-              </div>
-              <div class="cart-item-total">$7.50</div>
-              <div class="cart-item-action">
-                <button class="remove-item">
-                  <i class="fas fa-trash-alt"></i>
-                </button>
-              </div>
-            </div>
-
-            <!-- Cart Item 3 -->
-            <div class="cart-item">
-              <div class="cart-item-product">
-                <img
-                  src="https://images.unsplash.com/photo-1612528443702-f6741f70a049?ixlib=rb-1.2.1&auto=format&fit=crop&w=150&q=80"
-                  alt="Mito Brewhouse Candileja"
-                />
-                <div class="cart-item-details">
-                  <h3>Mito Brewhouse Candileja</h3>
-                  <p>Belgian Dubbel</p>
-                </div>
-              </div>
-              <div class="cart-item-price">$10.25</div>
-              <div class="cart-item-quantity">
-                <button class="quantity-btn minus">
-                  <i class="fas fa-minus"></i>
-                </button>
-                <input type="number" value="1" min="1" max="99" />
-                <button class="quantity-btn plus">
-                  <i class="fas fa-plus"></i>
-                </button>
-              </div>
-              <div class="cart-item-total">$10.25</div>
-              <div class="cart-item-action">
-                <button class="remove-item">
-                  <i class="fas fa-trash-alt"></i>
-                </button>
-              </div>
-            </div>
-
+            
             <!-- Cart Actions -->
             <div class="cart-actions">
-              <div class="coupon-form">
-                <input type="text" placeholder="Código de cupón" />
-                <button>Aplicar Cupón</button>
-              </div>
-              <button class="update-cart">Actualizar Carrito</button>
+              <button class="clear-cart-btn">Limpiar Carrito</button>
             </div>
           </div>
 
           <!-- Cart Summary -->
           <div class="cart-summary">
             <h2>Resumen del Pedido</h2>
-
-            <div class="summary-row">
-              <span>Subtotal</span>
-              <span>$34.75</span>
-            </div>
-
-            <div class="summary-row">
-              <span>Descuento</span>
-              <span>-$0.00</span>
-            </div>
-
-            <div class="summary-row">
-              <span>Puntos Canjeados</span>
-              <div class="points-redeem">
-                <input type="number" value="0" min="0" max="34" />
-                <span>/ 34 disponibles</span>
-              </div>
-            </div>
-
-            <div class="summary-row">
-              <span>Envío</span>
-              <span>$5.00</span>
-            </div>
-
-            <div class="summary-row total">
-              <span>Total</span>
-              <span>$39.75</span>
-            </div>
-
-            <a href="checkout.html" class="checkout-btn">Proceder al Pago</a>
-
-            <div class="continue-shopping">
-              <a href="catalog.html"
-                ><i class="fas fa-arrow-left"></i> Continuar Comprando</a
-              >
-            </div>
+            <!-- El resumen se cargará dinámicamente aquí -->
           </div>
         </div>
       </div>
@@ -230,10 +107,7 @@
         <div class="footer-column">
           <h3>Contacto</h3>
           <ul class="contact-info">
-            <li>
-              <i class="fas fa-map-marker-alt"></i> Sede ACAUCAB, Caracas,
-              Venezuela
-            </li>
+            <li><i class="fas fa-map-marker-alt"></i> Sede ACAUCAB, Caracas, Venezuela</li>
             <li><i class="fas fa-phone"></i> +58 212 123 4567</li>
             <li><i class="fas fa-envelope"></i> info@acaucab.com</li>
           </ul>
@@ -242,7 +116,7 @@
           <h3>Suscríbete</h3>
           <p>Recibe nuestras novedades y ofertas</p>
           <form class="subscribe-form">
-            <input type="email" placeholder="Tu correo electrónico" />
+            <input type="email" placeholder="Tu correo electrónico">
             <button type="submit"><i class="fas fa-paper-plane"></i></button>
           </form>
         </div>
@@ -251,5 +125,10 @@
         <p>&copy; 2025 ACAUCAB. Todos los derechos reservados.</p>
       </div>
     </footer>
+
+    <!-- Scripts -->
+    <script src="../js/config.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/cart.js"></script>
   </body>
 </html>

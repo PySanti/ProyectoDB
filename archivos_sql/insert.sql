@@ -2014,124 +2014,26 @@ INSERT INTO Lugar (nombre, tipo, lugar_relacion_id) VALUES
 ('La Victoria', 'Parroquia', 360);
 
 
-INSERT INTO Rol (id_rol, nombre) VALUES 
-(1, 'Proveedor'),
-(2, 'Cliente'),
-(3, 'Administrador');
+INSERT INTO Rol (nombre) VALUES 
+('Proveedor'),
+('Cliente'),
+('Administrador');
+
 
 INSERT INTO Privilegio (nombre) VALUES
--- === GESTIÓN DE USUARIOS Y SEGURIDAD ===
-('Crear Usuario'),
-('Consultar Usuario'),
-('Actualizar Usuario'),
-('Eliminar Usuario'),
-('Asignar Roles'),
-('Gestionar Permisos'),
-
--- === GESTIÓN DE EMPLEADOS ===
-('Crear Empleado'),
-('Consultar Empleado'),
-('Actualizar Empleado'),
-('Eliminar Empleado'),
-('Gestionar Horarios'),
-('Registrar Asistencia'),
-('Aprobar Vacaciones'),
-('Consultar Nómina'),
-
--- === GESTIÓN DE CLIENTES ===
-('Crear Cliente'),
-('Consultar Cliente'),
-('Actualizar Cliente'),
-('Eliminar Cliente'),
-('Gestionar Membresías'),
-('Consultar Historial Cliente'),
-
--- === GESTIÓN DE PROVEEDORES ===
-('Crear Proveedor'),
-('Consultar Proveedor'),
-('Actualizar Proveedor'),
-('Eliminar Proveedor'),
-('Evaluar Proveedor'),
-
--- === GESTIÓN DE PRODUCTOS ===
-('Crear Producto'),
-('Consultar Producto'),
-('Actualizar Producto'),
-('Eliminar Producto'),
-('Gestionar Recetas'),
-('Gestionar Presentaciones'),
-
--- === GESTIÓN DE INVENTARIO ===
-('Consultar Inventario'),
-('Actualizar Inventario'),
-('Crear Orden Reposición'),
-('Aprobar Orden Reposición'),
-('Gestionar Orden Anaquel'),
-('Aprobar Orden Anaquel'),
-('Realizar Auditoría Inventario'),
-
--- === GESTIÓN DE COMPRAS ===
-('Crear Compra'),
-('Consultar Compra'),
-('Actualizar Compra'),
-('Aprobar Compra'),
-('Cancelar Compra'),
-('Registrar Pago Compra'),
-
--- === GESTIÓN DE VENTAS ===
-('Crear Venta'),
-('Consultar Venta'),
-('Actualizar Venta'),
-('Cancelar Venta'),
-('Aplicar Descuentos'),
-('Procesar Pagos'),
-('Gestionar Puntos Cliente'),
-
--- === GESTIÓN DE EVENTOS ===
-('Crear Evento'),
-('Consultar Evento'),
-('Actualizar Evento'),
-('Cancelar Evento'),
-('Gestionar Invitados'),
-('Registrar Venta Evento'),
-('Aprobar Evento'),
-
--- === GESTIÓN DE PROMOCIONES ===
-('Crear Promoción'),
-('Consultar Promoción'),
-('Actualizar Promoción'),
-('Eliminar Promoción'),
-('Activar Promoción'),
-
--- === REPORTES Y ANÁLISIS ===
-('Generar Reporte Ventas'),
-('Generar Reporte Inventario'),
-('Generar Reporte Compras'),
-('Generar Reporte Empleados'),
-('Generar Reporte Clientes'),
-('Generar Reporte Financiero'),
-('Consultar Dashboard'),
-
--- === CONFIGURACIÓN DEL SISTEMA ===
-('Configurar Sistema'),
-('Gestionar Métodos Pago'),
-('Configurar Tasas Cambio'),
-('Gestionar Ubicaciones'),
-('Configurar Departamentos'),
-('Gestionar Beneficios');
+('crear'),
+('actualizar'),
+('eliminar'),
+('leer');
 
 
-INSERT INTO Permiso (id_rol, id_privilegio, fecha_asignacion, motivo) VALUES
-(1, 2, '2025-01-15', 'Permiso básico para consultar usuarios del sistema'),
-(1, 22, '2025-01-15', 'Consultar información de proveedores registrados'),
-(1, 27, '2025-01-15', 'Consultar productos disponibles en catálogo'),
-(1, 34, '2025-01-15', 'Consultar compras realizadas por la empresa'),
-(2, 2, '2025-01-15', 'Consultar información básica de usuarios'),
-(2, 16, '2025-01-15', 'Consultar información de clientes registrados'),
-(2, 27, '2025-01-15', 'Consultar catálogo de productos disponibles'),
-(2, 41, '2025-01-15', 'Crear ventas y realizar compras'),
-(2, 47, '2025-01-15', 'Consultar eventos disponibles'),
-(3, 73, '2025-01-15', 'Acceso total al sistema como administrador principal');
+
+
+INSERT INTO Rol_Privilegio (id_rol, id_privilegio, fecha_asignacion, motivo) VALUES
+(3, 1, '2025-01-15', 'Consultar catálogo de productos disponibles'),
+(3, 2, '2025-01-15', 'Crear ventas y realizar compras'),
+(3, 3, '2025-01-15', 'Consultar eventos disponibles'),
+(3, 4, '2025-01-15', 'Acceso total al sistema como administrador principal');
 
 INSERT INTO TipoEvento (nombre, descripcion) VALUES
 ('Festival de Cerveza', 'Evento masivo de degustación y venta de cervezas artesanales con múltiples proveedores'),
@@ -2171,18 +2073,9 @@ INSERT INTO Tipo_Invitado (nombre) VALUES
 
 
 INSERT INTO Estatus (id_estatus, nombre) VALUES
-(1, 'Orden Iniciada'),
-(2, 'Orden Procesada'),
-(3, 'Pendiente Aprobación'),
-(4, 'Aprobada'),
-(5, 'Enviada al Proveedor'),
-(6, 'En Preparación'),
-(7, 'Lista para Despacho'),
-(8, 'En Despacho'),
-(9, 'Listo para Entrega'),
-(10, 'Entregado'),
-(11, 'Cancelada'),
-(12, 'Rechazada');
+(1, 'Iniciada'),
+(2, 'En proceso'),
+(3, 'Atendida');
 
 
 INSERT INTO Horario (dia, hora_entrada, hora_salida) VALUES
@@ -2902,17 +2795,97 @@ INSERT INTO Beneficio_Depto_Empleado (pagado, id_empleado, id_departamento, mont
 
 
 
-INSERT INTO presentacion_cerveza (cantidad, id_presentacion, id_cerveza) VALUES
-(1, 1, 1),
-(1, 2, 2),
-(1, 3, 3),
-(6, 3, 4),
-(24, 2, 5),
-(1, 1, 6),
-(1, 1, 7),
-(1, 1, 8),
-(1, 1, 9),
-(1, 1, 10);
+INSERT INTO presentacion_cerveza (cantidad, id_presentacion, id_cerveza, precio) VALUES
+-- Cerveza 1: Destilo
+(1, 1, 1, 3.00), -- Botella 330ml
+(1, 2, 1, 5.00), -- Botella 500ml
+(1, 3, 1, 2.00), -- Lata 330ml
+
+-- Cerveza 2: Dos Leones Latin American Pale Ale
+(1, 1, 2, 3.00), -- Botella 330ml
+(1, 2, 2, 5.00), -- Botella 500ml
+(1, 3, 2, 2.00), -- Lata 330ml
+
+-- Cerveza 3: Benitz Pale Ale
+(1, 1, 3, 3.00), -- Botella 330ml
+(1, 2, 3, 5.00), -- Botella 500ml
+(1, 3, 3, 2.00), -- Lata 330ml
+
+-- Cerveza 4: Mito Brewhouse Candileja de Abadía
+(1, 1, 4, 3.00), -- Botella 330ml
+(1, 2, 4, 5.00), -- Botella 500ml
+(1, 3, 4, 2.00), -- Lata 330ml
+
+-- Cerveza 5: Cervecería Lago Ángel o Demonio
+(1, 1, 5, 3.00), -- Botella 330ml
+(1, 2, 5, 5.00), -- Botella 500ml
+(1, 3, 5, 2.00), -- Lata 330ml
+
+-- Cerveza 6: Barricas Saison Belga
+(1, 1, 6, 3.00), -- Botella 330ml
+(1, 2, 6, 5.00), -- Botella 500ml
+(1, 3, 6, 2.00), -- Lata 330ml
+
+-- Cerveza 7: Aldarra Mantuana
+(1, 1, 7, 3.00), -- Botella 330ml
+(1, 2, 7, 5.00), -- Botella 500ml
+(1, 3, 7, 2.00), -- Lata 330ml
+
+-- Cerveza 8: Tröegs HopBack Amber Ale
+(1, 1, 8, 3.00), -- Botella 330ml
+(1, 2, 8, 5.00), -- Botella 500ml
+(1, 3, 8, 2.00), -- Lata 330ml
+
+-- Cerveza 9: Full Sail Amber
+(1, 1, 9, 3.00), -- Botella 330ml
+(1, 2, 9, 5.00), -- Botella 500ml
+(1, 3, 9, 2.00), -- Lata 330ml
+
+-- Cerveza 10: Deschutes Cinder Cone Red
+(1, 1, 10, 3.00), -- Botella 330ml
+(1, 2, 10, 5.00), -- Botella 500ml
+(1, 3, 10, 2.00), -- Lata 330ml
+
+-- Cerveza 11: Rogue American Amber Ale
+(1, 1, 11, 3.00), -- Botella 330ml
+(1, 2, 11, 5.00), -- Botella 500ml
+(1, 3, 11, 2.00), -- Lata 330ml
+
+-- Cerveza 12: La Chouffe
+(1, 1, 12, 3.00), -- Botella 330ml
+(1, 2, 12, 5.00), -- Botella 500ml
+(1, 3, 12, 2.00), -- Lata 330ml
+
+-- Cerveza 13: Orval
+(1, 1, 13, 3.00), -- Botella 330ml
+(1, 2, 13, 5.00), -- Botella 500ml
+(1, 3, 13, 2.00), -- Lata 330ml
+
+-- Cerveza 14: Chimay Rouge (Première)
+(1, 1, 14, 3.00), -- Botella 330ml
+(1, 2, 14, 5.00), -- Botella 500ml
+(1, 3, 14, 2.00), -- Lata 330ml
+
+-- Cerveza 15: Duvel
+(1, 1, 15, 3.00), -- Botella 330ml
+(1, 2, 15, 5.00), -- Botella 500ml
+(1, 3, 15, 2.00), -- Lata 330ml
+
+-- Cerveza 16: Hoegaarden Witbier
+(1, 1, 16, 3.00), -- Botella 330ml
+(1, 2, 16, 5.00), -- Botella 500ml
+(1, 3, 16, 2.00), -- Lata 330ml
+
+-- Cerveza 17: Pilsner Urquell
+(1, 1, 17, 3.00), -- Botella 330ml
+(1, 2, 17, 5.00), -- Botella 500ml
+(1, 3, 17, 2.00), -- Lata 330ml
+
+-- Cerveza 18: Sierra Nevada Pale Ale
+(1, 1, 18, 3.00), -- Botella 330ml
+(1, 2, 18, 5.00), -- Botella 500ml
+(1, 3, 18, 2.00); -- Lata 330ml
+
 
 
 
@@ -3098,6 +3071,36 @@ INSERT INTO Cuota_Afiliacion (monto, membresia_id_membresia, fecha_pago) VALUES
 (180.00, 10, '2024-04-15');
 
 
+
+
+
+
+
+INSERT INTO Orden_Reposicion_Anaquel (fecha_hora_generacion) VALUES
+('2025-01-15 08:30:00'),  
+('2025-01-15 14:45:00'),  
+('2025-01-16 09:15:00'),  
+('2025-01-16 16:20:00'),  
+('2025-01-17 10:00:00'),  
+('2025-01-17 13:30:00'),  
+('2025-01-18 11:45:00'),  
+('2025-01-18 17:10:00'),  
+('2025-01-19 08:00:00'),  
+('2025-01-19 15:25:00');
+
+
+INSERT INTO Detalle_Orden_Reposicion_Anaquel (id_orden_reposicion, id_inventario, cantidad) VALUES
+(1, 11, 50),  
+(1, 12, 30),  
+(2, 13, 75),  
+(2, 14, 25),  
+(3, 15, 40), 
+(4, 16, 60),  
+(4, 17, 45), 
+(5, 18, 35), 
+(6, 19, 80),  
+(7, 20, 20);
+
 -- Insertar 10 órdenes de reposición
 INSERT INTO Orden_Reposicion (id_departamento, id_proveedor, fecha_emision) VALUES
 (3, 1, CURRENT_DATE),
@@ -3110,7 +3113,6 @@ INSERT INTO Orden_Reposicion (id_departamento, id_proveedor, fecha_emision) VALU
 (3, 8, CURRENT_DATE),
 (3, 9, CURRENT_DATE),
 (3, 10, CURRENT_DATE); 
-
 
 -- Detalles de órdenes de reposición (solo combinaciones válidas de id_presentacion y id_cerveza)
 INSERT INTO Detalle_Orden_Reposicion (cantidad, id_orden_reposicion, id_proveedor, id_departamento, precio, id_tipo_cerveza, id_presentacion, id_cerveza) VALUES
@@ -3176,58 +3178,30 @@ INSERT INTO Detalle_Orden_Reposicion (cantidad, id_orden_reposicion, id_proveedo
 (5, 10, 10, 3, 5, 27, 1, 10); 
 
 
-INSERT INTO Orden_Reposicion_Anaquel (fecha_hora_generacion) VALUES
-('2025-01-15 08:30:00'),  
-('2025-01-15 14:45:00'),  
-('2025-01-16 09:15:00'),  
-('2025-01-16 16:20:00'),  
-('2025-01-17 10:00:00'),  
-('2025-01-17 13:30:00'),  
-('2025-01-18 11:45:00'),  
-('2025-01-18 17:10:00'),  
-('2025-01-19 08:00:00'),  
-('2025-01-19 15:25:00');
-
-
-INSERT INTO Detalle_Orden_Reposicion_Anaquel (id_orden_reposicion, id_inventario, cantidad) VALUES
-(1, 11, 50),  
-(1, 12, 30),  
-(2, 13, 75),  
-(2, 14, 25),  
-(3, 15, 40), 
-(4, 16, 60),  
-(4, 17, 45), 
-(5, 18, 35), 
-(6, 19, 80),  
-(7, 20, 20);
-
-
 INSERT INTO Orden_Reposicion_Estatus (id_orden_reposicion, id_proveedor, id_departamento, id_estatus, fecha_asignacion, fecha_fin) VALUES
 (1, 1, 3, 1, '2025-01-15 14:00:00', '2025-01-15 14:01:00'),  
-(1, 1, 3, 2, '2025-01-15 14:01:00', '2025-01-15 14:05:00'),  
-(1, 1, 3, 3, '2025-01-15 14:05:00', '2025-01-15 15:30:00'),  
-(1, 1, 3, 4, '2025-01-15 15:30:00', '2025-01-15 15:35:00'),  
-(2, 2, 3, 1, '2025-01-16 09:00:00', '2025-01-16 09:01:00'),  
-(2, 2, 3, 2, '2025-01-16 09:01:00', '2025-01-16 09:05:00'),  
-(2, 2, 3, 3, '2025-01-16 09:05:00', '2025-01-16 18:00:00'),  
-(3, 3, 3, 1, '2025-01-17 11:00:00', '2025-01-17 11:01:00'),  
-(3, 3, 3, 2, '2025-01-17 11:01:00', '2025-01-17 11:05:00'),  
-(3, 3, 3, 3, '2025-01-17 11:05:00', '2025-01-17 16:20:00'),  
-(3, 3, 3, 12, '2025-01-17 16:20:00', '2025-01-17 16:25:00'); 
+(2, 2, 3, 2, '2025-01-16 09:00:00', '2025-01-16 09:01:00'),  
+(3, 3, 3, 2, '2025-01-17 11:00:00', '2025-01-17 11:01:00'),  
+(4, 4, 3, 2, '2025-01-17 11:00:00', '2025-01-17 11:01:00'),  
+(5, 5, 3, 2, '2025-01-17 11:00:00', '2025-01-17 11:01:00'),  
+(6, 6, 3, 2, '2025-01-17 11:00:00', '2025-01-17 11:01:00'),  
+(7, 7, 3, 1, '2025-01-17 11:00:00', '2025-01-17 11:01:00'),  
+(8, 8, 3, 1, '2025-01-17 11:00:00', '2025-01-17 11:01:00'),  
+(9, 9, 3, 1, '2025-01-17 11:00:00', '2025-01-17 11:01:00'),  
+(10, 10, 3, 2, '2025-01-17 11:00:00', '2025-01-17 11:01:00') ;
 
 
 INSERT INTO Estatus_Orden_Anaquel (id_orden_reposicion, id_estatus, fecha_hora_asignacion) VALUES
 (1, 1, '2025-01-15 08:30:00'),  
 (1, 2, '2025-01-15 08:45:00'),  
-(1, 4, '2025-01-15 09:00:00'),  
-(1, 10, '2025-01-15 10:30:00'), 
+(1, 3, '2025-01-15 10:30:00'), 
 (2, 1, '2025-01-15 14:45:00'),  
 (2, 2, '2025-01-15 15:00:00'),  
-(2, 4, '2025-01-15 15:15:00'),  
+(2, 3, '2025-01-15 15:15:00'),  
 (3, 1, '2025-01-16 09:15:00'),  
 (3, 3, '2025-01-16 09:30:00'),  
 (4, 1, '2025-01-16 16:20:00'),  
-(4, 12, '2025-01-16 16:35:00'); 
+(4, 2, '2025-01-16 16:35:00'); 
 
 
 -- =====================================================
@@ -4276,14 +4250,12 @@ INSERT INTO Detalle_Compra (precio_unitario, cantidad, id_inventario, id_compra)
 INSERT INTO Compra_Estatus (compra_id_compra, estatus_id_estatus, fecha_hora_asignacion, fecha_hora_fin) VALUES
 (1, 1, '2025-01-15 08:00:00', '2025-01-15 08:30:00'), 
 (1, 2, '2025-01-15 08:30:00', '2025-01-15 09:00:00'),
-(1, 4, '2025-01-15 09:00:00', '2025-01-15 09:15:00'),
-(1, 5, '2025-01-15 09:15:00', '2025-01-15 10:00:00'),  
+(1, 3, '2025-01-15 09:00:00', '2025-01-15 09:15:00'),
 (2, 1, '2025-01-16 10:00:00', '2025-01-16 10:20:00'), 
-(2, 2, '2025-01-16 10:20:00', '2025-01-16 11:00:00'),  
-(2, 4, '2025-01-16 11:00:00', '2025-01-16 11:10:00'), 
-(2, 9, '2025-01-16 11:10:00', '2025-01-16 13:10:00'), 
+(2, 3, '2025-01-16 11:00:00', '2025-01-16 11:10:00'), 
+(2, 2, '2025-01-16 11:10:00', '2025-01-16 13:10:00'), 
 (3, 1, '2025-01-17 14:00:00', '2025-01-17 14:15:00'),  
-(3, 11, '2025-01-17 14:15:00', '2025-01-17 14:30:00'); 
+(3, 2, '2025-01-17 14:15:00', '2025-01-17 14:30:00'); 
 
 
 INSERT INTO Venta_Evento (evento_id, id_cliente_natural, fecha_compra, total) VALUES

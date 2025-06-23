@@ -1,28 +1,24 @@
 const express = require('express');
+const cors = require('cors');
+const path = require('path');
 const app = express();
 const userRoutes = require('./routes/userRoutes.js');
 const roleRoutes = require('./routes/roleRoutes.js');
-const cors = require('cors');
+const cartRoutes = require('./routes/cartRoutes.js');
+const productRoutes = require('./routes/productRoutes.js');
 
-// Configuración CORS para permitir peticiones desde archivos locales (file://)
-app.use(cors({
-  origin: function (origin, callback) {
-    // Permitir peticiones desde archivos locales (sin origen o null)
-    if (!origin || origin === 'null') {
-      callback(null, true);
-    } else {
-      callback(null, true); // Puedes restringir aquí si lo deseas
-    }
-  },
-  credentials: true, // Si usas cookies o autenticación
-}));
+// Middleware para Favicon
+app.get('/favicon.ico', (req, res) => res.status(204).send());
 
-// Middleware para parsear JSON
+// Middlewares
+app.use(cors());
 app.use(express.json());
 
 // Asignar rutas
-app.use('/user', userRoutes);
-app.use('/roles', roleRoutes);
+app.use('/api/user', userRoutes);
+app.use('/api/roles', roleRoutes);
+app.use('/api/carrito', cartRoutes);
+app.use('/api/productos', productRoutes);
 
 // Iniciar servidor
 const PORT = process.env.PORT || 3000;

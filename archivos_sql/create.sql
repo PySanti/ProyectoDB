@@ -386,7 +386,7 @@ CREATE TABLE Orden_Reposicion_Estatus (
     id_departamento     INTEGER NOT NULL,
     id_estatus          INTEGER NOT NULL,
     fecha_asignacion    TIMESTAMP NOT NULL,
-    fecha_fin           TIMESTAMP NOT NULL,
+    fecha_fin           TIMESTAMP,
     PRIMARY KEY (id_orden_reposicion, id_proveedor, id_departamento, id_estatus)
 );
 
@@ -430,7 +430,7 @@ CREATE TABLE Pago_Orden_Reposicion (
     monto          DECIMAL NOT NULL
 );
 
-CREATE TABLE Permiso (
+CREATE TABLE Rol_Privilegio (
     id_rol          INTEGER NOT NULL,
     id_privilegio   INTEGER NOT NULL,
     fecha_asignacion DATE NOT NULL,
@@ -462,6 +462,7 @@ CREATE TABLE Presentacion_Cerveza (
     id_cerveza          INTEGER NOT NULL,
     cantidad            INTEGER NOT NULL,
     descripcion         TEXT,
+    precio              DECIMAL NOT NULL,
     PRIMARY KEY (id_presentacion, id_cerveza)
 );
 
@@ -615,7 +616,7 @@ CREATE TABLE Usuario (
     id_usuario      SERIAL PRIMARY KEY,
     id_cliente_juridico      INTEGER,
     id_cliente_natural      INTEGER,
-    id_rol          INTEGER NOT NULL,
+    id_rol          INTEGER,
     fecha_creacion  DATE NOT NULL,
     id_proveedor    INTEGER,
     empleado_id     INTEGER,

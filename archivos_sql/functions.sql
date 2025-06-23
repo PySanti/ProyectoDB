@@ -301,7 +301,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql; 
 
-
 -- Function to get all roles with their associated privileges
 CREATE OR REPLACE FUNCTION get_roles()
 RETURNS TABLE (
@@ -318,9 +317,9 @@ BEGIN
     FROM
         Rol r
     LEFT JOIN
-        Permiso perm ON r.id_rol = perm.id_rol
+        Rol_Privilegio rp ON r.id_rol = rp.id_rol
     LEFT JOIN
-        Privilegio p ON perm.id_privilegio = p.id_privilegio
+        Privilegio p ON rp.id_privilegio = p.id_privilegio
     GROUP BY
         r.id_rol, r.nombre
     ORDER BY
@@ -334,7 +333,7 @@ CREATE OR REPLACE FUNCTION create_role(
     p_crear BOOLEAN,
     p_eliminar BOOLEAN,
     p_actualizar BOOLEAN,
-    p_insertar BOOLEAN
+    p_leer BOOLEAN
 ) RETURNS VOID AS $$
 DECLARE
     new_rol_id INTEGER;
@@ -343,36 +342,255 @@ BEGIN
     -- Insert the new role and get its ID
     INSERT INTO Rol (nombre) VALUES (p_nombre_rol) RETURNING id_rol INTO new_rol_id;
 
-    -- Assign 'Creacion' privilege if selected
+    -- Assign 'crear' privilege if selected
     IF p_crear THEN
-        SELECT id_privilegio INTO priv_id FROM Privilegio WHERE nombre = 'Creacion';
+        SELECT id_privilegio INTO priv_id FROM Privilegio WHERE nombre = 'crear';
         IF FOUND THEN
-            INSERT INTO Permiso (id_rol, id_privilegio, fecha_asignacion) VALUES (new_rol_id, priv_id, CURRENT_DATE);
+            INSERT INTO Rol_Privilegio (id_rol, id_privilegio, fecha_asignacion) VALUES (new_rol_id, priv_id, CURRENT_DATE);
         END IF;
     END IF;
 
-    -- Assign 'Eliminacion' privilege if selected
+    -- Assign 'eliminar' privilege if selected
     IF p_eliminar THEN
-        SELECT id_privilegio INTO priv_id FROM Privilegio WHERE nombre = 'Eliminacion';
+        SELECT id_privilegio INTO priv_id FROM Privilegio WHERE nombre = 'eliminar';
         IF FOUND THEN
-            INSERT INTO Permiso (id_rol, id_privilegio, fecha_asignacion) VALUES (new_rol_id, priv_id, CURRENT_DATE);
+            INSERT INTO Rol_Privilegio (id_rol, id_privilegio, fecha_asignacion) VALUES (new_rol_id, priv_id, CURRENT_DATE);
         END IF;
     END IF;
 
-    -- Assign 'Actualizacion' privilege if selected
+    -- Assign 'actualizar' privilege if selected
     IF p_actualizar THEN
-        SELECT id_privilegio INTO priv_id FROM Privilegio WHERE nombre = 'Actualizacion';
+        SELECT id_privilegio INTO priv_id FROM Privilegio WHERE nombre = 'actualizar';
         IF FOUND THEN
-            INSERT INTO Permiso (id_rol, id_privilegio, fecha_asignacion) VALUES (new_rol_id, priv_id, CURRENT_DATE);
+            INSERT INTO Rol_Privilegio (id_rol, id_privilegio, fecha_asignacion) VALUES (new_rol_id, priv_id, CURRENT_DATE);
         END IF;
     END IF;
 
-    -- Assign 'Insercion' privilege if selected
-    IF p_insertar THEN
-        SELECT id_privilegio INTO priv_id FROM Privilegio WHERE nombre = 'Insercion';
+    -- Assign 'leer' privilege if selected
+    IF p_leer THEN
+        SELECT id_privilegio INTO priv_id FROM Privilegio WHERE nombre = 'leer';
         IF FOUND THEN
-            INSERT INTO Permiso (id_rol, id_privilegio, fecha_asignacion) VALUES (new_rol_id, priv_id, CURRENT_DATE);
+            INSERT INTO Rol_Privilegio (id_rol, id_privilegio, fecha_asignacion) VALUES (new_rol_id, priv_id, CURRENT_DATE);
         END IF;
     END IF;
 END;
-$$ LANGUAGE plpgsql; 
+$$ LANGUAGE plpgsql;
+
+-- Function to update role privileges
+CREATE OR REPLACE FUNCTION update_role_privileges(
+    p_id_rol INTEGER,
+    p_nombre_rol VARCHAR,
+    p_crear BOOLEAN,
+    p_eliminar BOOLEAN,
+    p_actualizar BOOLEAN,
+    p_leer BOOLEAN
+) RETURNS VOID AS $$
+DECLARE
+    priv_id INTEGER;
+BEGIN
+    -- Update role name if different
+    UPDATE Rol SET nombre = p_nombre_rol WHERE id_rol = p_id_rol;
+    
+    -- Delete all current privileges for this role
+    DELETE FROM Rol_Privilegio WHERE id_rol = p_id_rol;
+    
+    -- Assign 'crear' privilege if selected
+    IF p_crear THEN
+        SELECT id_privilegio INTO priv_id FROM Privilegio WHERE nombre = 'crear';
+        IF FOUND THEN
+            INSERT INTO Rol_Privilegio (id_rol, id_privilegio, fecha_asignacion) VALUES (p_id_rol, priv_id, CURRENT_DATE);
+        END IF;
+    END IF;
+
+    -- Assign 'eliminar' privilege if selected
+    IF p_eliminar THEN
+        SELECT id_privilegio INTO priv_id FROM Privilegio WHERE nombre = 'eliminar';
+        IF FOUND THEN
+            INSERT INTO Rol_Privilegio (id_rol, id_privilegio, fecha_asignacion) VALUES (p_id_rol, priv_id, CURRENT_DATE);
+        END IF;
+    END IF;
+
+    -- Assign 'actualizar' privilege if selected
+    IF p_actualizar THEN
+        SELECT id_privilegio INTO priv_id FROM Privilegio WHERE nombre = 'actualizar';
+        IF FOUND THEN
+            INSERT INTO Rol_Privilegio (id_rol, id_privilegio, fecha_asignacion) VALUES (p_id_rol, priv_id, CURRENT_DATE);
+        END IF;
+    END IF;
+
+    -- Assign 'leer' privilege if selected
+    IF p_leer THEN
+        SELECT id_privilegio INTO priv_id FROM Privilegio WHERE nombre = 'leer';
+        IF FOUND THEN
+            INSERT INTO Rol_Privilegio (id_rol, id_privilegio, fecha_asignacion) VALUES (p_id_rol, priv_id, CURRENT_DATE);
+        END IF;
+    END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Cambiar el rol de un usuario
+CREATE OR REPLACE FUNCTION set_rol_usuario(p_id_usuario INTEGER, p_id_rol INTEGER)
+RETURNS VOID AS $$
+BEGIN
+    UPDATE Usuario SET id_rol = p_id_rol WHERE id_usuario = p_id_usuario;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION create_empleado(
+    p_cedula VARCHAR,
+    p_primer_nombre VARCHAR,
+    p_segundo_nombre VARCHAR,
+    p_primer_apellido VARCHAR,
+    p_segundo_apellido VARCHAR,
+    p_direccion TEXT,
+    p_lugar_id_lugar INTEGER,
+    p_correo_nombre VARCHAR,
+    p_correo_extension VARCHAR,
+    p_contrasena VARCHAR
+) RETURNS VOID AS $$
+DECLARE
+    new_empleado_id INTEGER;
+    new_usuario_id INTEGER;
+    rol_empleado_id INTEGER;
+BEGIN
+    -- Buscar el id_rol correspondiente a 'Empleado'
+    SELECT id_rol INTO rol_empleado_id FROM Rol WHERE LOWER(nombre) = 'empleado' LIMIT 1;
+
+    -- Insertar en Empleado
+    INSERT INTO Empleado (
+        cedula, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, direccion, activo, lugar_id_lugar
+    ) VALUES (
+        p_cedula, p_primer_nombre, p_segundo_nombre, p_primer_apellido, p_segundo_apellido, p_direccion, 'S', p_lugar_id_lugar
+    ) RETURNING id_empleado INTO new_empleado_id;
+
+    -- Insertar en Usuario
+    INSERT INTO Usuario (
+        empleado_id, id_rol, fecha_creacion, contraseña
+    ) VALUES (
+        new_empleado_id, rol_empleado_id, CURRENT_DATE, p_contrasena
+    ) RETURNING id_usuario INTO new_usuario_id;
+
+    -- Insertar en Correo
+    INSERT INTO Correo (
+        nombre, extension_pag, id_empleado
+    ) VALUES (
+        p_correo_nombre, p_correo_extension, new_empleado_id
+    );
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION get_ordenes_reposicion_proveedores()
+RETURNS TABLE (
+    id_orden_reposicion INTEGER,
+    nombre_departamento VARCHAR,
+    razon_social_proveedor VARCHAR,
+    fecha_emision DATE,
+    fecha_fin DATE,
+    estatus_actual VARCHAR,
+    id_estatus_actual INTEGER
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+        o.id_orden_reposicion,
+        d.nombre AS nombre_departamento,
+        p.razon_social AS razon_social_proveedor,
+        o.fecha_emision,
+        o.fecha_fin,
+        e2.nombre AS estatus_actual,
+        oe.id_estatus AS id_estatus_actual
+    FROM Orden_Reposicion o
+    JOIN Departamento d ON o.id_departamento = d.id_departamento
+    JOIN Proveedor p ON o.id_proveedor = p.id_proveedor
+    LEFT JOIN LATERAL (
+        SELECT oe2.id_estatus, es.nombre
+        FROM Orden_Reposicion_Estatus oe2
+        JOIN Estatus es ON oe2.id_estatus = es.id_estatus
+        WHERE oe2.id_orden_reposicion = o.id_orden_reposicion
+        ORDER BY oe2.fecha_asignacion DESC
+        LIMIT 1
+    ) oe ON TRUE
+    LEFT JOIN Estatus e2 ON oe.id_estatus = e2.id_estatus
+    ORDER BY o.id_orden_reposicion DESC;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION set_estatus_orden_reposicion(
+    p_id_orden_reposicion INTEGER,
+    p_id_estatus INTEGER
+) RETURNS VOID AS $$
+DECLARE
+    v_id_proveedor INTEGER;
+    v_id_departamento INTEGER;
+    v_nombre_estatus VARCHAR;
+BEGIN
+    -- Obtener proveedor y departamento
+    SELECT id_proveedor, id_departamento
+    INTO v_id_proveedor, v_id_departamento
+    FROM Orden_Reposicion
+    WHERE id_orden_reposicion = p_id_orden_reposicion;
+
+    -- Insertar nuevo estatus
+    INSERT INTO Orden_Reposicion_Estatus (
+        id_orden_reposicion, id_proveedor, id_departamento, id_estatus, fecha_asignacion
+    ) VALUES (
+        p_id_orden_reposicion, v_id_proveedor, v_id_departamento, p_id_estatus, NOW()
+    );
+
+    -- Si el estatus es 'Atendida', actualizar fecha_fin
+    SELECT nombre INTO v_nombre_estatus FROM Estatus WHERE id_estatus = p_id_estatus;
+    IF LOWER(v_nombre_estatus) = 'atendida' THEN
+        UPDATE Orden_Reposicion SET fecha_fin = NOW() WHERE id_orden_reposicion = p_id_orden_reposicion;
+    END IF;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION get_ordenes_anaquel()
+RETURNS TABLE (
+    id_orden_reposicion INTEGER,
+    fecha_hora_generacion TIMESTAMP,
+    estatus_actual VARCHAR,
+    id_estatus_actual INTEGER
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+        o.id_orden_reposicion,
+        o.fecha_hora_generacion,
+        e2.nombre AS estatus_actual,
+        eo.id_estatus AS id_estatus_actual
+    FROM Orden_Reposicion_Anaquel o
+    LEFT JOIN LATERAL (
+        SELECT eo2.id_estatus, es.nombre
+        FROM Estatus_Orden_Anaquel eo2
+        JOIN Estatus es ON eo2.id_estatus = es.id_estatus
+        WHERE eo2.id_orden_reposicion = o.id_orden_reposicion
+        ORDER BY eo2.fecha_hora_asignacion DESC
+        LIMIT 1
+    ) eo ON TRUE
+    LEFT JOIN Estatus e2 ON eo.id_estatus = e2.id_estatus
+    ORDER BY o.id_orden_reposicion DESC;
+END;
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION set_estatus_orden_anaquel(
+    p_id_orden_reposicion INTEGER,
+    p_id_estatus INTEGER
+) RETURNS VOID AS $$
+DECLARE
+    v_nombre_estatus VARCHAR;
+BEGIN
+    -- Insertar nuevo estatus
+    INSERT INTO Estatus_Orden_Anaquel (
+        id_orden_reposicion, id_estatus, fecha_hora_asignacion
+    ) VALUES (
+        p_id_orden_reposicion, p_id_estatus, NOW()
+    );
+
+    -- Si el estatus es 'Atendida', actualizar fecha_fin en la orden si existe ese campo
+    SELECT nombre INTO v_nombre_estatus FROM Estatus WHERE id_estatus = p_id_estatus;
+    IF LOWER(v_nombre_estatus) = 'atendida' THEN
+        UPDATE Orden_Reposicion_Anaquel SET fecha_hora_fin = NOW() WHERE id_orden_reposicion = p_id_orden_reposicion;
+    END IF;
+END;
+$$ LANGUAGE plpgsql;

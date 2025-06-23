@@ -1,0 +1,478 @@
+/* =====================================================
+   CATÁLOGO DINÁMICO - ESTILOS ESPECÍFICOS
+   ===================================================== */
+
+/* Producto agotado */
+.product-badge.out-of-stock {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+    color: white;
+}
+
+.product-card .add-to-cart-btn[disabled] {
+    background: #6c757d;
+    color: #fff;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.product-card .add-to-cart-btn[disabled]:hover {
+    background: #6c757d;
+    transform: none;
+}
+
+/* Mejoras en las tarjetas de producto */
+.product-card {
+    display: flex;
+    flex-direction: column;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    height: 100%;
+}
+
+.product-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.product-header {
+    margin-bottom: 15px;
+}
+
+.product-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    margin: 0 0 5px 0;
+    line-height: 1.3;
+}
+
+.product-type {
+    font-size: 14px;
+    color: #666;
+    margin: 0;
+    font-style: italic;
+}
+
+.product-body {
+    flex: 1;
+    margin-bottom: 20px;
+}
+
+.product-body h4 {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    margin: 0 0 12px 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.presentation-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.presentation-item {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.presentation-item:hover {
+    border-color: #007bff;
+    background-color: #f8f9ff;
+}
+
+.presentation-item input[type="radio"] {
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.presentation-item input[type="radio"]:checked + label {
+    color: #007bff;
+    font-weight: 600;
+}
+
+.presentation-item label {
+    flex: 1;
+    font-size: 14px;
+    color: #555;
+    cursor: pointer;
+    margin: 0;
+    transition: color 0.2s;
+}
+
+.presentation-item:has(input[type="radio"]:disabled) {
+    opacity: 0.5;
+    background-color: #f5f5f5;
+    cursor: not-allowed;
+}
+
+.presentation-item:has(input[type="radio"]:disabled) label {
+    color: #999;
+    cursor: not-allowed;
+}
+
+.product-footer {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: stretch;
+}
+
+.product-price {
+    font-size: 20px;
+    font-weight: 700;
+    color: #333;
+    text-align: center;
+    padding: 8px 0;
+    background: #f8f9fa;
+    border-radius: 6px;
+    border: 1px solid #e9ecef;
+}
+
+.add-to-cart-btn {
+    padding: 12px 20px;
+    background: #212529;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.add-to-cart-btn:hover:not([disabled]) {
+    background: #343a40;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.add-to-cart-btn:active:not([disabled]) {
+    transform: translateY(0);
+}
+
+/* No se encontraron productos */
+.no-products {
+    text-align: center;
+    padding: 60px 20px;
+    color: #666;
+    grid-column: 1 / -1;
+}
+
+.no-products i {
+    font-size: 64px;
+    color: #ddd;
+    margin-bottom: 20px;
+}
+
+.no-products h3 {
+    font-size: 24px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+.no-products p {
+    font-size: 16px;
+    color: #666;
+}
+
+/* Paginación dinámica */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 40px;
+}
+
+.pagination .page-link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    color: #333;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.pagination .page-link:hover {
+    background: #f8f9fa;
+    border-color: #007bff;
+    color: #007bff;
+}
+
+.pagination .page-link.active {
+    background: #007bff;
+    border-color: #007bff;
+    color: white;
+}
+
+.pagination .page-link.next,
+.pagination .page-link:first-child {
+    width: 40px;
+}
+
+/* Filtros mejorados */
+.filter-group {
+    margin-bottom: 24px;
+}
+
+.filter-group h3 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: #333;
+}
+
+.filter-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.filter-list li {
+    margin-bottom: 8px;
+}
+
+.filter-list input[type="checkbox"],
+.filter-list input[type="radio"] {
+    margin-right: 8px;
+}
+
+.filter-list label {
+    font-size: 14px;
+    color: #666;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.filter-list label:hover {
+    color: #333;
+}
+
+/* Búsqueda mejorada */
+.search-box {
+    position: relative;
+    margin-bottom: 16px;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 12px 40px 12px 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: border-color 0.2s;
+}
+
+.search-box input:focus {
+    outline: none;
+    border-color: #007bff;
+}
+
+.search-box button {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    padding: 4px;
+}
+
+.search-box button:hover {
+    color: #007bff;
+}
+
+/* Rango de precios */
+.price-range {
+    margin-bottom: 16px;
+}
+
+.price-range input[type="range"] {
+    width: 100%;
+    margin-bottom: 12px;
+}
+
+.price-inputs {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.price-inputs input {
+    width: 60px;
+    padding: 6px 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 12px;
+    text-align: center;
+}
+
+.price-inputs span {
+    font-size: 12px;
+    color: #666;
+}
+
+/* Botones de filtros */
+.filter-apply-btn,
+.filter-reset-btn {
+    width: 100%;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-bottom: 8px;
+}
+
+.filter-apply-btn {
+    background: #007bff;
+    color: white;
+}
+
+.filter-apply-btn:hover {
+    background: #0056b3;
+}
+
+.filter-reset-btn {
+    background: #6c757d;
+    color: white;
+}
+
+.filter-reset-btn:hover {
+    background: #545b62;
+}
+
+/* Contador de productos */
+.product-count {
+    font-size: 14px;
+    color: #666;
+}
+
+/* Ordenamiento */
+.catalog-sort {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.catalog-sort label {
+    font-size: 14px;
+    color: #666;
+    font-weight: 500;
+}
+
+.catalog-sort select {
+    padding: 6px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    background: white;
+    cursor: pointer;
+}
+
+.catalog-sort select:focus {
+    outline: none;
+    border-color: #007bff;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .catalog-header {
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+    }
+    
+    .catalog-sort {
+        width: 100%;
+    }
+    
+    .catalog-sort select {
+        flex: 1;
+    }
+    
+    .pagination {
+        gap: 4px;
+    }
+    
+    .pagination .page-link {
+        width: 36px;
+        height: 36px;
+        font-size: 14px;
+    }
+    
+    .no-products {
+        padding: 40px 20px;
+    }
+    
+    .no-products i {
+        font-size: 48px;
+    }
+    
+    .no-products h3 {
+        font-size: 20px;
+    }
+    
+    .product-card {
+        padding: 15px;
+    }
+    
+    .presentation-item {
+        padding: 6px 10px;
+    }
+    
+    .product-price {
+        font-size: 18px;
+    }
+    
+    .add-to-cart-btn {
+        padding: 10px 16px;
+        font-size: 13px;
+    }
+}
+
+/* Estados de carga */
+.product-grid.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.product-grid.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #007bff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: translate(-50%, -50%) rotate(0deg); }
+    100% { transform: translate(-50%, -50%) rotate(360deg); }
+} 
