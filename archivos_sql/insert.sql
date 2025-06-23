@@ -2974,27 +2974,13 @@ INSERT INTO Fermentacion (receta_id_receta, fecha_inicio, fecha_fin_estimada) VA
 
 
 
-INSERT INTO Inventario (cantidad, id_tienda_fisica, id_tienda_web, id_ubicacion, id_presentacion, id_cerveza) VALUES
-(100000, NULL, 1, NULL, 1, 1),
-(100000, NULL, 1, NULL, 2, 2),
-(100000, NULL, 1, NULL, 3, 3),
-(100000, NULL, 1, NULL, 3, 4),
-(100000, NULL, 1, NULL, 2, 5),
-(100000, NULL, 1, NULL, 1, 6),
-(100000, NULL, 1, NULL, 1, 7),
-(100000, NULL, 1, NULL, 1, 8),
-(100000, NULL, 1, NULL, 1, 9),
-(100000, NULL, 1, NULL, 1, 10),
-(100000, NULL, NULL, 1, 1, 1),   
-(100000, NULL, NULL, 2, 2, 2),   
-(100000, NULL, NULL, 3, 3, 3),   
-(100000, NULL, NULL, 4, 3, 4),   
-(100000, NULL, NULL, 5, 2, 5),   
-(100000, NULL, NULL, 6, 1, 6),   
-(100000, NULL, NULL, 7, 1, 7),   
-(100000, NULL, NULL, 8, 1, 8),   
-(100000, NULL, NULL, 9, 1, 9),   
-(100000, NULL, NULL, 10, 1, 10);
+INSERT INTO Inventario (cantidad, id_tienda_fisica, id_presentacion, id_cerveza)
+SELECT
+    35 AS cantidad,
+    1 AS id_tienda_fisica,
+    pc.id_presentacion,
+    pc.id_cerveza
+FROM presentacion_cerveza pc;
 
 
 

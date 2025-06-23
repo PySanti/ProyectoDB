@@ -669,6 +669,82 @@ END;
 $$ LANGUAGE plpgsql;
 
 
+
+-- ==============================================================================
+-- FUNCIONES PARA EL CATÁLOGO DE PRODUCTOS
+-- ==============================================================================
+
+-- Función para obtener productos del catálogo con paginación y ordenamiento
+CREATE OR REPLACE FUNCTION obtener_productos_catalogo(
+    p_sort_by VARCHAR DEFAULT 'relevance',
+    p_page INTEGER DEFAULT 1,
+    p_limit INTEGER DEFAULT 9
+) RETURNS TABLE (
+    id_cerveza INTEGER,
+    nombre_cerveza VARCHAR,
+    tipo_cerveza VARCHAR,
+    min_price DECIMAL(10,2),
+    presentaciones JSON
+) AS $$
+BEGIN
+    RETURN QUERY
+    WITH UnicoInventario AS (
+        SELECT DISTINCT ON (i.id_cerveza, i.id_presentacion)
+            i.id_inventario, i.cantidad, i.id_presentacion, i.id_cerveza
+        FROM Inventario i
+        -- Priorizamos la tienda física si hay múltiples entradas
+        ORDER BY i.id_cerveza, i.id_presentacion, i.id_tienda_fisica DESC NULLS LAST
+    )
+    SELECT
+        c.id_cerveza, 
+        c.nombre_cerveza, 
+        tc.nombre AS tipo_cerveza,
+        MIN(pc.precio) as min_price, -- Helper para ordenar por precio
+        COALESCE(
+            json_agg(
+                json_build_object(
+                    'id_inventario', ui.id_inventario,
+                    'id_presentacion', p.id_presentacion, 
+                    'nombre_presentacion', p.nombre,
+                    'precio_unitario', pc.precio,
+                    'stock_disponible', COALESCE(ui.cantidad, 0)
+                ) ORDER BY p.id_presentacion
+            ) FILTER (WHERE p.id_presentacion IS NOT NULL),
+            '[]'::json
+        ) AS presentaciones
+    FROM Cerveza c
+    JOIN Tipo_Cerveza tc ON c.id_tipo_cerveza = tc.id_tipo_cerveza
+    LEFT JOIN presentacion_cerveza pc ON c.id_cerveza = pc.id_cerveza
+    LEFT JOIN Presentacion p ON pc.id_presentacion = p.id_presentacion
+    -- Unimos con nuestro inventario único para evitar duplicados
+    LEFT JOIN UnicoInventario ui ON pc.id_cerveza = ui.id_cerveza AND pc.id_presentacion = ui.id_presentacion
+    GROUP BY c.id_cerveza, tc.nombre
+    ORDER BY 
+        CASE WHEN p_sort_by = 'price-asc' THEN MIN(pc.precio) END ASC NULLS LAST,
+        CASE WHEN p_sort_by = 'price-desc' THEN MIN(pc.precio) END DESC NULLS LAST,
+        CASE WHEN p_sort_by = 'name-asc' THEN c.nombre_cerveza END ASC,
+        CASE WHEN p_sort_by = 'name-desc' THEN c.nombre_cerveza END DESC,
+        CASE WHEN p_sort_by = 'relevance' THEN c.id_cerveza END ASC
+    LIMIT p_limit OFFSET ((p_page - 1) * p_limit);
+END;
+$$ LANGUAGE plpgsql;
+
+-- Función para contar total de productos en el catálogo
+CREATE OR REPLACE FUNCTION contar_productos_catalogo() 
+RETURNS INTEGER AS $$
+DECLARE
+    total INTEGER;
+BEGIN
+    SELECT COUNT(DISTINCT c.id_cerveza) INTO total
+    FROM Cerveza c
+    JOIN presentacion_cerveza pc ON c.id_cerveza = pc.id_cerveza
+    JOIN Inventario i ON c.id_cerveza = i.id_cerveza AND pc.id_presentacion = i.id_presentacion;
+    
+    RETURN total;
+END;
+$$ LANGUAGE plpgsql; 
+
+
 -- =====================================================
 -- SISTEMA DE CARRITO DE COMPRAS - REFACTORIZADO
 -- =====================================================
@@ -1034,4 +1110,6 @@ COMMENT ON FUNCTION eliminar_del_carrito IS 'Función: Elimina un producto del c
 COMMENT ON FUNCTION limpiar_carrito_usuario IS 'Función: Vacía el carrito del usuario.';
 COMMENT ON FUNCTION obtener_resumen_carrito IS 'Función: Obtiene el resumen del carrito.';
 COMMENT ON FUNCTION verificar_stock_carrito IS 'Función: Verifica el stock de los productos en el carrito.'; 
+
+
 
