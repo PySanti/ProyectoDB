@@ -261,5 +261,21 @@
     <script src="../js/utils.js"></script>
     <script src="../js/cart.js"></script>
     <script src="../js/catalog.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const loginBtn = document.querySelector('.login-btn');
+        if (loginBtn) {
+          if (localStorage.getItem('user')) {
+            loginBtn.textContent = 'Cerrar Sesión';
+            loginBtn.href = '#';
+            loginBtn.addEventListener('click', function(e) {
+              e.preventDefault();
+              localStorage.clear();
+              window.location.href = 'inicio.html';
+            });
+          }
+        }
+      });
+    </script>
 </body>
 </html>
