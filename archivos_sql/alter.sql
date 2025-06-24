@@ -1426,8 +1426,6 @@ ALTER TABLE Venta_Evento
 -- MODIFICACIÓN DE TABLA PAGO_COMPRA PARA MÚLTIPLES PAGOS
 -- =====================================================
 
--- Agregar campo id_pago como clave primaria
-ALTER TABLE Pago_Compra ADD COLUMN id_pago SERIAL PRIMARY KEY;
 
 -- Cambiar la clave primaria compuesta por una constraint UNIQUE
 ALTER TABLE Pago_Compra DROP CONSTRAINT pago_compra_pkey;

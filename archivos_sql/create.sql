@@ -391,14 +391,14 @@ CREATE TABLE Orden_Reposicion_Estatus (
 );
 
 CREATE TABLE Pago_Compra (
-    id_pago        SERIAL PRIMARY KEY,
+    id_pago        SERIAL,
     metodo_id      INTEGER NOT NULL,
     compra_id      INTEGER NOT NULL,
     monto          DECIMAL NOT NULL,
     fecha_hora     TIMESTAMP NOT NULL,
     referencia     VARCHAR(50) NOT NULL,
     tasa_id        INTEGER,
-    PRIMARY KEY (metodo_id, compra_id)
+    PRIMARY KEY (id_pago, metodo_id, compra_id)
 );
 
 CREATE TABLE Pago_Cuota_Afiliacion (
