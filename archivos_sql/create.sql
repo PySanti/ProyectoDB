@@ -435,6 +435,7 @@ CREATE TABLE Rol_Privilegio (
     id_rol          INTEGER NOT NULL,
     id_privilegio   INTEGER NOT NULL,
     fecha_asignacion DATE NOT NULL,
+    nom_tabla_ojetivo VARCHAR(25) NOT NULL,
     motivo          TEXT,
     PRIMARY KEY (id_rol, id_privilegio)
 );
