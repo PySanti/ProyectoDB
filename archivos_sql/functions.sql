@@ -303,19 +303,26 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql; 
 
--- Function to get all roles with their associated privileges
+-- Function to get all roles with their associated privileges and tables
 CREATE OR REPLACE FUNCTION get_roles()
 RETURNS TABLE (
     id_rol INTEGER,
     nombre_rol VARCHAR(50),
-    privilegios TEXT[]
+    privilegios JSON
 ) AS $$
 BEGIN
     RETURN QUERY
     SELECT
         r.id_rol,
         r.nombre AS nombre_rol,
-        COALESCE(ARRAY_AGG(p.nombre ORDER BY p.nombre), '{}')::TEXT[] AS privilegios
+        COALESCE(
+            json_agg(
+                CASE WHEN p.nombre IS NOT NULL AND rp.nom_tabla_ojetivo IS NOT NULL THEN
+                    json_build_object('privilegio', p.nombre, 'tabla', rp.nom_tabla_ojetivo)
+                END
+            ) FILTER (WHERE p.nombre IS NOT NULL AND rp.nom_tabla_ojetivo IS NOT NULL),
+            '[]'::json
+        ) AS privilegios
     FROM
         Rol r
     LEFT JOIN
@@ -375,7 +382,7 @@ BEGIN
         SELECT 1 FROM json_array_elements(p_privilegios) AS j
         JOIN Privilegio pr ON pr.nombre = j->>'privilegio'
         WHERE Rol_Privilegio.id_privilegio = pr.id_privilegio
-          AND Rol_Privilegio.tabla = j->>'tabla'
+          AND Rol_Privilegio.nom_tabla_ojetivo = j->>'tabla'
       );
 
     -- Insert new pairs
@@ -386,11 +393,11 @@ BEGIN
             RAISE EXCEPTION 'Privilegio % no existe', p->>'privilegio';
         END IF;
         -- Insert if not exists
-        INSERT INTO Rol_Privilegio(id_rol, id_privilegio, tabla)
+        INSERT INTO Rol_Privilegio(id_rol, id_privilegio, nom_tabla_ojetivo)
         SELECT p_id_rol, priv_id, p->>'tabla'
         WHERE NOT EXISTS (
             SELECT 1 FROM Rol_Privilegio
-            WHERE id_rol = p_id_rol AND id_privilegio = priv_id AND tabla = p->>'tabla'
+            WHERE id_rol = p_id_rol AND id_privilegio = priv_id AND nom_tabla_ojetivo = p->>'tabla'
         );
     END LOOP;
 END;

@@ -3,7 +3,13 @@ const db = require('../db_connection/index.js');
 exports.getRoles = async (req, res) => {
   try {
     const { rows } = await db.query('SELECT * FROM get_roles()');
-    res.json({ roles: rows });
+    // Parsear el JSON de privilegios para cada rol
+    const roles = rows.map(row => ({
+      id_rol: row.id_rol,
+      nombre_rol: row.nombre_rol,
+      privilegios: Array.isArray(row.privilegios) ? row.privilegios : JSON.parse(row.privilegios)
+    }));
+    res.json({ roles });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Error al obtener los roles' });

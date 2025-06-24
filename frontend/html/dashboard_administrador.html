@@ -954,6 +954,10 @@
                 };
             }
         });
+        function editRole(id, nombre, privilegios) {
+            editingRoleId = id;
+            abrirModalRol('editar', { nombre, privilegios });
+        }
 
         // Hacer funciones globales
         window.editRole = editRole;
