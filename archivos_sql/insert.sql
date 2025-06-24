@@ -2015,8 +2015,8 @@ INSERT INTO Lugar (nombre, tipo, lugar_relacion_id) VALUES
 
 
 INSERT INTO Rol (nombre) VALUES 
-('Proveedor'),
-('Cliente'),
+('Supervisor'),
+('Encargado'),
 ('Administrador');
 
 
@@ -2320,16 +2320,16 @@ INSERT INTO Cargo (nombre, descripcion) VALUES
 
 
 INSERT INTO Empleado (cedula, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, direccion, activo, lugar_id_lugar) VALUES
-('V-12345678', 'Carlos', 'Alberto', 'González', 'Pérez', 'Av. Libertador, Edificio Torre Central, Piso 5, Apt 5-A', 'S', 52), -- Distrito Capital - Libertador
-('V-23456789', 'María', 'Elena', 'Rodríguez', 'Martínez', 'Calle Principal de Las Mercedes, Casa #45', 'S', 56), -- Miranda - Baruta
-('V-34567890', 'José', 'Luis', 'Hernández', 'Silva', 'Urbanización El Trigal, Calle 5, Casa 123', 'S', 66), -- Carabobo - Valencia
-('V-45678901', 'Ana', 'Beatriz', 'López', 'García', 'Sector La Candelaria, Carrera 15 con Calle 8, Casa 67', 'S', 52), -- Distrito Capital - Libertador
-('V-56789012', 'Miguel', 'Ángel', 'Fernández', 'Morales', 'Av. Universidad, Residencias Los Rosales, Torre B, Apt 8-C', 'S', 58), -- Miranda - Chacao
-('V-67890123', 'Carmen', 'Rosa', 'Jiménez', 'Vargas', 'Calle Bolívar, Centro Comercial Sambil, Local 234', 'S', 64), -- Carabobo - Naguanagua
-('V-78901234', 'Roberto', 'Antonio', 'Mendoza', 'Castillo', 'Zona Industrial de Maracaibo, Galpón 15', 'S', 77), -- Zulia - Maracaibo
-('V-89012345', 'Luisa', 'Fernanda', 'Torres', 'Ramos', 'Urbanización Santa Rosa, Calle Los Mangos, Casa 89', 'S', 33), -- Anzoátegui - Anaco
-('V-90123456', 'Pedro', 'José', 'Moreno', 'Díaz', 'Av. Principal de Puerto La Cruz, Edificio Mar Azul, Piso 3', 'S', 49), -- Anzoátegui - Juan Antonio Sotillo
-('V-01234567', 'Gabriela', 'Isabel', 'Ruiz', 'Herrera', 'Calle Real de Los Teques, Quinta Villa Hermosa', 'S', 61); -- Miranda - Guaicaipuro
+('V-12345678', 'Carlos', 'Alberto', 'González', 'Pérez', 'Av. Libertador, Edificio Torre Central, Piso 5, Apt 5-A', 'S', 360), -- Distrito Capital - Libertador
+('V-23456789', 'María', 'Elena', 'Rodríguez', 'Martínez', 'Calle Principal de Las Mercedes, Casa #45', 'S', 365), -- Miranda - Baruta
+('V-34567890', 'José', 'Luis', 'Hernández', 'Silva', 'Urbanización El Trigal, Calle 5, Casa 123', 'S', 366), -- Carabobo - Valencia
+('V-45678901', 'Ana', 'Beatriz', 'López', 'García', 'Sector La Candelaria, Carrera 15 con Calle 8, Casa 67', 'S', 367), -- Distrito Capital - Libertador
+('V-56789012', 'Miguel', 'Ángel', 'Fernández', 'Morales', 'Av. Universidad, Residencias Los Rosales, Torre B, Apt 8-C', 'S', 368), -- Miranda - Chacao
+('V-67890123', 'Carmen', 'Rosa', 'Jiménez', 'Vargas', 'Calle Bolívar, Centro Comercial Sambil, Local 234', 'S', 369), -- Carabobo - Naguanagua
+('V-78901234', 'Roberto', 'Antonio', 'Mendoza', 'Castillo', 'Zona Industrial de Maracaibo, Galpón 15', 'S', 370), -- Zulia - Maracaibo
+('V-89012345', 'Luisa', 'Fernanda', 'Torres', 'Ramos', 'Urbanización Santa Rosa, Calle Los Mangos, Casa 89', 'S', 375), -- Anzoátegui - Anaco
+('V-90123456', 'Pedro', 'José', 'Moreno', 'Díaz', 'Av. Principal de Puerto La Cruz, Edificio Mar Azul, Piso 3', 'S', 378), -- Anzoátegui - Juan Antonio Sotillo
+('V-01234567', 'Gabriela', 'Isabel', 'Ruiz', 'Herrera', 'Calle Real de Los Teques, Quinta Villa Hermosa', 'S', 380); -- Miranda - Guaicaipuro
 
 
 INSERT INTO Tienda_Fisica (id_lugar, nombre, direccion) VALUES
@@ -2442,66 +2442,66 @@ INSERT INTO Actividad (tema, invitado_evento_invitado_id_invitado, invitado_even
 
 
 INSERT INTO Usuario (id_cliente_juridico, id_cliente_natural, id_rol, fecha_creacion, id_proveedor, empleado_id, contraseña) VALUES
-(NULL, NULL, 1, CURRENT_DATE, 1, NULL, 'proveedor123'),
-(NULL, NULL, 1, CURRENT_DATE, 2, NULL, 'proveedor456'),
-(NULL, NULL, 1, CURRENT_DATE, 3, NULL, 'proveedor789'),
-(NULL, NULL, 1, CURRENT_DATE, 4, NULL, 'proveedor101'),
-(NULL, NULL, 1, CURRENT_DATE, 5, NULL, 'proveedor202'),
-(NULL, NULL, 1, CURRENT_DATE, 6, NULL, 'proveedor303'),
-(NULL, NULL, 1, CURRENT_DATE, 7, NULL, 'proveedor404'),
-(NULL, NULL, 1, CURRENT_DATE, 8, NULL, 'proveedor505'),
-(NULL, NULL, 1, CURRENT_DATE, 9, NULL, 'proveedor606'),
-(NULL, NULL, 1, CURRENT_DATE, 10, NULL, 'proveedor707'),
-(NULL, NULL, 1, CURRENT_DATE, 11, NULL, 'proveedor808'),
-(NULL, NULL, 1, CURRENT_DATE, 12, NULL, 'proveedor909'),
-(NULL, NULL, 1, CURRENT_DATE, 13, NULL, 'proveedor111'),
-(NULL, NULL, 1, CURRENT_DATE, 14, NULL, 'proveedor222'),
-(NULL, NULL, 1, CURRENT_DATE, 15, NULL, 'proveedor333'),
-(NULL, NULL, 1, CURRENT_DATE, 16, NULL, 'proveedor444'),
-(NULL, NULL, 1, CURRENT_DATE, 17, NULL, 'proveedor555'),
-(NULL, NULL, 1, CURRENT_DATE, 18, NULL, 'proveedor666'),
-(NULL, NULL, 1, CURRENT_DATE, 19, NULL, 'proveedor777'),
-(NULL, NULL, 1, CURRENT_DATE, 20, NULL, 'proveedor888'),
-(NULL, 1, 2, CURRENT_DATE, NULL, NULL, 'cliente001'),
-(NULL, 2, 2, CURRENT_DATE, NULL, NULL, 'cliente002'),
-(NULL, 3, 2, CURRENT_DATE, NULL, NULL, 'cliente003'),
-(NULL, 4, 2, CURRENT_DATE, NULL, NULL, 'cliente004'),
-(NULL, 5, 2, CURRENT_DATE, NULL, NULL, 'cliente005'),
-(NULL, 6, 2, CURRENT_DATE, NULL, NULL, 'cliente006'),
-(NULL, 7, 2, CURRENT_DATE, NULL, NULL, 'cliente007'),
-(NULL, 8, 2, CURRENT_DATE, NULL, NULL, 'cliente008'),
-(NULL, 9, 2, CURRENT_DATE, NULL, NULL, 'cliente009'),
-(NULL, 10, 2, CURRENT_DATE, NULL, NULL, 'cliente010'),
-(NULL, 11, 2, CURRENT_DATE, NULL, NULL, 'cliente011'),
-(NULL, 12, 2, CURRENT_DATE, NULL, NULL, 'cliente012'),
-(NULL, 13, 2, CURRENT_DATE, NULL, NULL, 'cliente013'),
-(NULL, 14, 2, CURRENT_DATE, NULL, NULL, 'cliente014'),
-(NULL, 15, 2, CURRENT_DATE, NULL, NULL, 'cliente015'),
-(NULL, 16, 2, CURRENT_DATE, NULL, NULL, 'cliente016'),
-(NULL, 17, 2, CURRENT_DATE, NULL, NULL, 'cliente017'),
-(NULL, 18, 2, CURRENT_DATE, NULL, NULL, 'cliente018'),
-(NULL, 19, 2, CURRENT_DATE, NULL, NULL, 'cliente019'),
-(NULL, 20, 2, CURRENT_DATE, NULL, NULL, 'cliente020'),
-(1, NULL, 2, CURRENT_DATE, NULL, NULL, 'empresa001'),
-(2, NULL, 2, CURRENT_DATE, NULL, NULL, 'empresa002'),
-(3, NULL, 2, CURRENT_DATE, NULL, NULL, 'empresa003'),
-(4, NULL, 2, CURRENT_DATE, NULL, NULL, 'empresa004'),
-(5, NULL, 2, CURRENT_DATE, NULL, NULL, 'empresa005'),
-(6, NULL, 2, CURRENT_DATE, NULL, NULL, 'empresa006'),
-(7, NULL, 2, CURRENT_DATE, NULL, NULL, 'empresa007'),
-(8, NULL, 2, CURRENT_DATE, NULL, NULL, 'empresa008'),
-(9, NULL, 2, CURRENT_DATE, NULL, NULL, 'empresa009'),
-(10, NULL, 2, CURRENT_DATE, NULL, NULL, 'empresa010'),
-(11, NULL, 2, CURRENT_DATE, NULL, NULL, 'empresa011'),
-(12, NULL, 2, CURRENT_DATE, NULL, NULL, 'empresa012'),
-(13, NULL, 2, CURRENT_DATE, NULL, NULL, 'empresa013'),
-(14, NULL, 2, CURRENT_DATE, NULL, NULL, 'empresa014'),
-(15, NULL, 2, CURRENT_DATE, NULL, NULL, 'empresa015'),
-(16, NULL, 2, CURRENT_DATE, NULL, NULL, 'empresa016'),
-(17, NULL, 2, CURRENT_DATE, NULL, NULL, 'empresa017'),
-(18, NULL, 2, CURRENT_DATE, NULL, NULL, 'empresa018'),
-(19, NULL, 2, CURRENT_DATE, NULL, NULL, 'empresa019'),
-(20, NULL, 2, CURRENT_DATE, NULL, NULL, 'empresa020'),
+(NULL, NULL, NULL, CURRENT_DATE, 1, NULL, 'proveedor123'),
+(NULL, NULL, NULL, CURRENT_DATE, 2, NULL, 'proveedor456'),
+(NULL, NULL, NULL, CURRENT_DATE, 3, NULL, 'proveedor789'),
+(NULL, NULL, NULL, CURRENT_DATE, 4, NULL, 'proveedor101'),
+(NULL, NULL, NULL, CURRENT_DATE, 5, NULL, 'proveedor202'),
+(NULL, NULL, NULL, CURRENT_DATE, 6, NULL, 'proveedor303'),
+(NULL, NULL, NULL, CURRENT_DATE, 7, NULL, 'proveedor404'),
+(NULL, NULL, NULL, CURRENT_DATE, 8, NULL, 'proveedor505'),
+(NULL, NULL, NULL, CURRENT_DATE, 9, NULL, 'proveedor606'),
+(NULL, NULL, NULL, CURRENT_DATE, 10, NULL, 'proveedor707'),
+(NULL, NULL, NULL, CURRENT_DATE, 11, NULL, 'proveedor808'),
+(NULL, NULL, NULL, CURRENT_DATE, 12, NULL, 'proveedor909'),
+(NULL, NULL, NULL, CURRENT_DATE, 13, NULL, 'proveedor111'),
+(NULL, NULL, NULL, CURRENT_DATE, 14, NULL, 'proveedor222'),
+(NULL, NULL, NULL, CURRENT_DATE, 15, NULL, 'proveedor333'),
+(NULL, NULL, NULL, CURRENT_DATE, 16, NULL, 'proveedor444'),
+(NULL, NULL, NULL, CURRENT_DATE, 17, NULL, 'proveedor555'),
+(NULL, NULL, NULL, CURRENT_DATE, 18, NULL, 'proveedor666'),
+(NULL, NULL, NULL, CURRENT_DATE, 19, NULL, 'proveedor777'),
+(NULL, NULL, NULL, CURRENT_DATE, 20, NULL, 'proveedor888'),
+(NULL, 1,  NULL, CURRENT_DATE, NULL, NULL, 'cliente001'),
+(NULL, 2,  NULL, CURRENT_DATE, NULL, NULL, 'cliente002'),
+(NULL, 3,  NULL, CURRENT_DATE, NULL, NULL, 'cliente003'),
+(NULL, 4,  NULL, CURRENT_DATE, NULL, NULL, 'cliente004'),
+(NULL, 5,  NULL, CURRENT_DATE, NULL, NULL, 'cliente005'),
+(NULL, 6,  NULL, CURRENT_DATE, NULL, NULL, 'cliente006'),
+(NULL, 7,  NULL, CURRENT_DATE, NULL, NULL, 'cliente007'),
+(NULL, 8,  NULL, CURRENT_DATE, NULL, NULL, 'cliente008'),
+(NULL, 9,  NULL, CURRENT_DATE, NULL, NULL, 'cliente009'),
+(NULL, 10, NULL, CURRENT_DATE, NULL, NULL, 'cliente010'),
+(NULL, 11, NULL, CURRENT_DATE, NULL, NULL, 'cliente011'),
+(NULL, 12, NULL, CURRENT_DATE, NULL, NULL, 'cliente012'),
+(NULL, 13, NULL, CURRENT_DATE, NULL, NULL, 'cliente013'),
+(NULL, 14, NULL, CURRENT_DATE, NULL, NULL, 'cliente014'),
+(NULL, 15, NULL, CURRENT_DATE, NULL, NULL, 'cliente015'),
+(NULL, 16, NULL, CURRENT_DATE, NULL, NULL, 'cliente016'),
+(NULL, 17, NULL, CURRENT_DATE, NULL, NULL, 'cliente017'),
+(NULL, 18, NULL, CURRENT_DATE, NULL, NULL, 'cliente018'),
+(NULL, 19, NULL, CURRENT_DATE, NULL, NULL, 'cliente019'),
+(NULL, 20, NULL, CURRENT_DATE, NULL, NULL, 'cliente020'),
+(1, NULL,  NULL, CURRENT_DATE, NULL, NULL, 'empresa001'),
+(2, NULL,  NULL, CURRENT_DATE, NULL, NULL, 'empresa002'),
+(3, NULL,  NULL, CURRENT_DATE, NULL, NULL, 'empresa003'),
+(4, NULL,  NULL, CURRENT_DATE, NULL, NULL, 'empresa004'),
+(5, NULL,  NULL, CURRENT_DATE, NULL, NULL, 'empresa005'),
+(6, NULL,  NULL, CURRENT_DATE, NULL, NULL, 'empresa006'),
+(7, NULL,  NULL, CURRENT_DATE, NULL, NULL, 'empresa007'),
+(8, NULL,  NULL, CURRENT_DATE, NULL, NULL, 'empresa008'),
+(9, NULL,  NULL, CURRENT_DATE, NULL, NULL, 'empresa009'),
+(10, NULL, NULL, CURRENT_DATE, NULL, NULL, 'empresa010'),
+(11, NULL, NULL, CURRENT_DATE, NULL, NULL, 'empresa011'),
+(12, NULL, NULL, CURRENT_DATE, NULL, NULL, 'empresa012'),
+(13, NULL, NULL, CURRENT_DATE, NULL, NULL, 'empresa013'),
+(14, NULL, NULL, CURRENT_DATE, NULL, NULL, 'empresa014'),
+(15, NULL, NULL, CURRENT_DATE, NULL, NULL, 'empresa015'),
+(16, NULL, NULL, CURRENT_DATE, NULL, NULL, 'empresa016'),
+(17, NULL, NULL, CURRENT_DATE, NULL, NULL, 'empresa017'),
+(18, NULL, NULL, CURRENT_DATE, NULL, NULL, 'empresa018'),
+(19, NULL, NULL, CURRENT_DATE, NULL, NULL, 'empresa019'),
+(20, NULL, NULL, CURRENT_DATE, NULL, NULL, 'empresa020'),
 (NULL, NULL, 3, CURRENT_DATE, NULL, 1, 'empleado123');
 
 -- Insertar correos de proveedores

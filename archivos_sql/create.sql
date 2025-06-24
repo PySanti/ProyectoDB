@@ -628,6 +628,12 @@ CREATE TABLE Usuario (
         (id_cliente_natural IS NULL AND id_cliente_juridico IS NOT NULL AND empleado_id IS NULL AND id_proveedor IS NULL) OR
         (id_cliente_natural IS NULL AND id_cliente_juridico IS NULL AND empleado_id IS NOT NULL AND id_proveedor IS NULL) OR
         (id_cliente_natural IS NULL AND id_cliente_juridico IS NULL AND empleado_id IS NULL AND id_proveedor IS NOT NULL) 
+    ),
+
+    CONSTRAINT rol_para_empleado CHECK (
+        (empleado_id IS NOT NULL AND id_rol IS NOT NULL) OR
+        (empleado_id IS NULL AND id_rol IS NULL) 
+
     )
 );
 
