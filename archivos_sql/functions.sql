@@ -65,8 +65,8 @@ BEGIN
     p_rif_cliente, p_razon_social, p_denominacion_comercial, p_capital_disponible, p_direccion_fiscal, p_direccion_fisica, p_pagina_web, p_lugar_id_lugar, p_lugar_id_lugar2
   ) RETURNING id_cliente INTO new_cliente_id;
 
-  INSERT INTO Usuario (id_cliente_juridico, id_rol, fecha_creacion, contraseña)
-  VALUES (new_cliente_id, 2, CURRENT_DATE, p_contrasena)
+  INSERT INTO Usuario (id_cliente_juridico, fecha_creacion, contraseña)
+  VALUES (new_cliente_id,  CURRENT_DATE, p_contrasena)
   RETURNING id_usuario INTO new_usuario_id;
 
   INSERT INTO Correo (nombre, extension_pag, id_cliente_juridico)
@@ -94,8 +94,8 @@ BEGIN
   VALUES (p_cedula, p_rif, p_primer_nombre, p_segundo_nombre, p_primer_apellido, p_segundo_apellido, p_id_lugar, p_direccion_fisica)
   RETURNING id_cliente INTO new_cliente_id;
 
-  INSERT INTO Usuario (id_cliente_natural, id_rol, fecha_creacion, contraseña)
-  VALUES (new_cliente_id, 2, CURRENT_DATE, p_contrasena)
+  INSERT INTO Usuario (id_cliente_natural, fecha_creacion, contraseña)
+  VALUES (new_cliente_id,  CURRENT_DATE, p_contrasena)
   RETURNING id_usuario INTO new_usuario_id;
 
   INSERT INTO Correo (nombre, extension_pag, id_cliente_natural)
@@ -123,8 +123,8 @@ BEGIN
   VALUES (p_razon_social, p_denominacion, p_rif, p_url_web, p_id_lugar, p_direccion_fisica, p_id_lugar2, p_direccion_fiscal)
   RETURNING id_proveedor INTO new_proveedor_id;
 
-  INSERT INTO Usuario (id_proveedor, id_rol, fecha_creacion, contraseña)
-  VALUES (new_proveedor_id, 1, CURRENT_DATE, p_contrasena)
+  INSERT INTO Usuario (id_proveedor, fecha_creacion, contraseña)
+  VALUES (new_proveedor_id,  CURRENT_DATE, p_contrasena)
   RETURNING id_usuario INTO new_usuario_id;
 
   INSERT INTO Correo (nombre, extension_pag, id_usuario)
