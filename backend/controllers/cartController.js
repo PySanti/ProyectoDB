@@ -142,6 +142,32 @@ async function verifyStock(req, res) {
     }
 }
 
+// =================================================================
+// REGISTRAR PAGOS DE UNA COMPRA
+// =================================================================
+async function registrarPagosCompra(req, res) {
+    const { compra_id, pagos } = req.body;
+    if (!compra_id || !Array.isArray(pagos) || pagos.length === 0) {
+        return res.status(400).json({ success: false, message: 'Datos de pago incompletos.' });
+    }
+    const db = require('../db_connection');
+    try {
+        // Llamar función SQL
+        const result = await db.query(
+            'SELECT registrar_pagos_y_descuento_inventario($1, $2::json) AS ok',
+            [compra_id, JSON.stringify(pagos)]
+        );
+        if (result.rows[0].ok) {
+            return res.json({ success: true, message: 'Pagos registrados y stock descontado exitosamente.' });
+        } else {
+            return res.status(500).json({ success: false, message: 'No se pudo registrar el pago.' });
+        }
+    } catch (err) {
+        console.error(err);
+        return res.status(500).json({ success: false, message: err.message || 'Error al registrar pagos.' });
+    }
+}
+
 module.exports = {
     getCart,
     addToCart,
@@ -150,6 +176,7 @@ module.exports = {
     removeFromCart,
     clearCart,
     getCartSummary,
-    verifyStock,
     updatePurchaseAmount,
+    verifyStock,
+    registrarPagosCompra
 }; 

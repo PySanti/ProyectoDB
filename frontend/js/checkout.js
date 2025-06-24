@@ -92,7 +92,20 @@ function setupCheckoutEventListeners() {
     // Event listeners para checkboxes de métodos de pago
     const paymentCheckboxes = document.querySelectorAll('.payment-checkbox');
     paymentCheckboxes.forEach(checkbox => {
-        checkbox.addEventListener('change', handlePaymentMethodChange);
+        const paymentMethod = checkbox.closest('.payment-method');
+        const amountInput = paymentMethod.querySelector('.amount-input');
+        // Deshabilitar por defecto
+        amountInput.disabled = true;
+        checkbox.addEventListener('change', function(event) {
+            if (checkbox.checked) {
+                amountInput.disabled = false;
+                amountInput.focus();
+            } else {
+                amountInput.disabled = true;
+                amountInput.value = '';
+            }
+            updatePaymentSummary();
+        });
     });
     
     // Event listeners para inputs de cantidad
@@ -112,25 +125,6 @@ function setupCheckoutEventListeners() {
     if (placeOrderBtn) {
         placeOrderBtn.addEventListener('click', handlePlaceOrder);
     }
-}
-
-function handlePaymentMethodChange(event) {
-    const checkbox = event.target;
-    const paymentMethod = checkbox.closest('.payment-method');
-    const details = paymentMethod.querySelector('.payment-details');
-    const amountInput = paymentMethod.querySelector('.amount-input');
-    
-    if (checkbox.checked) {
-        details.style.display = 'block';
-        amountInput.disabled = false;
-        amountInput.focus();
-    } else {
-        details.style.display = 'none';
-        amountInput.disabled = true;
-        amountInput.value = '';
-    }
-    
-    updatePaymentSummary();
 }
 
 function handleAmountChange() {
@@ -185,7 +179,7 @@ function calculateTotalPaid() {
 }
 
 function updateMethodTotals() {
-    const methods = ['card', 'cash', 'check', 'points'];
+    const methods = ['credit', 'debit', 'cash', 'check', 'points'];
     
     methods.forEach(method => {
         const checkbox = document.getElementById(`payment-${method}`);
@@ -205,15 +199,8 @@ function updateMethodTotals() {
 
 function updatePlaceOrderButton(totalPaid, totalToPay) {
     const placeOrderBtn = document.getElementById('place-order-btn');
-    const termsCheckbox = document.getElementById('terms-checkout');
-    
     if (placeOrderBtn) {
-        const isComplete = totalPaid >= totalToPay && termsCheckbox?.checked;
-        placeOrderBtn.disabled = !isComplete;
-        
-        if (totalPaid > totalToPay) {
-            showNotification('El monto pagado excede el total. Se procesará como cambio.', 'info');
-        }
+        placeOrderBtn.disabled = !(totalPaid === totalToPay && totalToPay > 0);
     }
 }
 
@@ -221,133 +208,66 @@ function updatePlaceOrderButton(totalPaid, totalToPay) {
 // PROCESAMIENTO DEL PEDIDO
 // =================================================================
 async function handlePlaceOrder() {
-    const placeOrderBtn = document.getElementById('place-order-btn');
-    if (placeOrderBtn) {
-        placeOrderBtn.disabled = true;
-        placeOrderBtn.textContent = 'Procesando...';
+    // Obtener compra_id (puede venir del backend o sessionStorage, aquí lo simulo)
+    const compraId = await getCompraId();
+    if (!compraId) {
+        showNotification('No se pudo identificar la compra.', 'error');
+        return;
     }
-    
+    // Recolectar métodos de pago seleccionados y sus montos
+    const pagos = collectSelectedPayments();
+    if (pagos.length === 0) {
+        showNotification('Debe seleccionar al menos un método de pago con monto.', 'error');
+        return;
+    }
     try {
-        // Recopilar datos de los métodos de pago
-        const paymentData = collectPaymentData();
-        
-        // Validar datos
-        if (!validatePaymentData(paymentData)) {
-            throw new Error('Por favor, completa todos los campos requeridos');
+        const response = await fetch(`${API_BASE_URL}/carrito/pago`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ compra_id: compraId, pagos })
+        });
+        const data = await response.json();
+        if (response.ok && data.success) {
+            showNotification('¡Compra realizada exitosamente!', 'success');
+            setTimeout(() => {
+                window.location.href = 'tiempo-muerto.html';
+            }, 2500);
+        } else {
+            showNotification(data.message || 'Error al registrar el pago', 'error');
         }
-        
-        // Aquí iría la llamada al backend para procesar el pago
-        // Por ahora solo mostramos un mensaje de éxito
-        showNotification('Pago procesado correctamente', 'success');
-        
-        // Redirigir a página de confirmación o limpiar carrito
-        setTimeout(() => {
-            window.location.href = 'home.html';
-        }, 2000);
-        
     } catch (error) {
-        console.error('Error al procesar el pago:', error);
-        showNotification(error.message, 'error');
-        
-        if (placeOrderBtn) {
-            placeOrderBtn.disabled = false;
-            placeOrderBtn.textContent = 'Completar Pago';
-        }
+        showNotification('Error de conexión al registrar el pago', 'error');
     }
 }
 
-function collectPaymentData() {
-    const paymentData = {
-        methods: [],
-        total: getTotalToPay()
+function collectSelectedPayments() {
+    // Mapear los métodos de pago a sus ids según la base de datos
+    const metodoIds = {
+        credit: 21, // Puedes ajustar según tu base
+        debit: 31,
+        cash: 1,
+        check: 11,
+        points: 41
     };
-    
-    const methods = ['card', 'cash', 'check', 'points'];
-    
+    const pagos = [];
+    const methods = ['credit', 'debit', 'cash', 'check', 'points'];
     methods.forEach(method => {
         const checkbox = document.getElementById(`payment-${method}`);
         const amountInput = checkbox?.closest('.payment-method')?.querySelector('.amount-input');
-        
-        if (checkbox?.checked && amountInput && !amountInput.disabled) {
-            const amount = Number(amountInput.value) || 0;
-            if (amount > 0) {
-                const methodData = {
-                    type: method,
-                    amount: amount,
-                    details: getMethodDetails(method)
-                };
-                paymentData.methods.push(methodData);
-            }
+        if (checkbox && checkbox.checked && amountInput && Number(amountInput.value) > 0) {
+            pagos.push({
+                metodo_id: metodoIds[method],
+                monto: Number(amountInput.value),
+                tipo: method
+            });
         }
     });
-    
-    return paymentData;
+    return pagos;
 }
 
-function getMethodDetails(method) {
-    const details = {};
-    
-    switch (method) {
-        case 'card':
-            details.cardNumber = document.getElementById('card-number')?.value || '';
-            details.cardName = document.getElementById('card-name')?.value || '';
-            details.cardExpiry = document.getElementById('card-expiry')?.value || '';
-            details.cardCvv = document.getElementById('card-cvv')?.value || '';
-            break;
-        case 'cash':
-            details.currency = document.getElementById('cash-currency')?.value || 'bs';
-            break;
-        case 'check':
-            details.checkNumber = document.getElementById('check-number')?.value || '';
-            details.bank = document.getElementById('check-bank')?.value || '';
-            details.account = document.getElementById('check-account')?.value || '';
-            break;
-        case 'points':
-            // Por ahora no implementado
-            break;
-    }
-    
-    return details;
-}
-
-function validatePaymentData(paymentData) {
-    if (paymentData.methods.length === 0) {
-        showNotification('Debes seleccionar al menos un método de pago', 'error');
-        return false;
-    }
-    
-    const totalPaid = paymentData.methods.reduce((sum, method) => sum + method.amount, 0);
-    if (totalPaid < paymentData.total) {
-        showNotification('El monto pagado debe ser igual o mayor al total', 'error');
-        return false;
-    }
-    
-    // Validar detalles específicos de cada método
-    for (const method of paymentData.methods) {
-        if (!validateMethodDetails(method)) {
-            return false;
-        }
-    }
-    
-    return true;
-}
-
-function validateMethodDetails(method) {
-    switch (method.type) {
-        case 'card':
-            if (!method.details.cardNumber || !method.details.cardName || 
-                !method.details.cardExpiry || !method.details.cardCvv) {
-                showNotification('Por favor, completa todos los campos de la tarjeta', 'error');
-                return false;
-            }
-            break;
-        case 'check':
-            if (!method.details.checkNumber || !method.details.bank || !method.details.account) {
-                showNotification('Por favor, completa todos los campos del cheque', 'error');
-                return false;
-            }
-            break;
-    }
-    
-    return true;
+async function getCompraId() {
+    // Aquí deberías obtener el id de la compra real del usuario
+    // Por ahora, simulo con sessionStorage o un valor dummy
+    // TODO: Integrar con el backend real
+    return sessionStorage.getItem('compra_id') || 1;
 } 

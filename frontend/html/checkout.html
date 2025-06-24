@@ -50,42 +50,38 @@
                     <p class="checkout-subtitle">Selecciona uno o más métodos de pago para completar tu compra</p>
                     
                     <div class="payment-methods">
-                        <!-- Tarjeta de Crédito/Débito -->
+                        <!-- Tarjeta de Crédito -->
                         <div class="payment-method">
                             <div class="payment-method-header">
-                                <input type="checkbox" name="payment-methods" id="payment-card" class="payment-checkbox">
-                                <label for="payment-card" class="payment-label">
-                                    <i class="fas fa-credit-card"></i> Tarjeta de Crédito/Débito
+                                <input type="checkbox" name="payment-methods" id="payment-credit" class="payment-checkbox">
+                                <label for="payment-credit" class="payment-label">
+                                    <i class="fas fa-credit-card"></i> Tarjeta de Crédito
                                 </label>
                                 <div class="payment-amount">
                                     <input type="number" class="amount-input" placeholder="0.00" step="0.01" min="0">
                                 </div>
                             </div>
-                            
-                            <div class="payment-details" id="card-details">
+                            <div class="payment-details" id="credit-details">
                                 <div class="form-group">
-                                    <label for="card-number">Número de Tarjeta</label>
-                                    <input type="text" id="card-number" placeholder="1234 5678 9012 3456">
+                                    <label for="credit-card-number">Número de Tarjeta</label>
+                                    <input type="text" id="credit-card-number" placeholder="1234 5678 9012 3456">
                                 </div>
-                                
                                 <div class="form-row">
                                     <div class="form-group">
-                                        <label for="card-name">Nombre en la Tarjeta</label>
-                                        <input type="text" id="card-name">
+                                        <label for="credit-card-name">Nombre en la Tarjeta</label>
+                                        <input type="text" id="credit-card-name">
                                     </div>
                                 </div>
-                                
                                 <div class="form-row">
                                     <div class="form-group">
-                                        <label for="card-expiry">Fecha de Expiración</label>
-                                        <input type="text" id="card-expiry" placeholder="MM/AA">
+                                        <label for="credit-card-expiry">Fecha de Expiración</label>
+                                        <input type="text" id="credit-card-expiry" placeholder="MM/AA">
                                     </div>
                                     <div class="form-group">
-                                        <label for="card-cvv">CVV</label>
-                                        <input type="text" id="card-cvv">
+                                        <label for="credit-card-cvv">CVV</label>
+                                        <input type="text" id="credit-card-cvv">
                                     </div>
                                 </div>
-                                
                                 <div class="accepted-cards">
                                     <i class="fab fa-cc-visa"></i>
                                     <i class="fab fa-cc-mastercard"></i>
@@ -93,7 +89,45 @@
                                 </div>
                             </div>
                         </div>
-                        
+                        <!-- Tarjeta de Débito -->
+                        <div class="payment-method">
+                            <div class="payment-method-header">
+                                <input type="checkbox" name="payment-methods" id="payment-debit" class="payment-checkbox">
+                                <label for="payment-debit" class="payment-label">
+                                    <i class="fas fa-credit-card"></i> Tarjeta de Débito
+                                </label>
+                                <div class="payment-amount">
+                                    <input type="number" class="amount-input" placeholder="0.00" step="0.01" min="0">
+                                </div>
+                            </div>
+                            <div class="payment-details" id="debit-details">
+                                <div class="form-group">
+                                    <label for="debit-card-number">Número de Tarjeta</label>
+                                    <input type="text" id="debit-card-number" placeholder="1234 5678 9012 3456">
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="debit-card-name">Nombre en la Tarjeta</label>
+                                        <input type="text" id="debit-card-name">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="debit-card-expiry">Fecha de Expiración</label>
+                                        <input type="text" id="debit-card-expiry" placeholder="MM/AA">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="debit-card-cvv">CVV</label>
+                                        <input type="text" id="debit-card-cvv">
+                                    </div>
+                                </div>
+                                <div class="accepted-cards">
+                                    <i class="fab fa-cc-visa"></i>
+                                    <i class="fab fa-cc-mastercard"></i>
+                                    <i class="fab fa-cc-amex"></i>
+                                </div>
+                            </div>
+                        </div>
                         <!-- Efectivo -->
                         <div class="payment-method">
                             <div class="payment-method-header">
@@ -105,16 +139,8 @@
                                     <input type="number" class="amount-input" placeholder="0.00" step="0.01" min="0">
                                 </div>
                             </div>
-                            
                             <div class="payment-details" id="cash-details">
                                 <p>Pago en efectivo al momento de la entrega.</p>
-                                <div class="form-group">
-                                    <label for="cash-currency">Moneda</label>
-                                    <select id="cash-currency">
-                                        <option value="bs">Bolívares</option>
-                                        <option value="usd">Dólares Americanos</option>
-                                    </select>
-                                </div>
                             </div>
                         </div>
                         
@@ -175,8 +201,12 @@
                         <h3>Resumen de Pagos</h3>
                         <div class="payment-breakdown">
                             <div class="payment-row">
-                                <span>Tarjeta:</span>
-                                <span id="card-total">$0.00</span>
+                                <span>Tarjeta Crédito:</span>
+                                <span id="credit-total">$0.00</span>
+                            </div>
+                            <div class="payment-row">
+                                <span>Tarjeta Débito:</span>
+                                <span id="debit-total">$0.00</span>
                             </div>
                             <div class="payment-row">
                                 <span>Efectivo:</span>

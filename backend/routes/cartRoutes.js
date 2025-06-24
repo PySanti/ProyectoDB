@@ -31,4 +31,7 @@ router.get('/verificar-stock/:id_usuario', cartController.verifyStock);
 // PUT /api/carrito/actualizar-monto - Actualizar monto de compra al proceder al pago
 router.put('/actualizar-monto', cartController.updatePurchaseAmount);
 
+// POST /api/carrito/pago - Registrar pagos de una compra
+router.post('/pago', cartController.registrarPagosCompra);
+
 module.exports = router; 
