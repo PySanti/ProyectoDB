@@ -1286,18 +1286,6 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- =====================================================
--- COMENTARIOS DE DOCUMENTACIÓN (SIMPLIFICADO)
--- =====================================================
-
-COMMENT ON FUNCTION obtener_o_crear_carrito_usuario IS 'Función: Obtiene o crea un carrito para el usuario.';
-COMMENT ON FUNCTION agregar_al_carrito IS 'Función: Agrega un producto al carrito.';
-COMMENT ON FUNCTION obtener_carrito_usuario IS 'Función: Obtiene los productos del carrito.';
-COMMENT ON FUNCTION actualizar_cantidad_carrito IS 'Función: Actualiza la cantidad de un producto.';
-COMMENT ON FUNCTION eliminar_del_carrito IS 'Función: Elimina un producto del carrito.';
-COMMENT ON FUNCTION limpiar_carrito_usuario IS 'Función: Vacía el carrito del usuario.';
-COMMENT ON FUNCTION obtener_resumen_carrito IS 'Función: Obtiene el resumen del carrito.';
-COMMENT ON FUNCTION verificar_stock_carrito IS 'Función: Verifica el stock de los productos en el carrito.'; 
 
 -- =====================================================
 -- FUNCIÓN PARA ACTUALIZAR MONTO DE COMPRA AL PROCEDER AL PAGO
@@ -1387,3 +1375,15 @@ $$ LANGUAGE plpgsql;
 
 
 
+-- =====================================================
+-- COMENTARIOS DE DOCUMENTACIÓN (SIMPLIFICADO)
+-- =====================================================
+
+COMMENT ON FUNCTION obtener_o_crear_carrito_usuario IS 'Función: Obtiene o crea un carrito para el usuario.';
+COMMENT ON FUNCTION agregar_al_carrito IS 'Función: Agrega un producto al carrito.';
+COMMENT ON FUNCTION obtener_carrito_usuario IS 'Función: Obtiene los productos del carrito.';
+COMMENT ON FUNCTION actualizar_cantidad_carrito IS 'Función: Actualiza la cantidad de un producto.';
+COMMENT ON FUNCTION eliminar_del_carrito IS 'Función: Elimina un producto del carrito.';
+COMMENT ON FUNCTION limpiar_carrito_usuario IS 'Función: Vacía el carrito del usuario.';
+COMMENT ON FUNCTION obtener_resumen_carrito IS 'Función: Obtiene el resumen del carrito.';
+COMMENT ON FUNCTION verificar_stock_carrito IS 'Función: Verifica el stock de los productos en el carrito.'; 
