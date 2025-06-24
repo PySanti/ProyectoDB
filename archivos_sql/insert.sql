@@ -2022,10 +2022,10 @@ INSERT INTO Rol (nombre) VALUES
 
 
 INSERT INTO Privilegio (nombre) VALUES
-('crear'),
-('actualizar'),
-('eliminar'),
-('leer');
+('Crear'),
+('Actualizar'),
+('Eliminar'),
+('Leer');
 
 
 

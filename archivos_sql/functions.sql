@@ -329,104 +329,70 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
--- Function to create a new role and assign basic privileges
+-- Function to create a new role and assign privileges by table
 CREATE OR REPLACE FUNCTION create_role(
     p_nombre_rol VARCHAR,
-    p_crear BOOLEAN,
-    p_eliminar BOOLEAN,
-    p_actualizar BOOLEAN,
-    p_leer BOOLEAN
+    p_privilegios JSON
 ) RETURNS VOID AS $$
 DECLARE
     new_rol_id INTEGER;
     priv_id INTEGER;
+    p JSON;
 BEGIN
     -- Insert the new role and get its ID
     INSERT INTO Rol (nombre) VALUES (p_nombre_rol) RETURNING id_rol INTO new_rol_id;
 
-    -- Assign 'crear' privilege if selected
-    IF p_crear THEN
-        SELECT id_privilegio INTO priv_id FROM Privilegio WHERE nombre = 'crear';
-        IF FOUND THEN
-            INSERT INTO Rol_Privilegio (id_rol, id_privilegio, fecha_asignacion) VALUES (new_rol_id, priv_id, CURRENT_DATE);
+    -- Insert privileges for each (privilegio, tabla)
+    FOR p IN SELECT * FROM json_array_elements(p_privilegios)
+    LOOP
+        SELECT id_privilegio INTO priv_id FROM Privilegio WHERE nombre = p->>'privilegio';
+        IF priv_id IS NULL THEN
+            RAISE EXCEPTION 'Privilegio % no existe', p->>'privilegio';
         END IF;
-    END IF;
-
-    -- Assign 'eliminar' privilege if selected
-    IF p_eliminar THEN
-        SELECT id_privilegio INTO priv_id FROM Privilegio WHERE nombre = 'eliminar';
-        IF FOUND THEN
-            INSERT INTO Rol_Privilegio (id_rol, id_privilegio, fecha_asignacion) VALUES (new_rol_id, priv_id, CURRENT_DATE);
-        END IF;
-    END IF;
-
-    -- Assign 'actualizar' privilege if selected
-    IF p_actualizar THEN
-        SELECT id_privilegio INTO priv_id FROM Privilegio WHERE nombre = 'actualizar';
-        IF FOUND THEN
-            INSERT INTO Rol_Privilegio (id_rol, id_privilegio, fecha_asignacion) VALUES (new_rol_id, priv_id, CURRENT_DATE);
-        END IF;
-    END IF;
-
-    -- Assign 'leer' privilege if selected
-    IF p_leer THEN
-        SELECT id_privilegio INTO priv_id FROM Privilegio WHERE nombre = 'leer';
-        IF FOUND THEN
-            INSERT INTO Rol_Privilegio (id_rol, id_privilegio, fecha_asignacion) VALUES (new_rol_id, priv_id, CURRENT_DATE);
-        END IF;
-    END IF;
+        INSERT INTO Rol_Privilegio (id_rol, id_privilegio, nom_tabla_ojetivo, fecha_asignacion)
+        VALUES (new_rol_id, priv_id, p->>'tabla', CURRENT_DATE);
+    END LOOP;
 END;
 $$ LANGUAGE plpgsql;
 
--- Function to update role privileges
+-- Function to update role privileges by table
 CREATE OR REPLACE FUNCTION update_role_privileges(
     p_id_rol INTEGER,
     p_nombre_rol VARCHAR,
-    p_crear BOOLEAN,
-    p_eliminar BOOLEAN,
-    p_actualizar BOOLEAN,
-    p_leer BOOLEAN
+    p_privilegios JSON
 ) RETURNS VOID AS $$
 DECLARE
     priv_id INTEGER;
+    p JSON;
 BEGIN
     -- Update role name if different
     UPDATE Rol SET nombre = p_nombre_rol WHERE id_rol = p_id_rol;
-    
-    -- Delete all current privileges for this role
-    DELETE FROM Rol_Privilegio WHERE id_rol = p_id_rol;
-    
-    -- Assign 'crear' privilege if selected
-    IF p_crear THEN
-        SELECT id_privilegio INTO priv_id FROM Privilegio WHERE nombre = 'crear';
-        IF FOUND THEN
-            INSERT INTO Rol_Privilegio (id_rol, id_privilegio, fecha_asignacion) VALUES (p_id_rol, priv_id, CURRENT_DATE);
-        END IF;
-    END IF;
 
-    -- Assign 'eliminar' privilege if selected
-    IF p_eliminar THEN
-        SELECT id_privilegio INTO priv_id FROM Privilegio WHERE nombre = 'eliminar';
-        IF FOUND THEN
-            INSERT INTO Rol_Privilegio (id_rol, id_privilegio, fecha_asignacion) VALUES (p_id_rol, priv_id, CURRENT_DATE);
-        END IF;
-    END IF;
+    -- Delete pairs that are not in the new list
+    DELETE FROM Rol_Privilegio
+    WHERE id_rol = p_id_rol
+      AND NOT EXISTS (
+        SELECT 1 FROM json_array_elements(p_privilegios) AS j
+        JOIN Privilegio pr ON pr.nombre = j->>'privilegio'
+        WHERE Rol_Privilegio.id_privilegio = pr.id_privilegio
+          AND Rol_Privilegio.tabla = j->>'tabla'
+      );
 
-    -- Assign 'actualizar' privilege if selected
-    IF p_actualizar THEN
-        SELECT id_privilegio INTO priv_id FROM Privilegio WHERE nombre = 'actualizar';
-        IF FOUND THEN
-            INSERT INTO Rol_Privilegio (id_rol, id_privilegio, fecha_asignacion) VALUES (p_id_rol, priv_id, CURRENT_DATE);
+    -- Insert new pairs
+    FOR p IN SELECT * FROM json_array_elements(p_privilegios)
+    LOOP
+        SELECT id_privilegio INTO priv_id FROM Privilegio WHERE nombre = p->>'privilegio';
+        IF priv_id IS NULL THEN
+            RAISE EXCEPTION 'Privilegio % no existe', p->>'privilegio';
         END IF;
-    END IF;
-
-    -- Assign 'leer' privilege if selected
-    IF p_leer THEN
-        SELECT id_privilegio INTO priv_id FROM Privilegio WHERE nombre = 'leer';
-        IF FOUND THEN
-            INSERT INTO Rol_Privilegio (id_rol, id_privilegio, fecha_asignacion) VALUES (p_id_rol, priv_id, CURRENT_DATE);
-        END IF;
-    END IF;
+        -- Insert if not exists
+        INSERT INTO Rol_Privilegio(id_rol, id_privilegio, tabla)
+        SELECT p_id_rol, priv_id, p->>'tabla'
+        WHERE NOT EXISTS (
+            SELECT 1 FROM Rol_Privilegio
+            WHERE id_rol = p_id_rol AND id_privilegio = priv_id AND tabla = p->>'tabla'
+        );
+    END LOOP;
 END;
 $$ LANGUAGE plpgsql;
 
