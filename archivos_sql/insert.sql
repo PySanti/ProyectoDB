@@ -2030,11 +2030,11 @@ INSERT INTO Privilegio (nombre) VALUES
 
 
 
-INSERT INTO Rol_Privilegio (id_rol, id_privilegio, fecha_asignacion, motivo) VALUES
-(3, 1, '2025-01-15', 'Consultar catálogo de productos disponibles'),
-(3, 2, '2025-01-15', 'Crear ventas y realizar compras'),
-(3, 3, '2025-01-15', 'Consultar eventos disponibles'),
-(3, 4, '2025-01-15', 'Acceso total al sistema como administrador principal');
+INSERT INTO Rol_Privilegio (id_rol, id_privilegio, fecha_asignacion, motivo, nom_tabla_ojetivo) VALUES
+(3, 1, '2025-01-15', 'Consultar catálogo de productos disponibles', 'all'),
+(3, 2, '2025-01-15', 'Crear ventas y realizar compras', 'all'),
+(3, 3, '2025-01-15', 'Consultar eventos disponibles', 'all'),
+(3, 4, '2025-01-15', 'Acceso total al sistema como administrador principal', 'all');
 
 INSERT INTO TipoEvento (nombre, descripcion) VALUES
 ('Festival de Cerveza', 'Evento masivo de degustación y venta de cervezas artesanales con múltiples proveedores'),
