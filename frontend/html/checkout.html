@@ -23,7 +23,7 @@
                 </ul>
             </nav>
             <div class="user-actions">
-                <a href="cart.html" class="cart-icon"><i class="fas fa-shopping-cart"></i> <span class="cart-count">3</span></a>
+                <a href="cart.html" class="cart-icon"><i class="fas fa-shopping-cart"></i> <span class="cart-count">0</span></a>
                 <a href="index.html" class="login-btn">Iniciar Sesión</a>
                 <a href="profile.html" class="profile-btn"><i class="fas fa-user"></i></a>
             </div>
@@ -33,7 +33,7 @@
     <!-- Checkout Page Title -->
     <section class="page-title">
         <div class="section-container">
-            <h1>Proceso de Pago</h1>
+            <h1>Proceso de Pago - Tienda Física</h1>
             <div class="breadcrumb">
                 <a href="home.html">Inicio</a> / <a href="cart.html">Carrito</a> / <span>Pago</span>
             </div>
@@ -43,287 +43,194 @@
     <!-- Checkout Content -->
     <section class="checkout-section">
         <div class="section-container">
-            <div class="checkout-progress">
-                <div class="progress-step active">
-                    <div class="step-number">1</div>
-                    <div class="step-label">Información de Envío</div>
-                </div>
-                <div class="progress-line"></div>
-                <div class="progress-step">
-                    <div class="step-number">2</div>
-                    <div class="step-label">Método de Pago</div>
-                </div>
-                <div class="progress-line"></div>
-                <div class="progress-step">
-                    <div class="step-number">3</div>
-                    <div class="step-label">Confirmación</div>
-                </div>
-            </div>
-            
             <div class="checkout-layout">
                 <!-- Checkout Form -->
                 <div class="checkout-form">
-                    <!-- Step 1: Shipping Information -->
-                    <div class="checkout-step active" id="step-1">
-                        <h2>Información de Envío</h2>
-                        
-                        <div class="form-group">
-                            <label for="checkout-email">Correo Electrónico</label>
-                            <input type="email" id="checkout-email" required>
-                        </div>
-                        
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="checkout-firstname">Nombre</label>
-                                <input type="text" id="checkout-firstname" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="checkout-lastname">Apellido</label>
-                                <input type="text" id="checkout-lastname" required>
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="checkout-address">Dirección</label>
-                            <input type="text" id="checkout-address" required>
-                        </div>
-                        
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="checkout-city">Ciudad</label>
-                                <input type="text" id="checkout-city" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="checkout-state">Estado</label>
-                                <input type="text" id="checkout-state" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="checkout-zip">Código Postal</label>
-                                <input type="text" id="checkout-zip" required>
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="checkout-phone">Teléfono</label>
-                            <input type="tel" id="checkout-phone" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="checkout-notes">Notas del Pedido (opcional)</label>
-                            <textarea id="checkout-notes"></textarea>
-                        </div>
-                        
-                        <div class="form-actions">
-                            <a href="cart.html" class="back-btn"><i class="fas fa-arrow-left"></i> Volver al Carrito</a>
-                            <button class="next-btn" onclick="nextStep(2)">Continuar <i class="fas fa-arrow-right"></i></button>
-                        </div>
-                    </div>
+                    <h2>Métodos de Pago</h2>
+                    <p class="checkout-subtitle">Selecciona uno o más métodos de pago para completar tu compra</p>
                     
-                    <!-- Step 2: Payment Method -->
-                    <div class="checkout-step" id="step-2">
-                        <h2>Método de Pago</h2>
-                        
-                        <div class="payment-methods">
-                            <div class="payment-method">
-                                <input type="radio" name="payment" id="payment-card" checked>
-                                <label for="payment-card">
+                    <div class="payment-methods">
+                        <!-- Tarjeta de Crédito/Débito -->
+                        <div class="payment-method">
+                            <div class="payment-method-header">
+                                <input type="checkbox" name="payment-methods" id="payment-card" class="payment-checkbox">
+                                <label for="payment-card" class="payment-label">
                                     <i class="fas fa-credit-card"></i> Tarjeta de Crédito/Débito
                                 </label>
-                                
-                                <div class="payment-details active">
-                                    <div class="form-group">
-                                        <label for="card-number">Número de Tarjeta</label>
-                                        <input type="text" id="card-number" placeholder="1234 5678 9012 3456" required>
-                                    </div>
-                                    
-                                    <div class="form-row">
-                                        <div class="form-group">
-                                            <label for="card-name">Nombre en la Tarjeta</label>
-                                            <input type="text" id="card-name" required>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="form-row">
-                                        <div class="form-group">
-                                            <label for="card-expiry">Fecha de Expiración</label>
-                                            <input type="text" id="card-expiry" placeholder="MM/AA" required>
-                                        </div>
-                                        <div class="form-group">
-                                            <label for="card-cvv">CVV</label>
-                                            <input type="text" id="card-cvv" required>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="accepted-cards">
-                                        <i class="fab fa-cc-visa"></i>
-                                        <i class="fab fa-cc-mastercard"></i>
-                                        <i class="fab fa-cc-amex"></i>
-                                    </div>
+                                <div class="payment-amount">
+                                    <input type="number" class="amount-input" placeholder="0.00" step="0.01" min="0">
                                 </div>
                             </div>
                             
-                            <div class="payment-method">
-                                <input type="radio" name="payment" id="payment-cash">
-                                <label for="payment-cash">
-                                    <i class="fas fa-money-bill-wave"></i> Efectivo
-                                </label>
+                            <div class="payment-details" id="card-details">
+                                <div class="form-group">
+                                    <label for="card-number">Número de Tarjeta</label>
+                                    <input type="text" id="card-number" placeholder="1234 5678 9012 3456">
+                                </div>
                                 
-                                <div class="payment-details">
-                                    <p>Pago en efectivo al momento de la entrega.</p>
+                                <div class="form-row">
                                     <div class="form-group">
-                                        <label for="cash-currency">Moneda</label>
-                                        <select id="cash-currency">
-                                            <option value="bs">Bolívares</option>
-                                            <option value="usd">Dólares Americanos</option>
-                                        </select>
+                                        <label for="card-name">Nombre en la Tarjeta</label>
+                                        <input type="text" id="card-name">
                                     </div>
                                 </div>
-                            </div>
-                            
-                            <div class="payment-method">
-                                <input type="radio" name="payment" id="payment-transfer">
-                                <label for="payment-transfer">
-                                    <i class="fas fa-university"></i> Transferencia Bancaria
-                                </label>
                                 
-                                <div class="payment-details">
-                                    <p>Realiza una transferencia a nuestra cuenta bancaria.</p>
-                                    <div class="bank-details">
-                                        <p><strong>Banco:</strong> Banco Nacional de Venezuela</p>
-                                        <p><strong>Titular:</strong> ACAUCAB</p>
-                                        <p><strong>Cuenta:</strong> 0123-4567-8901-2345-6789</p>
-                                        <p><strong>RIF:</strong> J-12345678-9</p>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label for="card-expiry">Fecha de Expiración</label>
+                                        <input type="text" id="card-expiry" placeholder="MM/AA">
                                     </div>
+                                    <div class="form-group">
+                                        <label for="card-cvv">CVV</label>
+                                        <input type="text" id="card-cvv">
+                                    </div>
+                                </div>
+                                
+                                <div class="accepted-cards">
+                                    <i class="fab fa-cc-visa"></i>
+                                    <i class="fab fa-cc-mastercard"></i>
+                                    <i class="fab fa-cc-amex"></i>
                                 </div>
                             </div>
                         </div>
                         
-                        <div class="form-actions">
-                            <button class="back-btn" onclick="prevStep(1)"><i class="fas fa-arrow-left"></i> Volver</button>
-                            <button class="next-btn" onclick="nextStep(3)">Continuar <i class="fas fa-arrow-right"></i></button>
+                        <!-- Efectivo -->
+                        <div class="payment-method">
+                            <div class="payment-method-header">
+                                <input type="checkbox" name="payment-methods" id="payment-cash" class="payment-checkbox">
+                                <label for="payment-cash" class="payment-label">
+                                    <i class="fas fa-money-bill-wave"></i> Efectivo
+                                </label>
+                                <div class="payment-amount">
+                                    <input type="number" class="amount-input" placeholder="0.00" step="0.01" min="0">
+                                </div>
+                            </div>
+                            
+                            <div class="payment-details" id="cash-details">
+                                <p>Pago en efectivo al momento de la entrega.</p>
+                                <div class="form-group">
+                                    <label for="cash-currency">Moneda</label>
+                                    <select id="cash-currency">
+                                        <option value="bs">Bolívares</option>
+                                        <option value="usd">Dólares Americanos</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Cheque -->
+                        <div class="payment-method">
+                            <div class="payment-method-header">
+                                <input type="checkbox" name="payment-methods" id="payment-check" class="payment-checkbox">
+                                <label for="payment-check" class="payment-label">
+                                    <i class="fas fa-university"></i> Cheque
+                                </label>
+                                <div class="payment-amount">
+                                    <input type="number" class="amount-input" placeholder="0.00" step="0.01" min="0">
+                                </div>
+                            </div>
+                            
+                            <div class="payment-details" id="check-details">
+                                <div class="form-group">
+                                    <label for="check-number">Número de Cheque</label>
+                                    <input type="text" id="check-number" placeholder="000000">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="check-bank">Banco</label>
+                                    <input type="text" id="check-bank" placeholder="Nombre del banco">
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="check-account">Cuenta</label>
+                                    <input type="text" id="check-account" placeholder="Número de cuenta">
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Puntos (deshabilitado por ahora) -->
+                        <div class="payment-method disabled">
+                            <div class="payment-method-header">
+                                <input type="checkbox" name="payment-methods" id="payment-points" class="payment-checkbox" disabled>
+                                <label for="payment-points" class="payment-label">
+                                    <i class="fas fa-star"></i> Puntos ACAUCAB
+                                </label>
+                                <div class="payment-amount">
+                                    <input type="number" class="amount-input" placeholder="0.00" step="0.01" min="0" disabled>
+                                </div>
+                            </div>
+                            
+                            <div class="payment-details" id="points-details">
+                                <p class="disabled-message">Sistema de puntos próximamente disponible</p>
+                                <div class="points-info">
+                                    <p><strong>Puntos disponibles:</strong> 0</p>
+                                    <p><strong>Valor por punto:</strong> $0.01</p>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     
-                    <!-- Step 3: Confirmation -->
-                    <div class="checkout-step" id="step-3">
-                        <h2>Confirmación del Pedido</h2>
-                        
-                        <div class="order-confirmation">
-                            <div class="confirmation-section">
-                                <h3>Información de Envío</h3>
-                                <p><strong>Nombre:</strong> <span id="confirm-name">Juan Pérez</span></p>
-                                <p><strong>Correo:</strong> <span id="confirm-email">juan@example.com</span></p>
-                                <p><strong>Dirección:</strong> <span id="confirm-address">Calle Principal 123, Caracas</span></p>
-                                <p><strong>Teléfono:</strong> <span id="confirm-phone">+58 212 123 4567</span></p>
+                    <!-- Resumen de Pagos -->
+                    <div class="payment-summary">
+                        <h3>Resumen de Pagos</h3>
+                        <div class="payment-breakdown">
+                            <div class="payment-row">
+                                <span>Tarjeta:</span>
+                                <span id="card-total">$0.00</span>
                             </div>
-                            
-                            <div class="confirmation-section">
-                                <h3>Método de Pago</h3>
-                                <p><span id="confirm-payment">Tarjeta de Crédito/Débito</span></p>
+                            <div class="payment-row">
+                                <span>Efectivo:</span>
+                                <span id="cash-total">$0.00</span>
                             </div>
-                            
-                            <div class="confirmation-section">
-                                <h3>Resumen del Pedido</h3>
-                                <div class="confirmation-items">
-                                    <div class="confirmation-item">
-                                        <span>Destilo Amber Ale x2</span>
-                                        <span>$17.00</span>
-                                    </div>
-                                    <div class="confirmation-item">
-                                        <span>Benitz Pale Ale x1</span>
-                                        <span>$7.50</span>
-                                    </div>
-                                    <div class="confirmation-item">
-                                        <span>Mito Brewhouse Candileja x1</span>
-                                        <span>$10.25</span>
-                                    </div>
-                                </div>
-                                
-                                <div class="confirmation-totals">
-                                    <div class="confirmation-total-row">
-                                        <span>Subtotal</span>
-                                        <span>$34.75</span>
-                                    </div>
-                                    <div class="confirmation-total-row">
-                                        <span>Envío</span>
-                                        <span>$5.00</span>
-                                    </div>
-                                    <div class="confirmation-total-row">
-                                        <span>Puntos Canjeados</span>
-                                        <span>-$0.00</span>
-                                    </div>
-                                    <div class="confirmation-total-row final">
-                                        <span>Total</span>
-                                        <span>$39.75</span>
-                                    </div>
-                                </div>
+                            <div class="payment-row">
+                                <span>Cheque:</span>
+                                <span id="check-total">$0.00</span>
                             </div>
-                            
-                            <div class="form-group terms">
-                                <input type="checkbox" id="terms-checkout" required>
-                                <label for="terms-checkout">He leído y acepto los <a href="#">Términos y Condiciones</a> y la <a href="#">Política de Privacidad</a></label>
+                            <div class="payment-row">
+                                <span>Puntos:</span>
+                                <span id="points-total">$0.00</span>
+                            </div>
+                            <div class="payment-row total">
+                                <span>Total Pagado:</span>
+                                <span id="total-paid">$0.00</span>
+                            </div>
+                            <div class="payment-row remaining">
+                                <span>Restante:</span>
+                                <span id="amount-remaining">$0.00</span>
                             </div>
                         </div>
-                        
-                        <div class="form-actions">
-                            <button class="back-btn" onclick="prevStep(2)"><i class="fas fa-arrow-left"></i> Volver</button>
-                            <button class="place-order-btn">Realizar Pedido</button>
-                        </div>
+                    </div>
+                    
+                    <!-- Términos y Condiciones -->
+                    <div class="form-group terms">
+                        <input type="checkbox" id="terms-checkout" required>
+                        <label for="terms-checkout">He leído y acepto los <a href="#">Términos y Condiciones</a> y la <a href="#">Política de Privacidad</a></label>
+                    </div>
+                    
+                    <!-- Botones de Acción -->
+                    <div class="form-actions">
+                        <a href="cart.html" class="back-btn"><i class="fas fa-arrow-left"></i> Volver al Carrito</a>
+                        <button class="place-order-btn" id="place-order-btn" disabled>Completar Pago</button>
                     </div>
                 </div>
                 
                 <!-- Order Summary -->
                 <div class="order-summary">
-                    <h2>Resumen del Pedido</h2>
+                    <h2>Resumen de la Compra</h2>
                     
-                    <div class="summary-products">
-                        <div class="summary-product">
-                            <img src="https://images.unsplash.com/photo-1566633806327-68e152aaf26d?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80" alt="Destilo Amber Ale">
-                            <div class="summary-product-info">
-                                <h3>Destilo Amber Ale</h3>
-                                <p>2 x $8.50</p>
-                            </div>
-                            <div class="summary-product-price">$17.00</div>
-                        </div>
-                        
-                        <div class="summary-product">
-                            <img src="https://images.unsplash.com/photo-1600788886242-5c96aabe3757?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80" alt="Benitz Pale Ale">
-                            <div class="summary-product-info">
-                                <h3>Benitz Pale Ale</h3>
-                                <p>1 x $7.50</p>
-                            </div>
-                            <div class="summary-product-price">$7.50</div>
-                        </div>
-                        
-                        <div class="summary-product">
-                            <img src="https://images.unsplash.com/photo-1612528443702-f6741f70a049?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80" alt="Mito Brewhouse Candileja">
-                            <div class="summary-product-info">
-                                <h3>Mito Brewhouse Candileja</h3>
-                                <p>1 x $10.25</p>
-                            </div>
-                            <div class="summary-product-price">$10.25</div>
-                        </div>
+                    <div class="summary-products" id="summary-products">
+                        <!-- Los productos se cargarán dinámicamente aquí -->
                     </div>
                     
                     <div class="summary-totals">
                         <div class="summary-row">
                             <span>Subtotal</span>
-                            <span>$34.75</span>
-                        </div>
-                        
-                        <div class="summary-row">
-                            <span>Envío</span>
-                            <span>$5.00</span>
-                        </div>
-                        
-                        <div class="summary-row">
-                            <span>Puntos Canjeados</span>
-                            <span>-$0.00</span>
+                            <span id="summary-subtotal">$0.00</span>
                         </div>
                         
                         <div class="summary-row total">
-                            <span>Total</span>
-                            <span>$39.75</span>
+                            <span>Total a Pagar</span>
+                            <span id="summary-total">$0.00</span>
                         </div>
                     </div>
                 </div>
@@ -362,7 +269,7 @@
             </div>
             <div class="footer-column">
                 <h3>Suscríbete</h3>
-                <p>Recibe nuestras novedades y oferas</p>
+                <p>Recibe nuestras novedades y ofertas</p>
                 <form class="subscribe-form">
                     <input type="email" placeholder="Tu correo electrónico">
                     <button type="submit"><i class="fas fa-paper-plane"></i></button>
@@ -374,44 +281,9 @@
         </div>
     </footer>
 
-    <script>
-        function nextStep(step) {
-            // Ocultar paso actual
-            document.querySelectorAll('.checkout-step').forEach(el => {
-                el.classList.remove('active');
-            });
-            
-            // Mostrar siguiente paso
-            document.getElementById('step-' + step).classList.add('active');
-            
-            // Actualizar barra de progreso
-            document.querySelectorAll('.progress-step').forEach((el, index) => {
-                if (index < step) {
-                    el.classList.add('active');
-                } else {
-                    el.classList.remove('active');
-                }
-            });
-        }
-        
-        function prevStep(step) {
-            // Ocultar paso actual
-            document.querySelectorAll('.checkout-step').forEach(el => {
-                el.classList.remove('active');
-            });
-            
-            // Mostrar paso anterior
-            document.getElementById('step-' + step).classList.add('active');
-            
-            // Actualizar barra de progreso
-            document.querySelectorAll('.progress-step').forEach((el, index) => {
-                if (index < step) {
-                    el.classList.add('active');
-                } else {
-                    el.classList.remove('active');
-                }
-            });
-        }
-    </script>
+    <!-- Scripts -->
+    <script src="../js/config.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/checkout.js"></script>
 </body>
 </html>

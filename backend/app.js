@@ -18,7 +18,7 @@ app.use(express.json());
 // Asignar rutas
 app.use('/api/carrito', cartRoutes);
 app.use('/api/productos', productRoutes);
-app.use('/user', userRoutes);
+app.use('/api/users', userRoutes);
 app.use('/roles', roleRoutes);
 app.use('/ordenes', ordenesRoutes);
 
