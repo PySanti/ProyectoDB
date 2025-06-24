@@ -1063,38 +1063,16 @@ ALTER TABLE Proveedor
 ;
 
 
-ALTER TABLE Punto_Cliente 
-    ADD CONSTRAINT Punto_Cliente_Cliente_FK FOREIGN KEY 
-    ( 
-     id_cliente_natural
-    ) 
-    REFERENCES Cliente_Natural 
-    ( 
-     id_cliente
-    ) 
-;
+-- Eliminación de restricciones antiguas de Punto_Cliente si existen
+-- ALTER TABLE Punto_Cliente DROP CONSTRAINT Punto_Cliente_pkey;
+-- ALTER TABLE Punto_Cliente DROP CONSTRAINT Punto_Cliente_Cliente_FK;
+-- ALTER TABLE Punto_Cliente DROP CONSTRAINT Punto_Cliente_Punto_FK;
 
+-- Nuevas restricciones para la nueva estructura de Punto_Cliente
 ALTER TABLE Punto_Cliente 
-    ADD CONSTRAINT Punto_Cliente_Punto_FK FOREIGN KEY 
-    ( 
-     id_metodo
-    ) 
-    REFERENCES Punto 
-    ( 
-     id_metodo
-    ) 
-;
-
-ALTER TABLE Punto 
-    ADD CONSTRAINT Punto_Metodo_Pago_FK FOREIGN KEY 
-    ( 
-     id_metodo
-    ) 
-    REFERENCES Metodo_Pago 
-    ( 
-     id_metodo
-    ) 
-;
+    ADD CONSTRAINT Punto_Cliente_Cliente_FK FOREIGN KEY (id_cliente_natural) REFERENCES Cliente_Natural(id_cliente);
+ALTER TABLE Punto_Cliente 
+    ADD CONSTRAINT Punto_Cliente_Punto_FK FOREIGN KEY (id_metodo) REFERENCES Punto(id_metodo);
 
 --  ERROR: FK name length exceeds maximum allowed length(30) 
 ALTER TABLE Receta_Ingrediente 
