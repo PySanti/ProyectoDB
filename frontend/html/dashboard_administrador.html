@@ -47,9 +47,6 @@
                         <input type="text" placeholder="Buscar usuario, rol u orden...">
                         <button><i class="fas fa-search"></i></button>
                     </div>
-                    <div class="notifications">
-                        <button class="notification-btn"><i class="fas fa-bell"></i><span class="badge">5</span></button>
-                    </div>
                 </div>
             </header>
             <!-- Usuarios Section -->
@@ -750,7 +747,7 @@
             }
 
             // Cargar usuarios al montar
-            fetch('http://localhost:3000/user/usuarios')
+            fetch('http://localhost:3000/api/users/usuarios')
                 .then(res => res.json())
                 .then(data => {
                     console.log(data);
@@ -988,7 +985,7 @@
             };
 
             try {
-                const res = await fetch('http://localhost:3000/user/empleados', {
+                const res = await fetch('http://localhost:3000/api/users/empleados', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
