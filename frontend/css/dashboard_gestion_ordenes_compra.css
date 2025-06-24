@@ -135,6 +135,35 @@ body {
     font-weight: 500;
 }
 
+.sidebar-nav a[data-section="reportes"] {
+    /* Color especial para el botón de reportes si se desea diferenciar */
+}
+
+.arrow-btn {
+    color: var(--primary-color);
+    transition: var(--transition);
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.arrow-btn:hover {
+    background-color: var(--secondary-color);
+    color: var(--primary-dark);
+}
+
+#reporte-contenido {
+    min-width: 300px;
+    min-height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+}
+
 .sidebar-footer {
     padding: 20px;
     border-top: 1px solid var(--border-color);
@@ -1111,4 +1140,38 @@ body {
     .form-actions button {
         width: 100%;
     }
+}
+
+.reportes-navegacion {
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    width: 100%;
+    height: 350px; /* Puedes ajustar la altura según lo que necesites */
+    min-height: 200px;
+    gap: 0;
+}
+.reporte-prev, .reporte-next {
+    width: 5%;
+    min-width: 40px;
+    max-width: 80px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+.reporte-contenido {
+    width: 90%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 300px;
+    min-height: 200px;
+    text-align: center;
+    font-size: 1.2rem;
 }
