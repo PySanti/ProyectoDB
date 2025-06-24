@@ -3247,17 +3247,28 @@ INSERT INTO Tarjeta_Debito (id_metodo, numero, banco) VALUES
 
 
 
-INSERT INTO Punto_Cliente (id_cliente_natural, id_metodo, cantidad_actual, cantidad_mov, fecha, tipo_movimiento) VALUES
-(1, 41, 150, 150, '2025-01-10', 'GANADO'),
-(2, 42, 200, 200, '2025-01-12', 'GANADO'),
-(3, 41, 300, 300, '2025-01-08', 'GANADO'),
-(4, 43, 180, 180, '2025-01-11', 'GANADO'),
-(5, 42, 120, 120, '2025-01-09', 'GANADO'),
-(6, 44, 250, 250, '2025-01-13', 'GANADO'),
-(7, 41, 90, 90, '2025-01-07', 'GANADO'),
-(8, 43, 160, 160, '2025-01-06', 'GANADO'),
-(9, 42, 80, 80, '2025-01-05', 'GANADO'),
-(10, 41, 220, 220, '2025-01-04', 'GANADO');
+-- Ejemplo de inserciones para Punto_Cliente (historial de movimientos)
+INSERT INTO Punto_Cliente (id_cliente_natural, id_metodo, cantidad_mov, fecha, tipo_movimiento) VALUES
+(1, 41, 150, '2025-01-10', 'GANADO'),
+(1, 41, -50, '2025-02-15', 'GASTADO'),
+(2, 42, 200, '2025-01-12', 'GANADO'),
+(2, 42, -80, '2025-03-10', 'GASTADO'),
+(3, 41, 300, '2025-01-08', 'GANADO'),
+(3, 41, -120, '2025-04-05', 'GASTADO'),
+(4, 43, 180, '2025-01-11', 'GANADO'),
+(4, 43, -60, '2025-02-20', 'GASTADO'),
+(5, 42, 120, '2025-01-09', 'GANADO'),
+(5, 42, -30, '2025-03-15', 'GASTADO'),
+(6, 44, 250, '2025-01-13', 'GANADO'),
+(6, 44, -100, '2025-05-01', 'GASTADO'),
+(7, 45, 170, '2025-01-14', 'GANADO'),
+(7, 45, -70, '2025-03-25', 'GASTADO'),
+(8, 46, 220, '2025-01-15', 'GANADO'),
+(8, 46, -90, '2025-04-10', 'GASTADO'),
+(9, 47, 190, '2025-01-16', 'GANADO'),
+(9, 47, -40, '2025-02-28', 'GASTADO'),
+(10, 48, 210, '2025-01-17', 'GANADO'),
+(10, 48, -60, '2025-03-30', 'GASTADO');
 
 
 --- Compras de usuarios de clientes naturales

@@ -500,15 +500,14 @@ CREATE TABLE Punto (
 );
 
 CREATE TABLE Punto_Cliente (
-    id_cliente_natural       INTEGER NOT NULL,
-    id_metodo        INTEGER NOT NULL,
-    cantidad_actual  INTEGER NOT NULL,
-    cantidad_mov     INTEGER NOT NULL,
-    fecha            DATE NOT NULL,
-    tipo_movimiento  VARCHAR(20) NOT NULL,
-
-    PRIMARY KEY (id_metodo, id_cliente_natural)
-
+    id_punto_cliente SERIAL PRIMARY KEY,
+    id_cliente_natural INTEGER NOT NULL,
+    id_metodo INTEGER NOT NULL,
+    cantidad_mov INTEGER NOT NULL,
+    fecha DATE NOT NULL,
+    tipo_movimiento VARCHAR(20) NOT NULL,
+    FOREIGN KEY (id_cliente_natural) REFERENCES Cliente_Natural(id_cliente),
+    FOREIGN KEY (id_metodo) REFERENCES Punto(id_metodo)
 );
 
 CREATE TABLE Receta (
