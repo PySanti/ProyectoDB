@@ -990,30 +990,24 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
                 });
-                if (res.ok) {
+                const responseData = await res.json();
+                if (res.ok && responseData.empleado) {
                     alert('Empleado creado exitosamente');
                     document.getElementById('nuevo-empleado-modal').classList.remove('active');
                     // Agregar el nuevo empleado al localStorage y refrescar la tabla
-                    // 1. Obtener el objeto actual de usuarios
                     let usuariosLS = JSON.parse(localStorage.getItem('users_list')) || {};
                     if (!usuariosLS['empleados']) usuariosLS['empleados'] = [];
-                    // 2. Crear el objeto del nuevo empleado (con los campos mínimos para la tabla)
-                    const nuevoEmpleado = {
-                        nombre_completo: primer_nombre + (segundo_nombre ? ' ' + segundo_nombre : '') + ' ' + primer_apellido + (segundo_apellido ? ' ' + segundo_apellido : ''),
-                        email: correo_nombre + '@' + correo_extension,
-                        cedula: cedula,
-                        direccion_especifica: direccion,
-                        activo: 'S',
-                        // Los siguientes campos pueden quedar vacíos o null si no se tienen en el frontend
-                        id_usuario: null, // No lo tenemos hasta recargar desde backend
-                        id_rol: null // No lo tenemos hasta recargar desde backend
-                    };
+                    // Usar todos los datos retornados por la API
+                    const nuevoEmpleado = responseData.empleado;
+                    // Normalizar id_usuario si viene como usuario_id
+                    if (nuevoEmpleado.usuario_id && !nuevoEmpleado.id_usuario) {
+                        nuevoEmpleado.id_usuario = nuevoEmpleado.usuario_id;
+                    }
                     usuariosLS['empleados'].push(nuevoEmpleado);
                     localStorage.setItem('users_list', JSON.stringify(usuariosLS));
                     renderUsuariosTable();
                 } else {
-                    const errorData = await res.json();
-                    alert('Error al crear el empleado: ' + (errorData.error || ''));
+                    alert('Error al crear el empleado: ' + (responseData.error || ''));
                 }
             } catch (err) {
                 alert('Error de conexión al crear el empleado');

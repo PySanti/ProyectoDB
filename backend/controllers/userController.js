@@ -28,8 +28,8 @@ exports.createEmpleado = async (req, res) => {
   } = req.body;
 
   try {
-    await db.query(
-      'SELECT create_empleado($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)',
+    const result = await db.query(
+      'SELECT * FROM create_empleado($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)',
       [
         cedula,
         primer_nombre,
@@ -43,7 +43,12 @@ exports.createEmpleado = async (req, res) => {
         contrasena
       ]
     );
-    res.status(201).json({ message: 'Empleado creado exitosamente' });
+    const empleadoCreado = result.rows[0];
+    // Normalizar el campo id_usuario si viene como usuario_id
+    if (empleadoCreado && empleadoCreado.usuario_id && !empleadoCreado.id_usuario) {
+      empleadoCreado.id_usuario = empleadoCreado.usuario_id;
+    }
+    res.status(201).json({ message: 'Empleado creado exitosamente', empleado: empleadoCreado });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Error al crear el empleado' });

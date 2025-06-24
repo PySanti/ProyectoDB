@@ -224,8 +224,8 @@ RETURNS TABLE (
     nombre_completo VARCHAR(100),
     cedula VARCHAR(20),
     estado VARCHAR(100),
-    ciudad VARCHAR(100),
     municipio VARCHAR(100),
+    parroquia VARCHAR(100),
     direccion_especifica TEXT,
     activo CHAR(1)
 ) AS $$
@@ -237,8 +237,8 @@ BEGIN
         CONCAT(e.primer_nombre, ' ', e.segundo_nombre, ' ', e.primer_apellido, ' ', e.segundo_apellido)::VARCHAR(100) AS nombre_completo,
         e.cedula::VARCHAR(20) AS cedula,
         l_estado.nombre::VARCHAR(100) AS estado,
-        l_ciudad.nombre::VARCHAR(100) AS ciudad,
         l_municipio.nombre::VARCHAR(100) AS municipio,
+        l_parroquia.nombre::VARCHAR(100) AS parroquia,
         e.direccion AS direccion_especifica,
         e.activo
     FROM Usuario u
@@ -246,8 +246,7 @@ BEGIN
     LEFT JOIN Correo cor ON cor.id_empleado = e.id_empleado
     LEFT JOIN Lugar l_parroquia ON e.lugar_id_lugar = l_parroquia.id_lugar
     LEFT JOIN Lugar l_municipio ON l_parroquia.lugar_relacion_id = l_municipio.id_lugar AND l_municipio.tipo = 'Municipio'
-    LEFT JOIN Lugar l_ciudad ON l_municipio.lugar_relacion_id = l_ciudad.id_lugar AND l_ciudad.tipo = 'Ciudad'
-    LEFT JOIN Lugar l_estado ON l_ciudad.lugar_relacion_id = l_estado.id_lugar AND l_estado.tipo = 'Estado'
+    LEFT JOIN Lugar l_estado ON l_municipio.lugar_relacion_id = l_estado.id_lugar AND l_estado.tipo = 'Estado'
     WHERE u.empleado_id IS NOT NULL;
 END;
 $$ LANGUAGE plpgsql; 
@@ -447,7 +446,18 @@ CREATE OR REPLACE FUNCTION create_empleado(
     p_correo_nombre VARCHAR,
     p_correo_extension VARCHAR,
     p_contrasena VARCHAR
-) RETURNS VOID AS $$
+)
+RETURNS TABLE (
+    usuario_id INTEGER,
+    email VARCHAR(100),
+    nombre_completo VARCHAR(100),
+    cedula VARCHAR(20),
+    estado VARCHAR(100),
+    municipio VARCHAR(100),
+    parroquia VARCHAR(100),
+    direccion_especifica TEXT,
+    activo CHAR(1)
+) AS $$
 DECLARE
     new_empleado_id INTEGER;
     new_usuario_id INTEGER;
@@ -476,6 +486,26 @@ BEGIN
     ) VALUES (
         p_correo_nombre, p_correo_extension, new_empleado_id
     );
+
+    -- Retornar los datos completos del empleado recién creado
+    RETURN QUERY
+    SELECT
+        u.id_usuario,
+        CONCAT(cor.nombre, '@', cor.extension_pag)::VARCHAR(100) AS email,
+        CONCAT(e.primer_nombre, ' ', e.segundo_nombre, ' ', e.primer_apellido, ' ', e.segundo_apellido)::VARCHAR(100) AS nombre_completo,
+        e.cedula::VARCHAR(20) AS cedula,
+        l_estado.nombre::VARCHAR(100) AS estado,
+        l_municipio.nombre::VARCHAR(100) AS municipio,
+        l_parroquia.nombre::VARCHAR(100) AS parroquia,
+        e.direccion AS direccion_especifica,
+        e.activo
+    FROM Usuario u
+    JOIN Empleado e ON u.empleado_id = e.id_empleado
+    LEFT JOIN Correo cor ON cor.id_empleado = e.id_empleado
+    LEFT JOIN Lugar l_parroquia ON e.lugar_id_lugar = l_parroquia.id_lugar
+    LEFT JOIN Lugar l_municipio ON l_parroquia.lugar_relacion_id = l_municipio.id_lugar AND l_municipio.tipo = 'Municipio'
+    LEFT JOIN Lugar l_estado ON l_municipio.lugar_relacion_id = l_estado.id_lugar AND l_estado.tipo = 'Estado'
+    WHERE e.id_empleado = new_empleado_id;
 END;
 $$ LANGUAGE plpgsql;
 
