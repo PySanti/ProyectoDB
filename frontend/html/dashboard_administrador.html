@@ -5,7 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Administrador - ACAUCAB</title>
     <link rel="stylesheet" href="../css/dashboard_gestion_ordenes_compra.css">
+    <link rel="stylesheet" href="../css/reportes.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div class="dashboard-container">
@@ -174,8 +177,37 @@
                 <div class="reportes-navegacion">
                     <button id="reporte-prev" class="arrow-btn reporte-prev"><i class="fas fa-chevron-left"></i></button>
                     <div id="reporte-contenido" class="reporte-contenido">
-                        <!-- Aquí se mostrará el contenido del reporte -->
-                        <p>Selecciona un reporte para visualizarlo.</p>
+                        <!-- Título del reporte -->
+                        <div class="reporte-titulo">
+                            <h3>Ranking de Clientes por Puntos de Fidelidad</h3>
+                            <p>Top 10 clientes más leales según puntos acumulados</p>
+                        </div>
+                        
+                        <!-- Contenedor del gráfico -->
+                        <div class="grafico-container">
+                            <canvas id="grafico-ranking-puntos" width="800" height="400"></canvas>
+                        </div>
+                        
+                        <!-- Botones de paginación para el ranking de clientes -->
+                        <div class="paginacion-ranking" style="width:100%; display:flex; justify-content:flex-end; align-items:center; gap:10px; margin-top:10px;">
+                            <span id="ranking-rango" style="font-size:14px; color:#666;"></span>
+                            <button id="ranking-anterior" class="paginacion-btn">Anterior</button>
+                            <button id="ranking-siguiente" class="paginacion-btn">Siguiente</button>
+                        </div>
+                        
+                        <!-- Información adicional -->
+                        <div class="reporte-info">
+                            <div class="leyenda">
+                                <span class="leyenda-item">
+                                    <span class="leyenda-color" style="background-color: #4CAF50;"></span>
+                                    Puntos Ganados
+                                </span>
+                                <span class="leyenda-item">
+                                    <span class="leyenda-color" style="background-color: #F44336;"></span>
+                                    Puntos Gastados
+                                </span>
+                            </div>
+                        </div>
                     </div>
                     <button id="reporte-next" class="arrow-btn reporte-next"><i class="fas fa-chevron-right"></i></button>
                 </div>
@@ -419,9 +451,9 @@
         #modal-cambiar-estatus .estatus-btn {
             display: block;
             width: 100%;
-            margin: 0.5rem 0;
-            padding: 0.7rem 1rem;
-            background: #f0ad4e;
+            padding: 10px;
+            margin: 5px 0;
+            background: #007bff;
             color: #fff;
             border: none;
             border-radius: 4px;
@@ -1232,6 +1264,58 @@
         document.getElementById('close-modal-detalles-orden-proveedor').onclick = function() {
             document.getElementById('modal-detalles-orden-proveedor').classList.remove('active');
         };
+
+        // Funcionalidad para reportes
+        document.addEventListener('DOMContentLoaded', function() {
+            // Agregar event listeners para la navegación de reportes
+            const reportesLink = document.querySelector('a[data-section="reportes"]');
+            if (reportesLink) {
+                reportesLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    // Mostrar la sección de reportes
+                    mostrarSeccion('reportes');
+                    // Cargar el reporte de ranking de puntos
+                    setTimeout(() => {
+                        reportes.mostrarRankingPuntos();
+                    }, 100);
+                });
+            }
+
+            // Función para mostrar secciones
+            function mostrarSeccion(seccion) {
+                // Ocultar todas las secciones
+                document.querySelectorAll('.content-section').forEach(section => {
+                    section.style.display = 'none';
+                });
+                
+                // Mostrar la sección seleccionada
+                const seccionElement = document.getElementById(seccion + '-section');
+                if (seccionElement) {
+                    seccionElement.style.display = 'block';
+                }
+                
+                // Actualizar navegación activa
+                document.querySelectorAll('.sidebar-nav li').forEach(li => {
+                    li.classList.remove('active');
+                });
+                
+                const linkActivo = document.querySelector(`a[data-section="${seccion}"]`);
+                if (linkActivo) {
+                    linkActivo.parentElement.classList.add('active');
+                }
+            }
+
+            // Si la sección de reportes está activa al cargar la página, mostrar el reporte
+            const reportesSection = document.getElementById('reportes-section');
+            if (reportesSection && reportesSection.style.display !== 'none') {
+                setTimeout(() => {
+                    reportes.mostrarRankingPuntos();
+                }, 100);
+            }
+        });
     </script>
+    
+    <!-- Script para reportes -->
+    <script src="../js/reportes.js"></script>
 </body>
 </html> 

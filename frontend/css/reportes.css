@@ -1,0 +1,166 @@
+/* Estilos para la sección de reportes */
+
+#reportes-section {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 0;
+    min-width: 0;
+    height: 90%;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.reportes-navegacion {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+.reporte-contenido {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    max-width: 1100px;
+    min-height: 500px;
+    margin: 0 20px;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.reporte-titulo {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.reporte-titulo h3 {
+    color: #333;
+    margin-bottom: 10px;
+    font-size: 24px;
+}
+
+.reporte-titulo p {
+    color: #666;
+    font-size: 14px;
+}
+
+.grafico-container {
+    width: 100%;
+    max-width: 900px;
+    height: 400px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.reporte-info {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.leyenda {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.leyenda-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #666;
+}
+
+.leyenda-color {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+/* Estilos para navegación de reportes */
+.arrow-btn {
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s;
+}
+
+.arrow-btn:hover {
+    background: #0056b3;
+}
+
+.arrow-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+/* Responsive design para reportes */
+@media (max-width: 768px) {
+    .reporte-contenido {
+        padding: 15px;
+    }
+    
+    .reporte-titulo h3 {
+        font-size: 20px;
+    }
+    
+    .grafico-container {
+        height: 300px;
+    }
+    
+    .leyenda {
+        gap: 15px;
+    }
+    
+    .reportes-navegacion {
+        gap: 10px;
+    }
+}
+
+.paginacion-ranking {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.paginacion-btn {
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 6px 18px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.paginacion-btn:disabled {
+    background: #ccc;
+    color: #888;
+    cursor: not-allowed;
+}
+.paginacion-btn:hover:not(:disabled) {
+    background: #0056b3;
+} 
