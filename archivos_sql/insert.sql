@@ -2770,6 +2770,21 @@ INSERT INTO Vacacion (fecha_inicio, fecha_fin, descripcion, empleado_id) VALUES
 ('2024-09-02', '2024-09-06', 'Vacaciones de regreso a clases - Asuntos familiares', 10);
 
 
+INSERT INTO Vacacion (empleado_id, fecha_inicio, fecha_fin, descripcion) VALUES
+(1, '2024-06-03', '2024-06-07', 'Vacaciones de verano - Viaje familiar corto'),
+(1, '2024-09-09', '2024-09-13', 'Vacaciones por asuntos personales'),
+(2, '2024-07-22', '2024-07-26', 'Vacaciones de verano - Visita a familiares'),
+(3, '2024-05-20', '2024-05-24', 'Vacaciones de mayo - Asuntos familiares'),
+(4, '2024-01-08', '2024-01-12', 'Vacaciones de inicio de año - Descanso'),
+(4, '2024-03-11', '2024-03-15', 'Vacaciones de marzo - Asuntos académicos'),
+(6, '2024-01-29', '2024-02-02', 'Vacaciones de enero - Descanso personal'),
+(7, '2024-02-12', '2024-02-16', 'Vacaciones de febrero - Descanso personal'),
+(7, '2024-05-06', '2024-05-10', 'Vacaciones de mayo - Viaje familiar'),
+(9, '2024-02-26', '2024-03-01', 'Vacaciones de febrero - Descanso personal'),
+(9, '2024-05-13', '2024-05-17', 'Vacaciones de mayo - Viaje familiar'),
+(10, '2024-01-22', '2024-01-26', 'Vacaciones de enero - Descanso personal'),
+
+
 INSERT INTO Beneficio (nombre, descripcion, monto, activo) VALUES
 ('Bono Alimentación', 'Bono mensual para alimentación de empleados', 150.00, 'S'),
 ('Seguro Médico', 'Cobertura médica integral para empleados y familiares', 200.00, 'S'),
@@ -3269,6 +3284,26 @@ INSERT INTO Punto_Cliente (id_cliente_natural, id_metodo, cantidad_mov, fecha, t
 (9, 47, -40, '2025-02-28', 'GASTADO'),
 (10, 48, 210, '2025-01-17', 'GANADO'),
 (10, 48, -60, '2025-03-30', 'GASTADO');
+(11, 41, 120, '2025-07-01', 'GANADO'),
+(11, 41, -40, '2025-07-10', 'GASTADO'),
+(12, 42, 150, '2025-07-02', 'GANADO'),
+(12, 42, -60, '2025-07-12', 'GASTADO'),
+(13, 43, 90, '2025-07-03', 'GANADO'),
+(13, 43, -30, '2025-07-13', 'GASTADO'),
+(14, 44, 110, '2025-07-04', 'GANADO'),
+(14, 44, -50, '2025-07-14', 'GASTADO'),
+(15, 45, 130, '2025-07-05', 'GANADO'),
+(15, 45, -70, '2025-07-15', 'GASTADO'),
+(16, 46, 80, '2025-07-06', 'GANADO'),
+(16, 46, -20, '2025-07-16', 'GASTADO'),
+(17, 47, 140, '2025-07-07', 'GANADO'),
+(17, 47, -60, '2025-07-17', 'GASTADO'),
+(18, 48, 100, '2025-07-08', 'GANADO'),
+(18, 48, -30, '2025-07-18', 'GASTADO'),
+(19, 41, 160, '2025-07-09', 'GANADO'),
+(19, 41, -80, '2025-07-19', 'GASTADO'),
+(20, 42, 70, '2025-07-10', 'GANADO'),
+(20, 42, -10, '2025-07-20', 'GASTADO');
 
 
 --- Compras de usuarios de clientes naturales

@@ -31,4 +31,36 @@ exports.getRankingPuntos = async (req, res) => {
       error: 'Error al obtener el ranking de clientes por puntos' 
     });
   }
+};
+
+exports.getVacacionesEmpleados = async (req, res) => {
+  try {
+    const query = `
+      SELECT
+        e.id_empleado,
+        CONCAT(e.primer_nombre, ' ', e.segundo_nombre, ' ', e.primer_apellido, ' ', e.segundo_apellido) AS nombre_empleado,
+        v.fecha_inicio,
+        v.fecha_fin,
+        v.descripcion,
+        (v.fecha_fin - v.fecha_inicio) + 1 AS dias_periodo
+      FROM
+        Empleado e
+      LEFT JOIN
+        Vacacion v ON e.id_empleado = v.empleado_id
+      ORDER BY
+        nombre_empleado, v.fecha_inicio;
+    `;
+    const result = await db.query(query);
+    res.json({
+      success: true,
+      data: result.rows,
+      message: 'Resumen de días de vacaciones por empleado obtenido exitosamente'
+    });
+  } catch (err) {
+    console.error('Error al obtener resumen de vacaciones:', err);
+    res.status(500).json({
+      success: false,
+      error: 'Error al obtener el resumen de días de vacaciones por empleado'
+    });
+  }
 }; 
