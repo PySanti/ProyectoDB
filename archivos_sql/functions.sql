@@ -227,7 +227,8 @@ RETURNS TABLE (
     municipio VARCHAR(100),
     parroquia VARCHAR(100),
     direccion_especifica TEXT,
-    activo CHAR(1)
+    activo CHAR(1),
+    rol VARCHAR(50)
 ) AS $$
 BEGIN
     RETURN QUERY
@@ -240,13 +241,15 @@ BEGIN
         l_municipio.nombre::VARCHAR(100) AS municipio,
         l_parroquia.nombre::VARCHAR(100) AS parroquia,
         e.direccion AS direccion_especifica,
-        e.activo
+        e.activo,
+        r.nombre AS rol
     FROM Usuario u
     JOIN Empleado e ON u.empleado_id = e.id_empleado
     LEFT JOIN Correo cor ON cor.id_empleado = e.id_empleado
     LEFT JOIN Lugar l_parroquia ON e.lugar_id_lugar = l_parroquia.id_lugar
     LEFT JOIN Lugar l_municipio ON l_parroquia.lugar_relacion_id = l_municipio.id_lugar AND l_municipio.tipo = 'Municipio'
     LEFT JOIN Lugar l_estado ON l_municipio.lugar_relacion_id = l_estado.id_lugar AND l_estado.tipo = 'Estado'
+    LEFT JOIN Rol r ON u.id_rol = r.id_rol
     WHERE u.empleado_id IS NOT NULL;
 END;
 $$ LANGUAGE plpgsql; 
@@ -456,15 +459,18 @@ RETURNS TABLE (
     municipio VARCHAR(100),
     parroquia VARCHAR(100),
     direccion_especifica TEXT,
-    activo CHAR(1)
+    activo CHAR(1),
+    rol VARCHAR(50)
 ) AS $$
 DECLARE
     new_empleado_id INTEGER;
     new_usuario_id INTEGER;
     rol_empleado_id INTEGER;
 BEGIN
-    -- Buscar el id_rol correspondiente a 'Empleado'
-    SELECT id_rol INTO rol_empleado_id FROM Rol WHERE LOWER(nombre) = 'empleado' LIMIT 1;
+    SELECT id_rol INTO rol_empleado_id FROM Rol WHERE LOWER(nombre) = 'empleado nuevo';
+    IF rol_empleado_id IS NULL THEN
+        RAISE EXCEPTION 'No se encontró el rol Empleado Nuevo en la tabla Rol';
+    END IF;
 
     -- Insertar en Empleado
     INSERT INTO Empleado (
@@ -487,7 +493,7 @@ BEGIN
         p_correo_nombre, p_correo_extension, new_empleado_id
     );
 
-    -- Retornar los datos completos del empleado recién creado
+    -- Retornar los datos completos del empleado recién creado, incluyendo el nombre del rol
     RETURN QUERY
     SELECT
         u.id_usuario,
@@ -498,13 +504,15 @@ BEGIN
         l_municipio.nombre::VARCHAR(100) AS municipio,
         l_parroquia.nombre::VARCHAR(100) AS parroquia,
         e.direccion AS direccion_especifica,
-        e.activo
+        e.activo,
+        r.nombre AS rol
     FROM Usuario u
     JOIN Empleado e ON u.empleado_id = e.id_empleado
     LEFT JOIN Correo cor ON cor.id_empleado = e.id_empleado
     LEFT JOIN Lugar l_parroquia ON e.lugar_id_lugar = l_parroquia.id_lugar
     LEFT JOIN Lugar l_municipio ON l_parroquia.lugar_relacion_id = l_municipio.id_lugar AND l_municipio.tipo = 'Municipio'
     LEFT JOIN Lugar l_estado ON l_municipio.lugar_relacion_id = l_estado.id_lugar AND l_estado.tipo = 'Estado'
+    JOIN Rol r ON u.id_rol = r.id_rol
     WHERE e.id_empleado = new_empleado_id;
 END;
 $$ LANGUAGE plpgsql;

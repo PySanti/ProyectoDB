@@ -2017,7 +2017,8 @@ INSERT INTO Lugar (nombre, tipo, lugar_relacion_id) VALUES
 INSERT INTO Rol (nombre) VALUES 
 ('Supervisor'),
 ('Encargado'),
-('Administrador');
+('Administrador'),
+('Empleado Nuevo');
 
 
 INSERT INTO Privilegio (nombre) VALUES
