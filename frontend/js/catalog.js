@@ -170,10 +170,22 @@ function renderPagination() {
         pageLink.className = `page-link ${i === catalogState.currentPage ? 'active' : ''}`;
         pageLink.addEventListener('click', (e) => {
             e.preventDefault();
-            catalogState.currentPage = i;
-            loadProducts();
+            if (catalogState.currentPage !== i) {
+                catalogState.currentPage = i;
+                loadProducts(i, catalogState.sortBy);
+                scrollToCatalogTop();
+            }
         });
         paginationContainer.appendChild(pageLink);
+    }
+}
+
+function scrollToCatalogTop() {
+    const catalogSection = document.querySelector('.product-grid');
+    if (catalogSection) {
+        catalogSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 }
 

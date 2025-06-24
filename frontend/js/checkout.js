@@ -94,15 +94,19 @@ function setupCheckoutEventListeners() {
     paymentCheckboxes.forEach(checkbox => {
         const paymentMethod = checkbox.closest('.payment-method');
         const amountInput = paymentMethod.querySelector('.amount-input');
+        const details = paymentMethod.querySelector('.payment-details');
         // Deshabilitar por defecto
         amountInput.disabled = true;
+        if (details) details.classList.remove('active');
         checkbox.addEventListener('change', function(event) {
             if (checkbox.checked) {
                 amountInput.disabled = false;
                 amountInput.focus();
+                if (details) details.classList.add('active');
             } else {
                 amountInput.disabled = true;
                 amountInput.value = '';
+                if (details) details.classList.remove('active');
             }
             updatePaymentSummary();
         });
@@ -124,6 +128,16 @@ function setupCheckoutEventListeners() {
     const placeOrderBtn = document.getElementById('place-order-btn');
     if (placeOrderBtn) {
         placeOrderBtn.addEventListener('click', handlePlaceOrder);
+    }
+    
+    // Event listener para cerrar modal al hacer clic fuera
+    const successModal = document.getElementById('success-modal');
+    if (successModal) {
+        successModal.addEventListener('click', function(event) {
+            if (event.target === successModal) {
+                closeSuccessModal();
+            }
+        });
     }
 }
 
@@ -208,13 +222,11 @@ function updatePlaceOrderButton(totalPaid, totalToPay) {
 // PROCESAMIENTO DEL PEDIDO
 // =================================================================
 async function handlePlaceOrder() {
-    // Obtener compra_id (puede venir del backend o sessionStorage, aquí lo simulo)
     const compraId = await getCompraId();
     if (!compraId) {
         showNotification('No se pudo identificar la compra.', 'error');
         return;
     }
-    // Recolectar métodos de pago seleccionados y sus montos
     const pagos = collectSelectedPayments();
     if (pagos.length === 0) {
         showNotification('Debe seleccionar al menos un método de pago con monto.', 'error');
@@ -228,10 +240,7 @@ async function handlePlaceOrder() {
         });
         const data = await response.json();
         if (response.ok && data.success) {
-            showNotification('¡Compra realizada exitosamente!', 'success');
-            setTimeout(() => {
-                window.location.href = 'tiempo-muerto.html';
-            }, 2500);
+            showPaymentSuccessCountdown();
         } else {
             showNotification(data.message || 'Error al registrar el pago', 'error');
         }
@@ -270,4 +279,30 @@ async function getCompraId() {
     // Por ahora, simulo con sessionStorage o un valor dummy
     // TODO: Integrar con el backend real
     return sessionStorage.getItem('compra_id') || 1;
+}
+
+function showPaymentSuccessCountdown() {
+    let seconds = 3;
+    showNotification(`Pago realizado exitosamente, volviendo al inicio en: ${seconds}...`, 'success');
+    const interval = setInterval(() => {
+        seconds--;
+        if (seconds > 0) {
+            showNotification(`Pago realizado exitosamente, volviendo al inicio en: ${seconds}...`, 'success');
+        } else {
+            clearInterval(interval);
+            window.location.href = 'tiempo-muerto.html';
+        }
+    }, 1000);
+}
+
+async function clearCart() {
+    try {
+        await fetch(`${API_BASE_URL}/carrito/limpiar/${GUEST_USER_ID}`, {
+            method: 'DELETE'
+        });
+        // Actualizar contador del carrito
+        updateCartCounter();
+    } catch (error) {
+        console.error('Error al limpiar el carrito:', error);
+    }
 } 
