@@ -250,3 +250,6 @@ DROP FUNCTION IF EXISTS limpiar_carrito_usuario(INTEGER);
 DROP FUNCTION IF EXISTS eliminar_del_carrito(INTEGER, INTEGER);
 DROP FUNCTION IF EXISTS actualizar_cantidad_carrito(INTEGER, INTEGER, INTEGER);
 DROP FUNCTION IF EXISTS agregar_al_carrito(INTEGER, INTEGER, INTEGER);
+
+DROP FUNCTION IF EXISTS get_cliente_natural_by_cedula(VARCHAR);
+DROP FUNCTION IF EXISTS get_cliente_natural_by_cedula(INTEGER);

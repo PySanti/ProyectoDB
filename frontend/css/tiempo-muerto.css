@@ -1,0 +1,340 @@
+/* Estilos generales */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --primary-color: #c77b30;
+    --primary-dark: #a05a1a;
+    --secondary-color: #f8f1e5;
+    --text-color: #333333;
+    --light-text: #777777;
+    --border-color: #dddddd;
+    --success-color: #2ecc71;
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --transition: all 0.3s ease;
+    --gradient: linear-gradient(135deg, #c77b30 0%, #a05a1a 100%);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background: var(--gradient);
+    color: var(--text-color);
+    line-height: 1.6;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Header */
+.main-header {
+    background-color: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    box-shadow: var(--shadow);
+    padding: 15px 0;
+}
+
+.header-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo-header h1 {
+    color: var(--primary-color);
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.header-info {
+    display: flex;
+    align-items: center;
+    gap: 30px;
+}
+
+.store-info, .time-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+.store-info i, .time-info i {
+    color: var(--primary-color);
+    font-size: 16px;
+}
+
+/* Main Content */
+.main-content {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+}
+
+.content-container {
+    max-width: 800px;
+    width: 100%;
+    text-align: center;
+}
+
+/* Welcome Section */
+.welcome-section {
+    margin-bottom: 60px;
+}
+
+.welcome-icon {
+    margin-bottom: 30px;
+}
+
+.welcome-icon i {
+    font-size: 80px;
+    color: white;
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.welcome-title {
+    font-size: 48px;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 15px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.welcome-subtitle {
+    font-size: 20px;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 20px;
+    font-weight: 500;
+}
+
+.welcome-description {
+    font-size: 16px;
+    color: rgba(255, 255, 255, 0.8);
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+/* Action Section */
+.action-section {
+    margin-bottom: 80px;
+}
+
+.start-purchase-btn {
+    background: white;
+    color: var(--primary-color);
+    border: none;
+    border-radius: 50px;
+    padding: 25px 60px;
+    font-size: 24px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+}
+
+.start-purchase-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    transition: left 0.5s;
+}
+
+.start-purchase-btn:hover::before {
+    left: 100%;
+}
+
+.start-purchase-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+}
+
+.start-purchase-btn:active {
+    transform: translateY(-1px);
+}
+
+.start-purchase-btn i {
+    font-size: 28px;
+}
+
+/* Features Section */
+.features-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 30px;
+    margin-top: 60px;
+}
+
+.feature-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 30px 20px;
+    text-align: center;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: var(--transition);
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.feature-card i {
+    font-size: 40px;
+    color: white;
+    margin-bottom: 20px;
+    display: block;
+}
+
+.feature-card h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 10px;
+}
+
+.feature-card p {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* Footer */
+.main-footer {
+    background-color: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(10px);
+    padding: 20px 0;
+    margin-top: auto;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.footer-content p {
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+.footer-content p:last-child {
+    margin-bottom: 0;
+    font-weight: 500;
+}
+
+/* Animaciones */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.welcome-section {
+    animation: fadeInUp 0.8s ease-out;
+}
+
+.action-section {
+    animation: fadeInUp 0.8s ease-out 0.2s both;
+}
+
+.features-section {
+    animation: fadeInUp 0.8s ease-out 0.4s both;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .header-container {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .header-info {
+        gap: 20px;
+    }
+    
+    .welcome-title {
+        font-size: 36px;
+    }
+    
+    .welcome-subtitle {
+        font-size: 18px;
+    }
+    
+    .start-purchase-btn {
+        padding: 20px 40px;
+        font-size: 20px;
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .start-purchase-btn i {
+        font-size: 24px;
+    }
+    
+    .features-section {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .feature-card {
+        padding: 25px 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .welcome-title {
+        font-size: 28px;
+    }
+    
+    .welcome-subtitle {
+        font-size: 16px;
+    }
+    
+    .welcome-description {
+        font-size: 14px;
+    }
+    
+    .start-purchase-btn {
+        padding: 18px 30px;
+        font-size: 18px;
+    }
+    
+    .feature-card i {
+        font-size: 32px;
+    }
+    
+    .feature-card h3 {
+        font-size: 16px;
+    }
+    
+    .feature-card p {
+        font-size: 13px;
+    }
+} 

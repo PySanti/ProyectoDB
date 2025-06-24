@@ -669,6 +669,219 @@ END;
 $$ LANGUAGE plpgsql;
 
 
+
+-- Funciones para validación de clientes por cédula adaptadas a la estructura real
+
+-- Función para obtener cliente natural por cédula
+CREATE OR REPLACE FUNCTION get_cliente_natural_by_cedula(p_cedula INTEGER)
+RETURNS TABLE (
+    id_cliente INTEGER,
+    ci_cliente INTEGER,
+    primer_nombre VARCHAR(30),
+    segundo_nombre VARCHAR(30),
+    primer_apellido VARCHAR(30),
+    segundo_apellido VARCHAR(30),
+    direccion TEXT,
+    lugar_id_lugar INTEGER,
+    correo_nombre VARCHAR(50),
+    correo_extension VARCHAR(20),
+    telefono VARCHAR(20)
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        cn.id_cliente,
+        cn.ci_cliente,
+        cn.primer_nombre,
+        cn.segundo_nombre,
+        cn.primer_apellido,
+        cn.segundo_apellido,
+        cn.direccion,
+        cn.lugar_id_lugar,
+        c.nombre AS correo_nombre,
+        c.extension_pag AS correo_extension,
+        t.numero AS telefono
+    FROM Cliente_Natural cn
+    LEFT JOIN Correo c ON c.id_cliente_natural = cn.id_cliente
+    LEFT JOIN Telefono t ON t.id_cliente_natural = cn.id_cliente
+    WHERE cn.ci_cliente = p_cedula
+    LIMIT 1;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Función para obtener cliente jurídico por RIF
+CREATE OR REPLACE FUNCTION get_cliente_juridico_by_rif(p_rif INTEGER)
+RETURNS TABLE (
+    id_cliente INTEGER,
+    rif_cliente INTEGER,
+    razon_social VARCHAR(50),
+    denominacion_comercial VARCHAR(50),
+    direccion_fiscal TEXT,
+    direccion_fisica TEXT,
+    lugar_id_lugar INTEGER,
+    correo_nombre VARCHAR(50),
+    correo_extension VARCHAR(20),
+    telefono VARCHAR(20)
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        cj.id_cliente,
+        cj.rif_cliente,
+        cj.razon_social,
+        cj.denominacion_comercial,
+        cj.direccion_fiscal,
+        cj.direccion_fisica,
+        cj.lugar_id_lugar,
+        c.nombre AS correo_nombre,
+        c.extension_pag AS correo_extension,
+        t.numero AS telefono
+    FROM Cliente_Juridico cj
+    LEFT JOIN Correo c ON c.id_cliente_juridico = cj.id_cliente
+    LEFT JOIN Telefono t ON t.id_cliente_juridico = cj.id_cliente
+    WHERE cj.rif_cliente = p_rif
+    LIMIT 1;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Función para crear cliente natural y su correo/telefono
+CREATE OR REPLACE FUNCTION create_cliente_natural_fisica(
+    p_ci_cliente INTEGER,
+    p_rif_cliente INTEGER,
+    p_primer_nombre VARCHAR(30),
+    p_segundo_nombre VARCHAR(30),
+    p_primer_apellido VARCHAR(30),
+    p_segundo_apellido VARCHAR(30),
+    p_direccion TEXT,
+    p_lugar_id_lugar INTEGER,
+    p_correo_nombre VARCHAR(50),
+    p_correo_extension VARCHAR(20),
+    p_codigo_area VARCHAR(4),
+    p_telefono VARCHAR(20)
+)
+RETURNS INTEGER AS $$
+DECLARE
+    v_id_cliente INTEGER;
+BEGIN
+    -- Verificar si el cliente ya existe
+    IF EXISTS (SELECT 1 FROM Cliente_Natural WHERE ci_cliente = p_ci_cliente) THEN
+        RAISE EXCEPTION 'Ya existe un cliente natural con la cédula %', p_ci_cliente;
+    END IF;
+    
+    -- Crear el cliente natural
+    INSERT INTO Cliente_Natural (
+        ci_cliente, rif_cliente, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, direccion, lugar_id_lugar
+    ) VALUES (
+        p_ci_cliente, p_rif_cliente, p_primer_nombre, p_segundo_nombre, p_primer_apellido, p_segundo_apellido, p_direccion, p_lugar_id_lugar
+    ) RETURNING id_cliente INTO v_id_cliente;
+    
+    -- Insertar correo
+    INSERT INTO Correo (nombre, extension_pag, id_cliente_natural)
+    VALUES (p_correo_nombre, p_correo_extension, v_id_cliente);
+    
+    -- Insertar teléfono
+    INSERT INTO Telefono (codigo_area, numero, id_cliente_natural)
+    VALUES (p_codigo_area, p_telefono, v_id_cliente);
+    
+    RETURN v_id_cliente;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Función para verificar si existe un cliente (natural o jurídico) por documento
+CREATE OR REPLACE FUNCTION check_cliente_exists(p_documento INTEGER)
+RETURNS BOOLEAN AS $$
+BEGIN
+    -- Verificar en clientes naturales
+    IF EXISTS (SELECT 1 FROM Cliente_Natural WHERE ci_cliente = p_documento) THEN
+        RETURN TRUE;
+    END IF;
+    
+    -- Verificar en clientes jurídicos
+    IF EXISTS (SELECT 1 FROM Cliente_Juridico WHERE rif_cliente = p_documento) THEN
+        RETURN TRUE;
+    END IF;
+    
+    RETURN FALSE;
+END;
+$$ LANGUAGE plpgsql; 
+
+
+
+-- ==============================================================================
+-- FUNCIONES PARA EL CATÁLOGO DE PRODUCTOS
+-- ==============================================================================
+
+-- Función para obtener productos del catálogo con paginación y ordenamiento
+CREATE OR REPLACE FUNCTION obtener_productos_catalogo(
+    p_sort_by VARCHAR DEFAULT 'relevance',
+    p_page INTEGER DEFAULT 1,
+    p_limit INTEGER DEFAULT 9
+) RETURNS TABLE (
+    id_cerveza INTEGER,
+    nombre_cerveza VARCHAR,
+    tipo_cerveza VARCHAR,
+    min_price DECIMAL(10,2),
+    presentaciones JSON
+) AS $$
+BEGIN
+    RETURN QUERY
+    WITH UnicoInventario AS (
+        SELECT DISTINCT ON (i.id_cerveza, i.id_presentacion)
+            i.id_inventario, i.cantidad, i.id_presentacion, i.id_cerveza
+        FROM Inventario i
+        -- Priorizamos la tienda física si hay múltiples entradas
+        ORDER BY i.id_cerveza, i.id_presentacion, i.id_tienda_fisica DESC NULLS LAST
+    )
+    SELECT
+        c.id_cerveza, 
+        c.nombre_cerveza, 
+        tc.nombre AS tipo_cerveza,
+        MIN(pc.precio) as min_price, -- Helper para ordenar por precio
+        COALESCE(
+            json_agg(
+                json_build_object(
+                    'id_inventario', ui.id_inventario,
+                    'id_presentacion', p.id_presentacion, 
+                    'nombre_presentacion', p.nombre,
+                    'precio_unitario', pc.precio,
+                    'stock_disponible', COALESCE(ui.cantidad, 0)
+                ) ORDER BY p.id_presentacion
+            ) FILTER (WHERE p.id_presentacion IS NOT NULL),
+            '[]'::json
+        ) AS presentaciones
+    FROM Cerveza c
+    JOIN Tipo_Cerveza tc ON c.id_tipo_cerveza = tc.id_tipo_cerveza
+    LEFT JOIN presentacion_cerveza pc ON c.id_cerveza = pc.id_cerveza
+    LEFT JOIN Presentacion p ON pc.id_presentacion = p.id_presentacion
+    -- Unimos con nuestro inventario único para evitar duplicados
+    LEFT JOIN UnicoInventario ui ON pc.id_cerveza = ui.id_cerveza AND pc.id_presentacion = ui.id_presentacion
+    GROUP BY c.id_cerveza, tc.nombre
+    ORDER BY 
+        CASE WHEN p_sort_by = 'price-asc' THEN MIN(pc.precio) END ASC NULLS LAST,
+        CASE WHEN p_sort_by = 'price-desc' THEN MIN(pc.precio) END DESC NULLS LAST,
+        CASE WHEN p_sort_by = 'name-asc' THEN c.nombre_cerveza END ASC,
+        CASE WHEN p_sort_by = 'name-desc' THEN c.nombre_cerveza END DESC,
+        CASE WHEN p_sort_by = 'relevance' THEN c.id_cerveza END ASC
+    LIMIT p_limit OFFSET ((p_page - 1) * p_limit);
+END;
+$$ LANGUAGE plpgsql;
+
+-- Función para contar total de productos en el catálogo
+CREATE OR REPLACE FUNCTION contar_productos_catalogo() 
+RETURNS INTEGER AS $$
+DECLARE
+    total INTEGER;
+BEGIN
+    SELECT COUNT(DISTINCT c.id_cerveza) INTO total
+    FROM Cerveza c
+    JOIN presentacion_cerveza pc ON c.id_cerveza = pc.id_cerveza
+    JOIN Inventario i ON c.id_cerveza = i.id_cerveza AND pc.id_presentacion = i.id_presentacion;
+    
+    RETURN total;
+END;
+$$ LANGUAGE plpgsql; 
+
+
 -- =====================================================
 -- SISTEMA DE CARRITO DE COMPRAS - REFACTORIZADO
 -- =====================================================
@@ -716,6 +929,57 @@ BEGIN
     RETURN v_id_compra;
 END;
 $$ LANGUAGE plpgsql;
+
+-- =====================================================
+-- FUNCIÓN PARA BUSCAR INVENTARIO POR NOMBRE Y PRESENTACIÓN
+-- =====================================================
+
+CREATE OR REPLACE FUNCTION buscar_inventario_por_producto(
+    p_nombre_cerveza VARCHAR(50),
+    p_nombre_presentacion VARCHAR(50)
+)
+RETURNS INTEGER AS $$
+DECLARE
+    v_id_inventario INTEGER;
+BEGIN
+    SELECT i.id_inventario INTO v_id_inventario
+    FROM Inventario i
+    JOIN Cerveza c ON i.id_cerveza = c.id_cerveza
+    JOIN Presentacion p ON i.id_presentacion = p.id_presentacion
+    WHERE c.nombre_cerveza = p_nombre_cerveza 
+      AND p.nombre = p_nombre_presentacion
+      AND i.cantidad > 0
+    LIMIT 1;
+    
+    RETURN v_id_inventario;
+END;
+$$ LANGUAGE plpgsql;
+
+-- =====================================================
+-- FUNCIÓN MODIFICADA PARA AGREGAR AL CARRITO POR NOMBRE Y PRESENTACIÓN
+-- =====================================================
+
+CREATE OR REPLACE FUNCTION agregar_al_carrito_por_producto(
+    p_id_usuario INTEGER,
+    p_nombre_cerveza VARCHAR(50),
+    p_nombre_presentacion VARCHAR(50),
+    p_cantidad INTEGER
+)
+RETURNS VOID LANGUAGE plpgsql AS $$
+DECLARE
+    v_id_inventario INTEGER;
+BEGIN
+    -- Buscar el inventario correcto por nombre y presentación
+    v_id_inventario := buscar_inventario_por_producto(p_nombre_cerveza, p_nombre_presentacion);
+    
+    IF v_id_inventario IS NULL THEN
+        RAISE EXCEPTION 'Producto no encontrado o sin stock disponible';
+    END IF;
+    
+    -- Llamar a la función original con el id_inventario correcto
+    PERFORM agregar_al_carrito(p_id_usuario, v_id_inventario, p_cantidad);
+END;
+$$;
 
 -- =====================================================
 -- FUNCIÓN (antes Procedimiento) PARA AGREGAR PRODUCTO AL CARRITO
@@ -1034,4 +1298,92 @@ COMMENT ON FUNCTION eliminar_del_carrito IS 'Función: Elimina un producto del c
 COMMENT ON FUNCTION limpiar_carrito_usuario IS 'Función: Vacía el carrito del usuario.';
 COMMENT ON FUNCTION obtener_resumen_carrito IS 'Función: Obtiene el resumen del carrito.';
 COMMENT ON FUNCTION verificar_stock_carrito IS 'Función: Verifica el stock de los productos en el carrito.'; 
+
+-- =====================================================
+-- FUNCIÓN PARA ACTUALIZAR MONTO DE COMPRA AL PROCEDER AL PAGO
+-- =====================================================
+
+CREATE OR REPLACE FUNCTION actualizar_monto_compra(
+    p_id_usuario INTEGER
+)
+RETURNS DECIMAL AS $$
+DECLARE
+    v_id_compra INTEGER;
+    v_monto_total DECIMAL;
+BEGIN
+    -- Obtener el carrito del usuario
+    v_id_compra := obtener_o_crear_carrito_usuario(p_id_usuario);
+    
+    IF v_id_compra IS NULL THEN
+        RAISE EXCEPTION 'No se encontró carrito para el usuario';
+    END IF;
+    
+    -- Calcular el monto total de los detalles
+    SELECT COALESCE(SUM(dc.cantidad * dc.precio_unitario), 0) INTO v_monto_total
+    FROM Detalle_Compra dc
+    WHERE dc.id_compra = v_id_compra;
+    
+    -- Actualizar el monto total en la tabla Compra
+    UPDATE Compra 
+    SET monto_total = v_monto_total
+    WHERE id_compra = v_id_compra;
+    
+    RETURN v_monto_total;
+END;
+$$ LANGUAGE plpgsql;
+
+-- =====================================================
+-- FUNCIÓN PARA REGISTRAR PAGOS Y DESCONTAR INVENTARIO
+-- =====================================================
+CREATE OR REPLACE FUNCTION registrar_pagos_y_descuento_inventario(
+    p_compra_id INTEGER,
+    p_pagos JSON
+) RETURNS BOOLEAN AS $$
+DECLARE
+    v_pago JSON;
+    v_metodo_id INTEGER;
+    v_monto NUMERIC;
+    v_tasa_id INTEGER;
+    v_referencia TEXT;
+    v_fecha TIMESTAMP := NOW();
+    v_id_inventario INTEGER;
+    v_cantidad INTEGER;
+    v_stock_actual INTEGER;
+BEGIN
+    -- Insertar cada pago
+    FOR v_pago IN SELECT * FROM json_array_elements(p_pagos) LOOP
+        v_metodo_id := (v_pago->>'metodo_id')::INTEGER;
+        v_monto := (v_pago->>'monto')::NUMERIC;
+        v_tasa_id := NULLIF((v_pago->>'tasa_id')::INTEGER, 0);
+        
+        -- Asignar tasa por defecto según el tipo de método
+        IF v_tasa_id IS NULL THEN
+            -- Efectivo (1-10) y Cheque (11-20) no tienen tasa
+            IF v_metodo_id BETWEEN 1 AND 20 THEN
+                v_tasa_id := NULL;
+            -- Tarjetas de crédito (21-30), débito (31-40) y puntos (41-50) usan tasa por defecto
+            ELSE
+                v_tasa_id := 1; -- Tasa por defecto
+            END IF;
+        END IF;
+        
+        IF v_monto > 0 THEN
+            v_referencia := CONCAT('PAGO-', v_metodo_id, '-', EXTRACT(EPOCH FROM v_fecha)::BIGINT, '-', floor(random()*10000)::INT);
+            INSERT INTO Pago_Compra (metodo_id, compra_id, monto, fecha_hora, referencia, tasa_id)
+            VALUES (v_metodo_id, p_compra_id, v_monto, v_fecha, v_referencia, v_tasa_id);
+        END IF;
+    END LOOP;
+    -- Descontar inventario
+    FOR v_id_inventario, v_cantidad IN SELECT id_inventario, cantidad FROM Detalle_Compra WHERE id_compra = p_compra_id LOOP
+        SELECT cantidad INTO v_stock_actual FROM Inventario WHERE id_inventario = v_id_inventario;
+        IF v_stock_actual < v_cantidad THEN
+            RAISE EXCEPTION 'Stock insuficiente para inventario %', v_id_inventario;
+        END IF;
+        UPDATE Inventario SET cantidad = cantidad - v_cantidad WHERE id_inventario = v_id_inventario;
+    END LOOP;
+    RETURN TRUE;
+END;
+$$ LANGUAGE plpgsql;
+
+
 

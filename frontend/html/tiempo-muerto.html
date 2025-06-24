@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tiempo Muerto - ACAUCAB</title>
+    <link rel="stylesheet" href="../css/tiempo-muerto.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="main-header">
+        <div class="header-container">
+            <div class="logo-header">
+                <h1>ACAUCAB</h1>
+            </div>
+            <div class="header-info">
+                <div class="store-info">
+                    <i class="fas fa-store"></i>
+                    <span>Tienda Física</span>
+                </div>
+                <div class="time-info">
+                    <i class="fas fa-clock"></i>
+                    <span id="current-time">--:--</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="content-container">
+            <div class="welcome-section">
+                <div class="welcome-icon">
+                    <i class="fas fa-beer"></i>
+                </div>
+                <h1 class="welcome-title">Bienvenido a ACAUCAB</h1>
+                <p class="welcome-subtitle">Asociación de Cerveceros Artesanales UCAB</p>
+                <p class="welcome-description">
+                    Descubre nuestra selección de cervezas artesanales de la más alta calidad
+                </p>
+            </div>
+
+            <div class="action-section">
+                <button class="start-purchase-btn" onclick="startPurchase()">
+                    <i class="fas fa-shopping-cart"></i>
+                    <span>Realizar Compra</span>
+                </button>
+            </div>
+
+            <div class="features-section">
+                <div class="feature-card">
+                    <i class="fas fa-star"></i>
+                    <h3>Calidad Premium</h3>
+                    <p>Cervezas artesanales seleccionadas</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-leaf"></i>
+                    <h3>Ingredientes Naturales</h3>
+                    <p>100% ingredientes naturales</p>
+                </div>
+                <div class="feature-card">
+                    <i class="fas fa-heart"></i>
+                    <h3>Hecho con Pasión</h3>
+                    <p>Por cerveceros apasionados</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="footer-content">
+            <p>&copy; 2025 ACAUCAB. Todos los derechos reservados.</p>
+            <p>Sistema de Venta - Tienda Física</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="../js/config.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/tiempo-muerto.js"></script>
+</body>
+</html> 

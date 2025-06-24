@@ -391,6 +391,7 @@ CREATE TABLE Orden_Reposicion_Estatus (
 );
 
 CREATE TABLE Pago_Compra (
+    id_pago        SERIAL PRIMARY KEY,
     metodo_id      INTEGER NOT NULL,
     compra_id      INTEGER NOT NULL,
     monto          DECIMAL NOT NULL,
