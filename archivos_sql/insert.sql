@@ -3001,6 +3001,15 @@ SELECT
     pc.id_cerveza
 FROM presentacion_cerveza pc;
 
+INSERT INTO Inventario (cantidad, id_ubicacion, id_presentacion, id_cerveza)
+SELECT
+    35 AS cantidad,
+    t.id_ubicacion,
+    pc.id_presentacion,
+    pc.id_cerveza
+FROM presentacion_cerveza pc, ubicacion_tienda t;
+
+
 
 
 INSERT INTO Horario_Evento (id_evento, id_horario) VALUES
