@@ -199,10 +199,9 @@ CREATE TABLE Detalle_Orden_Reposicion (
     id_proveedor      INTEGER NOT NULL,
     id_departamento   INTEGER NOT NULL,
     precio            DECIMAL NOT NULL,
-    id_tipo_cerveza   INTEGER NOT NULL,
     id_presentacion   INTEGER NOT NULL,
     id_cerveza        INTEGER NOT NULL,
-    PRIMARY KEY (id_orden_reposicion, id_proveedor, id_departamento, id_tipo_cerveza, id_presentacion, id_cerveza)
+    PRIMARY KEY (id_orden_reposicion, id_proveedor, id_departamento,  id_presentacion, id_cerveza)
 );
 
 CREATE TABLE Detalle_Orden_Reposicion_Anaquel (

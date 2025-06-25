@@ -2995,7 +2995,7 @@ INSERT INTO Fermentacion (receta_id_receta, fecha_inicio, fecha_fin_estimada) VA
 
 INSERT INTO Inventario (cantidad, id_tienda_fisica, id_presentacion, id_cerveza)
 SELECT
-    35 AS cantidad,
+    1000 AS cantidad,
     1 AS id_tienda_fisica,
     pc.id_presentacion,
     pc.id_cerveza
@@ -3003,7 +3003,7 @@ FROM presentacion_cerveza pc;
 
 INSERT INTO Inventario (cantidad, id_ubicacion, id_presentacion, id_cerveza)
 SELECT
-    35 AS cantidad,
+    1000 AS cantidad,
     t.id_ubicacion,
     pc.id_presentacion,
     pc.id_cerveza
@@ -3142,67 +3142,67 @@ INSERT INTO Orden_Reposicion (id_departamento, id_proveedor, fecha_emision) VALU
 (3, 10, CURRENT_DATE); 
 
 -- Detalles de órdenes de reposición (solo combinaciones válidas de id_presentacion y id_cerveza)
-INSERT INTO Detalle_Orden_Reposicion (cantidad, id_orden_reposicion, id_proveedor, id_departamento, precio, id_tipo_cerveza, id_presentacion, id_cerveza) VALUES
+INSERT INTO Detalle_Orden_Reposicion (cantidad, id_orden_reposicion, id_proveedor, id_departamento, precio,  id_presentacion, id_cerveza) VALUES
 -- Detalles para la orden 1
-(5, 1, 1, 3, 5, 7, 1, 1),
-(5, 1, 1, 3, 5, 15, 2, 2),
-(5, 1, 1, 3, 5, 22, 3, 3),
-(5, 1, 1, 3, 5, 4, 3, 4),
-(5, 1, 1, 3, 5, 29, 2, 5),
+(5, 1, 1, 3, 5, 1, 1),
+(5, 1, 1, 3, 5,  2, 2),
+(5, 1, 1, 3, 5,  3, 3),
+(5, 1, 1, 3, 5, 3, 4),
+(5, 1, 1, 3, 5,  2, 5),
 -- Detalles para la orden 2
-(5, 2, 2, 3, 5, 11, 1, 6),
-(5, 2, 2, 3, 5, 18, 1, 7),
-(5, 2, 2, 3, 5, 25, 1, 8),
-(5, 2, 2, 3, 5, 6, 1, 9),
-(5, 2, 2, 3, 5, 30, 1, 10),
+(5, 2, 2, 3, 5,  1, 6),
+(5, 2, 2, 3, 5,  1, 7),
+(5, 2, 2, 3, 5,  1, 8),
+(5, 2, 2, 3, 5, 1, 9),
+(5, 2, 2, 3, 5,  1, 10),
 -- Detalles para la orden 3
-(5, 3, 3, 3, 5, 2, 1, 1),
-(5, 3, 3, 3, 5, 13, 2, 2),
-(5, 3, 3, 3, 5, 21, 3, 3),
-(5, 3, 3, 3, 5, 8, 3, 4),
-(5, 3, 3, 3, 5, 27, 2, 5),
+(5, 3, 3, 3, 5, 1, 1),
+(5, 3, 3, 3, 5,  2, 2),
+(5, 3, 3, 3, 5,  3, 3),
+(5, 3, 3, 3, 5, 3, 4),
+(5, 3, 3, 3, 5,  2, 5),
 -- Detalles para la orden 4
-(5, 4, 4, 3, 5, 5, 1, 6),
-(5, 4, 4, 3, 5, 19, 1, 7),
-(5, 4, 4, 3, 5, 23, 1, 8),
-(5, 4, 4, 3, 5, 10, 1, 9),
-(5, 4, 4, 3, 5, 28, 1, 10),
+(5, 4, 4, 3, 5,1, 6),
+(5, 4, 4, 3, 5, 1, 7),
+(5, 4, 4, 3, 5, 1, 8),
+(5, 4, 4, 3, 5, 1, 9),
+(5, 4, 4, 3, 5, 1, 10),
 -- Detalles para la orden 5
-(5, 5, 5, 3, 5, 12, 1, 1),
-(5, 5, 5, 3, 5, 16, 2, 2),
-(5, 5, 5, 3, 5, 24, 3, 3),
-(5, 5, 5, 3, 5, 3, 3, 4),
-(5, 5, 5, 3, 5, 26, 2, 5),
+(5, 5, 5, 3, 5,  1, 1),
+(5, 5, 5, 3, 5,  2, 2),
+(5, 5, 5, 3, 5,  3, 3),
+(5, 5, 5, 3, 5, 3, 4),
+(5, 5, 5, 3, 5,  2, 5),
 -- Detalles para la orden 6
-(5, 6, 6, 3, 5, 9, 1, 6),
-(5, 6, 6, 3, 5, 20, 1, 7),
-(5, 6, 6, 3, 5, 14, 1, 8),
-(5, 6, 6, 3, 5, 1, 1, 9),
-(5, 6, 6, 3, 5, 17, 1, 10),
+(5, 6, 6, 3, 5, 1, 6),
+(5, 6, 6, 3, 5,  1, 7),
+(5, 6, 6, 3, 5,  1, 8),
+(5, 6, 6, 3, 5, 1, 9),
+(5, 6, 6, 3, 5,  1, 10),
 -- Detalles para la orden 7
-(5, 7, 7, 3, 5, 6, 1, 1),
-(5, 7, 7, 3, 5, 28, 2, 2),
-(5, 7, 7, 3, 5, 11, 3, 3),
-(5, 7, 7, 3, 5, 24, 3, 4),
-(5, 7, 7, 3, 5, 15, 2, 5),
+(5, 7, 7, 3, 5, 1, 1),
+(5, 7, 7, 3, 5,  2, 2),
+(5, 7, 7, 3, 5,  3, 3),
+(5, 7, 7, 3, 5,  3, 4),
+(5, 7, 7, 3, 5,  2, 5),
 -- Detalles para la orden 8
-(5, 8, 8, 3, 5, 7, 1, 6),
-(5, 8, 8, 3, 5, 18, 1, 7),
-(5, 8, 8, 3, 5, 22, 1, 8),
-(5, 8, 8, 3, 5, 13, 1, 9),
-(5, 8, 8, 3, 5, 29, 1, 10),
+(5, 8, 8, 3, 5, 1, 6),
+(5, 8, 8, 3, 5,  1, 7),
+(5, 8, 8, 3, 5,  1, 8),
+(5, 8, 8, 3, 5,  1, 9),
+(5, 8, 8, 3, 5,  1, 10),
 -- Detalles para la orden 9
-(5, 9, 9, 3, 5, 2, 1, 1),
-(5, 9, 9, 3, 5, 17, 2, 2),
-(5, 9, 9, 3, 5, 25, 3, 3),
-(5, 9, 9, 3, 5, 8, 3, 4),
-(5, 9, 9, 3, 5, 30, 2, 5),
+(5, 9, 9, 3, 5, 1, 1),
+(5, 9, 9, 3, 5,  2, 2),
+(5, 9, 9, 3, 5,  3, 3),
+(5, 9, 9, 3, 5, 3, 4),
+(5, 9, 9, 3, 5,  2, 5),
 -- Detalles para la orden 10
-(5, 10, 10, 3, 5, 10, 1, 6),
-(5, 10, 10, 3, 5, 21, 1, 7),
-(5, 10, 10, 3, 5, 14, 1, 8),
-(5, 10, 10, 3, 5, 4, 1, 9),
-(5, 10, 10, 3, 5, 27, 1, 10); 
+(5, 10, 10, 3, 5,  1, 6),        
+(5, 10, 10, 3, 5,  1, 7),
+(5, 10, 10, 3, 5,  1, 8),
+(5, 10, 10, 3, 5, 1, 9),
+(5, 10, 10, 3, 5,  1, 10); 
 
 
 INSERT INTO Orden_Reposicion_Estatus (id_orden_reposicion, id_proveedor, id_departamento, id_estatus, fecha_asignacion, fecha_fin) VALUES
