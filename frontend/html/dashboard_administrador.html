@@ -228,6 +228,19 @@
                             <canvas id="grafico-ingresos-por-tipo" width="1200" height="500"></canvas>
                             <div class="leyenda-ingresos" id="leyenda-ingresos"></div>
                         </div>
+                        <!-- Contenedor del grid comparativo de estilos -->
+                        <div class="grafico-container" id="grid-comparativa-estilos-container" style="display: none; flex-direction: column; align-items: stretch;">
+                            <div class="comparativa-table-responsive">
+                                <table class="comparativa-table" id="comparativa-estilos-table">
+                                    <!-- El contenido de la tabla se llenará dinámicamente con JS -->
+                                </table>
+                            </div>
+                            <div class="paginacion-comparativa" style="width:100%; display:flex; justify-content:flex-end; align-items:center; gap:10px; margin-top:10px;">
+                                <span id="comparativa-rango" style="font-size:14px; color:#666;"></span>
+                                <button id="comparativa-anterior" class="paginacion-btn">Anterior</button>
+                                <button id="comparativa-siguiente" class="paginacion-btn">Siguiente</button>
+                            </div>
+                        </div>
                     </div>
                     <button id="reporte-next" class="arrow-btn reporte-next"><i class="fas fa-chevron-right"></i></button>
                 </div>
@@ -1353,6 +1366,12 @@
                     funcion: () => window.reportes.mostrarIngresosPorTipo(),
                     contenedor: 'grafico-ingresos-container',
                     contenedorRanking: 'grafico-ranking-puntos'
+                },
+                {
+                    titulo: 'Comparativa de Estilos de Cerveza',
+                    descripcion: 'Visualiza y compara el color, la graduación alcohólica y el amargor de las cervezas registradas.',
+                    funcion: () => window.reportes.mostrarComparativaEstilos(),
+                    contenedor: 'grid-comparativa-estilos-container',
                 }
             ];
 
@@ -1374,15 +1393,18 @@
                 document.getElementById('grafico-vacaciones-container').style.display = 'none';
                 document.getElementById('grafico-cervezas-container').style.display = 'none';
                 document.getElementById('grafico-ingresos-container').style.display = 'none';
+                document.getElementById('grid-comparativa-estilos-container').style.display = 'none';
                 
                 // Ocultar todas las paginaciones
                 const paginacionRanking = document.querySelector('.paginacion-ranking');
                 const paginacionVacaciones = document.getElementById('vacaciones-paginacion');
                 const paginacionCervezas = document.getElementById('cervezas-paginacion');
+                const paginacionComparativa = document.querySelector('.paginacion-comparativa');
                 
                 if (paginacionRanking) paginacionRanking.style.display = 'none';
                 if (paginacionVacaciones) paginacionVacaciones.style.display = 'none';
                 if (paginacionCervezas) paginacionCervezas.style.display = 'none';
+                if (paginacionComparativa) paginacionComparativa.style.display = 'none';
                 
                 // Mostrar el contenedor del reporte actual
                 if (index === 0) {
@@ -1397,6 +1419,9 @@
                 } else if (index === 3) {
                     // Para ingresos por tipo
                     document.getElementById('grafico-ingresos-container').style.display = 'block';
+                } else if (index === 4) {
+                    document.getElementById('grid-comparativa-estilos-container').style.display = 'flex';
+                    if (paginacionComparativa) paginacionComparativa.style.display = 'flex';
                 }
                 
                 // Ejecutar la función del reporte
@@ -1409,13 +1434,15 @@
             
             if (btnPrev) {
                 btnPrev.addEventListener('click', function() {
-                    mostrarReporte(reporteActual - 1);
+                    const nuevoIndex = (reporteActual - 1 + reportes.length) % reportes.length;
+                    mostrarReporte(nuevoIndex);
                 });
             }
             
             if (btnNext) {
                 btnNext.addEventListener('click', function() {
-                    mostrarReporte(reporteActual + 1);
+                    const nuevoIndex = (reporteActual + 1) % reportes.length;
+                    mostrarReporte(nuevoIndex);
                 });
             }
 

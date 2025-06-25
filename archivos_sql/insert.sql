@@ -2108,7 +2108,16 @@ INSERT INTO Caracteristica (tipo_caracteristica, valor_caracteristica) VALUES
 ('Aroma', 'Floral'),
 ('Aroma', 'Frutal'),
 ('Cuerpo', 'Ligero'),
-('Cuerpo', 'Robusto');
+('Cuerpo', 'Robusto'),
+('Graduación alcohólica', '4.5%'),
+('Graduación alcohólica', '5.0%'),
+('Graduación alcohólica', '6.0%'),
+('Graduación alcohólica', '6.5%'),
+('Graduación alcohólica', '7.0%'),
+('Amargor', 'Bajo'),
+('Amargor', 'Medio'),
+('Amargor', 'Alto'),
+('Amargor', 'Muy alto');
 
 
 INSERT INTO Ingrediente (nombre, tipo, valor, ingrediente_padre) VALUES
@@ -2909,19 +2918,106 @@ INSERT INTO presentacion_cerveza (cantidad, id_presentacion, id_cerveza, precio)
 
 
 
+-- ... existing code ...
 INSERT INTO Caracteristica_Especifica (id_tipo_cerveza, id_caracteristica, valor) VALUES
-(1, 4, 'Dorado claro'),        
-(1, 9, 'Ligero y refrescante'), 
-(2, 5, 'Ámbar intenso'),       
-(2, 10, 'Robusto y complejo'), 
-(3, 4, 'Dorado brillante'),    
-(3, 1, 'Amargo equilibrado'),  
-(13, 1, 'Muy amargo'),         
-(13, 7, 'Floral intenso'),     
-(17, 6, 'Negro profundo'),     
-(17, 10, 'Robusto cremoso'),   
-(22, 8, 'Frutal cítrico'),     
-(22, 9, 'Ligero sedoso'); 
+-- Lager
+(1, 4, 'Dorado'), (1, 12, '5.0%'), (1, 15, 'Medio'),
+-- Ale
+(2, 5, 'Ámbar'), (2, 13, '6.0%'), (2, 16, 'Alto'),
+-- Pilsner
+(3, 4, 'Dorado'), (3, 11, '4.5%'), (3, 14, 'Bajo'),
+-- Spezial
+(4, 5, 'Ámbar'), (4, 12, '5.0%'), (4, 15, 'Medio'),
+-- Dortmunster
+(5, 4, 'Dorado'), (5, 12, '5.0%'), (5, 15, 'Medio'),
+-- Schwarzbier
+(6, 6, 'Oscuro'), (6, 13, '6.0%'), (6, 16, 'Alto'),
+-- Vienna
+(7, 5, 'Ámbar'), (7, 13, '6.0%'), (7, 15, 'Medio'),
+-- Bock
+(8, 6, 'Oscuro'), (8, 17, '6.5%'), (8, 16, 'Alto'),
+-- Bohemian Pilsener
+(9, 4, 'Dorado'), (9, 12, '5.0%'), (9, 14, 'Bajo'),
+-- Munich Helles
+(10, 4, 'Dorado'), (10, 11, '4.5%'), (10, 14, 'Bajo'),
+-- Oktoberfest-Marzen
+(11, 5, 'Ámbar'), (11, 13, '6.0%'), (11, 15, 'Medio'),
+-- Pale Ale
+(12, 5, 'Ámbar'), (12, 12, '5.0%'), (12, 15, 'Medio'),
+-- IPA
+(13, 4, 'Dorado'), (13, 17, '6.5%'), (13, 19, 'Muy alto'),
+-- Amber Ale
+(14, 5, 'Ámbar'), (14, 12, '5.0%'), (14, 15, 'Medio'),
+-- Brown Ale
+(15, 6, 'Oscuro'), (15, 11, '4.5%'), (15, 14, 'Bajo'),
+-- Golden Ale
+(16, 4, 'Dorado'), (16, 12, '5.0%'), (16, 14, 'Bajo'),
+-- Stout
+(17, 7, 'Negro'), (17, 13, '6.0%'), (17, 16, 'Alto'),
+-- Porter
+(18, 7, 'Negro'), (18, 13, '6.0%'), (18, 16, 'Alto'),
+-- Belgian Dubbel
+(19, 6, 'Oscuro'), (19, 18, '7.0%'), (19, 16, 'Alto'),
+-- Belgian Golden Strong
+(20, 4, 'Dorado'), (20, 18, '7.0%'), (20, 16, 'Alto'),
+-- Belgian Specialty Ale
+(21, 5, 'Ámbar'), (21, 17, '6.5%'), (21, 15, 'Medio'),
+-- Wheat Beer
+(22, 4, 'Dorado'), (22, 12, '5.0%'), (22, 14, 'Bajo'),
+-- Blonde Ale
+(23, 4, 'Dorado'), (23, 11, '4.5%'), (23, 14, 'Bajo'),
+-- Barley Wine
+(24, 6, 'Oscuro'), (24, 18, '7.0%'), (24, 19, 'Muy alto'),
+-- American Pale Ale
+(25, 5, 'Ámbar'), (25, 12, '5.0%'), (25, 15, 'Medio'),
+-- English Pale Ale
+(26, 5, 'Ámbar'), (26, 12, '5.0%'), (26, 15, 'Medio'),
+-- American IPA
+(27, 4, 'Dorado'), (27, 17, '6.5%'), (27, 19, 'Muy alto'),
+-- Imperial IPA
+(28, 4, 'Dorado'), (28, 18, '7.0%'), (28, 19, 'Muy alto'),
+-- India Pale Ale
+(29, 4, 'Dorado'), (29, 17, '6.5%'), (29, 19, 'Muy alto'),
+-- American Amber Ale
+(30, 5, 'Ámbar'), (30, 12, '5.0%'), (30, 15, 'Medio'),
+-- Irish Red Ale
+(31, 5, 'Ámbar'), (31, 12, '5.0%'), (31, 15, 'Medio'),
+-- Red Ale
+(32, 5, 'Ámbar'), (32, 12, '5.0%'), (32, 15, 'Medio'),
+-- Dry Stout
+(33, 7, 'Negro'), (33, 13, '6.0%'), (33, 16, 'Alto'),
+-- Imperial Stout
+(34, 7, 'Negro'), (34, 18, '7.0%'), (34, 19, 'Muy alto'),
+-- Sweet Stout
+(35, 7, 'Negro'), (35, 13, '6.0%'), (35, 16, 'Alto'),
+-- Artisanal Amber
+(36, 5, 'Ámbar'), (36, 12, '5.0%'), (36, 15, 'Medio'),
+-- Artisanal Blond
+(37, 4, 'Dorado'), (37, 11, '4.5%'), (37, 14, 'Bajo'),
+-- Artisanal Brown
+(38, 6, 'Oscuro'), (38, 13, '6.0%'), (38, 16, 'Alto'),
+-- Belgian Barleywine
+(39, 6, 'Oscuro'), (39, 18, '7.0%'), (39, 19, 'Muy alto'),
+-- Belgian IPA
+(40, 4, 'Dorado'), (40, 17, '6.5%'), (40, 19, 'Muy alto'),
+-- Belgian Spiced Christmas Beer
+(41, 5, 'Ámbar'), (41, 17, '6.5%'), (41, 15, 'Medio'),
+-- Belgian Stout
+(42, 7, 'Negro'), (42, 17, '6.5%'), (42, 16, 'Alto'),
+-- Fruit Lambic
+(43, 4, 'Dorado'), (43, 12, '5.0%'), (43, 14, 'Bajo'),
+-- Spice, Herb o Vegetable
+(44, 5, 'Ámbar'), (44, 12, '5.0%'), (44, 15, 'Medio'),
+-- Flanders Red/Brown
+(45, 5, 'Ámbar'), (45, 13, '6.0%'), (45, 16, 'Alto'),
+-- Weizen-Weissbier
+(46, 4, 'Dorado'), (46, 12, '5.0%'), (46, 14, 'Bajo'),
+-- Witbier
+(47, 4, 'Dorado'), (47, 11, '4.5%'), (47, 14, 'Bajo'),
+-- Düsseldorf Altbier
+(48, 5, 'Ámbar'), (48, 12, '5.0%'), (48, 15, 'Medio'),
+-- Extra-Strong Bitter
+(49, 5, 'Ámbar'), (49, 13, '6.0%'), (49, 16, 'Alto');
 
 
 

@@ -27,6 +27,11 @@ let proveedorActual = 0;
 // Variable global para el gráfico de ingresos
 let graficoIngresosPorTipo = null;
 
+// variables globales para la comparativa de estilos
+let comparativaEstilosData = [];
+let paginaActualComparativa = 0;
+const cervezasPorPagina = 6;
+
 // ========================================
 // FUNCIONES COMUNES
 // ========================================
@@ -1005,6 +1010,114 @@ function configurarSelectorAnios() {
     });
 }
 
+// =====================================================================================================
+// FUNCIONES DE REPORTE 4. COMPARATIVA DE ESTILOS DE CERVEZA
+// =====================================================================================================
+
+async function obtenerComparativaEstilos() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/reportes/comparativa-estilos`);
+        if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
+        const data = await response.json();
+        if (data.success) {
+            return data.data;
+        } else {
+            throw new Error(data.error || 'Error al obtener la comparativa de estilos');
+        }
+    } catch (error) {
+        console.error('Error al obtener comparativa de estilos:', error);
+        throw error;
+    }
+}
+
+function renderizarTablaComparativa(datos, pagina = 0) {
+    const tabla = document.getElementById('comparativa-estilos-table');
+    if (!tabla) return;
+    // Limpiar tabla
+    tabla.innerHTML = '';
+    // Calcular paginación
+    const inicio = pagina * cervezasPorPagina;
+    const fin = Math.min(inicio + cervezasPorPagina, datos.length);
+    const cervezasPagina = datos.slice(inicio, fin);
+    // Encabezado
+    let thead = '<thead><tr>';
+    thead += '<th class="th-caracteristica-vacia"></th>';
+    cervezasPagina.forEach(c => {
+        thead += `<th>${c.nombre_cerveza}</th>`;
+    });
+    thead += '</tr></thead>';
+    // Filas de características
+    let tbody = '<tbody>';
+    // Color
+    tbody += '<tr><td>Color</td>';
+    cervezasPagina.forEach(c => {
+        const colorVal = c.color || '';
+        tbody += `<td style="background:inherit;color:#111;font-weight:bold;text-align:center;">${colorVal}</td>`;
+    });
+    tbody += '</tr>';
+    // Graduación alcohólica
+    tbody += '<tr><td>Graduación alcohólica</td>';
+    cervezasPagina.forEach(c => {
+        tbody += `<td style="text-align:center;">${c.graduacion_alcoholica || ''}</td>`;
+    });
+    tbody += '</tr>';
+    // Amargor
+    tbody += '<tr><td>Amargor</td>';
+    cervezasPagina.forEach(c => {
+        tbody += `<td style="text-align:center;">${c.amargor || ''}</td>`;
+    });
+    tbody += '</tr>';
+    tbody += '</tbody>';
+    tabla.innerHTML = thead + tbody;
+    // Actualizar rango y botones
+    actualizarPaginacionComparativa(datos, pagina);
+}
+
+function actualizarPaginacionComparativa(datos, pagina) {
+    const rango = document.getElementById('comparativa-rango');
+    const btnAnterior = document.getElementById('comparativa-anterior');
+    const btnSiguiente = document.getElementById('comparativa-siguiente');
+    if (rango) {
+        rango.textContent = `Mostrando ${pagina * cervezasPorPagina + 1}-${Math.min((pagina + 1) * cervezasPorPagina, datos.length)} de ${datos.length}`;
+    }
+    if (btnAnterior) btnAnterior.disabled = pagina === 0;
+    if (btnSiguiente) btnSiguiente.disabled = (pagina + 1) * cervezasPorPagina >= datos.length;
+}
+
+async function mostrarComparativaEstilos() {
+    // Ocultar otros contenedores
+    document.getElementById('grafico-ranking-puntos').style.display = 'none';
+    document.getElementById('grafico-vacaciones-container').style.display = 'none';
+    document.getElementById('grafico-cervezas-container').style.display = 'none';
+    document.getElementById('grafico-ingresos-container').style.display = 'none';
+    // Mostrar comparativa
+    const contenedor = document.getElementById('grid-comparativa-estilos-container');
+    contenedor.style.display = 'flex';
+    // Obtener datos solo una vez
+    if (comparativaEstilosData.length === 0) {
+        comparativaEstilosData = await obtenerComparativaEstilos();
+    }
+    paginaActualComparativa = 0;
+    renderizarTablaComparativa(comparativaEstilosData, paginaActualComparativa);
+    // Asignar eventos a los botones de paginación
+    const btnAnterior = document.getElementById('comparativa-anterior');
+    const btnSiguiente = document.getElementById('comparativa-siguiente');
+    if (btnAnterior && btnSiguiente) {
+        btnAnterior.onclick = function() {
+            if (paginaActualComparativa > 0) {
+                paginaActualComparativa--;
+                renderizarTablaComparativa(comparativaEstilosData, paginaActualComparativa);
+            }
+        };
+        btnSiguiente.onclick = function() {
+            if ((paginaActualComparativa + 1) * cervezasPorPagina < comparativaEstilosData.length) {
+                paginaActualComparativa++;
+                renderizarTablaComparativa(comparativaEstilosData, paginaActualComparativa);
+            }
+        };
+    }
+}
+
 // ========================================
 // FUNCIÓN DE INICIALIZACIÓN
 // ========================================
@@ -1037,5 +1150,6 @@ window.reportes = {
     obtenerVacacionesEmpleados,
     mostrarVacacionesEmpleados,
     mostrarCervezasProveedores,
-    mostrarIngresosPorTipo
+    mostrarIngresosPorTipo,
+    mostrarComparativaEstilos
 };
