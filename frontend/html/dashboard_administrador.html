@@ -80,7 +80,7 @@
                                     <th>Nombre</th>
                                     <th>Email</th>
                                     <th>Estado</th>
-                                    <th>Fecha Creación</th>
+                                    <th>Rol</th>
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
@@ -217,6 +217,17 @@
                             <canvas id="grafico-cervezas-proveedores" width="800" height="400"></canvas>
                             <div class="leyenda-cervezas" id="leyenda-cervezas"></div>
                         </div>
+                        <!-- Contenedor del gráfico de ingresos por tipo -->
+                        <div class="grafico-container" id="grafico-ingresos-container" style="display: none;">
+                            <div class="filtros-reporte">
+                                <label for="selector-anio-ingresos">Año:</label>
+                                <select id="selector-anio-ingresos">
+                                    <option value="">Todos los años</option>
+                                </select>
+                            </div>
+                            <canvas id="grafico-ingresos-por-tipo" width="1200" height="500"></canvas>
+                            <div class="leyenda-ingresos" id="leyenda-ingresos"></div>
+                        </div>
                     </div>
                     <button id="reporte-next" class="arrow-btn reporte-next"><i class="fas fa-chevron-right"></i></button>
                 </div>
@@ -244,13 +255,9 @@
                     <input type="text" id="rol-nombre" required />
                 </div>
                 <div class="form-group">
-                    <label>Permisos</label>
-                    <div class="permisos-checkboxes" style="display:flex; flex-direction:column;">
-                        <label><input type="checkbox" name="crear" /> Crear</label>
-                        <label><input type="checkbox" name="eliminar" /> Eliminar</label>
-                        <label><input type="checkbox" name="actualizar" /> Actualizar</label>
-                        <label><input type="checkbox" name="leer" /> Leer</label>
-                    </div>
+                    <label>Privilegios asignados</label>
+                    <div id="privilegios-list"></div>
+                    <button type="button" id="add-privilegio-btn">+ Agregar privilegio</button>
                 </div>
                 <div class="modal-footer" style="padding-top: 1rem;">
                     <button type="submit" class="primary-btn">Guardar Rol</button>
@@ -474,6 +481,21 @@
         #modal-cambiar-estatus .estatus-btn:hover {
             background: #ec971f;
         }
+        #privilegios-list {
+            margin-bottom: 1rem;
+        }
+        .privilegio-row {
+            display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.5rem;
+        }
+        .privilegio-row select, .privilegio-row button {
+            height: 2rem;
+        }
+        .privilegio-row .remove-privilegio-btn {
+            background: #e74c3c; color: #fff; border: none; border-radius: 4px; cursor: pointer; padding: 0 0.5rem;
+        }
+        #add-privilegio-btn {
+            margin-top: 0.5rem; background: #3498db; color: #fff; border: none; border-radius: 4px; cursor: pointer; padding: 0.5rem 1rem;
+        }
     </style>
     
     <script src="../js/lugares.js"></script>
@@ -484,36 +506,113 @@
         let usuarioSeleccionadoId = null;
         let ordenSeleccionadaId = null;
         let estatusActualId = null;
+        const PRIVILEGIOS = ["Crear", "Leer", "Actualizar", "Eliminar"];
+        let TABLAS = [];
 
-        // Función global para editar un rol
-        function editRole(id, nombre, privilegios) {
-            console.log('editRole llamado con:', { id, nombre, privilegios });
-            editingRoleId = id;
-            
-            // Llenar el formulario con los datos del rol
-            document.getElementById('rol-nombre').value = nombre;
-            
-            // Marcar los checkboxes según los privilegios actuales
-            document.querySelector('#rol-form input[name="crear"]').checked = privilegios.includes('crear');
-            document.querySelector('#rol-form input[name="eliminar"]').checked = privilegios.includes('eliminar');
-            document.querySelector('#rol-form input[name="actualizar"]').checked = privilegios.includes('actualizar');
-            document.querySelector('#rol-form input[name="leer"]').checked = privilegios.includes('leer');
-            
-            // Cambiar el título del modal
-            document.getElementById('rol-modal-title').textContent = 'Editar Rol';
-            
-            // Mostrar el modal
-            document.getElementById('rol-modal').classList.add('active');
-            console.log('Modal abierto, editingRoleId:', editingRoleId);
+        async function cargarTablas() {
+            const res = await fetch('../lista_tablas.json');
+            TABLAS = await res.json();
         }
 
-        // Función para resetear el modal de roles
-        function resetRolModal() {
-            editingRoleId = null;
-            document.getElementById('rol-form').reset();
-            document.getElementById('rol-modal-title').textContent = 'Crear Nuevo Rol';
+        function agregarFilaPrivilegio(privilegio = '', tabla = '') {
+            const row = document.createElement('div');
+            row.className = 'privilegio-row';
+
+            const selectPriv = document.createElement('select');
+            PRIVILEGIOS.forEach(p => {
+                const opt = document.createElement('option');
+                opt.value = p;
+                opt.textContent = p;
+                if (p === privilegio) opt.selected = true;
+                selectPriv.appendChild(opt);
+            });
+
+            const selectTabla = document.createElement('select');
+            TABLAS.forEach(t => {
+                const opt = document.createElement('option');
+                opt.value = t;
+                opt.textContent = t;
+                if (t === tabla) opt.selected = true;
+                selectTabla.appendChild(opt);
+            });
+
+            const btnRemove = document.createElement('button');
+            btnRemove.type = 'button';
+            btnRemove.className = 'remove-privilegio-btn';
+            btnRemove.textContent = 'X';
+            btnRemove.onclick = () => row.remove();
+
+            row.appendChild(selectPriv);
+            row.appendChild(selectTabla);
+            row.appendChild(btnRemove);
+
+            document.getElementById('privilegios-list').appendChild(row);
+        }
+
+        function abrirModalRol(modo = 'crear', rol = null) {
+            document.getElementById('rol-modal-title').textContent = modo === 'crear' ? 'Nuevo Rol' : 'Editar Rol';
+            document.getElementById('rol-nombre').value = rol ? rol.nombre : '';
+            document.getElementById('privilegios-list').innerHTML = '';
+            if (rol && rol.privilegios && rol.privilegios.length) {
+                rol.privilegios.forEach(p => agregarFilaPrivilegio(p.privilegio, p.tabla));
+            } else {
+                agregarFilaPrivilegio();
+            }
+            document.getElementById('rol-modal').classList.add('active');
+        }
+
+        function cerrarModalRol() {
             document.getElementById('rol-modal').classList.remove('active');
         }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await cargarTablas();
+            document.getElementById('add-privilegio-btn').onclick = () => agregarFilaPrivilegio();
+            document.getElementById('close-rol-modal').onclick = cerrarModalRol;
+            document.getElementById('rol-form').onsubmit = async function(e) {
+                e.preventDefault();
+                const nombre = document.getElementById('rol-nombre').value.trim();
+                const privilegios = [];
+                document.querySelectorAll('#privilegios-list .privilegio-row').forEach(row => {
+                    const privilegio = row.children[0].value;
+                    const tabla = row.children[1].value;
+                    if (privilegio && tabla) {
+                        privilegios.push({ privilegio, tabla });
+                    }
+                });
+                if (!nombre) {
+                    alert('El nombre del rol es obligatorio.');
+                    return;
+                }
+                if (privilegios.length === 0) {
+                    alert('Debe agregar al menos un privilegio.');
+                    return;
+                }
+                const set = new Set(privilegios.map(p => p.privilegio + '-' + p.tabla));
+                if (set.size !== privilegios.length) {
+                    alert('No puede haber pares privilegio+tabla duplicados.');
+                    return;
+                }
+                const esEdicion = !!editingRoleId;
+                const url = "http://localhost:3000" + (esEdicion ? `/roles/${editingRoleId}` : '/roles/');
+                const method = esEdicion ? 'PUT' : 'POST';
+                console.log(nombre, privilegios)
+                try {
+                    const resp = await fetch(url, {
+                        method,
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ nombre, privilegios })
+                    });
+                    const data = await resp.json();
+                    if (!resp.ok) throw new Error(data.error || 'Error');
+                    alert(data.message);
+                    cerrarModalRol();
+                    renderRolesTable();
+                } catch (err) {
+                    alert('Error: ' + err.message);
+                }
+            };
+        });
 
         // Función para mostrar modal de usuario
         function mostrarModal(tipo, idx) {
@@ -551,6 +650,7 @@
                     <th>Nombre completo</th>
                     <th>Email</th>
                     <th>Estado</th>
+                    <th>Rol</th>
                     <th>Acciones</th>
                 `;
                 usuarios['empleados'].forEach((u, idx) => {
@@ -559,6 +659,7 @@
                         <td>${u.nombre_completo}</td>
                         <td>${u.email}</td>
                         <td><span class="status ${u.activo === 'S' ? 'active' : 'inactive'}">${u.activo === 'S' ? 'Activo' : 'Inactivo'}</span></td>
+                        <td>${u.rol || ''}</td>
                         <td class="actions">
                             <button class="action-btn view" title="Ver detalles" onclick="mostrarModal('empleado', ${idx})"><i class="fas fa-eye"></i></button>
                             <button class="action-btn assign-role" title="Asignar Rol" onclick="abrirModalRolUsuario(${u.id_usuario}, '${u.nombre_completo.replace(/'/g, '\'')}', ${u.id_rol})"><i class="fas fa-user-tag"></i></button>
@@ -627,7 +728,7 @@
         // Función para renderizar tabla de roles
         async function renderRolesTable() {
             try {
-                const res = await fetch('http://localhost:3000/roles');
+                const res = await fetch('http://localhost:3000/roles/');
                 if (!res.ok) throw new Error('Error al cargar roles');
                 const { roles } = await res.json();
                 
@@ -635,11 +736,12 @@
                 rolesTbody.innerHTML = '';
                 
                 roles.forEach(rol => {
+                    const privs = (rol.privilegios || []).map(p => `${p.privilegio} sobre ${p.tabla}`).join('<br>');
                     rolesTbody.innerHTML += `
                         <tr>
                             <td>${rol.id_rol}</td>
                             <td>${rol.nombre_rol}</td>
-                            <td>${rol.privilegios.join(', ') || 'Sin privilegios'}</td>
+                            <td>${privs || 'Sin privilegios'}</td>
                             <td class="actions">
                                 <button class="action-btn edit" title="Editar" data-rol-id="${rol.id_rol}" data-rol-nombre="${rol.nombre_rol}" data-rol-privilegios='${JSON.stringify(rol.privilegios)}'><i class="fas fa-edit"></i></button>
                                 <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
@@ -685,13 +787,15 @@
                             <td>${orden.fecha_emision ? orden.fecha_emision.split('T')[0] : ''}</td>
                             <td>${orden.fecha_fin ? orden.fecha_fin.split('T')[0] : ''}</td>
                             <td>${orden.estatus_actual}</td>
-                            <td>
-                                <button class="action-btn assign-role" title="Modificar estatus" onclick="abrirModalCambiarEstatus(${orden.id_orden_reposicion}, ${orden.id_estatus_actual})">
-                                    <i class="fas fa-exchange-alt"></i>
-                                </button>
-                                <button class="action-btn view" title="Ver Detalles" onclick="abrirModalDetallesOrdenProveedor(${orden.id_orden_reposicion})">
-                                    <i class="fas fa-eye"></i>
-                                </button>
+                            <td class="actions">
+                                <div class="actions">
+                                    <button class="action-btn assign-role" title="Modificar estatus" onclick="abrirModalCambiarEstatus(${orden.id_orden_reposicion}, ${orden.id_estatus_actual})">
+                                        <i class="fas fa-exchange-alt"></i>
+                                    </button>
+                                    <button class="action-btn view" title="Ver Detalles" onclick="abrirModalDetallesOrdenProveedor(${orden.id_orden_reposicion})">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
                             </td>
                         </tr>
                     `;
@@ -730,13 +834,15 @@
             }
         }
 
-        // Cerrar modal
-        const closeModalCambiarEstatus = document.getElementById('close-modal-cambiar-estatus');
-        if (closeModalCambiarEstatus) {
-            closeModalCambiarEstatus.onclick = function() {
-                document.getElementById('modal-cambiar-estatus').classList.remove('active');
-            };
-        }
+        // Cierre robusto de modales (solo el modal correspondiente)
+        document.querySelectorAll('.close-modal').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const modal = btn.closest('.modal');
+                if (modal) {
+                    modal.classList.remove('active');
+                }
+            });
+        });
 
         // Cambiar estatus de la orden
         async function cambiarEstatusOrden(idOrden, idEstatusNuevo, nombreEstatusNuevo) {
@@ -857,72 +963,7 @@
             // Botón agregar rol
             const addRolBtn = document.getElementById('add-rol-btn');
             addRolBtn.addEventListener('click', () => {
-                resetRolModal();
-                document.getElementById('rol-modal').classList.add('active');
-            });
-
-            // Cerrar modal de roles
-            document.getElementById('close-rol-modal').addEventListener('click', resetRolModal);
-
-            // Formulario de roles
-            document.getElementById('rol-form').addEventListener('submit', async (e) => {
-                e.preventDefault();
-                console.log('Formulario enviado, editingRoleId:', editingRoleId);
-                
-                const nombre = document.getElementById('rol-nombre').value;
-                const permisos = {
-                    crear: document.querySelector('#rol-form input[name="crear"]').checked,
-                    eliminar: document.querySelector('#rol-form input[name="eliminar"]').checked,
-                    actualizar: document.querySelector('#rol-form input[name="actualizar"]').checked,
-                    leer: document.querySelector('#rol-form input[name="leer"]').checked
-                };
-
-                console.log('Datos del formulario:', { nombre, permisos, editingRoleId });
-
-                try {
-                    let res;
-                    if (editingRoleId) {
-                        // Modo edición
-                        console.log('Enviando PUT request para editar rol:', editingRoleId);
-                        res = await fetch("http://localhost:3000/roles/" + editingRoleId, {
-                            method: 'PUT',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ nombre, permisos })
-                        });
-                    } else {
-                        // Modo creación
-                        console.log('Enviando POST request para crear rol');
-                        res = await fetch('http://localhost:3000/roles', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ nombre, permisos })
-                        });
-                    }
-
-                    if (res.ok) {
-                        console.log('Operación exitosa, reseteando formulario');
-                        resetRolModal();
-                        await renderRolesTable(); // Refresh the list
-                    } else {
-                        const errorData = await res.json();
-                        const action = editingRoleId ? 'actualizar' : 'crear';
-                        alert(`Error al ${action} el rol: ${errorData.error}`);
-                    }
-                } catch (err) {
-                    console.error('Error de conexión:', err);
-                    const action = editingRoleId ? 'actualizar' : 'crear';
-                    alert(`Error de conexión al ${action} el rol.`);
-                }
-            });
-
-            // Cerrar modales al hacer clic fuera
-            document.addEventListener('click', function(e) {
-                if (e.target.id === 'rol-modal') {
-                    resetRolModal();
-                }
-                if (e.target.id === 'close-modal' || e.target.id === 'usuario-modal') {
-                    document.getElementById('usuario-modal').classList.remove('active');
-                }
+                abrirModalRol();
             });
 
             // Cambia el texto y visibilidad del botón de nuevo usuario según el filtro
@@ -966,6 +1007,10 @@
                 };
             }
         });
+        function editRole(id, nombre, privilegios) {
+            editingRoleId = id;
+            abrirModalRol('editar', { nombre, privilegios });
+        }
 
         // Hacer funciones globales
         window.editRole = editRole;
@@ -1099,13 +1144,15 @@
                             <td>${orden.fecha_hora_generacion ? orden.fecha_hora_generacion.replace('T', ' ').slice(0, 16) : ''}</td>
                             <td>${orden.ubicacion_completa || 'No especificada'}</td>
                             <td>${orden.estatus_actual}</td>
-                            <td>
-                                <button class="action-btn assign-role" title="Modificar estatus" onclick="abrirModalCambiarEstatusAnaquel(${orden.id_orden_reposicion}, ${orden.id_estatus_actual})">
-                                    <i class="fas fa-exchange-alt"></i>
-                                </button>
-                                <button class="action-btn view" title="Ver Detalles" onclick="abrirModalDetallesOrdenAnaquel(${orden.id_orden_reposicion})">
-                                    <i class="fas fa-eye"></i>
-                                </button>
+                            <td class="actions">
+                                <div class="actions">
+                                    <button class="action-btn assign-role" title="Modificar estatus" onclick="abrirModalCambiarEstatusAnaquel(${orden.id_orden_reposicion}, ${orden.id_estatus_actual})">
+                                        <i class="fas fa-exchange-alt"></i>
+                                    </button>
+                                    <button class="action-btn view" title="Ver Detalles" onclick="abrirModalDetallesOrdenAnaquel(${orden.id_orden_reposicion})">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
                             </td>
                         </tr>
                     `;
@@ -1299,6 +1346,13 @@
                     funcion: () => window.reportes.mostrarCervezasProveedores(),
                     contenedor: 'grafico-cervezas-proveedores',
                     contenedorRanking: 'grafico-ranking-puntos'
+                },
+                {
+                    titulo: 'Desglose de Ingresos por Tipo de Venta',
+                    descripcion: 'Comparación de ventas online vs físicas por mes',
+                    funcion: () => window.reportes.mostrarIngresosPorTipo(),
+                    contenedor: 'grafico-ingresos-container',
+                    contenedorRanking: 'grafico-ranking-puntos'
                 }
             ];
 
@@ -1319,6 +1373,7 @@
                 document.getElementById('grafico-ranking-puntos').parentElement.style.display = 'none';
                 document.getElementById('grafico-vacaciones-container').style.display = 'none';
                 document.getElementById('grafico-cervezas-container').style.display = 'none';
+                document.getElementById('grafico-ingresos-container').style.display = 'none';
                 
                 // Ocultar todas las paginaciones
                 const paginacionRanking = document.querySelector('.paginacion-ranking');
@@ -1339,6 +1394,9 @@
                 } else if (index === 2) {
                     // Para cervezas, el contenido se genera dinámicamente
                     if (paginacionCervezas) paginacionCervezas.style.display = 'flex';
+                } else if (index === 3) {
+                    // Para ingresos por tipo
+                    document.getElementById('grafico-ingresos-container').style.display = 'block';
                 }
                 
                 // Ejecutar la función del reporte

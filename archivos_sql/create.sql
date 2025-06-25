@@ -115,7 +115,7 @@ CREATE TABLE Compra_Estatus (
     compra_id_compra      INTEGER NOT NULL,
     estatus_id_estatus    INTEGER NOT NULL,
     fecha_hora_asignacion TIMESTAMP NOT NULL,
-    fecha_hora_fin        TIMESTAMP NOT NULL,
+    fecha_hora_fin        TIMESTAMP,
     PRIMARY KEY (compra_id_compra, estatus_id_estatus)
 );
 
@@ -377,6 +377,7 @@ CREATE TABLE Orden_Reposicion (
 
 CREATE TABLE Orden_Reposicion_Anaquel (
     id_orden_reposicion SERIAL PRIMARY KEY,
+    id_ubicacion INTEGER NOT NULL,
     fecha_hora_generacion TIMESTAMP NOT NULL
 );
 
@@ -434,7 +435,8 @@ CREATE TABLE Pago_Orden_Reposicion (
 CREATE TABLE Rol_Privilegio (
     id_rol          INTEGER NOT NULL,
     id_privilegio   INTEGER NOT NULL,
-    fecha_asignacion DATE NOT NULL,
+    fecha_asignacion DATE NOT NULL DEFAULT CURRENT_DATE,
+    nom_tabla_ojetivo VARCHAR(25) NOT NULL,
     motivo          TEXT,
     PRIMARY KEY (id_rol, id_privilegio)
 );

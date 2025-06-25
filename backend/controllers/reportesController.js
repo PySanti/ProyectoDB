@@ -110,4 +110,70 @@ exports.getCervezasProveedores = async (req, res) => {
       error: 'Error al obtener el listado de cervezas por proveedores'
     });
   }
+};
+
+exports.getIngresosPorTipo = async (req, res) => {
+  try {
+    const { year } = req.query;
+    
+    // Query principal para los datos del gráfico
+    let query = `
+      SELECT 
+        EXTRACT(YEAR FROM ce.fecha_hora_asignacion) AS anio,
+        EXTRACT(MONTH FROM ce.fecha_hora_asignacion) AS mes,
+        TO_CHAR(ce.fecha_hora_asignacion, 'TMMonth YYYY') AS periodo,
+        CASE 
+          WHEN c.tienda_web_id_tienda IS NOT NULL THEN 'Online'
+          WHEN c.tienda_fisica_id_tienda IS NOT NULL THEN 'Física'
+          ELSE 'Sin definir'
+        END AS tipo_venta,
+        SUM(c.monto_total) AS ingresos_totales,
+        COUNT(*) AS cantidad_ventas
+      FROM Compra c
+      INNER JOIN Compra_Estatus ce ON c.id_compra = ce.compra_id_compra
+      WHERE 
+        c.monto_total > 0
+        AND ce.estatus_id_estatus = 3
+        AND ce.fecha_hora_asignacion IS NOT NULL
+        AND (c.tienda_web_id_tienda IS NOT NULL OR c.tienda_fisica_id_tienda IS NOT NULL)
+    `;
+
+    // Agregar filtro de año si se proporciona
+    if (year) {
+      query += ` AND EXTRACT(YEAR FROM ce.fecha_hora_asignacion) = $1`;
+    }
+
+    query += `
+      GROUP BY 
+        EXTRACT(YEAR FROM ce.fecha_hora_asignacion),
+        EXTRACT(MONTH FROM ce.fecha_hora_asignacion),
+        TO_CHAR(ce.fecha_hora_asignacion, 'TMMonth YYYY'),
+        CASE 
+          WHEN c.tienda_web_id_tienda IS NOT NULL THEN 'Online'
+          WHEN c.tienda_fisica_id_tienda IS NOT NULL THEN 'Física'
+          ELSE 'Sin definir'
+        END
+      ORDER BY 
+        anio DESC,
+        mes ASC,
+        tipo_venta ASC;
+    `;
+
+    // Ejecutar query con o sin parámetro de año
+    const result = year 
+      ? await db.query(query, [year])
+      : await db.query(query);
+
+    res.json({
+      success: true,
+      data: result.rows,
+      message: 'Reporte de ingresos por tipo de venta obtenido exitosamente'
+    });
+  } catch (err) {
+    console.error('Error al obtener reporte de ingresos por tipo:', err);
+    res.status(500).json({
+      success: false,
+      error: 'Error al obtener el reporte de ingresos por tipo de venta'
+    });
+  }
 }; 

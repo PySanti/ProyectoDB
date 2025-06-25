@@ -3,7 +3,13 @@ const db = require('../db_connection/index.js');
 exports.getRoles = async (req, res) => {
   try {
     const { rows } = await db.query('SELECT * FROM get_roles()');
-    res.json({ roles: rows });
+    // Parsear el JSON de privilegios para cada rol
+    const roles = rows.map(row => ({
+      id_rol: row.id_rol,
+      nombre_rol: row.nombre_rol,
+      privilegios: Array.isArray(row.privilegios) ? row.privilegios : JSON.parse(row.privilegios)
+    }));
+    res.json({ roles });
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Error al obtener los roles' });
@@ -11,11 +17,12 @@ exports.getRoles = async (req, res) => {
 };
 
 exports.createRole = async (req, res) => {
-  const { nombre, permisos } = req.body;
-  const { crear, eliminar, actualizar, leer } = permisos;
-
+  const { nombre, privilegios } = req.body;
+  if (!nombre || !Array.isArray(privilegios) || privilegios.length === 0) {
+    return res.status(400).json({ error: 'Datos incompletos' });
+  }
   try {
-    await db.query('SELECT create_role($1, $2, $3, $4, $5)', [nombre, !!crear, !!eliminar, !!actualizar, !!leer]);
+    await db.query('SELECT create_role($1, $2::json)', [nombre, JSON.stringify(privilegios)]);
     res.status(201).json({ message: 'Rol creado exitosamente' });
   } catch (err) {
     console.error(err);
@@ -25,13 +32,12 @@ exports.createRole = async (req, res) => {
 
 exports.updateRole = async (req, res) => {
   const { id } = req.params;
-  const { nombre, permisos } = req.body;
-  const { crear, eliminar, actualizar, leer } = permisos;
-
+  const { nombre, privilegios } = req.body;
+  if (!nombre || !Array.isArray(privilegios) || privilegios.length === 0) {
+    return res.status(400).json({ error: 'Datos incompletos' });
+  }
   try {
-    await db.query('SELECT update_role_privileges($1, $2, $3, $4, $5, $6)', [
-      parseInt(id), nombre, !!crear, !!eliminar, !!actualizar, !!leer
-    ]);
+    await db.query('SELECT update_role_privileges($1, $2, $3::json)', [parseInt(id), nombre, JSON.stringify(privilegios)]);
     res.json({ message: 'Rol actualizado exitosamente' });
   } catch (err) {
     console.error(err);

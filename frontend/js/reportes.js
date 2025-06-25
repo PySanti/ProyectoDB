@@ -24,6 +24,9 @@ const empleadosPorPagina = 10;
 let cervezasProveedoresData = [];
 let proveedorActual = 0;
 
+// Variable global para el gráfico de ingresos
+let graficoIngresosPorTipo = null;
+
 // ========================================
 // FUNCIONES COMUNES
 // ========================================
@@ -44,6 +47,12 @@ function mostrarPaginacion(tipo) {
     const paginacionCervezas = document.getElementById('cervezas-paginacion');
     if (paginacionCervezas) {
         paginacionCervezas.style.display = (tipo === 'cervezas') ? 'flex' : 'none';
+    }
+    // Para ingresos no hay paginación, solo ocultamos las demás
+    if (tipo === 'ingresos') {
+        if (paginacionRanking) paginacionRanking.style.display = 'none';
+        if (paginacionVacaciones) paginacionVacaciones.style.display = 'none';
+        if (paginacionCervezas) paginacionCervezas.style.display = 'none';
     }
 }
 
@@ -721,6 +730,281 @@ async function mostrarCervezasProveedores() {
     }
 }
 
+// ==================================================================================================================================
+// FUNCIONES DE REPORTE 5. INGRESOS POR VENTA FISICA U ONLINE 
+// ==================================================================================================================================
+
+// Función para obtener datos de ingresos por tipo
+async function obtenerIngresosPorTipo(year = null) {
+    try {
+        const url = year 
+            ? `${API_BASE_URL}/reportes/ingresos-por-tipo?year=${year}`
+            : `${API_BASE_URL}/reportes/ingresos-por-tipo`;
+            
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`Error HTTP: ${response.status}`);
+        }
+        const data = await response.json();
+        if (data.success) {
+            console.log('Datos de ingresos por tipo obtenidos:', data.data);
+            return data.data;
+        } else {
+            throw new Error(data.error || 'Error al obtener los ingresos por tipo');
+        }
+    } catch (error) {
+        console.error('Error al obtener ingresos por tipo:', error);
+        throw error;
+    }
+}
+
+// Función para procesar datos para el gráfico de líneas
+function procesarDatosIngresosParaGrafico(datos) {
+    // Agrupar datos por año y mes
+    const agrupados = {};
+    datos.forEach(row => {
+        const key = `${row.anio}-${row.mes}`;
+        if (!agrupados[key]) {
+            agrupados[key] = {
+                anio: row.anio,
+                mes: row.mes,
+                periodo: row.periodo.trim(),
+                online: 0,
+                fisica: 0
+            };
+        }
+        if (row.tipo_venta === 'Online') {
+            agrupados[key].online = parseFloat(row.ingresos_totales);
+        } else if (row.tipo_venta === 'Física') {
+            agrupados[key].fisica = parseFloat(row.ingresos_totales);
+        }
+    });
+    // Convertir a array y ordenar por año y mes
+    const ordenados = Object.values(agrupados).sort((a, b) => {
+        if (a.anio !== b.anio) return a.anio - b.anio;
+        return a.mes - b.mes;
+    });
+    // Construir arrays para el gráfico
+    const periodos = ordenados.map(d => d.periodo.charAt(0).toUpperCase() + d.periodo.slice(1));
+    const datosOnline = ordenados.map(d => d.online);
+    const datosFisica = ordenados.map(d => d.fisica);
+    return {
+        periodos,
+        datosOnline,
+        datosFisica
+    };
+}
+
+// Función para extraer años únicos de los datos
+function extraerAniosUnicos(datos) {
+    const anios = [...new Set(datos.map(row => row.anio))].sort();
+    return anios;
+}
+
+// Función para llenar el selector de años
+function llenarSelectorAnios(anios) {
+    const selector = document.getElementById('selector-anio-ingresos');
+    if (!selector) return;
+    
+    // Mantener la opción "Todos los años"
+    selector.innerHTML = '<option value="">Todos los años</option>';
+    
+    // Agregar opciones de años
+    anios.forEach(anio => {
+        const option = document.createElement('option');
+        option.value = anio;
+        option.textContent = anio;
+        selector.appendChild(option);
+    });
+}
+
+// Función para crear el gráfico de líneas
+function crearGraficoIngresosPorTipo(datos) {
+    // Ordenar datos por año y mes (por si acaso)
+    datos.sort((a, b) => {
+        if (a.anio !== b.anio) return a.anio - b.anio;
+        return a.mes - b.mes;
+    });
+
+    const ctx = document.getElementById('grafico-ingresos-por-tipo');
+    if (graficoIngresosPorTipo) {
+        graficoIngresosPorTipo.destroy();
+    }
+    
+    const datosProcesados = procesarDatosIngresosParaGrafico(datos);
+    
+    graficoIngresosPorTipo = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: datosProcesados.periodos,
+            datasets: [
+                {
+                    label: 'Ventas Online',
+                    data: datosProcesados.datosOnline,
+                    borderColor: '#43A047', // Verde
+                    backgroundColor: 'rgba(67, 160, 71, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: '#43A047',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointRadius: 6,
+                    pointHoverRadius: 8
+                },
+                {
+                    label: 'Ventas Físicas',
+                    data: datosProcesados.datosFisica,
+                    borderColor: '#1976D2', // Azul
+                    backgroundColor: 'rgba(25, 118, 210, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: '#1976D2',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2,
+                    pointRadius: 6,
+                    pointHoverRadius: 8
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                title: {
+                    display: false
+                },
+                legend: {
+                    display: true,
+                    position: 'top',
+                    labels: {
+                        usePointStyle: true,
+                        padding: 20
+                    }
+                },
+                tooltip: {
+                    mode: 'index',
+                    intersect: false,
+                    callbacks: {
+                        label: function(context) {
+                            return context.dataset.label + ': $' + context.parsed.y.toLocaleString();
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Período'
+                    },
+                    ticks: {
+                        maxRotation: 45,
+                        minRotation: 0
+                    }
+                },
+                y: {
+                    title: {
+                        display: true,
+                        text: 'Ingresos ($)'
+                    },
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            return '$' + value.toLocaleString();
+                        }
+                    }
+                }
+            },
+            interaction: {
+                mode: 'nearest',
+                axis: 'x',
+                intersect: false
+            }
+        }
+    });
+}
+
+// Función para mostrar el reporte de ingresos por tipo
+async function mostrarIngresosPorTipo(year = null) {
+    try {
+        // Ocultar otros contenedores de gráficos
+        document.getElementById('grafico-ranking-puntos').style.display = 'none';
+        document.getElementById('grafico-vacaciones-container').style.display = 'none';
+        document.getElementById('grafico-cervezas-container').style.display = 'none';
+        
+        // Mostrar contenedor de ingresos
+        const contenedorIngresos = document.getElementById('grafico-ingresos-container');
+        contenedorIngresos.style.display = 'block';
+        
+        // Obtener datos
+        const datos = await obtenerIngresosPorTipo(year);
+        
+        if (datos.length === 0) {
+            // Mostrar mensaje de no hay datos
+            const titulo = document.getElementById('reporte-titulo-principal');
+            const subtitulo = document.getElementById('reporte-titulo-sub');
+            if (titulo) titulo.textContent = 'Desglose de Ingresos por Tipo de Venta';
+            if (subtitulo) subtitulo.textContent = 'No hay datos disponibles para el período seleccionado';
+            
+            // Limpiar canvas
+            const ctx = document.getElementById('grafico-ingresos-por-tipo').getContext('2d');
+            ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
+            return;
+        }
+        
+        // Extraer años únicos y llenar selector (solo si no hay filtro de año)
+        if (!year) {
+            const anios = extraerAniosUnicos(datos);
+            llenarSelectorAnios(anios);
+        }
+        
+        // Crear gráfico
+        crearGraficoIngresosPorTipo(datos);
+        
+        // Actualizar títulos
+        const titulo = document.getElementById('reporte-titulo-principal');
+        const subtitulo = document.getElementById('reporte-titulo-sub');
+        if (titulo) titulo.textContent = 'Desglose de Ingresos por Tipo de Venta';
+        if (subtitulo) subtitulo.textContent = year 
+            ? `Comparación de ventas online vs físicas - Año ${year}`
+            : 'Comparación de ventas online vs físicas por mes';
+        
+        // Ocultar paginaciones de otros reportes
+        mostrarPaginacion('ingresos');
+        
+        return datos;
+    } catch (error) {
+        console.error('Error al mostrar ingresos por tipo:', error);
+        const reporteContenido = document.getElementById('reporte-contenido');
+        if (reporteContenido) {
+            reporteContenido.innerHTML = `
+                <div class="reporte-titulo">
+                    <h3>Error al cargar el reporte</h3>
+                    <p>No se pudieron cargar los datos de ingresos por tipo de venta</p>
+                </div>
+            `;
+        }
+        throw error;
+    }
+}
+
+// Función para manejar el cambio de año en el selector
+function configurarSelectorAnios() {
+    const selector = document.getElementById('selector-anio-ingresos');
+    if (!selector) return;
+    
+    selector.addEventListener('change', async function() {
+        const year = this.value || null;
+        try {
+            await mostrarIngresosPorTipo(year);
+        } catch (error) {
+            console.error('Error al cambiar año:', error);
+        }
+    });
+}
+
 // ========================================
 // FUNCIÓN DE INICIALIZACIÓN
 // ========================================
@@ -728,6 +1012,9 @@ async function mostrarCervezasProveedores() {
 // Función principal para inicializar los reportes
 function inicializarReportes() {
     console.log('Inicializando reportes...');
+    
+    // Configurar el selector de años para el reporte de ingresos
+    configurarSelectorAnios();
     
     // Mostrar el ranking de puntos cuando se cargue la página
     // mostrarRankingPuntos();
@@ -749,5 +1036,6 @@ window.reportes = {
     crearGraficoRankingPuntos,
     obtenerVacacionesEmpleados,
     mostrarVacacionesEmpleados,
-    mostrarCervezasProveedores
+    mostrarCervezasProveedores,
+    mostrarIngresosPorTipo
 };

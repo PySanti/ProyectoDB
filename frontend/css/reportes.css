@@ -270,4 +270,131 @@
     .leyenda-item-cerveza .clasificacion {
         font-size: 11px;
     }
+}
+
+/* Responsive para leyenda de cervezas */
+@media (max-width: 768px) {
+    .leyenda-cervezas {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .leyenda-item-cerveza {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .leyenda-item-cerveza .leyenda-color {
+        margin-bottom: 5px;
+    }
+    
+    .leyenda-item-cerveza strong {
+        font-size: 14px;
+    }
+    
+    .leyenda-item-cerveza .clasificacion {
+        font-size: 12px;
+    }
+}
+
+/* ========================================
+   ESTILOS PARA REPORTE DE INGRESOS POR TIPO
+   ======================================== */
+
+/* Contenedor del gráfico de ingresos */
+#grafico-ingresos-container {
+    width: 100%;
+    max-width: 1200px;
+    height: 600px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+/* Filtros del reporte */
+.filtros-reporte {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+}
+
+.filtros-reporte label {
+    font-weight: 600;
+    color: #495057;
+    font-size: 14px;
+}
+
+.filtros-reporte select {
+    padding: 8px 12px;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    background: white;
+    font-size: 14px;
+    color: #495057;
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.filtros-reporte select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.filtros-reporte select:hover {
+    border-color: #007bff;
+}
+
+/* Canvas del gráfico de ingresos */
+#grafico-ingresos-por-tipo {
+    width: 100% !important;
+    height: 500px !important;
+    max-width: 1200px;
+}
+
+/* Leyenda de ingresos */
+.leyenda-ingresos {
+    margin-top: 15px;
+    text-align: center;
+    font-size: 12px;
+    color: #6c757d;
+}
+
+/* Responsive para reporte de ingresos */
+@media (max-width: 1400px) {
+    #grafico-ingresos-container {
+        max-width: 1000px;
+        height: 500px;
+    }
+    #grafico-ingresos-por-tipo {
+        height: 400px !important;
+        max-width: 1000px;
+    }
+}
+@media (max-width: 1100px) {
+    #grafico-ingresos-container {
+        max-width: 800px;
+        height: 400px;
+    }
+    #grafico-ingresos-por-tipo {
+        height: 320px !important;
+        max-width: 800px;
+    }
+}
+@media (max-width: 800px) {
+    #grafico-ingresos-container {
+        max-width: 100vw;
+        height: 300px;
+    }
+    #grafico-ingresos-por-tipo {
+        height: 200px !important;
+        max-width: 100vw;
+    }
 } 
