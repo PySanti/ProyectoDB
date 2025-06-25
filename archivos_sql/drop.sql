@@ -253,3 +253,5 @@ DROP FUNCTION IF EXISTS agregar_al_carrito(INTEGER, INTEGER, INTEGER);
 
 DROP FUNCTION IF EXISTS get_cliente_natural_by_cedula(VARCHAR);
 DROP FUNCTION IF EXISTS get_cliente_natural_by_cedula(INTEGER);
+
+DROP FUNCTION IF EXISTS obtener_o_crear_carrito_usuario(integer);

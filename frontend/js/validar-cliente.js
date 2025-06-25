@@ -444,33 +444,50 @@ async function cargarMunicipios() {
     const select = document.getElementById('municipio');
     select.innerHTML = '<option value="">Seleccione un municipio</option>';
     document.getElementById('parroquia').innerHTML = '<option value="">Seleccione una parroquia</option>';
-    if (!estadoId) return;
+    if (!estadoId || isNaN(parseInt(estadoId, 10))) return;
     try {
         const res = await fetch(`${API_BASE_URL}/users/municipios?estado_id=${estadoId}`);
         const municipios = await res.json();
+        console.log('Municipios recibidos:', municipios);
+        if (!Array.isArray(municipios)) {
+            showNotification(municipios.error || 'Error al cargar municipios', 'error');
+            return;
+        }
         municipios.forEach(m => {
             const opt = document.createElement('option');
             opt.value = m.id_lugar;
             opt.textContent = m.nombre;
             select.appendChild(opt);
         });
-        select.addEventListener('change', cargarParroquias);
-    } catch (e) { console.error('Error cargando municipios', e); }
+        // Elimina listeners previos antes de agregar uno nuevo
+        select.replaceWith(select.cloneNode(true));
+        const newSelect = document.getElementById('municipio');
+        newSelect.addEventListener('change', cargarParroquias);
+    } catch (e) { 
+        console.error('Error cargando municipios', e); 
+    }
 }
 
 async function cargarParroquias() {
     const municipioId = document.getElementById('municipio').value;
     const select = document.getElementById('parroquia');
     select.innerHTML = '<option value="">Seleccione una parroquia</option>';
-    if (!municipioId) return;
+    if (!municipioId || isNaN(parseInt(municipioId, 10))) return;
     try {
         const res = await fetch(`${API_BASE_URL}/users/parroquias?municipio_id=${municipioId}`);
         const parroquias = await res.json();
+        console.log('Parroquias recibidas:', parroquias);
+        if (!Array.isArray(parroquias)) {
+            showNotification(parroquias.error || 'Error al cargar parroquias', 'error');
+            return;
+        }
         parroquias.forEach(p => {
             const opt = document.createElement('option');
             opt.value = p.id_lugar;
             opt.textContent = p.nombre;
             select.appendChild(opt);
         });
-    } catch (e) { console.error('Error cargando parroquias', e); }
+    } catch (e) { 
+        console.error('Error cargando parroquias', e); 
+    }
 } 

@@ -907,30 +907,78 @@ $$ LANGUAGE plpgsql;
 
 
 -- =====================================================
+-- FUNCIÓN AUXILIAR PARA DETERMINAR TIPO DE COMPRA Y OBTENER CARRITO
+-- =====================================================
+CREATE OR REPLACE FUNCTION obtener_carrito_por_tipo(
+    p_id_usuario INTEGER DEFAULT NULL,
+    p_id_cliente_natural INTEGER DEFAULT NULL,
+    p_id_cliente_juridico INTEGER DEFAULT NULL
+)
+RETURNS INTEGER AS $$
+DECLARE
+    v_id_compra INTEGER;
+BEGIN
+    -- Determinar el tipo de compra basándose en los parámetros
+    IF p_id_cliente_natural IS NOT NULL OR p_id_cliente_juridico IS NOT NULL THEN
+        -- Compra en tienda física: usar cliente, NO usuario
+        v_id_compra := obtener_o_crear_carrito_usuario(NULL, p_id_cliente_natural, p_id_cliente_juridico);
+    ELSE
+        -- Compra web: usar usuario, NO cliente
+        v_id_compra := obtener_o_crear_carrito_usuario(p_id_usuario, NULL, NULL);
+    END IF;
+    
+    RETURN v_id_compra;
+END;
+$$ LANGUAGE plpgsql;
+
+-- =====================================================
 -- FUNCIÓN AUXILIAR PARA OBTENER O CREAR CARRITO
 -- (Se mantiene como función porque retorna un valor directo)
 -- =====================================================
 
-CREATE OR REPLACE FUNCTION obtener_o_crear_carrito_usuario(p_id_usuario INTEGER)
+CREATE OR REPLACE FUNCTION obtener_o_crear_carrito_usuario(
+    p_id_usuario INTEGER,
+    p_id_cliente_natural INTEGER DEFAULT NULL,
+    p_id_cliente_juridico INTEGER DEFAULT NULL
+)
 RETURNS INTEGER AS $$
 DECLARE
     v_id_compra INTEGER;
     v_estatus_pendiente INTEGER := 13; -- ID del estatus "Pendiente"
 BEGIN
     -- Buscar si el usuario ya tiene un carrito pendiente
-    SELECT c.id_compra INTO v_id_compra
-    FROM Compra c
-    JOIN Compra_Estatus ce ON c.id_compra = ce.compra_id_compra
-    WHERE c.usuario_id_usuario = p_id_usuario 
-    AND ce.estatus_id_estatus = v_estatus_pendiente
-    AND ce.fecha_hora_fin > CURRENT_TIMESTAMP;
+    -- Si es compra en tienda física (con cliente), buscar por cliente
+    IF p_id_cliente_natural IS NOT NULL OR p_id_cliente_juridico IS NOT NULL THEN
+        SELECT c.id_compra INTO v_id_compra
+        FROM Compra c
+        JOIN Compra_Estatus ce ON c.id_compra = ce.compra_id_compra
+        WHERE (c.id_cliente_natural = p_id_cliente_natural OR c.id_cliente_juridico = p_id_cliente_juridico)
+        AND ce.estatus_id_estatus = v_estatus_pendiente
+        AND ce.fecha_hora_fin > CURRENT_TIMESTAMP;
+    ELSE
+        -- Si es compra web (con usuario), buscar por usuario
+        SELECT c.id_compra INTO v_id_compra
+        FROM Compra c
+        JOIN Compra_Estatus ce ON c.id_compra = ce.compra_id_compra
+        WHERE c.usuario_id_usuario = p_id_usuario 
+        AND ce.estatus_id_estatus = v_estatus_pendiente
+        AND ce.fecha_hora_fin > CURRENT_TIMESTAMP;
+    END IF;
     
     -- Si no existe carrito pendiente, crear uno nuevo
     IF v_id_compra IS NULL THEN
         -- Se asume que la tienda física tiene el ID 1.
-        INSERT INTO Compra (usuario_id_usuario, monto_total, tienda_fisica_id_tienda)
-        VALUES (p_id_usuario, 0, 1)
-        RETURNING id_compra INTO v_id_compra;
+        IF p_id_cliente_natural IS NOT NULL OR p_id_cliente_juridico IS NOT NULL THEN
+            -- Compra en tienda física: solo cliente, sin usuario
+            INSERT INTO Compra (monto_total, tienda_fisica_id_tienda, id_cliente_natural, id_cliente_juridico)
+            VALUES (0, 1, p_id_cliente_natural, p_id_cliente_juridico)
+            RETURNING id_compra INTO v_id_compra;
+        ELSE
+            -- Compra web: solo usuario, sin cliente
+            INSERT INTO Compra (usuario_id_usuario, monto_total, tienda_fisica_id_tienda)
+            VALUES (p_id_usuario, 0, 1)
+            RETURNING id_compra INTO v_id_compra;
+        END IF;
         
         -- Asignar estatus "Pendiente" al carrito
         INSERT INTO Compra_Estatus (compra_id_compra, estatus_id_estatus, fecha_hora_asignacion, fecha_hora_fin)
@@ -940,6 +988,34 @@ BEGIN
     RETURN v_id_compra;
 END;
 $$ LANGUAGE plpgsql;
+
+-- =====================================================
+-- FUNCIÓN MODIFICADA PARA AGREGAR AL CARRITO POR NOMBRE Y PRESENTACIÓN
+-- =====================================================
+
+CREATE OR REPLACE FUNCTION agregar_al_carrito_por_producto(
+    p_id_usuario INTEGER,
+    p_nombre_cerveza VARCHAR(50),
+    p_nombre_presentacion VARCHAR(50),
+    p_cantidad INTEGER,
+    p_id_cliente_natural INTEGER DEFAULT NULL,
+    p_id_cliente_juridico INTEGER DEFAULT NULL
+)
+RETURNS VOID LANGUAGE plpgsql AS $$
+DECLARE
+    v_id_inventario INTEGER;
+BEGIN
+    -- Buscar el inventario correcto por nombre y presentación
+    v_id_inventario := buscar_inventario_por_producto(p_nombre_cerveza, p_nombre_presentacion);
+    
+    IF v_id_inventario IS NULL THEN
+        RAISE EXCEPTION 'Producto no encontrado o sin stock disponible';
+    END IF;
+    
+    -- Llamar a la función original con el id_inventario correcto
+    PERFORM agregar_al_carrito(p_id_usuario, v_id_inventario, p_cantidad, p_id_cliente_natural, p_id_cliente_juridico);
+END;
+$$;
 
 -- =====================================================
 -- FUNCIÓN PARA BUSCAR INVENTARIO POR NOMBRE Y PRESENTACIÓN
@@ -967,39 +1043,15 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- =====================================================
--- FUNCIÓN MODIFICADA PARA AGREGAR AL CARRITO POR NOMBRE Y PRESENTACIÓN
--- =====================================================
-
-CREATE OR REPLACE FUNCTION agregar_al_carrito_por_producto(
-    p_id_usuario INTEGER,
-    p_nombre_cerveza VARCHAR(50),
-    p_nombre_presentacion VARCHAR(50),
-    p_cantidad INTEGER
-)
-RETURNS VOID LANGUAGE plpgsql AS $$
-DECLARE
-    v_id_inventario INTEGER;
-BEGIN
-    -- Buscar el inventario correcto por nombre y presentación
-    v_id_inventario := buscar_inventario_por_producto(p_nombre_cerveza, p_nombre_presentacion);
-    
-    IF v_id_inventario IS NULL THEN
-        RAISE EXCEPTION 'Producto no encontrado o sin stock disponible';
-    END IF;
-    
-    -- Llamar a la función original con el id_inventario correcto
-    PERFORM agregar_al_carrito(p_id_usuario, v_id_inventario, p_cantidad);
-END;
-$$;
-
--- =====================================================
 -- FUNCIÓN (antes Procedimiento) PARA AGREGAR PRODUCTO AL CARRITO
 -- =====================================================
 
 CREATE OR REPLACE FUNCTION agregar_al_carrito(
     p_id_usuario INTEGER,
     p_id_inventario INTEGER,
-    p_cantidad INTEGER
+    p_cantidad INTEGER,
+    p_id_cliente_natural INTEGER DEFAULT NULL,
+    p_id_cliente_juridico INTEGER DEFAULT NULL
 )
 RETURNS VOID LANGUAGE plpgsql AS $$
 DECLARE
@@ -1010,11 +1062,17 @@ DECLARE
     v_precio_unitario DECIMAL;
     v_producto_ya_en_carrito BOOLEAN;
     v_cantidad_actual INTEGER;
+    v_es_compra_web BOOLEAN;
 BEGIN
-    -- Verificar que el usuario existe
-    SELECT EXISTS(SELECT 1 FROM Usuario WHERE id_usuario = p_id_usuario) INTO v_usuario_existe;
-    IF NOT v_usuario_existe THEN
-        RAISE EXCEPTION 'Usuario no encontrado';
+    -- Determinar si es compra web o tienda física
+    v_es_compra_web := (p_id_cliente_natural IS NULL AND p_id_cliente_juridico IS NULL);
+    
+    -- Verificar que el usuario existe (solo para compra web)
+    IF v_es_compra_web THEN
+        SELECT EXISTS(SELECT 1 FROM Usuario WHERE id_usuario = p_id_usuario) INTO v_usuario_existe;
+        IF NOT v_usuario_existe THEN
+            RAISE EXCEPTION 'Usuario no encontrado';
+        END IF;
     END IF;
 
     -- Verificar que el producto existe en inventario
@@ -1032,8 +1090,8 @@ BEGIN
         RAISE EXCEPTION 'Stock insuficiente. Disponible: %', v_stock_disponible;
     END IF;
 
-    -- Obtener o crear carrito del usuario
-    v_id_compra := obtener_o_crear_carrito_usuario(p_id_usuario);
+    -- Obtener o crear carrito usando la función auxiliar
+    v_id_compra := obtener_carrito_por_tipo(p_id_usuario, p_id_cliente_natural, p_id_cliente_juridico);
 
     -- Verificar si el producto ya está en el carrito
     SELECT EXISTS(SELECT 1 FROM Detalle_Compra WHERE id_compra = v_id_compra AND id_inventario = p_id_inventario) 
@@ -1067,7 +1125,11 @@ $$;
 -- FUNCIÓN (CONSULTA) PARA OBTENER EL CARRITO
 -- =====================================================
 
-CREATE OR REPLACE FUNCTION obtener_carrito_usuario(p_id_usuario INTEGER)
+CREATE OR REPLACE FUNCTION obtener_carrito_usuario(
+    p_id_usuario INTEGER,
+    p_id_cliente_natural INTEGER DEFAULT NULL,
+    p_id_cliente_juridico INTEGER DEFAULT NULL
+)
 RETURNS TABLE (
     id_compra INTEGER,
     id_inventario INTEGER,
@@ -1083,7 +1145,7 @@ RETURNS TABLE (
 DECLARE
     v_id_compra INTEGER;
 BEGIN
-    v_id_compra := obtener_o_crear_carrito_usuario(p_id_usuario);
+    v_id_compra := obtener_carrito_por_tipo(p_id_usuario, p_id_cliente_natural, p_id_cliente_juridico);
     
     IF v_id_compra IS NULL THEN
         RETURN;
@@ -1117,14 +1179,16 @@ $$ LANGUAGE plpgsql;
 CREATE OR REPLACE FUNCTION actualizar_cantidad_carrito(
     p_id_usuario INTEGER,
     p_id_inventario INTEGER,
-    p_nueva_cantidad INTEGER
+    p_nueva_cantidad INTEGER,
+    p_id_cliente_natural INTEGER DEFAULT NULL,
+    p_id_cliente_juridico INTEGER DEFAULT NULL
 )
 RETURNS VOID LANGUAGE plpgsql AS $$
 DECLARE
     v_stock_disponible INTEGER;
     v_id_compra INTEGER;
 BEGIN
-    v_id_compra := obtener_o_crear_carrito_usuario(p_id_usuario);
+    v_id_compra := obtener_carrito_por_tipo(p_id_usuario, p_id_cliente_natural, p_id_cliente_juridico);
     
     IF v_id_compra IS NULL THEN
         RAISE EXCEPTION 'No se encontró carrito';
@@ -1155,13 +1219,15 @@ $$;
 
 CREATE OR REPLACE FUNCTION eliminar_del_carrito(
     p_id_usuario INTEGER,
-    p_id_inventario INTEGER
+    p_id_inventario INTEGER,
+    p_id_cliente_natural INTEGER DEFAULT NULL,
+    p_id_cliente_juridico INTEGER DEFAULT NULL
 )
 RETURNS VOID LANGUAGE plpgsql AS $$
 DECLARE
     v_id_compra INTEGER;
 BEGIN
-    v_id_compra := obtener_o_crear_carrito_usuario(p_id_usuario);
+    v_id_compra := obtener_carrito_por_tipo(p_id_usuario, p_id_cliente_natural, p_id_cliente_juridico);
     
     IF v_id_compra IS NULL THEN
         RAISE EXCEPTION 'No se encontró carrito';
@@ -1182,13 +1248,15 @@ $$;
 
 
 CREATE OR REPLACE FUNCTION limpiar_carrito_usuario(
-    p_id_usuario INTEGER
+    p_id_usuario INTEGER,
+    p_id_cliente_natural INTEGER DEFAULT NULL,
+    p_id_cliente_juridico INTEGER DEFAULT NULL
 )
 RETURNS VOID LANGUAGE plpgsql AS $$
 DECLARE
     v_id_compra INTEGER;
 BEGIN
-    v_id_compra := obtener_o_crear_carrito_usuario(p_id_usuario);
+    v_id_compra := obtener_carrito_por_tipo(p_id_usuario, p_id_cliente_natural, p_id_cliente_juridico);
     
     IF v_id_compra IS NULL THEN
         RAISE EXCEPTION 'No se encontró carrito';
@@ -1203,7 +1271,11 @@ $$;
 -- FUNCIÓN (CONSULTA) PARA OBTENER RESUMEN
 -- =====================================================
 
-CREATE OR REPLACE FUNCTION obtener_resumen_carrito(p_id_usuario INTEGER)
+CREATE OR REPLACE FUNCTION obtener_resumen_carrito(
+    p_id_usuario INTEGER,
+    p_id_cliente_natural INTEGER DEFAULT NULL,
+    p_id_cliente_juridico INTEGER DEFAULT NULL
+)
 RETURNS TABLE (
     id_compra INTEGER,
     total_productos INTEGER,
@@ -1215,7 +1287,7 @@ DECLARE
     v_id_compra INTEGER;
     v_items JSON;
 BEGIN
-    v_id_compra := obtener_o_crear_carrito_usuario(p_id_usuario);
+    v_id_compra := obtener_carrito_por_tipo(p_id_usuario, p_id_cliente_natural, p_id_cliente_juridico);
     
     IF v_id_compra IS NULL THEN
         RETURN QUERY
@@ -1262,7 +1334,11 @@ $$ LANGUAGE plpgsql;
 -- FUNCIÓN (CONSULTA) PARA VERIFICAR STOCK
 -- =====================================================
 
-CREATE OR REPLACE FUNCTION verificar_stock_carrito(p_id_usuario INTEGER)
+CREATE OR REPLACE FUNCTION verificar_stock_carrito(
+    p_id_usuario INTEGER,
+    p_id_cliente_natural INTEGER DEFAULT NULL,
+    p_id_cliente_juridico INTEGER DEFAULT NULL
+)
 RETURNS TABLE (
     id_inventario INTEGER,
     nombre_cerveza VARCHAR(50),
@@ -1274,7 +1350,7 @@ RETURNS TABLE (
 DECLARE
     v_id_compra INTEGER;
 BEGIN
-    v_id_compra := obtener_o_crear_carrito_usuario(p_id_usuario);
+    v_id_compra := obtener_carrito_por_tipo(p_id_usuario, p_id_cliente_natural, p_id_cliente_juridico);
     
     IF v_id_compra IS NULL THEN
         RETURN;
@@ -1303,15 +1379,17 @@ $$ LANGUAGE plpgsql;
 -- =====================================================
 
 CREATE OR REPLACE FUNCTION actualizar_monto_compra(
-    p_id_usuario INTEGER
+    p_id_usuario INTEGER,
+    p_id_cliente_natural INTEGER DEFAULT NULL,
+    p_id_cliente_juridico INTEGER DEFAULT NULL
 )
 RETURNS DECIMAL AS $$
 DECLARE
     v_id_compra INTEGER;
     v_monto_total DECIMAL;
 BEGIN
-    -- Obtener el carrito del usuario
-    v_id_compra := obtener_o_crear_carrito_usuario(p_id_usuario);
+    -- Obtener el carrito usando la función auxiliar
+    v_id_compra := obtener_carrito_por_tipo(p_id_usuario, p_id_cliente_natural, p_id_cliente_juridico);
     
     IF v_id_compra IS NULL THEN
         RAISE EXCEPTION 'No se encontró carrito para el usuario';
@@ -1332,7 +1410,216 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- =====================================================
--- FUNCIÓN PARA REGISTRAR PAGOS Y DESCONTAR INVENTARIO
+-- FUNCIONES PARA MÉTODOS DE PAGO (SUPERTIPO-SUBTIPO)
+-- =====================================================
+
+-- Función para crear método de pago con Cheque
+DROP FUNCTION IF EXISTS crear_metodo_pago_cheque(integer, integer, varchar, integer, integer);
+  -- O la firma que corresponda
+CREATE OR REPLACE FUNCTION crear_metodo_pago_cheque(
+    p_num_cheque VARCHAR(20),
+    p_num_cuenta VARCHAR(20),
+    p_banco VARCHAR(30),
+    p_id_cliente_natural INTEGER DEFAULT NULL,
+    p_id_cliente_juridico INTEGER DEFAULT NULL
+) RETURNS INTEGER AS $$
+DECLARE
+    v_id_metodo INTEGER;
+BEGIN
+    -- Validar que al menos un cliente esté especificado
+    IF p_id_cliente_natural IS NULL AND p_id_cliente_juridico IS NULL THEN
+        RAISE EXCEPTION 'Debe especificar al menos un cliente (natural o jurídico)';
+    END IF;
+    
+    -- 1. Crear registro en el supertipo usando la función automática
+    SELECT insertar_metodo_pago_automatico(p_id_cliente_natural, p_id_cliente_juridico) INTO v_id_metodo;
+    
+    -- 2. Crear registro en el subtipo
+    INSERT INTO Cheque (id_metodo, num_cheque, num_cuenta, banco)
+    VALUES (v_id_metodo, p_num_cheque, p_num_cuenta, p_banco);
+    
+    RETURN v_id_metodo;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Función para crear método de pago con Efectivo
+CREATE OR REPLACE FUNCTION crear_metodo_pago_efectivo(
+    p_denominacion INTEGER,
+    p_id_cliente_natural INTEGER DEFAULT NULL,
+    p_id_cliente_juridico INTEGER DEFAULT NULL
+) RETURNS INTEGER AS $$
+DECLARE
+    v_id_metodo INTEGER;
+BEGIN
+    -- Validar que al menos un cliente esté especificado
+    IF p_id_cliente_natural IS NULL AND p_id_cliente_juridico IS NULL THEN
+        RAISE EXCEPTION 'Debe especificar al menos un cliente (natural o jurídico)';
+    END IF;
+    
+    -- 1. Crear registro en el supertipo usando la función automática
+    SELECT insertar_metodo_pago_automatico(p_id_cliente_natural, p_id_cliente_juridico) INTO v_id_metodo;
+    
+    -- 2. Crear registro en el subtipo
+    INSERT INTO Efectivo (id_metodo, denominacion)
+    VALUES (v_id_metodo, p_denominacion);
+    
+    RETURN v_id_metodo;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Función para crear método de pago con Tarjeta de Crédito
+CREATE OR REPLACE FUNCTION crear_metodo_pago_tarjeta_credito(
+    p_tipo VARCHAR(20),
+    p_numero VARCHAR(20),
+    p_banco VARCHAR(30),
+    p_fecha_vencimiento DATE,
+    p_id_cliente_natural INTEGER DEFAULT NULL,
+    p_id_cliente_juridico INTEGER DEFAULT NULL
+) RETURNS INTEGER AS $$
+DECLARE
+    v_id_metodo INTEGER;
+BEGIN
+    -- Validar que al menos un cliente esté especificado
+    IF p_id_cliente_natural IS NULL AND p_id_cliente_juridico IS NULL THEN
+        RAISE EXCEPTION 'Debe especificar al menos un cliente (natural o jurídico)';
+    END IF;
+    
+    -- 1. Crear registro en el supertipo usando la función automática
+    SELECT insertar_metodo_pago_automatico(p_id_cliente_natural, p_id_cliente_juridico) INTO v_id_metodo;
+    
+    -- 2. Crear registro en el subtipo
+    INSERT INTO Tarjeta_Credito (id_metodo, tipo, numero, banco, fecha_vencimiento)
+    VALUES (v_id_metodo, p_tipo, p_numero, p_banco, p_fecha_vencimiento);
+    
+    RETURN v_id_metodo;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Función para crear método de pago con Tarjeta de Débito
+CREATE OR REPLACE FUNCTION crear_metodo_pago_tarjeta_debito(
+    p_numero VARCHAR(20),
+    p_banco VARCHAR(30),
+    p_id_cliente_natural INTEGER DEFAULT NULL,
+    p_id_cliente_juridico INTEGER DEFAULT NULL
+) RETURNS INTEGER AS $$
+DECLARE
+    v_id_metodo INTEGER;
+BEGIN
+    -- Validar que al menos un cliente esté especificado
+    IF p_id_cliente_natural IS NULL AND p_id_cliente_juridico IS NULL THEN
+        RAISE EXCEPTION 'Debe especificar al menos un cliente (natural o jurídico)';
+    END IF;
+    
+    -- 1. Crear registro en el supertipo usando la función automática
+    SELECT insertar_metodo_pago_automatico(p_id_cliente_natural, p_id_cliente_juridico) INTO v_id_metodo;
+    
+    -- 2. Crear registro en el subtipo
+    INSERT INTO Tarjeta_Debito (id_metodo, numero, banco)
+    VALUES (v_id_metodo, p_numero, p_banco);
+    
+    RETURN v_id_metodo;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Función para obtener información completa de un método de pago
+CREATE OR REPLACE FUNCTION obtener_metodo_pago_completo(
+    p_id_metodo INTEGER
+) RETURNS TABLE(
+    id_metodo INTEGER,
+    tipo_metodo VARCHAR(20),
+    id_cliente_natural INTEGER,
+    id_cliente_juridico INTEGER,
+    datos_especificos JSON
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT 
+        mp.id_metodo,
+        CASE 
+            WHEN c.id_metodo IS NOT NULL THEN 'cheque'
+            WHEN e.id_metodo IS NOT NULL THEN 'efectivo'
+            WHEN tc.id_metodo IS NOT NULL THEN 'tarjeta_credito'
+            WHEN td.id_metodo IS NOT NULL THEN 'tarjeta_debito'
+            ELSE 'desconocido'
+        END AS tipo_metodo,
+        mp.id_cliente_natural,
+        mp.id_cliente_juridico,
+        CASE 
+            WHEN c.id_metodo IS NOT NULL THEN 
+                json_build_object(
+                    'num_cheque', c.num_cheque,
+                    'num_cuenta', c.num_cuenta,
+                    'banco', c.banco
+                )
+            WHEN e.id_metodo IS NOT NULL THEN 
+                json_build_object('denominacion', e.denominacion)
+            WHEN tc.id_metodo IS NOT NULL THEN 
+                json_build_object(
+                    'tipo', tc.tipo,
+                    'numero', tc.numero,
+                    'banco', tc.banco,
+                    'fecha_vencimiento', tc.fecha_vencimiento
+                )
+            WHEN td.id_metodo IS NOT NULL THEN 
+                json_build_object(
+                    'numero', td.numero,
+                    'banco', td.banco
+                )
+            ELSE '{}'::json
+        END AS datos_especificos
+    FROM Metodo_Pago mp
+    LEFT JOIN Cheque c ON mp.id_metodo = c.id_metodo
+    LEFT JOIN Efectivo e ON mp.id_metodo = e.id_metodo
+    LEFT JOIN Tarjeta_Credito tc ON mp.id_metodo = tc.id_metodo
+    LEFT JOIN Tarjeta_Debito td ON mp.id_metodo = td.id_metodo
+    WHERE mp.id_metodo = p_id_metodo;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Función para eliminar un método de pago (elimina supertipo y subtipo)
+CREATE OR REPLACE FUNCTION eliminar_metodo_pago(
+    p_id_metodo INTEGER
+) RETURNS BOOLEAN AS $$
+DECLARE
+    v_tipo_metodo VARCHAR(20);
+BEGIN
+    -- Determinar el tipo de método
+    SELECT 
+        CASE 
+            WHEN c.id_metodo IS NOT NULL THEN 'cheque'
+            WHEN e.id_metodo IS NOT NULL THEN 'efectivo'
+            WHEN tc.id_metodo IS NOT NULL THEN 'tarjeta_credito'
+            WHEN td.id_metodo IS NOT NULL THEN 'tarjeta_debito'
+            ELSE 'desconocido'
+        END INTO v_tipo_metodo
+    FROM Metodo_Pago mp
+    LEFT JOIN Cheque c ON mp.id_metodo = c.id_metodo
+    LEFT JOIN Efectivo e ON mp.id_metodo = e.id_metodo
+    LEFT JOIN Tarjeta_Credito tc ON mp.id_metodo = tc.id_metodo
+    LEFT JOIN Tarjeta_Debito td ON mp.id_metodo = td.id_metodo
+    WHERE mp.id_metodo = p_id_metodo;
+    
+    IF v_tipo_metodo = 'desconocido' THEN
+        RETURN FALSE;
+    END IF;
+    
+    -- Eliminar subtipo primero (por las foreign keys)
+    CASE v_tipo_metodo
+        WHEN 'cheque' THEN DELETE FROM Cheque WHERE id_metodo = p_id_metodo;
+        WHEN 'efectivo' THEN DELETE FROM Efectivo WHERE id_metodo = p_id_metodo;
+        WHEN 'tarjeta_credito' THEN DELETE FROM Tarjeta_Credito WHERE id_metodo = p_id_metodo;
+        WHEN 'tarjeta_debito' THEN DELETE FROM Tarjeta_Debito WHERE id_metodo = p_id_metodo;
+    END CASE;
+    
+    -- Eliminar supertipo
+    DELETE FROM Metodo_Pago WHERE id_metodo = p_id_metodo;
+    
+    RETURN TRUE;
+END;
+$$ LANGUAGE plpgsql;
+
+-- =====================================================
+-- FUNCIÓN PARA REGISTRAR PAGOS Y DESCONTAR INVENTARIO (ACTUALIZADA)
 -- =====================================================
 CREATE OR REPLACE FUNCTION registrar_pagos_y_descuento_inventario(
     p_compra_id INTEGER,
@@ -1348,19 +1635,64 @@ DECLARE
     v_id_inventario INTEGER;
     v_cantidad INTEGER;
     v_stock_actual INTEGER;
+    v_tipo_metodo VARCHAR(20);
+    v_id_cliente_natural INTEGER;
+    v_id_cliente_juridico INTEGER;
 BEGIN
+    -- Obtener información del cliente de la compra
+    SELECT id_cliente_natural, id_cliente_juridico 
+    INTO v_id_cliente_natural, v_id_cliente_juridico
+    FROM Compra 
+    WHERE id_compra = p_compra_id;
+    
     -- Insertar cada pago
     FOR v_pago IN SELECT * FROM json_array_elements(p_pagos) LOOP
-        v_metodo_id := (v_pago->>'metodo_id')::INTEGER;
+        v_tipo_metodo := v_pago->>'tipo';
         v_monto := (v_pago->>'monto')::NUMERIC;
         v_tasa_id := NULLIF((v_pago->>'tasa_id')::INTEGER, 0);
         
+        -- Crear método de pago según el tipo con datos específicos
+        CASE v_tipo_metodo
+            WHEN 'cheque' THEN
+                v_metodo_id := crear_metodo_pago_cheque(
+                    (v_pago->>'num_cheque')::VARCHAR(20),
+                    (v_pago->>'num_cuenta')::VARCHAR(20),
+                    v_pago->>'banco',
+                    v_id_cliente_natural,
+                    v_id_cliente_juridico
+                );
+            WHEN 'efectivo' THEN
+                v_metodo_id := crear_metodo_pago_efectivo(
+                    (v_pago->>'denominacion')::INTEGER,
+                    v_id_cliente_natural,
+                    v_id_cliente_juridico
+                );
+            WHEN 'tarjeta_credito' THEN
+                v_metodo_id := crear_metodo_pago_tarjeta_credito(
+                    v_pago->>'tipo_tarjeta',
+                    v_pago->>'numero',
+                    v_pago->>'banco',
+                    (v_pago->>'fecha_vencimiento')::DATE,
+                    v_id_cliente_natural,
+                    v_id_cliente_juridico
+                );
+            WHEN 'tarjeta_debito' THEN
+                v_metodo_id := crear_metodo_pago_tarjeta_debito(
+                    v_pago->>'numero',
+                    v_pago->>'banco',
+                    v_id_cliente_natural,
+                    v_id_cliente_juridico
+                );
+            ELSE
+                RAISE EXCEPTION 'Tipo de método de pago no válido: %', v_tipo_metodo;
+        END CASE;
+        
         -- Asignar tasa por defecto según el tipo de método
         IF v_tasa_id IS NULL THEN
-            -- Efectivo (1-10) y Cheque (11-20) no tienen tasa
-            IF v_metodo_id BETWEEN 1 AND 20 THEN
+            -- Efectivo y Cheque no tienen tasa
+            IF v_tipo_metodo IN ('efectivo', 'cheque') THEN
                 v_tasa_id := NULL;
-            -- Tarjetas de crédito (21-30), débito (31-40) y puntos (41-50) usan tasa por defecto
+            -- Tarjetas de crédito y débito usan tasa por defecto
             ELSE
                 v_tasa_id := 1; -- Tasa por defecto
             END IF;
@@ -1372,6 +1704,7 @@ BEGIN
             VALUES (v_metodo_id, p_compra_id, v_monto, v_fecha, v_referencia, v_tasa_id);
         END IF;
     END LOOP;
+    
     -- Descontar inventario
     FOR v_id_inventario, v_cantidad IN SELECT id_inventario, cantidad FROM Detalle_Compra WHERE id_compra = p_compra_id LOOP
         SELECT cantidad INTO v_stock_actual FROM Inventario WHERE id_inventario = v_id_inventario;
@@ -1380,21 +1713,89 @@ BEGIN
         END IF;
         UPDATE Inventario SET cantidad = cantidad - v_cantidad WHERE id_inventario = v_id_inventario;
     END LOOP;
+    
     RETURN TRUE;
 END;
 $$ LANGUAGE plpgsql;
 
-
+-- Comentarios de documentación
+COMMENT ON FUNCTION crear_metodo_pago_cheque IS 'Función: Crea un método de pago tipo cheque con patrón supertipo-subtipo';
+COMMENT ON FUNCTION crear_metodo_pago_efectivo IS 'Función: Crea un método de pago tipo efectivo con patrón supertipo-subtipo';
+COMMENT ON FUNCTION crear_metodo_pago_tarjeta_credito IS 'Función: Crea un método de pago tipo tarjeta de crédito con patrón supertipo-subtipo';
+COMMENT ON FUNCTION crear_metodo_pago_tarjeta_debito IS 'Función: Crea un método de pago tipo tarjeta de débito con patrón supertipo-subtipo';
+COMMENT ON FUNCTION obtener_metodo_pago_completo IS 'Función: Obtiene información completa de un método de pago incluyendo datos específicos';
+COMMENT ON FUNCTION eliminar_metodo_pago IS 'Función: Elimina un método de pago completo (supertipo y subtipo)';
+COMMENT ON FUNCTION registrar_pagos_y_descuento_inventario IS 'Función: Registra pagos y descuenta inventario';
 
 -- =====================================================
--- COMENTARIOS DE DOCUMENTACIÓN (SIMPLIFICADO)
+-- FUNCIÓN PARA OBTENER EL SIGUIENTE ID DE MÉTODO DE PAGO
 -- =====================================================
 
-COMMENT ON FUNCTION obtener_o_crear_carrito_usuario IS 'Función: Obtiene o crea un carrito para el usuario.';
-COMMENT ON FUNCTION agregar_al_carrito IS 'Función: Agrega un producto al carrito.';
-COMMENT ON FUNCTION obtener_carrito_usuario IS 'Función: Obtiene los productos del carrito.';
-COMMENT ON FUNCTION actualizar_cantidad_carrito IS 'Función: Actualiza la cantidad de un producto.';
-COMMENT ON FUNCTION eliminar_del_carrito IS 'Función: Elimina un producto del carrito.';
-COMMENT ON FUNCTION limpiar_carrito_usuario IS 'Función: Vacía el carrito del usuario.';
-COMMENT ON FUNCTION obtener_resumen_carrito IS 'Función: Obtiene el resumen del carrito.';
-COMMENT ON FUNCTION verificar_stock_carrito IS 'Función: Verifica el stock de los productos en el carrito.'; 
+CREATE OR REPLACE FUNCTION obtener_siguiente_id_metodo_pago()
+RETURNS INTEGER AS $$
+DECLARE
+    siguiente_id INTEGER;
+    max_id INTEGER;
+BEGIN
+    -- Obtener el máximo ID existente
+    SELECT COALESCE(MAX(id_metodo), 0) INTO max_id
+    FROM Metodo_Pago;
+    
+    -- Calcular el siguiente ID
+    siguiente_id := max_id + 1;
+    
+    -- Solo ajustar la secuencia si hay registros existentes
+    IF max_id > 0 THEN
+        PERFORM setval('metodo_pago_id_metodo_seq', max_id, true);
+    END IF;
+    
+    RETURN siguiente_id;
+END;
+$$ LANGUAGE plpgsql;
+
+-- =====================================================
+-- FUNCIÓN MEJORADA PARA INSERTAR MÉTODO DE PAGO CON ID AUTOMÁTICO
+-- =====================================================
+
+CREATE OR REPLACE FUNCTION insertar_metodo_pago_automatico(
+    p_id_cliente_natural INTEGER DEFAULT NULL,
+    p_id_cliente_juridico INTEGER DEFAULT NULL
+)
+RETURNS INTEGER AS $$
+DECLARE
+    nuevo_id INTEGER;
+BEGIN
+    -- Obtener el siguiente ID disponible
+    SELECT obtener_siguiente_id_metodo_pago() INTO nuevo_id;
+    
+    -- Insertar el método de pago con el ID calculado
+    INSERT INTO Metodo_Pago (id_metodo, id_cliente_natural, id_cliente_juridico)
+    VALUES (nuevo_id, p_id_cliente_natural, p_id_cliente_juridico);
+    
+    RETURN nuevo_id;
+END;
+$$ LANGUAGE plpgsql; 
+
+-- =====================================================
+-- AJUSTE AUTOMÁTICO DE SECUENCIA AL CARGAR FUNCIONES
+-- =====================================================
+
+-- Ajustar la secuencia de Metodo_Pago de forma segura
+-- Solo ajustar si hay datos existentes
+DO $$
+DECLARE
+    max_id INTEGER;
+BEGIN
+    -- Obtener el máximo ID existente
+    SELECT COALESCE(MAX(id_metodo), 0) INTO max_id
+    FROM Metodo_Pago;
+    
+    -- Solo ajustar la secuencia si hay datos existentes
+    IF max_id > 0 THEN
+        -- Ajustar al máximo existente
+        PERFORM setval('metodo_pago_id_metodo_seq', max_id, true);
+        RAISE NOTICE 'Secuencia ajustada al ID máximo existente: %', max_id;
+    ELSE
+        RAISE NOTICE 'No hay datos existentes. La secuencia mantendrá su valor por defecto.';
+    END IF;
+END $$;
