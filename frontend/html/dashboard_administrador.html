@@ -780,13 +780,15 @@
             }
         }
 
-        // Cerrar modal
-        const closeModalCambiarEstatus = document.getElementById('close-modal-cambiar-estatus');
-        if (closeModalCambiarEstatus) {
-            closeModalCambiarEstatus.onclick = function() {
-                document.getElementById('modal-cambiar-estatus').classList.remove('active');
-            };
-        }
+        // Cierre robusto de modales (solo el modal correspondiente)
+        document.querySelectorAll('.close-modal').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const modal = btn.closest('.modal');
+                if (modal) {
+                    modal.classList.remove('active');
+                }
+            });
+        });
 
         // Cambiar estatus de la orden
         async function cambiarEstatusOrden(idOrden, idEstatusNuevo, nombreEstatusNuevo) {
@@ -909,9 +911,6 @@
             addRolBtn.addEventListener('click', () => {
                 abrirModalRol();
             });
-
-            // Cerrar modal de roles
-            document.getElementById('close-rol-modal').addEventListener('click', cerrarModalRol);
 
             // Cambia el texto y visibilidad del botón de nuevo usuario según el filtro
             function actualizarBotonNuevoUsuario() {
