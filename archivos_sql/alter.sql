@@ -428,16 +428,6 @@ ALTER TABLE Detalle_Orden_Reposicion_Anaquel
     ) 
 ;
 
-ALTER TABLE Detalle_Orden_Reposicion_Anaquel 
-    ADD CONSTRAINT Detalle_Orden_Reposicion_Anaquel_Ubicacion_Tienda_FK FOREIGN KEY 
-    ( 
-     id_ubicacion
-    ) 
-    REFERENCES Ubicacion_Tienda 
-    ( 
-     id_ubicacion
-    ) 
-;
 
 
 
