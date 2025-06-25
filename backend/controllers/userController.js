@@ -151,11 +151,33 @@ exports.registerClienteNatural = async (req, res) => {
     return res.status(400).json({ error: 'Cédula inválida' });
   }
   rif_cliente = rif_cliente ? parseInt(rif_cliente, 10) : 0;
-  // Usamos 1 como valor dummy para lugar_id_lugar
-  const lugar_id_lugar = 1;
 
-  // Concatenar ubicación textual al inicio de la dirección
-  const ubicacion = `${estado}, ${municipio}, ${parroquia}`;
+  // Usar directamente el ID de la parroquia como lugar_id_lugar
+  // El frontend envía los IDs correctos, no los nombres
+  const lugar_id_lugar = parseInt(parroquia, 10);
+  if (isNaN(lugar_id_lugar)) {
+    return res.status(400).json({ error: 'ID de parroquia inválido' });
+  }
+
+  // Verificar que el lugar existe y obtener los nombres para la dirección
+  const lugarInfo = await db.query(`
+    SELECT 
+      l3.id_lugar,
+      l1.nombre as estado_nombre,
+      l2.nombre as municipio_nombre,
+      l3.nombre as parroquia_nombre
+    FROM Lugar l1 
+    JOIN Lugar l2 ON l2.lugar_relacion_id = l1.id_lugar 
+    JOIN Lugar l3 ON l3.lugar_relacion_id = l2.id_lugar 
+    WHERE l3.id_lugar = $1 AND l1.tipo = 'Estado' AND l2.tipo = 'Municipio' AND l3.tipo = 'Parroquia'
+  `, [lugar_id_lugar]);
+
+  if (lugarInfo.rows.length === 0) {
+    return res.status(400).json({ error: 'La ubicación especificada no existe' });
+  }
+
+  const lugar = lugarInfo.rows[0];
+  const ubicacion = `${lugar.estado_nombre}, ${lugar.municipio_nombre}, ${lugar.parroquia_nombre}`;
   const direccion_final = ubicacion + (direccion ? (', ' + direccion) : '');
 
   try {
@@ -222,7 +244,7 @@ exports.registerClienteNatural = async (req, res) => {
 // ENDPOINTS PARA LUGARES
 exports.getEstados = async (req, res) => {
   try {
-    const estados = (await db.query("SELECT id_lugar, nombre FROM Lugar WHERE tipo = 'estado' ORDER BY nombre")).rows;
+    const estados = (await db.query("SELECT id_lugar, nombre FROM Lugar WHERE LOWER(tipo) = 'estado' ORDER BY nombre")).rows;
     res.json(estados);
   } catch (err) {
     console.error(err);
@@ -233,8 +255,15 @@ exports.getEstados = async (req, res) => {
 exports.getMunicipios = async (req, res) => {
   const { estado_id } = req.query;
   if (!estado_id) return res.status(400).json({ error: 'Estado requerido' });
+  
+  // Validar que estado_id sea un número válido
+  const estadoId = parseInt(estado_id, 10);
+  if (isNaN(estadoId)) {
+    return res.status(400).json({ error: 'ID de estado inválido' });
+  }
+  
   try {
-    const municipios = (await db.query("SELECT id_lugar, nombre FROM Lugar WHERE tipo = 'municipio' AND lugar_relacion_id = $1 ORDER BY nombre", [estado_id])).rows;
+    const municipios = (await db.query("SELECT id_lugar, nombre FROM Lugar WHERE LOWER(tipo) = 'municipio' AND lugar_relacion_id = $1 ORDER BY nombre", [estadoId])).rows;
     res.json(municipios);
   } catch (err) {
     console.error(err);
@@ -245,8 +274,15 @@ exports.getMunicipios = async (req, res) => {
 exports.getParroquias = async (req, res) => {
   const { municipio_id } = req.query;
   if (!municipio_id) return res.status(400).json({ error: 'Municipio requerido' });
+  
+  // Validar que municipio_id sea un número válido
+  const municipioId = parseInt(municipio_id, 10);
+  if (isNaN(municipioId)) {
+    return res.status(400).json({ error: 'ID de municipio inválido' });
+  }
+  
   try {
-    const parroquias = (await db.query("SELECT id_lugar, nombre FROM Lugar WHERE tipo = 'parroquia' AND lugar_relacion_id = $1 ORDER BY nombre", [municipio_id])).rows;
+    const parroquias = (await db.query("SELECT id_lugar, nombre FROM Lugar WHERE LOWER(tipo) = 'parroquia' AND lugar_relacion_id = $1 ORDER BY nombre", [municipioId])).rows;
     res.json(parroquias);
   } catch (err) {
     console.error(err);

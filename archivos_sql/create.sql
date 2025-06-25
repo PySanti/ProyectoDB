@@ -57,14 +57,6 @@ CREATE TABLE Cerveza (
     id_proveedor    INTEGER NOT NULL
 );
 
-CREATE TABLE Cheque (
-    id_metodo  SERIAL PRIMARY KEY,
-    num_cheque INTEGER NOT NULL,
-    num_cuenta INTEGER NOT NULL,  
-    banco      VARCHAR(30)      
-);
-
-
 CREATE TABLE Cliente_Juridico (
     id_cliente             SERIAL PRIMARY KEY,
     rif_cliente            INTEGER NOT NULL,  
@@ -89,6 +81,29 @@ CREATE TABLE Cliente_Natural (
     direccion        TEXT NOT NULL,       
     lugar_id_lugar   INTEGER NOT NULL
 );
+
+CREATE TABLE Metodo_Pago (
+    id_metodo SERIAL PRIMARY KEY,
+    id_cliente_natural INTEGER,
+    id_cliente_juridico INTEGER,
+    FOREIGN KEY (id_cliente_natural) REFERENCES Cliente_Natural(id_cliente),
+    FOREIGN KEY (id_cliente_juridico) REFERENCES Cliente_Juridico(id_cliente)
+);
+
+CREATE TABLE Cheque (
+    id_metodo  INTEGER PRIMARY KEY,
+    num_cheque INTEGER NOT NULL,
+    num_cuenta INTEGER NOT NULL,  
+    banco      VARCHAR(30),
+    FOREIGN KEY (id_metodo) REFERENCES Metodo_Pago(id_metodo)
+);
+
+CREATE TABLE Efectivo (
+    id_metodo    INTEGER PRIMARY KEY,
+    denominacion INTEGER NOT NULL,
+    FOREIGN KEY (id_metodo) REFERENCES Metodo_Pago(id_metodo)
+);
+
 
 CREATE TABLE Compra (
     id_compra               SERIAL PRIMARY KEY,
@@ -212,11 +227,6 @@ CREATE TABLE Detalle_Venta_Evento (
     PRIMARY KEY (id_evento,  id_cliente_natural, id_cerveza, id_proveedor, id_proveedor_evento, id_tipo_cerveza, id_presentacion, id_cerveza_inv)
 
 
-);
-
-CREATE TABLE Efectivo (
-    id_metodo    SERIAL PRIMARY KEY,
-    denominacion INTEGER NOT NULL
 );
 
 CREATE TABLE Empleado (
@@ -362,10 +372,6 @@ CREATE TABLE Membresia (
     id_proveedor    INTEGER NOT NULL
 );
 
-CREATE TABLE Metodo_Pago (
-    id_metodo SERIAL PRIMARY KEY
-);
-
 CREATE TABLE Orden_Reposicion (
     id_orden_reposicion SERIAL PRIMARY KEY,
     id_departamento     INTEGER NOT NULL,
@@ -391,15 +397,28 @@ CREATE TABLE Orden_Reposicion_Estatus (
     PRIMARY KEY (id_orden_reposicion, id_proveedor, id_departamento, id_estatus)
 );
 
+CREATE TABLE Tasa (
+    id_tasa      SERIAL PRIMARY KEY,
+    nombre       VARCHAR(50) NOT NULL,
+    valor        DECIMAL NOT NULL,
+    fecha        DATE NOT NULL,
+    punto_id     INTEGER NOT NULL,
+    id_metodo INTEGER NOT NULL
+);
+
 CREATE TABLE Pago_Compra (
-    id_pago        SERIAL,
+    id_pago         SERIAL PRIMARY KEY,
     metodo_id      INTEGER NOT NULL,
     compra_id      INTEGER NOT NULL,
     monto          DECIMAL NOT NULL,
     fecha_hora     TIMESTAMP NOT NULL,
     referencia     VARCHAR(50) NOT NULL,
     tasa_id        INTEGER,
-    PRIMARY KEY (id_pago, metodo_id, compra_id)
+    
+    -- Foreign Keys para integridad referencial
+    FOREIGN KEY (metodo_id) REFERENCES Metodo_Pago(id_metodo),
+    FOREIGN KEY (compra_id) REFERENCES Compra(id_compra),
+    FOREIGN KEY (tasa_id) REFERENCES Tasa(id_tasa)
 );
 
 CREATE TABLE Pago_Cuota_Afiliacion (
@@ -529,27 +548,21 @@ CREATE TABLE Rol (
 );
 
 CREATE TABLE Tarjeta_Credito (
-    id_metodo         SERIAL PRIMARY KEY,
+    id_metodo         INTEGER PRIMARY KEY,
     tipo              VARCHAR(20) NOT NULL,
     numero            VARCHAR(20) NOT NULL,
     banco             VARCHAR(30) NOT NULL,
-    fecha_vencimiento DATE NOT NULL
+    fecha_vencimiento DATE NOT NULL,
+    FOREIGN KEY (id_metodo) REFERENCES Metodo_Pago(id_metodo)
 );
 
 CREATE TABLE Tarjeta_Debito (
-    id_metodo SERIAL PRIMARY KEY,
+    id_metodo INTEGER PRIMARY KEY,
     numero    VARCHAR(20) NOT NULL,
-    banco     VARCHAR(30) NOT NULL
+    banco     VARCHAR(30) NOT NULL,
+    FOREIGN KEY (id_metodo) REFERENCES Metodo_Pago(id_metodo)
 );
 
-CREATE TABLE Tasa (
-    id_tasa      SERIAL PRIMARY KEY,
-    nombre       VARCHAR(50) NOT NULL,
-    valor        DECIMAL NOT NULL,
-    fecha        DATE NOT NULL,
-    punto_id     INTEGER NOT NULL,
-    id_metodo INTEGER NOT NULL
-);
 
 CREATE TABLE Telefono (
     id_telefono     SERIAL PRIMARY KEY,

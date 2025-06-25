@@ -34,4 +34,7 @@ router.put('/actualizar-monto', cartController.updatePurchaseAmount);
 // POST /api/carrito/pago - Registrar pagos de una compra
 router.post('/pago', cartController.registrarPagosCompra);
 
+// POST /api/carrito/create-or-get - Crear o asociar compra con cliente
+router.post('/create-or-get', cartController.createOrGetCart);
+
 module.exports = router; 

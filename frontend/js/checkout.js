@@ -3,7 +3,11 @@
 // =================================================================
 const GUEST_USER_ID = 1;
 
-document.addEventListener('DOMContentLoaded', initCheckout);
+document.addEventListener('DOMContentLoaded', () => {
+    initCheckout();
+    poblarSelectBancos();
+    poblarSelectAnios();
+});
 
 function initCheckout() {
     // Solo ejecuta la lógica de la página del checkout si encuentra el contenedor principal.
@@ -18,18 +22,31 @@ function initCheckout() {
 // =================================================================
 async function loadCheckoutData() {
     try {
-        // Cargar resumen del carrito
-        const summaryResponse = await fetch(`${API_BASE_URL}/carrito/resumen/${GUEST_USER_ID}`);
+        console.log('=== INICIANDO CARGA DE DATOS DEL CHECKOUT ===');
+        const compraId = await ensureCompraId();
+        console.log('Compra ID obtenida:', compraId);
+        
+        if (!compraId) {
+            throw new Error('No se pudo obtener el ID de la compra');
+        }
+        
+        const currentClient = getCurrentClient();
+        const clientParams = currentClient ? `?id_cliente_natural=${currentClient.id}` : '';
+        
+        // Cargar resumen del carrito usando la compra_id correcta
+        const summaryResponse = await fetch(`${API_BASE_URL}/carrito/resumen/${compraId}${clientParams}`);
         if (!summaryResponse.ok) throw new Error('No se pudo cargar el resumen del carrito.');
         
         const summary = await summaryResponse.json();
+        console.log('Resumen del carrito:', summary);
         renderOrderSummary(summary);
         
-        // Cargar items del carrito
-        const itemsResponse = await fetch(`${API_BASE_URL}/carrito/usuario/${GUEST_USER_ID}`);
+        // Cargar items del carrito usando la compra_id correcta
+        const itemsResponse = await fetch(`${API_BASE_URL}/carrito/usuario/${compraId}${clientParams}`);
         if (!itemsResponse.ok) throw new Error('No se pudo cargar los items del carrito.');
         
         const items = await itemsResponse.json();
+        console.log('Items del carrito:', items);
         renderOrderItems(items);
         
         // Actualizar contador del carrito
@@ -116,6 +133,18 @@ function setupCheckoutEventListeners() {
     const amountInputs = document.querySelectorAll('.amount-input');
     amountInputs.forEach(input => {
         input.addEventListener('input', handleAmountChange);
+        // Validación especial para efectivo
+        if (input.closest('.payment-method')?.querySelector('#cash-denomination')) {
+            input.addEventListener('input', function() {
+                const denominaciones = [1, 5, 10, 20, 50, 100, 200, 500, 1000];
+                const value = Number(input.value);
+                if (value > 0 && !esSumaDeDenominaciones(value, denominaciones)) {
+                    input.setCustomValidity('El monto debe ser suma de denominaciones válidas.');
+                } else {
+                    input.setCustomValidity('');
+                }
+            });
+        }
     });
     
     // Event listener para términos y condiciones
@@ -227,6 +256,11 @@ async function handlePlaceOrder() {
         showNotification('No se pudo identificar la compra.', 'error');
         return;
     }
+    const currentClient = getCurrentClient();
+    if (!currentClient) {
+        showNotification('Debe validar un cliente antes de pagar.', 'error');
+        return;
+    }
     const pagos = collectSelectedPayments();
     if (pagos.length === 0) {
         showNotification('Debe seleccionar al menos un método de pago con monto.', 'error');
@@ -236,7 +270,7 @@ async function handlePlaceOrder() {
         const response = await fetch(`${API_BASE_URL}/carrito/pago`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ compra_id: compraId, pagos })
+            body: JSON.stringify({ compra_id: compraId, pagos, cliente: currentClient })
         });
         const data = await response.json();
         if (response.ok && data.success) {
@@ -250,27 +284,106 @@ async function handlePlaceOrder() {
 }
 
 function collectSelectedPayments() {
-    // Mapear los métodos de pago a sus ids según la base de datos
-    const metodoIds = {
-        credit: 21, // Puedes ajustar según tu base
-        debit: 31,
-        cash: 1,
-        check: 11,
-        points: 41
-    };
     const pagos = [];
-    const methods = ['credit', 'debit', 'cash', 'check', 'points'];
-    methods.forEach(method => {
-        const checkbox = document.getElementById(`payment-${method}`);
-        const amountInput = checkbox?.closest('.payment-method')?.querySelector('.amount-input');
-        if (checkbox && checkbox.checked && amountInput && Number(amountInput.value) > 0) {
+    
+    // Tarjeta de Crédito
+    const creditCheckbox = document.getElementById('payment-credit');
+    if (creditCheckbox && creditCheckbox.checked) {
+        const amountInput = creditCheckbox.closest('.payment-method').querySelector('.amount-input');
+        const amount = Number(amountInput.value) || 0;
+        if (amount > 0) {
+            const tipo = document.getElementById('credit-card-type').value;
+            const numero = document.getElementById('credit-card-number').value;
+            const banco = document.getElementById('credit-card-bank').value;
+            const mes = document.getElementById('credit-card-expiry-month').value;
+            const anio = document.getElementById('credit-card-expiry-year').value;
+            const fecha_vencimiento = (anio && mes) ? `${anio}-${mes}-01` : '';
+            if (!tipo || !numero || !banco || !mes || !anio) {
+                showNotification('Por favor complete todos los campos de la tarjeta de crédito', 'error');
+                return [];
+            }
             pagos.push({
-                metodo_id: metodoIds[method],
-                monto: Number(amountInput.value),
-                tipo: method
+                tipo: 'tarjeta_credito',
+                monto: amount,
+                tipo_tarjeta: tipo,
+                numero: numero,
+                banco: banco,
+                fecha_vencimiento: fecha_vencimiento
             });
         }
-    });
+    }
+    
+    // Tarjeta de Débito
+    const debitCheckbox = document.getElementById('payment-debit');
+    if (debitCheckbox && debitCheckbox.checked) {
+        const amountInput = debitCheckbox.closest('.payment-method').querySelector('.amount-input');
+        const amount = Number(amountInput.value) || 0;
+        if (amount > 0) {
+            const numero = document.getElementById('debit-card-number').value;
+            const banco = document.getElementById('debit-card-bank').value;
+            const mes = document.getElementById('debit-card-expiry-month').value;
+            const anio = document.getElementById('debit-card-expiry-year').value;
+            const fecha_vencimiento = (anio && mes) ? `${anio}-${mes}-01` : '';
+            if (!numero || !banco || !mes || !anio) {
+                showNotification('Por favor complete todos los campos de la tarjeta de débito', 'error');
+                return [];
+            }
+            pagos.push({
+                tipo: 'tarjeta_debito',
+                monto: amount,
+                numero: numero,
+                banco: banco,
+                fecha_vencimiento: fecha_vencimiento
+            });
+        }
+    }
+    
+    // Efectivo
+    const cashCheckbox = document.getElementById('payment-cash');
+    if (cashCheckbox && cashCheckbox.checked) {
+        const amountInput = cashCheckbox.closest('.payment-method').querySelector('.amount-input');
+        const amount = Number(amountInput.value) || 0;
+        if (amount > 0) {
+            const denominacion = document.getElementById('cash-denomination').value;
+            
+            if (!denominacion) {
+                showNotification('Por favor seleccione la denominación del efectivo', 'error');
+                return [];
+            }
+            
+            pagos.push({
+                tipo: 'efectivo',
+                monto: amount,
+                denominacion: Number(denominacion)
+            });
+        }
+    }
+    
+    // Cheque
+    const checkCheckbox = document.getElementById('payment-check');
+    if (checkCheckbox && checkCheckbox.checked) {
+        const amountInput = checkCheckbox.closest('.payment-method').querySelector('.amount-input');
+        const amount = Number(amountInput.value) || 0;
+        if (amount > 0) {
+            const num_cheque = document.getElementById('check-number').value;
+            const banco = document.getElementById('check-bank').value;
+            const num_cuenta = document.getElementById('check-account').value;
+            
+            if (!num_cheque || !banco || !num_cuenta) {
+                showNotification('Por favor complete todos los campos del cheque', 'error');
+                return [];
+            }
+            
+            pagos.push({
+                tipo: 'cheque',
+                monto: amount,
+                num_cheque: Number(num_cheque),
+                banco: banco,
+                num_cuenta: Number(num_cuenta)
+            });
+        }
+    }
+    
     return pagos;
 }
 
@@ -305,4 +418,99 @@ async function clearCart() {
     } catch (error) {
         console.error('Error al limpiar el carrito:', error);
     }
+}
+
+function poblarSelectBancos() {
+    const bancos = [
+        'Banco de Venezuela',
+        'Banesco',
+        'Banco Mercantil',
+        'BBVA Provincial',
+        'Banco Nacional de Crédito (BNC)',
+        'Banco del Tesoro',
+        'Bancaribe',
+        'Banco Exterior',
+        'Banco Plaza',
+        'Banco Caroní',
+        'Banco Fondo Común (BFC)',
+        'Banco Sofitasa',
+        'Banplus',
+        'Bancamiga',
+        'DELSUR Banco Universal',
+        '100% Banco',
+        'Banco Activo',
+        'Mi Banco',
+        'Venezolano de Crédito'
+    ];
+    ['credit-card-bank', 'debit-card-bank', 'check-bank'].forEach(id => {
+        const select = document.getElementById(id);
+        if (select) {
+            select.innerHTML = '<option value="">Seleccione un banco</option>' + bancos.map(b => `<option value="${b}">${b}</option>`).join('');
+        }
+    });
+}
+
+function poblarSelectAnios() {
+    const anioActual = new Date().getFullYear();
+    const anios = Array.from({length: 15}, (_, i) => anioActual + i);
+    ['credit-card-expiry-year', 'debit-card-expiry-year'].forEach(id => {
+        const select = document.getElementById(id);
+        if (select) {
+            select.innerHTML = '<option value="">Año</option>' + anios.map(a => `<option value="${a}">${a}</option>`).join('');
+        }
+    });
+}
+
+function getCurrentClient() {
+    const clientStr = sessionStorage.getItem('currentClient');
+    if (!clientStr) return null;
+    try {
+        return JSON.parse(clientStr);
+    } catch {
+        return null;
+    }
+}
+
+function esSumaDeDenominaciones(monto, denominaciones) {
+    monto = Math.round(monto * 100);
+    denominaciones = denominaciones.map(d => Math.round(d * 100));
+    denominaciones.sort((a, b) => b - a);
+    for (let i = 0; i < denominaciones.length; i++) {
+        while (monto >= denominaciones[i]) {
+            monto -= denominaciones[i];
+        }
+    }
+    return monto === 0;
+}
+
+async function ensureCompraId() {
+    let compraId = sessionStorage.getItem('compra_id');
+    const currentClient = getCurrentClient();
+    
+    if (!compraId && currentClient) {
+        // Para compra en tienda física, NO usar id_usuario, solo el cliente
+        const requestBody = {
+            id_usuario: null,  // Para tienda física, usuario debe ser NULL
+            cliente: currentClient  // El cliente ya tiene el ID correcto
+        };
+        
+        console.log('Creando compra con:', requestBody);
+        
+        // Llama al backend para crear o asociar la compra con el cliente
+        const response = await fetch(`${API_BASE_URL}/carrito/create-or-get`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(requestBody)
+        });
+        
+        const data = await response.json();
+        if (data.success && data.id_compra) {
+            compraId = data.id_compra;
+            sessionStorage.setItem('compra_id', compraId);
+            console.log('Compra creada con ID:', compraId);
+        } else {
+            console.error('Error al crear compra:', data);
+        }
+    }
+    return compraId;
 } 

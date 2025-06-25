@@ -64,23 +64,55 @@
                             </div>
                             <div class="payment-details" id="credit-details">
                                 <div class="form-group">
+                                    <label for="credit-card-type">Tipo de Tarjeta</label>
+                                    <select id="credit-card-type" required>
+                                        <option value="">Seleccionar tipo</option>
+                                        <option value="Visa">Visa</option>
+                                        <option value="Mastercard">Mastercard</option>
+                                        <option value="American Express">American Express</option>
+                                        <option value="Discover">Discover</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
                                     <label for="credit-card-number">Número de Tarjeta</label>
-                                    <input type="text" id="credit-card-number" placeholder="1234 5678 9012 3456">
+                                    <input type="text" id="credit-card-number" placeholder="1234 5678 9012 3456" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="credit-card-bank">Banco</label>
+                                    <select id="credit-card-bank" required></select>
                                 </div>
                                 <div class="form-row">
                                     <div class="form-group">
                                         <label for="credit-card-name">Nombre en la Tarjeta</label>
-                                        <input type="text" id="credit-card-name">
+                                        <input type="text" id="credit-card-name" required>
                                     </div>
                                 </div>
                                 <div class="form-row">
                                     <div class="form-group">
                                         <label for="credit-card-expiry">Fecha de Expiración</label>
-                                        <input type="text" id="credit-card-expiry" placeholder="MM/AA">
-                                    </div>
+                                        <div class="expiry-selects">
+                                            <select id="credit-card-expiry-month" required>
+                                                <option value="">Mes</option>
+                                                <option value="01">01</option>
+                                                <option value="02">02</option>
+                                                <option value="03">03</option>
+                                                <option value="04">04</option>
+                                                <option value="05">05</option>
+                                                <option value="06">06</option>
+                                                <option value="07">07</option>
+                                                <option value="08">08</option>
+                                                <option value="09">09</option>
+                                                <option value="10">10</option>
+                                                <option value="11">11</option>
+                                                <option value="12">12</option>
+                                            </select>
+                                            <select id="credit-card-expiry-year" required></select>
+                                        </div>
+                                </div>
+                                <div class="form-row">
                                     <div class="form-group">
                                         <label for="credit-card-cvv">CVV</label>
-                                        <input type="text" id="credit-card-cvv">
+                                        <input type="text" id="credit-card-cvv" required>
                                     </div>
                                 </div>
                                 <div class="accepted-cards">
@@ -104,22 +136,44 @@
                             <div class="payment-details" id="debit-details">
                                 <div class="form-group">
                                     <label for="debit-card-number">Número de Tarjeta</label>
-                                    <input type="text" id="debit-card-number" placeholder="1234 5678 9012 3456">
+                                    <input type="text" id="debit-card-number" placeholder="1234 5678 9012 3456" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="debit-card-bank">Banco</label>
+                                    <select id="debit-card-bank" required></select>
                                 </div>
                                 <div class="form-row">
                                     <div class="form-group">
                                         <label for="debit-card-name">Nombre en la Tarjeta</label>
-                                        <input type="text" id="debit-card-name">
+                                        <input type="text" id="debit-card-name" required>
                                     </div>
                                 </div>
                                 <div class="form-row">
                                     <div class="form-group">
                                         <label for="debit-card-expiry">Fecha de Expiración</label>
-                                        <input type="text" id="debit-card-expiry" placeholder="MM/AA">
-                                    </div>
+                                        <div class="expiry-selects">
+                                            <select id="debit-card-expiry-month" required>
+                                                <option value="">Mes</option>
+                                                <option value="01">01</option>
+                                                <option value="02">02</option>
+                                                <option value="03">03</option>
+                                                <option value="04">04</option>
+                                                <option value="05">05</option>
+                                                <option value="06">06</option>
+                                                <option value="07">07</option>
+                                                <option value="08">08</option>
+                                                <option value="09">09</option>
+                                                <option value="10">10</option>
+                                                <option value="11">11</option>
+                                                <option value="12">12</option>
+                                            </select>
+                                            <select id="debit-card-expiry-year" required></select>
+                                        </div>
+                                </div>
+                                <div class="form-row">
                                     <div class="form-group">
                                         <label for="debit-card-cvv">CVV</label>
-                                        <input type="text" id="debit-card-cvv">
+                                        <input type="text" id="debit-card-cvv" required>
                                     </div>
                                 </div>
                                 <div class="accepted-cards">
@@ -141,6 +195,21 @@
                                 </div>
                             </div>
                             <div class="payment-details" id="cash-details">
+                                <div class="form-group">
+                                    <label for="cash-denomination">Denominación</label>
+                                    <select id="cash-denomination" required>
+                                        <option value="">Seleccionar denominación</option>
+                                        <option value="1">$1</option>
+                                        <option value="5">$5</option>
+                                        <option value="10">$10</option>
+                                        <option value="20">$20</option>
+                                        <option value="50">$50</option>
+                                        <option value="100">$100</option>
+                                        <option value="200">$200</option>
+                                        <option value="500">$500</option>
+                                        <option value="1000">$1000</option>
+                                    </select>
+                                </div>
                                 <p>Pago en efectivo al momento de la entrega.</p>
                             </div>
                         </div>
@@ -160,17 +229,17 @@
                             <div class="payment-details" id="check-details">
                                 <div class="form-group">
                                     <label for="check-number">Número de Cheque</label>
-                                    <input type="text" id="check-number" placeholder="000000">
+                                    <input type="text" id="check-number" placeholder="000000" required>
                                 </div>
                                 
                                 <div class="form-group">
                                     <label for="check-bank">Banco</label>
-                                    <input type="text" id="check-bank" placeholder="Nombre del banco">
+                                    <select id="check-bank" required></select>
                                 </div>
                                 
                                 <div class="form-group">
                                     <label for="check-account">Cuenta</label>
-                                    <input type="text" id="check-account" placeholder="Número de cuenta">
+                                    <input type="text" id="check-account" placeholder="Número de cuenta" required>
                                 </div>
                             </div>
                         </div>

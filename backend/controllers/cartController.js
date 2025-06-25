@@ -5,8 +5,12 @@ const db = require('../db_connection');
 // =================================================================
 async function getCart(req, res) {
     const { id_usuario } = req.params;
+    const { id_cliente_natural, id_cliente_juridico } = req.query;
     try {
-        const result = await db.query('SELECT * FROM obtener_carrito_usuario($1)', [parseInt(id_usuario)]);
+        const result = await db.query(
+            'SELECT * FROM obtener_carrito_usuario($1, $2, $3)', 
+            [parseInt(id_usuario), id_cliente_natural || null, id_cliente_juridico || null]
+        );
         res.json(result.rows);
     } catch (error) {
         console.error('Error al obtener el carrito:', error);
@@ -18,9 +22,12 @@ async function getCart(req, res) {
 // AGREGAR PRODUCTO AL CARRITO (FUNCIÓN)
 // =================================================================
 async function addToCart(req, res) {
-    const { id_usuario, id_inventario, cantidad } = req.body;
+    const { id_usuario, id_inventario, cantidad, id_cliente_natural, id_cliente_juridico } = req.body;
     try {
-        await db.query('SELECT agregar_al_carrito($1, $2, $3)', [id_usuario, id_inventario, cantidad]);
+        await db.query(
+            'SELECT agregar_al_carrito($1, $2, $3, $4, $5)', 
+            [id_usuario, id_inventario, cantidad, id_cliente_natural || null, id_cliente_juridico || null]
+        );
         res.json({ success: true, message: 'Producto agregado al carrito' });
     } catch (error) {
         console.error('Error al agregar al carrito:', error);
@@ -32,14 +39,12 @@ async function addToCart(req, res) {
 // AGREGAR PRODUCTO AL CARRITO POR NOMBRE Y PRESENTACIÓN (FUNCIÓN)
 // =================================================================
 async function addToCartByProduct(req, res) {
-    const { id_usuario, nombre_cerveza, nombre_presentacion, cantidad } = req.body;
+    const { id_usuario, nombre_cerveza, nombre_presentacion, cantidad, id_cliente_natural, id_cliente_juridico } = req.body;
     try {
-        await db.query('SELECT agregar_al_carrito_por_producto($1, $2, $3, $4)', [
-            id_usuario, 
-            nombre_cerveza, 
-            nombre_presentacion, 
-            cantidad
-        ]);
+        await db.query(
+            'SELECT agregar_al_carrito_por_producto($1, $2, $3, $4, $5, $6)', 
+            [id_usuario, nombre_cerveza, nombre_presentacion, cantidad, id_cliente_natural || null, id_cliente_juridico || null]
+        );
         res.json({ success: true, message: 'Producto agregado al carrito' });
     } catch (error) {
         console.error('Error al agregar al carrito:', error);
@@ -51,9 +56,12 @@ async function addToCartByProduct(req, res) {
 // ACTUALIZAR CANTIDAD EN CARRITO (FUNCIÓN)
 // =================================================================
 async function updateCart(req, res) {
-    const { id_usuario, id_inventario, nueva_cantidad } = req.body;
+    const { id_usuario, id_inventario, nueva_cantidad, id_cliente_natural, id_cliente_juridico } = req.body;
     try {
-        await db.query('SELECT actualizar_cantidad_carrito($1, $2, $3)', [id_usuario, id_inventario, nueva_cantidad]);
+        await db.query(
+            'SELECT actualizar_cantidad_carrito($1, $2, $3, $4, $5)', 
+            [id_usuario, id_inventario, nueva_cantidad, id_cliente_natural || null, id_cliente_juridico || null]
+        );
         res.json({ success: true, message: 'Cantidad actualizada' });
     } catch (error) {
         console.error('Error al actualizar el carrito:', error);
@@ -65,9 +73,12 @@ async function updateCart(req, res) {
 // ELIMINAR PRODUCTO DEL CARRITO (FUNCIÓN)
 // =================================================================
 async function removeFromCart(req, res) {
-    const { id_usuario, id_inventario } = req.body;
+    const { id_usuario, id_inventario, id_cliente_natural, id_cliente_juridico } = req.body;
     try {
-        await db.query('SELECT eliminar_del_carrito($1, $2)', [id_usuario, id_inventario]);
+        await db.query(
+            'SELECT eliminar_del_carrito($1, $2, $3, $4)', 
+            [id_usuario, id_inventario, id_cliente_natural || null, id_cliente_juridico || null]
+        );
         res.json({ success: true, message: 'Producto eliminado' });
     } catch (error) {
         console.error('Error al eliminar del carrito:', error);
@@ -80,8 +91,12 @@ async function removeFromCart(req, res) {
 // =================================================================
 async function clearCart(req, res) {
     const { id_usuario } = req.params;
+    const { id_cliente_natural, id_cliente_juridico } = req.query;
     try {
-        await db.query('SELECT limpiar_carrito_usuario($1)', [parseInt(id_usuario)]);
+        await db.query(
+            'SELECT limpiar_carrito_usuario($1, $2, $3)', 
+            [parseInt(id_usuario), id_cliente_natural || null, id_cliente_juridico || null]
+        );
         res.json({ success: true, message: 'Carrito limpiado' });
     } catch (error) {
         console.error('Error al limpiar el carrito:', error);
@@ -94,8 +109,12 @@ async function clearCart(req, res) {
 // =================================================================
 async function getCartSummary(req, res) {
     const { id_usuario } = req.params;
+    const { id_cliente_natural, id_cliente_juridico } = req.query;
     try {
-        const result = await db.query('SELECT * FROM obtener_resumen_carrito($1)', [parseInt(id_usuario)]);
+        const result = await db.query(
+            'SELECT * FROM obtener_resumen_carrito($1, $2, $3)', 
+            [parseInt(id_usuario), id_cliente_natural || null, id_cliente_juridico || null]
+        );
         
         if (result.rows.length > 0) {
             res.json(result.rows[0]);
@@ -112,9 +131,12 @@ async function getCartSummary(req, res) {
 // ACTUALIZAR MONTO DE COMPRA AL PROCEDER AL PAGO (FUNCIÓN)
 // =================================================================
 async function updatePurchaseAmount(req, res) {
-    const { id_usuario } = req.body;
+    const { id_usuario, id_cliente_natural, id_cliente_juridico } = req.body;
     try {
-        const result = await db.query('SELECT actualizar_monto_compra($1)', [id_usuario]);
+        const result = await db.query(
+            'SELECT actualizar_monto_compra($1, $2, $3)', 
+            [id_usuario, id_cliente_natural || null, id_cliente_juridico || null]
+        );
         const montoTotal = result.rows[0].actualizar_monto_compra;
         
         res.json({ 
@@ -133,8 +155,12 @@ async function updatePurchaseAmount(req, res) {
 // =================================================================
 async function verifyStock(req, res) {
     const { id_usuario } = req.params;
+    const { id_cliente_natural, id_cliente_juridico } = req.query;
     try {
-        const result = await db.query('SELECT * FROM verificar_stock_carrito($1)', [parseInt(id_usuario)]);
+        const result = await db.query(
+            'SELECT * FROM verificar_stock_carrito($1, $2, $3)', 
+            [parseInt(id_usuario), id_cliente_natural || null, id_cliente_juridico || null]
+        );
         res.json(result.rows);
     } catch (error) {
         console.error('Error al verificar stock:', error);
@@ -146,9 +172,15 @@ async function verifyStock(req, res) {
 // REGISTRAR PAGOS DE UNA COMPRA
 // =================================================================
 async function registrarPagosCompra(req, res) {
-    const { compra_id, pagos } = req.body;
+    const { compra_id, pagos, cliente } = req.body;
+    console.log('Body recibido en registrarPagosCompra:', req.body);
     if (!compra_id || !Array.isArray(pagos) || pagos.length === 0) {
         return res.status(400).json({ success: false, message: 'Datos de pago incompletos.' });
+    }
+    if (!cliente) {
+        console.warn('No se recibió cliente en el body del pago.');
+    } else {
+        console.log('Cliente recibido:', cliente);
     }
     const db = require('../db_connection');
     try {
@@ -168,6 +200,54 @@ async function registrarPagosCompra(req, res) {
     }
 }
 
+// =================================================================
+// Ejemplo de endpoint para crear carrito/compra (ajusta según tu flujo real)
+// =================================================================
+async function createOrGetCart(req, res) {
+    const { id_usuario, cliente } = req.body;
+    console.log('createOrGetCart - id_usuario:', id_usuario, 'cliente:', cliente);
+    
+    let id_cliente_natural = null;
+    let id_cliente_juridico = null;
+    let final_id_usuario = null;
+    
+    if (cliente) {
+        // Compra en tienda física - usar cliente, NO usuario
+        if (cliente.tipo === 'natural') {
+            id_cliente_natural = cliente.id;
+            console.log('Cliente natural detectado, ID:', id_cliente_natural);
+        } else if (cliente.tipo === 'juridico') {
+            id_cliente_juridico = cliente.id;
+            console.log('Cliente jurídico detectado, ID:', id_cliente_juridico);
+        }
+        // Para tienda física, usuario_id_usuario debe ser NULL
+        final_id_usuario = null;
+    } else {
+        // Compra web - usar usuario, NO cliente
+        final_id_usuario = id_usuario;
+        console.log('Compra web detectada, usuario ID:', final_id_usuario);
+    }
+    
+    try {
+        console.log('Llamando a obtener_o_crear_carrito_usuario con:', {
+            id_usuario: final_id_usuario,
+            id_cliente_natural,
+            id_cliente_juridico
+        });
+        
+        const result = await db.query(
+            'SELECT obtener_o_crear_carrito_usuario($1, $2, $3) AS id_compra',
+            [final_id_usuario, id_cliente_natural, id_cliente_juridico]
+        );
+        
+        console.log('Compra creada/obtenida con ID:', result.rows[0].id_compra);
+        res.json({ success: true, id_compra: result.rows[0].id_compra });
+    } catch (error) {
+        console.error('Error al crear/obtener carrito:', error);
+        res.status(500).json({ success: false, message: 'Error interno del servidor' });
+    }
+}
+
 module.exports = {
     getCart,
     addToCart,
@@ -178,5 +258,6 @@ module.exports = {
     getCartSummary,
     updatePurchaseAmount,
     verifyStock,
-    registrarPagosCompra
+    registrarPagosCompra,
+    createOrGetCart
 }; 
