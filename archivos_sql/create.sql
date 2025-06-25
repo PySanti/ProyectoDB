@@ -377,6 +377,7 @@ CREATE TABLE Orden_Reposicion (
 
 CREATE TABLE Orden_Reposicion_Anaquel (
     id_orden_reposicion SERIAL PRIMARY KEY,
+    id_ubicacion INTEGER NOT NULL,
     fecha_hora_generacion TIMESTAMP NOT NULL
 );
 

@@ -735,13 +735,15 @@
                             <td>${orden.fecha_emision ? orden.fecha_emision.split('T')[0] : ''}</td>
                             <td>${orden.fecha_fin ? orden.fecha_fin.split('T')[0] : ''}</td>
                             <td>${orden.estatus_actual}</td>
-                            <td>
-                                <button class="action-btn assign-role" title="Modificar estatus" onclick="abrirModalCambiarEstatus(${orden.id_orden_reposicion}, ${orden.id_estatus_actual})">
-                                    <i class="fas fa-exchange-alt"></i>
-                                </button>
-                                <button class="action-btn view" title="Ver Detalles" onclick="abrirModalDetallesOrdenProveedor(${orden.id_orden_reposicion})">
-                                    <i class="fas fa-eye"></i>
-                                </button>
+                            <td class="actions">
+                                <div class="actions">
+                                    <button class="action-btn assign-role" title="Modificar estatus" onclick="abrirModalCambiarEstatus(${orden.id_orden_reposicion}, ${orden.id_estatus_actual})">
+                                        <i class="fas fa-exchange-alt"></i>
+                                    </button>
+                                    <button class="action-btn view" title="Ver Detalles" onclick="abrirModalDetallesOrdenProveedor(${orden.id_orden_reposicion})">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
                             </td>
                         </tr>
                     `;
@@ -1090,13 +1092,15 @@
                             <td>${orden.fecha_hora_generacion ? orden.fecha_hora_generacion.replace('T', ' ').slice(0, 16) : ''}</td>
                             <td>${orden.ubicacion_completa || 'No especificada'}</td>
                             <td>${orden.estatus_actual}</td>
-                            <td>
-                                <button class="action-btn assign-role" title="Modificar estatus" onclick="abrirModalCambiarEstatusAnaquel(${orden.id_orden_reposicion}, ${orden.id_estatus_actual})">
-                                    <i class="fas fa-exchange-alt"></i>
-                                </button>
-                                <button class="action-btn view" title="Ver Detalles" onclick="abrirModalDetallesOrdenAnaquel(${orden.id_orden_reposicion})">
-                                    <i class="fas fa-eye"></i>
-                                </button>
+                            <td class="actions">
+                                <div class="actions">
+                                    <button class="action-btn assign-role" title="Modificar estatus" onclick="abrirModalCambiarEstatusAnaquel(${orden.id_orden_reposicion}, ${orden.id_estatus_actual})">
+                                        <i class="fas fa-exchange-alt"></i>
+                                    </button>
+                                    <button class="action-btn view" title="Ver Detalles" onclick="abrirModalDetallesOrdenAnaquel(${orden.id_orden_reposicion})">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
                             </td>
                         </tr>
                     `;
