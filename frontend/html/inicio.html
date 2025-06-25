@@ -326,12 +326,15 @@
         }
       }
 
+
+      
       function loginForm(event) {
         event.preventDefault(); 
 
         const email = document.getElementById('login-email').value;
         const password = document.getElementById('login-password').value;
-
+        console.log('Login frontend:', { email, password });
+        
         axios.post('http://localhost:3000/api/users/login', {
             email: email,
             password: password
@@ -466,6 +469,16 @@
           alert('Error en el registro: ' + (err.response?.data?.error || err.message));
         }
       };
+
+      // Oculta el botón 'Iniciar Sesión' si el usuario está logueado
+      document.addEventListener('DOMContentLoaded', function() {
+        if (localStorage.getItem('user')) {
+          var loginBtns = document.querySelectorAll('.login-btn');
+          loginBtns.forEach(function(btn) {
+            btn.style.display = 'none';
+          });
+        }
+      });
     </script>
   </body>
 </html>

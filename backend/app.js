@@ -12,6 +12,7 @@ const reportesRoutes = require('./routes/reportesRoutes.js');
 // Middleware para Favicon
 app.get('/favicon.ico', (req, res) => res.status(204).send());
 
+
 // Middlewares
 app.use(cors());
 app.use(express.json());
