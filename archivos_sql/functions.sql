@@ -566,15 +566,13 @@ RETURNS TABLE (
 ) AS $$
 BEGIN
     RETURN QUERY
-    SELECT DISTINCT ON (o.id_orden_reposicion)
+    SELECT 
         o.id_orden_reposicion,
         o.fecha_hora_generacion,
         e2.nombre AS estatus_actual,
         eo.id_estatus AS id_estatus_actual,
-        get_full_location_path(i.id_ubicacion) AS ubicacion_completa
+        get_full_location_path(o.id_ubicacion) AS ubicacion_completa
     FROM Orden_Reposicion_Anaquel o
-    LEFT JOIN Detalle_Orden_Reposicion_Anaquel dora ON o.id_orden_reposicion = dora.id_orden_reposicion
-    LEFT JOIN Inventario i ON dora.id_inventario = i.id_inventario
     LEFT JOIN LATERAL (
         SELECT eo2.id_estatus, es.nombre
         FROM Estatus_Orden_Anaquel eo2
@@ -616,6 +614,7 @@ BEGIN
     WITH RECURSIVE location_path AS (
         SELECT 
             id_ubicacion, 
+            tipo,
             nombre, 
             ubicacion_tienda_relacion_id,
             1 AS level
@@ -626,13 +625,14 @@ BEGIN
 
         SELECT 
             ut.id_ubicacion, 
+            ut.tipo,
             ut.nombre, 
             ut.ubicacion_tienda_relacion_id,
             lp.level + 1
         FROM Ubicacion_Tienda ut
         JOIN location_path lp ON ut.id_ubicacion = lp.ubicacion_tienda_relacion_id
     )
-    SELECT string_agg(nombre, ' / ' ORDER BY level DESC)
+    SELECT string_agg(tipo || ': ' || nombre, ' / ' ORDER BY level DESC)
     INTO full_path
     FROM location_path;
 

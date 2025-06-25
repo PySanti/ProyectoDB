@@ -2503,7 +2503,16 @@ INSERT INTO Usuario (id_cliente_juridico, id_cliente_natural, id_rol, fecha_crea
 (18, NULL, NULL, CURRENT_DATE, NULL, NULL, 'empresa018'),
 (19, NULL, NULL, CURRENT_DATE, NULL, NULL, 'empresa019'),
 (20, NULL, NULL, CURRENT_DATE, NULL, NULL, 'empresa020'),
-(NULL, NULL, 3, CURRENT_DATE, NULL, 1, 'empleado123');
+(NULL, NULL, 3, CURRENT_DATE, NULL, 1, 'empleado123'),
+(NULL, NULL, 4, CURRENT_DATE, NULL, 2, 'empleado123'),
+(NULL, NULL, 4, CURRENT_DATE, NULL, 3, 'empleado123'),
+(NULL, NULL, 4, CURRENT_DATE, NULL, 4, 'empleado123'),
+(NULL, NULL, 4, CURRENT_DATE, NULL, 5, 'empleado123'),
+(NULL, NULL, 4, CURRENT_DATE, NULL, 6, 'empleado123'),
+(NULL, NULL, 4, CURRENT_DATE, NULL, 7, 'empleado123'),
+(NULL, NULL, 4, CURRENT_DATE, NULL, 8, 'empleado123'),
+(NULL, NULL, 4, CURRENT_DATE, NULL, 9, 'empleado123'),
+(NULL, NULL, 4, CURRENT_DATE, NULL, 10, 'empleado123');
 
 -- Insertar correos de proveedores
 INSERT INTO Correo (nombre, extension_pag, id_proveedor_proveedor, id_cliente_natural, id_cliente_juridico) VALUES
@@ -2638,7 +2647,16 @@ INSERT INTO Correo (nombre, extension_pag, id_cliente_juridico, id_cliente_natur
 -- Insertar correos para empleados
 
 INSERT INTO Correo (nombre, extension_pag, id_empleado, id_cliente_juridico, id_cliente_natural, id_proveedor_proveedor) VALUES
-('admin', 'gmail.com', 1, NULL, NULL, NULL);
+('admin', 'gmail.com', 1, NULL, NULL, NULL),
+('prueba12', 'gmail.com', 2, NULL, NULL, NULL),
+('prueba', 'gmail.com', 3, NULL, NULL, NULL),
+('viscabarca', 'gmail.com', 4, NULL, NULL, NULL),
+('pedri', 'gmail.com', 5, NULL, NULL, NULL),
+('gavi', 'gmail.com', 6, NULL, NULL, NULL),
+('lamine', 'gmail.com', 7, NULL, NULL, NULL),
+('nico', 'gmail.com', 8, NULL, NULL, NULL),
+('kounde', 'gmail.com', 9, NULL, NULL, NULL),
+('nigga', 'gmail.com', 10, NULL, NULL, NULL);
 
 INSERT INTO Persona_Contacto (nombre, apellido, id_proveedor, id_cliente_juridico) VALUES
 ('María', 'González', 1,  NULL),
@@ -3064,17 +3082,17 @@ INSERT INTO Cuota_Afiliacion (monto, membresia_id_membresia, fecha_pago) VALUES
 
 
 
-INSERT INTO Orden_Reposicion_Anaquel (fecha_hora_generacion) VALUES
-('2025-01-15 08:30:00'),  
-('2025-01-15 14:45:00'),  
-('2025-01-16 09:15:00'),  
-('2025-01-16 16:20:00'),  
-('2025-01-17 10:00:00'),  
-('2025-01-17 13:30:00'),  
-('2025-01-18 11:45:00'),  
-('2025-01-18 17:10:00'),  
-('2025-01-19 08:00:00'),  
-('2025-01-19 15:25:00');
+INSERT INTO Orden_Reposicion_Anaquel (fecha_hora_generacion, id_ubicacion) VALUES
+('2025-01-15 08:30:00',1),  
+('2025-01-15 14:45:00',2),  
+('2025-01-16 09:15:00',3),  
+('2025-01-16 16:20:00',4),  
+('2025-01-17 10:00:00',5),  
+('2025-01-17 13:30:00',6),  
+('2025-01-18 11:45:00',7),  
+('2025-01-18 17:10:00',8),  
+('2025-01-19 08:00:00',9),  
+('2025-01-19 15:25:00',10);
 
 INSERT INTO Estatus_Orden_Anaquel (id_orden_reposicion, id_estatus, fecha_hora_asignacion) VALUES
 (1, 1, '2025-01-15 08:30:00'),  
