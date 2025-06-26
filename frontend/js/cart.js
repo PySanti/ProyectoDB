@@ -18,18 +18,24 @@ function initCart() {
 // =================================================================
 async function loadCart() {
     try {
-        const response = await fetch(`${API_BASE_URL}/carrito/usuario/${GUEST_USER_ID}`);
+        const compraId = await ensureCompraId();
+        if (!compraId) {
+            renderEmptyCart();
+            return;
+        }
+        const response = await fetch(`${API_BASE_URL}/carrito/resumen-por-id/${compraId}`);
         if (!response.ok) throw new Error('No se pudo cargar el carrito.');
-        
-        const items = await response.json();
-        
-        if (items.length === 0) {
+        const resumen = await response.json();
+        if (!resumen || resumen.estatus_nombre.toLowerCase() !== 'en proceso') {
+            showNotification('El carrito ya fue pagado o cerrado. No se pueden realizar más operaciones.', 'info');
+            renderEmptyCart();
+            return;
+        }
+        if (!resumen.items_carrito || resumen.items_carrito.length === 0) {
             renderEmptyCart();
         } else {
-            renderCartItems(items);
-            const summaryResponse = await fetch(`${API_BASE_URL}/carrito/resumen/${GUEST_USER_ID}`);
-            const summary = await summaryResponse.json();
-            renderSummary(summary);
+            renderCartItems(resumen.items_carrito);
+            renderSummary(resumen);
         }
     } catch (error) {
         console.error(error);
@@ -87,30 +93,24 @@ async function proceedToCheckout() {
     console.log('Función proceedToCheckout llamada');
     
     try {
-        // Primero actualizar el monto de la compra
-        const response = await fetch(`${API_BASE_URL}/carrito/actualizar-monto`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                id_usuario: GUEST_USER_ID
-            }),
-        });
-
-        const result = await response.json();
-
-        if (result.success) {
-            console.log('Monto actualizado:', result.monto_total);
-            showNotification('Monto de compra actualizado correctamente', 'success');
-            // Redirigir al checkout
-            window.location.href = 'checkout.html';
-        } else {
-            showNotification(result.message || 'Error al actualizar el monto', 'error');
+        const compraId = await ensureCompraId();
+        if (!compraId) {
+            showNotification('No hay carrito activo para este cliente.', 'error');
+            return;
         }
+        
+        // Verificar que el carrito esté en proceso
+        const resumen = await fetch(`${API_BASE_URL}/carrito/resumen-por-id/${compraId}`).then(r => r.json());
+        if (!resumen || resumen.estatus_nombre.toLowerCase() !== 'en proceso') {
+            showNotification('El carrito ya fue pagado o cerrado. No se puede proceder al pago.', 'error');
+            return;
+        }
+        
+        // Redirigir al checkout con el compra_id
+        window.location.href = `checkout.html?compra_id=${compraId}`;
     } catch (error) {
-        console.error('Error al actualizar monto:', error);
-        showNotification('Error de conexión al actualizar el monto', 'error');
+        console.error('Error al proceder al checkout:', error);
+        showNotification('Error de conexión al proceder al checkout', 'error');
     }
 }
 
@@ -192,13 +192,94 @@ async function apiCall(endpoint, method, body) {
 }
 
 function updateQuantity(inventarioId, nueva_cantidad) {
-    apiCall('/carrito/actualizar', 'PUT', { id_usuario: GUEST_USER_ID, id_inventario: inventarioId, nueva_cantidad });
+    const compraId = sessionStorage.getItem('compra_id');
+    if (!compraId) {
+        showNotification('No hay carrito activo.', 'error');
+        return;
+    }
+    apiCall('/carrito/actualizar-por-id', 'PUT', { compra_id: compraId, id_inventario: inventarioId, nueva_cantidad });
 }
 
 function removeFromCart(inventarioId) {
-    apiCall('/carrito/eliminar', 'DELETE', { id_usuario: GUEST_USER_ID, id_inventario: inventarioId });
+    const compraId = sessionStorage.getItem('compra_id');
+    if (!compraId) {
+        showNotification('No hay carrito activo.', 'error');
+        return;
+    }
+    apiCall('/carrito/eliminar-por-id', 'DELETE', { compra_id: compraId, id_inventario: inventarioId });
 }
 
 function clearCart() {
-    apiCall(`/carrito/limpiar/${GUEST_USER_ID}`, 'DELETE');
+    const compraId = sessionStorage.getItem('compra_id');
+    if (!compraId) {
+        showNotification('No hay carrito activo.', 'error');
+        return;
+    }
+    apiCall(`/carrito/limpiar-por-id/${compraId}`, 'DELETE');
+}
+
+async function getCartResumen() {
+    const compraId = await ensureCompraId();
+    if (!compraId) {
+        showNotification('No hay carrito activo para este cliente.', 'error');
+        return null;
+    }
+    const response = await fetch(`${API_BASE_URL}/carrito/resumen-por-id/${compraId}`);
+    if (!response.ok) {
+        showNotification('No se pudo obtener el resumen del carrito.', 'error');
+        return null;
+    }
+    const resumen = await response.json();
+    if (!resumen || resumen.estatus_nombre.toLowerCase() !== 'en proceso') {
+        showNotification('El carrito ya fue pagado o cerrado. No se pueden realizar más operaciones.', 'error');
+        deshabilitarOperacionesCarrito();
+        return null;
+    }
+    habilitarOperacionesCarrito();
+    renderCartItems(resumen.items_carrito || []);
+    return resumen;
+}
+
+function deshabilitarOperacionesCarrito() {
+    document.querySelectorAll('.btn-cart-op').forEach(btn => btn.disabled = true);
+}
+function habilitarOperacionesCarrito() {
+    document.querySelectorAll('.btn-cart-op').forEach(btn => btn.disabled = false);
+}
+
+// Todas las funciones de agregar, eliminar, actualizar, limpiar deben usar compraId actual
+async function agregarAlCarrito(idInventario, cantidad) {
+    const compraId = await ensureCompraId();
+    if (!compraId) return;
+    const resumen = await getCartResumen();
+    if (!resumen) return;
+    fetch(`${API_BASE_URL}/carrito/agregar-producto`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ compra_id: compraId, id_inventario: idInventario, cantidad })
+    }).then(() => getCartResumen());
+}
+
+async function eliminarDelCarrito(idInventario) {
+    const compraId = await ensureCompraId();
+    if (!compraId) return;
+    const resumen = await getCartResumen();
+    if (!resumen) return;
+    fetch(`${API_BASE_URL}/carrito/eliminar-producto`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ compra_id: compraId, id_inventario: idInventario })
+    }).then(() => getCartResumen());
+}
+
+async function limpiarCarrito() {
+    const compraId = await ensureCompraId();
+    if (!compraId) return;
+    const resumen = await getCartResumen();
+    if (!resumen) return;
+    fetch(`${API_BASE_URL}/carrito/limpiar`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ compra_id: compraId })
+    }).then(() => getCartResumen());
 }

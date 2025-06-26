@@ -76,7 +76,7 @@ function setupEventListeners() {
                     const presentation = product.presentaciones.find(p => p.id_inventario == inventarioId);
                     
                     if (product && presentation) {
-                        addToCart(product.nombre_cerveza, presentation.nombre_presentacion);
+                        handleAddToCart(presentation.id_inventario, 1);
                     } else {
                         showNotification('Error al obtener información del producto.', 'error');
                     }
@@ -207,24 +207,22 @@ function updateProductCount() {
 /**
  * Agrega un producto al carrito en la base de datos para un usuario genérico.
  */
-async function addToCart(nombre_cerveza, nombre_presentacion, cantidad = 1) {
-    if (!nombre_cerveza || !nombre_presentacion) {
-        showNotification('Por favor, selecciona una presentación.', 'info');
+async function handleAddToCart(idInventario, cantidad) {
+    const compraId = await ensureCompraId();
+    if (!compraId) {
+        showNotification('No hay carrito activo para este cliente.', 'info');
         return;
     }
-
+    const resumen = await fetch(`${API_BASE_URL}/carrito/resumen-por-id/${compraId}`).then(r => r.json());
+    if (!resumen || resumen.estatus_nombre.toLowerCase() !== 'en proceso') {
+        showNotification('El carrito ya fue pagado o cerrado. No se pueden realizar más operaciones.', 'info');
+        return;
+    }
     try {
-        const response = await fetch(`${API_BASE_URL}/carrito/agregar-por-producto`, {
+        const response = await fetch(`${API_BASE_URL}/carrito/agregar-producto`, {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                id_usuario: 1, // Asumiendo ID de usuario 1
-                nombre_cerveza: nombre_cerveza,
-                nombre_presentacion: nombre_presentacion,
-                cantidad: cantidad,
-            }),
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ compra_id: compraId, id_inventario: idInventario, cantidad })
         });
 
         const result = await response.json();
@@ -291,7 +289,7 @@ function createProductCard(product) {
             priceElement.textContent = `$${price.toFixed(2)}`;
             addToCartButton.disabled = false;
             addToCartButton.textContent = 'Añadir al carrito';
-            addToCartButton.onclick = () => addToCart(product.nombre_cerveza, selectedPresentation.nombre_presentacion, 1);
+            addToCartButton.onclick = () => handleAddToCart(selectedPresentation.id_inventario, 1);
         }
     }
 
