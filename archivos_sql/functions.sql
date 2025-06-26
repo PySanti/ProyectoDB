@@ -115,7 +115,7 @@ DECLARE
   new_proveedor_id INTEGER;
   new_usuario_id INTEGER;
 BEGIN
-  INSERT INTO Proveedor (razon_social, denominacion, rif, url_web, id_lugar, direccion_fisica, id_lugar2, direccion_fiscal)
+  INSERT INTO Proveedor (razon_social, denominacion, rif, url_web, id_lugar, direccion_fisica, lugar_id2, direccion_fiscal)
   VALUES (p_razon_social, p_denominacion, p_rif, p_url_web, p_id_lugar, p_direccion_fisica, p_id_lugar2, p_direccion_fiscal)
   RETURNING id_proveedor INTO new_proveedor_id;
 
@@ -123,8 +123,8 @@ BEGIN
   VALUES (new_proveedor_id,  CURRENT_DATE, p_contrasena)
   RETURNING id_usuario INTO new_usuario_id;
 
-  INSERT INTO Correo (nombre, extension_pag, id_usuario)
-  VALUES (split_part(p_correo, '@', 1), split_part(p_correo, '@', 2), new_usuario_id);
+  INSERT INTO Correo (nombre, extension_pag, id_proveedor_proveedor)
+  VALUES (split_part(p_correo, '@', 1), split_part(p_correo, '@', 2), new_proveedor_id);
 END;
 $$ LANGUAGE plpgsql; 
 
@@ -930,60 +930,7 @@ $$ LANGUAGE plpgsql;
 -- =====================================================
 -- FUNCIÓN AUXILIAR PARA OBTENER O CREAR CARRITO
 -- (Se mantiene como función porque retorna un valor directo)
--- =====================================================
-
-CREATE OR REPLACE FUNCTION obtener_o_crear_carrito_usuario(
-    p_id_usuario INTEGER,
-    p_id_cliente_natural INTEGER DEFAULT NULL,
-    p_id_cliente_juridico INTEGER DEFAULT NULL
-)
-RETURNS INTEGER AS $$
-DECLARE
-    v_id_compra INTEGER;
-    v_estatus_pendiente INTEGER := 2; -- ID del estatus "En proceso"
-BEGIN
-    -- Buscar si el usuario ya tiene un carrito pendiente
-    -- Si es compra en tienda física (con cliente), buscar por cliente
-    IF p_id_cliente_natural IS NOT NULL OR p_id_cliente_juridico IS NOT NULL THEN
-        SELECT c.id_compra INTO v_id_compra
-        FROM Compra c
-        JOIN Compra_Estatus ce ON c.id_compra = ce.compra_id_compra
-        WHERE (c.id_cliente_natural = p_id_cliente_natural OR c.id_cliente_juridico = p_id_cliente_juridico)
-        AND ce.estatus_id_estatus = v_estatus_pendiente
-        AND ce.fecha_hora_fin > CURRENT_TIMESTAMP;
-    ELSE
-        -- Si es compra web (con usuario), buscar por usuario
-        SELECT c.id_compra INTO v_id_compra
-        FROM Compra c
-        JOIN Compra_Estatus ce ON c.id_compra = ce.compra_id_compra
-        WHERE c.usuario_id_usuario = p_id_usuario 
-        AND ce.estatus_id_estatus = v_estatus_pendiente
-        AND ce.fecha_hora_fin > CURRENT_TIMESTAMP;
-    END IF;
-    
-    -- Si no existe carrito pendiente, crear uno nuevo
-    IF v_id_compra IS NULL THEN
-        -- Se asume que la tienda física tiene el ID 1.
-        IF p_id_cliente_natural IS NOT NULL OR p_id_cliente_juridico IS NOT NULL THEN
-            -- Compra en tienda física: solo cliente, sin usuario
-            INSERT INTO Compra (monto_total, tienda_fisica_id_tienda, id_cliente_natural, id_cliente_juridico)
-            VALUES (0, 1, p_id_cliente_natural, p_id_cliente_juridico)
-            RETURNING id_compra INTO v_id_compra;
-        ELSE
-            -- Compra web: solo usuario, sin cliente
-            INSERT INTO Compra (usuario_id_usuario, monto_total, tienda_fisica_id_tienda)
-            VALUES (p_id_usuario, 0, 1)
-            RETURNING id_compra INTO v_id_compra;
-        END IF;
-        
-        -- Asignar estatus "En proceso" al carrito
-        INSERT INTO Compra_Estatus (compra_id_compra, estatus_id_estatus, fecha_hora_asignacion, fecha_hora_fin)
-        VALUES (v_id_compra, v_estatus_pendiente, CURRENT_TIMESTAMP, '9999-12-31 23:59:59');
-    END IF;
-    
-    RETURN v_id_compra;
-END;
-$$ LANGUAGE plpgsql;
+-- =====
 
 -- =====================================================
 -- FUNCIÓN MODIFICADA PARA AGREGAR AL CARRITO POR NOMBRE Y PRESENTACIÓN
@@ -1808,6 +1755,26 @@ BEGIN
 END $$;
 
 -- =====================================================
+-- FUNCIÓN PARA INSERTAR NUEVA TASA DE CAMBIO
+-- =====================================================
+
+CREATE OR REPLACE FUNCTION insertar_nueva_tasa(
+    p_nombre VARCHAR(50),
+    p_valor DECIMAL
+)
+RETURNS TABLE(
+    id_tasa INTEGER,
+    nombre VARCHAR(50),
+    valor DECIMAL,
+    fecha DATE
+) AS $$
+BEGIN
+    RETURN QUERY
+    INSERT INTO Tasa (nombre, valor, fecha)
+    VALUES (p_nombre, p_valor, CURRENT_DATE)
+    RETURNING Tasa.id_tasa, Tasa.nombre, Tasa.valor, Tasa.fecha;
+END;
+$$ LANGUAGE plpgsql;
 -- FUNCIONES ROBUSTAS DE CARRITO CON ESTATUS (TIENDA FÍSICA, CLIENTE)
 -- =====================================================
 
@@ -1931,12 +1898,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- =====================================================
--- ACTUALIZACIÓN DE FUNCIÓN PARA CORREGIR CONTADOR DE CARRITO
--- =====================================================
--- Esta función ahora solo cuenta items cuando la compra está "en proceso"
-
--- =====================================================
--- SISTEMA DE PUNTOS - FUNCIONES CORREGIDAS
+-- FUNCIÓN PARA OBTENER LA TASA ACTUAL DEL DÓLAR
 -- =====================================================
 
 -- Función para acumular puntos automáticamente al finalizar una compra física
@@ -3031,46 +2993,19 @@ $$ LANGUAGE plpgsql;
 -- =============================================
 CREATE OR REPLACE FUNCTION diagnosticar_tasas_puntos()
 RETURNS TABLE (
+CREATE OR REPLACE FUNCTION obtener_tasa_actual_dolar()
+RETURNS TABLE(
     id_tasa INTEGER,
     nombre VARCHAR(50),
     valor DECIMAL,
-    fecha DATE,
-    punto_id INTEGER,
-    id_metodo INTEGER
+    fecha DATE
 ) AS $$
 BEGIN
     RETURN QUERY
-    SELECT 
-        t.id_tasa,
-        t.nombre,
-        t.valor,
-        t.fecha,
-        t.punto_id,
-        t.id_metodo
+    SELECT t.id_tasa, t.nombre, t.valor, t.fecha
     FROM Tasa t
-    WHERE t.punto_id IS NOT NULL
-    ORDER BY t.fecha DESC, t.id_tasa DESC;
+    WHERE t.nombre = 'Dólar Estadounidense'
+    ORDER BY t.fecha DESC, t.id_tasa DESC
+    LIMIT 1;
 END;
 $$ LANGUAGE plpgsql;
-
--- =============================================
--- INSERT DE TASA DE VALOR DE PUNTO POR DEFECTO (id_metodo NULL)
--- =============================================
-
--- =============================================
--- LIMPIEZA Y REINSERCIÓN DE TASA DE PUNTOS CORRECTA
--- =============================================
-DO $$
-BEGIN
-
-    
-    -- Insertar la tasa correcta con valor 1.0
-    INSERT INTO Tasa (nombre, valor, punto_id, fecha, id_metodo)
-    VALUES ('Punto', 1.0, 51, '2025-06-15', NULL);
-    
-    RAISE NOTICE 'Tasa de puntos limpiada y reinsertada con valor 1.0';
-END $$;
-
--- =============================================
--- INSERT DE TASA DE VALOR DE PUNTO POR DEFECTO (id_metodo NULL)
--- =============================================

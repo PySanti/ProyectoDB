@@ -87,11 +87,11 @@
           <form id="natural-form" class="client-form active">
             <div class="form-group">
               <label for="natural-cedula">Cédula</label>
-              <input type="text" id="natural-cedula" name="natural-cedula" required />
+              <input type="text" id="natural-cedula" name="natural-cedula" required maxlength="8" pattern="[0-9]{1,8}" inputmode="numeric" title="Ingrese solo números, máximo 8 dígitos" />
             </div>
             <div class="form-group">
               <label for="natural-rif">RIF</label>
-              <input type="text" id="natural-rif" name="natural-rif" required />
+              <input type="text" id="natural-rif" name="natural-rif" required maxlength="9" pattern="[0-9]{1,9}" inputmode="numeric" title="Ingrese solo números, máximo 9 dígitos" />
             </div>
               <div class="form-group">
               <label for="natural-primer-nombre">Primer Nombre</label>
@@ -135,7 +135,7 @@
           <form id="juridica-form" class="client-form">
             <div class="form-group">
               <label for="juridica-rif">RIF</label>
-              <input type="text" id="juridica-rif" name="juridica-rif" required />
+              <input type="text" id="juridica-rif" name="juridica-rif" required maxlength="9" pattern="[0-9]{1,9}" inputmode="numeric" title="Ingrese solo números, máximo 9 dígitos" />
             </div>
             <div class="form-group">
               <label for="juridica-razon">Razón Social</label>
@@ -191,7 +191,7 @@
             </div>
             <div class="form-group">
               <label for="proveedor-rif">RIF</label>
-              <input type="text" id="proveedor-rif" name="proveedor-rif" required />
+              <input type="text" id="proveedor-rif" name="proveedor-rif" required maxlength="9" pattern="[0-9]{1,9}" inputmode="numeric" title="Ingrese solo números, máximo 9 dígitos" />
             </div>
             <div class="form-group">
               <label for="proveedor-web">Página Web</label>
@@ -326,12 +326,15 @@
         }
       }
 
+
+      
       function loginForm(event) {
         event.preventDefault(); 
 
         const email = document.getElementById('login-email').value;
         const password = document.getElementById('login-password').value;
-
+        console.log('Login frontend:', { email, password });
+        
         axios.post('http://localhost:3000/api/users/login', {
             email: email,
             password: password
@@ -466,6 +469,31 @@
           alert('Error en el registro: ' + (err.response?.data?.error || err.message));
         }
       };
+
+      // Validación en tiempo real para solo números y longitud máxima
+      function soloNumerosYMaxLength(input, maxLength) {
+        input.addEventListener('input', function() {
+          let value = input.value.replace(/\D/g, ''); // Solo dígitos
+          if (value.length > maxLength) value = value.slice(0, maxLength);
+          input.value = value;
+        });
+      }
+      // Persona natural
+      soloNumerosYMaxLength(document.getElementById('natural-cedula'), 8);
+      soloNumerosYMaxLength(document.getElementById('natural-rif'), 9);
+      // Persona jurídica
+      soloNumerosYMaxLength(document.getElementById('juridica-rif'), 9);
+      // Proveedor
+      soloNumerosYMaxLength(document.getElementById('proveedor-rif'), 9);
+      // Oculta el botón 'Iniciar Sesión' si el usuario está logueado
+      document.addEventListener('DOMContentLoaded', function() {
+        if (localStorage.getItem('user')) {
+          var loginBtns = document.querySelectorAll('.login-btn');
+          loginBtns.forEach(function(btn) {
+            btn.style.display = 'none';
+          });
+        }
+      });
     </script>
   </body>
 </html>
