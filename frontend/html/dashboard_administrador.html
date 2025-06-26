@@ -1612,6 +1612,8 @@
                 setTimeout(() => {
                     mostrarReporte(0);
                 }, 100);
+            }
+        })
         
         // Funciones para la gestión de tasa
         async function cargarTasaActual() {
@@ -1663,6 +1665,7 @@
                 alert('Error: ' + err.message);
             }
         }
+        
         
         // Event listeners para la sección de tasa
         document.addEventListener('DOMContentLoaded', function() {
