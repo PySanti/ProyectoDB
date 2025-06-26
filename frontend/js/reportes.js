@@ -1040,6 +1040,20 @@ async function mostrarIngresosPorTipo(year = null) {
     }
 }
 
+// Función para manejar el cambio de año en el selector
+function configurarSelectorAnios() {
+    const selector = document.getElementById('selector-anio-ingresos');
+    if (!selector) return;
+    
+    selector.addEventListener('change', async function() {
+        const year = this.value || null;
+        try {
+            await mostrarIngresosPorTipo(year);
+        } catch (error) {
+            console.error('Error al cambiar año:', error);
+        }
+    });
+}
 
 // =====================================================================================================
 // FUNCIONES DE REPORTE 4. COMPARATIVA DE ESTILOS DE CERVEZA
@@ -1487,6 +1501,24 @@ function removerBotonDescargaPDF() {
     }
 }
 
+// ========================================
+// FUNCIÓN DE INICIALIZACIÓN
+// ========================================
+
+// Función principal para inicializar los reportes
+function inicializarReportes() {
+    console.log('Inicializando reportes...');
+    
+    // Configurar el selector de años para el reporte de ingresos
+    configurarSelectorAnios();
+    
+    // Mostrar el ranking de puntos cuando se cargue la página
+    // mostrarRankingPuntos();
+    
+    // Aquí podemos agregar más reportes en el futuro
+    // mostrarVentasMensuales();
+    // etc...
+}
 
 // ========================================
 // EXPORTACIÓN DE FUNCIONES
