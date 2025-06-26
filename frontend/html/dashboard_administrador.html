@@ -288,7 +288,7 @@
                     <legend>Datos del empleado</legend>
                     <div class="form-group">
                         <label for="nuevo-empleado-cedula">Cédula</label>
-                        <input type="text" id="nuevo-empleado-cedula" name="cedula" required>
+                        <input type="text" id="nuevo-empleado-cedula" name="cedula" required maxlength="8" pattern="[0-9]{1,8}" inputmode="numeric" title="Ingrese solo números, máximo 8 dígitos" />
                     </div>
                     <div class="form-group">
                         <label for="nuevo-empleado-primer-nombre">Primer nombre</label>
@@ -1464,6 +1464,16 @@
                 tasaForm.addEventListener('submit', actualizarTasa);
             }
         });
+
+        // Validación en tiempo real para solo números y longitud máxima en cédula del modal
+        function soloNumerosYMaxLength(input, maxLength) {
+            input.addEventListener('input', function() {
+                let value = input.value.replace(/\D/g, ''); // Solo dígitos
+                if (value.length > maxLength) value = value.slice(0, maxLength);
+                input.value = value;
+            });
+        }
+        soloNumerosYMaxLength(document.getElementById('nuevo-empleado-cedula'), 8);
     </script>
 </body>
 </html> 
