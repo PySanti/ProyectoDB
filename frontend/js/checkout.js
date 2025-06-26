@@ -612,6 +612,9 @@ function updateTotalsSummary() {
     if (summaryTotalPayment) {
         summaryTotalPayment.textContent = `$${totalToPay.toFixed(2)} | Bs ${(totalToPay * TASA_BS).toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
     }
+    
+    // Actualizar el estado del botón de pagar basado en el restante
+    updatePlaceOrderButton(totalUSD, totalToPay);
 }
 
 function updatePlaceOrderButton(totalPaid, totalToPay) {
