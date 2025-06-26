@@ -1685,7 +1685,8 @@ BEGIN
                 v_puntos_acumulados := usar_puntos_como_pago(
                     v_id_cliente_natural,
                     (v_pago->>'puntos_usados')::INTEGER,
-                    p_compra_id
+                    v_id_cliente_natural,
+                    v_id_cliente_juridico
                 );
                 -- Continuar al siguiente pago ya que usar_puntos_como_pago ya registra el pago
                 CONTINUE;
@@ -1719,18 +1720,6 @@ BEGIN
         END IF;
         UPDATE Inventario SET cantidad = cantidad - v_cantidad WHERE id_inventario = v_id_inventario;
     END LOOP;
-    
-    -- Acumular puntos automáticamente para clientes naturales en compras físicas
-    -- NOTA: Comentado para evitar duplicación con la segunda versión de la función
-    /*
-    IF v_id_cliente_natural IS NOT NULL THEN
-        v_puntos_acumulados := acumular_puntos_compra_fisica(p_compra_id);
-        -- Log de puntos acumulados (opcional)
-        IF v_puntos_acumulados > 0 THEN
-            RAISE NOTICE 'Se acumularon % puntos para el cliente %', v_puntos_acumulados, v_id_cliente_natural;
-        END IF;
-    END IF;
-    */
     
     RETURN TRUE;
 END;
@@ -1878,82 +1867,6 @@ $$ LANGUAGE plpgsql;
 -- FUNCIONES PARA OPERACIONES POR COMPRA_ID
 -- =================================================================
 
--- Obtener resumen por compra_id
-DROP FUNCTION IF EXISTS obtener_resumen_carrito_por_id(integer);
-CREATE OR REPLACE FUNCTION obtener_resumen_carrito_por_id(p_id_compra INTEGER)
-RETURNS TABLE (
-    id_compra INTEGER,
-    total_productos INTEGER,
-    total_items INTEGER,
-    monto_total DECIMAL,
-    items_carrito JSON,
-    estatus_id INTEGER,
-    estatus_nombre VARCHAR(50)
-) AS $$
-DECLARE
-    v_items JSON;
-    v_estatus_id INTEGER;
-    v_estatus_nombre VARCHAR(50);
-    v_estatus_en_proceso_id INTEGER;
-BEGIN
-    -- Obtener el id del estatus "en proceso"
-    SELECT id_estatus INTO v_estatus_en_proceso_id 
-    FROM Estatus 
-    WHERE LOWER(nombre) = 'en proceso' 
-    LIMIT 1;
-
-    -- Obtener el estatus actual de la compra (el abierto)
-    SELECT ce.estatus_id_estatus, e.nombre INTO v_estatus_id, v_estatus_nombre
-    FROM Compra_Estatus ce
-    JOIN Estatus e ON ce.estatus_id_estatus = e.id_estatus
-    WHERE ce.compra_id_compra = p_id_compra
-      AND ce.fecha_hora_fin = '9999-12-31 23:59:59'
-    LIMIT 1;
-
-    -- Si la compra NO está en proceso, devolver 0 items
-    IF v_estatus_id IS NULL OR v_estatus_id != v_estatus_en_proceso_id THEN
-        RETURN QUERY
-        SELECT p_id_compra, 0::INTEGER, 0::INTEGER, 0::DECIMAL, '[]'::json, v_estatus_id, v_estatus_nombre;
-        RETURN;
-    END IF;
-
-    -- Solo obtener items si la compra está en proceso
-    SELECT json_agg(json_build_object(
-            'id_inventario', dc.id_inventario, 
-            'nombre_cerveza', c.nombre_cerveza,
-            'nombre_presentacion', p.nombre, 
-            'cantidad', dc.cantidad,
-            'precio_unitario', dc.precio_unitario, 
-            'subtotal', (dc.cantidad * dc.precio_unitario)
-        )) INTO v_items
-    FROM Detalle_Compra dc
-    JOIN Inventario i ON dc.id_inventario = i.id_inventario
-    JOIN Cerveza c ON i.id_cerveza = c.id_cerveza
-    JOIN Presentacion p ON i.id_presentacion = p.id_presentacion
-    WHERE dc.id_compra = p_id_compra;
-
-    -- Si no hay items, devolver valores por defecto
-    IF v_items IS NULL THEN
-        RETURN QUERY
-        SELECT p_id_compra, 0::INTEGER, 0::INTEGER, 0::DECIMAL, '[]'::json, v_estatus_id, v_estatus_nombre;
-        RETURN;
-    END IF;
-
-    -- Devolver el resumen con los items y el estatus
-    RETURN QUERY
-    SELECT 
-        p_id_compra,
-        COUNT(DISTINCT dc.id_inventario)::INTEGER,
-        COALESCE(SUM(dc.cantidad), 0)::INTEGER,
-        COALESCE(SUM(dc.cantidad * dc.precio_unitario), 0),
-        v_items,
-        v_estatus_id,
-        v_estatus_nombre
-    FROM Detalle_Compra dc
-    WHERE dc.id_compra = p_id_compra;
-END;
-$$ LANGUAGE plpgsql;
-
 -- Obtener carrito por compra_id
 DROP FUNCTION IF EXISTS obtener_carrito_por_id(integer);
 CREATE OR REPLACE FUNCTION obtener_carrito_por_id(p_id_compra INTEGER)
@@ -2021,82 +1934,6 @@ $$ LANGUAGE plpgsql;
 -- ACTUALIZACIÓN DE FUNCIÓN PARA CORREGIR CONTADOR DE CARRITO
 -- =====================================================
 -- Esta función ahora solo cuenta items cuando la compra está "en proceso"
-
--- Obtener resumen por compra_id (CORREGIDA)
-DROP FUNCTION IF EXISTS obtener_resumen_carrito_por_id(integer);
-CREATE OR REPLACE FUNCTION obtener_resumen_carrito_por_id(p_id_compra INTEGER)
-RETURNS TABLE (
-    id_compra INTEGER,
-    total_productos INTEGER,
-    total_items INTEGER,
-    monto_total DECIMAL,
-    items_carrito JSON,
-    estatus_id INTEGER,
-    estatus_nombre VARCHAR(50)
-) AS $$
-DECLARE
-    v_items JSON;
-    v_estatus_id INTEGER;
-    v_estatus_nombre VARCHAR(50);
-    v_estatus_en_proceso_id INTEGER;
-BEGIN
-    -- Obtener el id del estatus "en proceso"
-    SELECT id_estatus INTO v_estatus_en_proceso_id 
-    FROM Estatus 
-    WHERE LOWER(nombre) = 'en proceso' 
-    LIMIT 1;
-
-    -- Obtener el estatus actual de la compra (el abierto)
-    SELECT ce.estatus_id_estatus, e.nombre INTO v_estatus_id, v_estatus_nombre
-    FROM Compra_Estatus ce
-    JOIN Estatus e ON ce.estatus_id_estatus = e.id_estatus
-    WHERE ce.compra_id_compra = p_id_compra
-      AND ce.fecha_hora_fin = '9999-12-31 23:59:59'
-    LIMIT 1;
-
-    -- Si la compra NO está en proceso, devolver 0 items
-    IF v_estatus_id IS NULL OR v_estatus_id != v_estatus_en_proceso_id THEN
-        RETURN QUERY
-        SELECT p_id_compra, 0::INTEGER, 0::INTEGER, 0::DECIMAL, '[]'::json, v_estatus_id, v_estatus_nombre;
-        RETURN;
-    END IF;
-
-    -- Solo obtener items si la compra está en proceso
-    SELECT json_agg(json_build_object(
-            'id_inventario', dc.id_inventario, 
-            'nombre_cerveza', c.nombre_cerveza,
-            'nombre_presentacion', p.nombre, 
-            'cantidad', dc.cantidad,
-            'precio_unitario', dc.precio_unitario, 
-            'subtotal', (dc.cantidad * dc.precio_unitario)
-        )) INTO v_items
-    FROM Detalle_Compra dc
-    JOIN Inventario i ON dc.id_inventario = i.id_inventario
-    JOIN Cerveza c ON i.id_cerveza = c.id_cerveza
-    JOIN Presentacion p ON i.id_presentacion = p.id_presentacion
-    WHERE dc.id_compra = p_id_compra;
-
-    -- Si no hay items, devolver valores por defecto
-    IF v_items IS NULL THEN
-        RETURN QUERY
-        SELECT p_id_compra, 0::INTEGER, 0::INTEGER, 0::DECIMAL, '[]'::json, v_estatus_id, v_estatus_nombre;
-        RETURN;
-    END IF;
-
-    -- Devolver el resumen con los items y el estatus
-    RETURN QUERY
-    SELECT 
-        p_id_compra,
-        COUNT(DISTINCT dc.id_inventario)::INTEGER,
-        COALESCE(SUM(dc.cantidad), 0)::INTEGER,
-        COALESCE(SUM(dc.cantidad * dc.precio_unitario), 0),
-        v_items,
-        v_estatus_id,
-        v_estatus_nombre
-    FROM Detalle_Compra dc
-    WHERE dc.id_compra = p_id_compra;
-END;
-$$ LANGUAGE plpgsql;
 
 -- =====================================================
 -- SISTEMA DE PUNTOS - FUNCIONES CORREGIDAS
@@ -2691,81 +2528,6 @@ $$ LANGUAGE plpgsql;
 -- FUNCIONES PARA OPERACIONES POR COMPRA_ID
 -- =================================================================
 
--- Obtener resumen por compra_id
-DROP FUNCTION IF EXISTS obtener_resumen_carrito_por_id(integer);
-CREATE OR REPLACE FUNCTION obtener_resumen_carrito_por_id(p_id_compra INTEGER)
-RETURNS TABLE (
-    id_compra INTEGER,
-    total_productos INTEGER,
-    total_items INTEGER,
-    monto_total DECIMAL,
-    items_carrito JSON,
-    estatus_id INTEGER,
-    estatus_nombre VARCHAR(50)
-) AS $$
-DECLARE
-    v_items JSON;
-    v_estatus_id INTEGER;
-    v_estatus_nombre VARCHAR(50);
-    v_estatus_en_proceso_id INTEGER;
-BEGIN
-    -- Obtener el id del estatus "en proceso"
-    SELECT id_estatus INTO v_estatus_en_proceso_id 
-    FROM Estatus 
-    WHERE LOWER(nombre) = 'en proceso' 
-    LIMIT 1;
-
-    -- Obtener el estatus actual de la compra (el abierto)
-    SELECT ce.estatus_id_estatus, e.nombre INTO v_estatus_id, v_estatus_nombre
-    FROM Compra_Estatus ce
-    JOIN Estatus e ON ce.estatus_id_estatus = e.id_estatus
-    WHERE ce.compra_id_compra = p_id_compra
-      AND ce.fecha_hora_fin = '9999-12-31 23:59:59'
-    LIMIT 1;
-
-    -- Si la compra NO está en proceso, devolver 0 items
-    IF v_estatus_id IS NULL OR v_estatus_id != v_estatus_en_proceso_id THEN
-        RETURN QUERY
-        SELECT p_id_compra, 0::INTEGER, 0::INTEGER, 0::DECIMAL, '[]'::json, v_estatus_id, v_estatus_nombre;
-        RETURN;
-    END IF;
-
-    -- Solo obtener items si la compra está en proceso
-    SELECT json_agg(json_build_object(
-            'id_inventario', dc.id_inventario, 
-            'nombre_cerveza', c.nombre_cerveza,
-            'nombre_presentacion', p.nombre, 
-            'cantidad', dc.cantidad,
-            'precio_unitario', dc.precio_unitario, 
-            'subtotal', (dc.cantidad * dc.precio_unitario)
-        )) INTO v_items
-    FROM Detalle_Compra dc
-    JOIN Inventario i ON dc.id_inventario = i.id_inventario
-    JOIN Cerveza c ON i.id_cerveza = c.id_cerveza
-    JOIN Presentacion p ON i.id_presentacion = p.id_presentacion
-    WHERE dc.id_compra = p_id_compra;
-
-    -- Si no hay items, devolver valores por defecto
-    IF v_items IS NULL THEN
-        RETURN QUERY
-        SELECT p_id_compra, 0::INTEGER, 0::INTEGER, 0::DECIMAL, '[]'::json, v_estatus_id, v_estatus_nombre;
-        RETURN;
-    END IF;
-
-    -- Devolver el resumen con los items y el estatus
-    RETURN QUERY
-    SELECT 
-        p_id_compra,
-        COUNT(DISTINCT dc.id_inventario)::INTEGER,
-        COALESCE(SUM(dc.cantidad), 0)::INTEGER,
-        COALESCE(SUM(dc.cantidad * dc.precio_unitario), 0),
-        v_items,
-        v_estatus_id,
-        v_estatus_nombre
-    FROM Detalle_Compra dc
-    WHERE dc.id_compra = p_id_compra;
-END;
-$$ LANGUAGE plpgsql;
 
 -- Obtener carrito por compra_id
 DROP FUNCTION IF EXISTS obtener_carrito_por_id(integer);
@@ -3280,15 +3042,7 @@ $$ LANGUAGE plpgsql;
 -- =============================================
 -- INSERT DE TASA DE VALOR DE PUNTO POR DEFECTO (id_metodo NULL)
 -- =============================================
-DO $$
-BEGIN
-    IF NOT EXISTS (
-        SELECT 1 FROM Tasa WHERE nombre = 'Punto' AND punto_id = 51
-    ) THEN
-        INSERT INTO Tasa (nombre, valor, punto_id, fecha, id_metodo)
-        VALUES ('Punto', 1.0, 51, '2025-06-15', NULL);
-    END IF;
-END $$;
+
 
 -- =============================================
 -- FUNCIÓN DE DIAGNÓSTICO PARA VERIFICAR TASAS DE PUNTOS
@@ -3326,8 +3080,7 @@ $$ LANGUAGE plpgsql;
 -- =============================================
 DO $$
 BEGIN
-    -- Eliminar todas las tasas de puntos existentes
-    DELETE FROM Tasa WHERE punto_id IS NOT NULL;
+
     
     -- Insertar la tasa correcta con valor 1.0
     INSERT INTO Tasa (nombre, valor, punto_id, fecha, id_metodo)
