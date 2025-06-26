@@ -130,7 +130,7 @@ CREATE TABLE Compra_Estatus (
     compra_id_compra      INTEGER NOT NULL,
     estatus_id_estatus    INTEGER NOT NULL,
     fecha_hora_asignacion TIMESTAMP NOT NULL,
-    fecha_hora_fin        TIMESTAMP NOT NULL,
+    fecha_hora_fin        TIMESTAMP,
     PRIMARY KEY (compra_id_compra, estatus_id_estatus)
 );
 

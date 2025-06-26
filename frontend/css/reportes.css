@@ -1,0 +1,580 @@
+/* Estilos para la sección de reportes */
+
+#reportes-section {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 0;
+    min-width: 0;
+    height: 90%;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.reportes-navegacion {
+    display: flex;
+    align-items: center;
+    position: relative;
+    height: 100%;
+}
+
+.reporte-contenido {
+    position: relative;
+    flex: 1 1 auto;
+    max-width: 900px;
+    margin: 20px auto;
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 2px 12px #0001;
+    min-height: 500px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.reporte-titulo {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.reporte-titulo h3 {
+    color: #333;
+    margin-bottom: 10px;
+    font-size: 24px;
+}
+
+.reporte-titulo p {
+    color: #666;
+    font-size: 14px;
+}
+
+.grafico-container {
+    width: 100%;
+    max-width: 900px;
+    height: 400px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.reporte-info {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.leyenda {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+}
+
+.leyenda-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #666;
+}
+
+.leyenda-color {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+}
+
+/* Estilos para navegación de reportes */
+.arrow-btn {
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s;
+}
+
+.arrow-btn:hover {
+    background: #0056b3;
+}
+
+.arrow-btn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+/* Responsive design para reportes */
+@media (max-width: 768px) {
+    .reporte-contenido {
+        padding: 15px;
+        margin: 10px auto;
+    }
+    
+    .reporte-titulo h3 {
+        font-size: 20px;
+    }
+    
+    .grafico-container {
+        height: 300px;
+    }
+    
+    .leyenda {
+        gap: 15px;
+    }
+    
+    .reportes-navegacion {
+        gap: 10px;
+    }
+}
+
+.paginacion-ranking {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.paginacion-btn {
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 6px 18px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+.paginacion-btn:disabled {
+    background: #ccc;
+    color: #888;
+    cursor: not-allowed;
+}
+.paginacion-btn:hover:not(:disabled) {
+    background: #0056b3;
+}
+
+/* Estilos específicos para el gráfico de vacaciones */
+#grafico-vacaciones-container {
+    width: 100%;
+    max-width: 900px;
+    height: 400px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#grafico-vacaciones-container canvas {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+/* Estilos para tooltips personalizados del gráfico de vacaciones */
+.chartjs-tooltip {
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    border-radius: 4px;
+    padding: 8px 12px;
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+/* Responsive para gráfico de vacaciones */
+@media (max-width: 768px) {
+    #grafico-vacaciones-container {
+        height: 300px;
+    }
+}
+
+.paginacion-cervezas {
+    position: absolute;
+    bottom: 30px;
+    right: 30px;
+    z-index: 10;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.leyenda-cervezas {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 24px;
+    margin-top: 32px;
+    margin-bottom: 8px;
+    width: 100%;
+}
+
+.leyenda-item-cerveza {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+    color: #333;
+    background: #f8f8f8;
+    border-radius: 8px;
+    padding: 8px 18px;
+    box-shadow: 0 1px 4px #0001;
+}
+
+.leyenda-item-cerveza .leyenda-color {
+    width: 22px;
+    height: 22px;
+    border-radius: 4px;
+    border: 1.5px solid #ddd;
+}
+
+.leyenda-item-cerveza .leyenda-texto {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.leyenda-item-cerveza strong {
+    font-weight: 700;
+    font-size: 15px;
+    color: #222;
+}
+
+.leyenda-item-cerveza .clasificacion {
+    font-size: 13px;
+    color: #666;
+}
+
+@media (max-width: 768px) {
+    .leyenda-cervezas {
+        gap: 10px;
+        margin-top: 18px;
+    }
+    .leyenda-item-cerveza {
+        font-size: 13px;
+        padding: 6px 10px;
+    }
+    .leyenda-item-cerveza .leyenda-color {
+        width: 16px;
+        height: 16px;
+    }
+    .leyenda-item-cerveza strong {
+        font-size: 13px;
+    }
+    .leyenda-item-cerveza .clasificacion {
+        font-size: 11px;
+    }
+}
+
+/* Responsive para leyenda de cervezas */
+@media (max-width: 768px) {
+    .leyenda-cervezas {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    
+    .leyenda-item-cerveza {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .leyenda-item-cerveza .leyenda-color {
+        margin-bottom: 5px;
+    }
+    
+    .leyenda-item-cerveza strong {
+        font-size: 14px;
+    }
+    
+    .leyenda-item-cerveza .clasificacion {
+        font-size: 12px;
+    }
+}
+
+/* ========================================
+   ESTILOS PARA REPORTE DE INGRESOS POR TIPO
+   ======================================== */
+
+/* Contenedor del gráfico de ingresos */
+#grafico-ingresos-container {
+    width: 100%;
+    max-width: 1200px;
+    height: 600px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+/* Filtros del reporte */
+.filtros-reporte {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+}
+
+.filtros-reporte label {
+    font-weight: 600;
+    color: #495057;
+    font-size: 14px;
+}
+
+.filtros-reporte select {
+    padding: 8px 12px;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    background: white;
+    font-size: 14px;
+    color: #495057;
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.filtros-reporte select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+}
+
+.filtros-reporte select:hover {
+    border-color: #007bff;
+}
+
+/* Canvas del gráfico de ingresos */
+#grafico-ingresos-por-tipo {
+    width: 100% !important;
+    height: 500px !important;
+    max-width: 1200px;
+}
+
+/* Leyenda de ingresos */
+.leyenda-ingresos {
+    margin-top: 15px;
+    text-align: center;
+    font-size: 12px;
+    color: #6c757d;
+}
+
+/* Responsive para reporte de ingresos */
+@media (max-width: 1400px) {
+    #grafico-ingresos-container {
+        max-width: 1000px;
+        height: 500px;
+    }
+    #grafico-ingresos-por-tipo {
+        height: 400px !important;
+        max-width: 1000px;
+    }
+}
+@media (max-width: 1100px) {
+    #grafico-ingresos-container {
+        max-width: 800px;
+        height: 400px;
+    }
+    #grafico-ingresos-por-tipo {
+        height: 320px !important;
+        max-width: 800px;
+    }
+}
+@media (max-width: 800px) {
+    #grafico-ingresos-container {
+        max-width: 100vw;
+        height: 300px;
+    }
+    #grafico-ingresos-por-tipo {
+        height: 200px !important;
+        max-width: 100vw;
+    }
+}
+
+/* =============================
+   ESTILOS PARA GRID COMPARATIVO
+   ============================= */
+.comparativa-table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    margin-bottom: 10px;
+}
+.comparativa-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 6px;
+    background: #fff;
+    box-shadow: 0 2px 12px #0001;
+    border-radius: 12px;
+    overflow: hidden;
+    min-width: 700px;
+}
+.comparativa-table th, .comparativa-table td {
+    border: 1px solid #e0e0e0;
+    padding: 18px 16px;
+    text-align: center;
+    font-size: 15px;
+    background: #fafbfc !important;
+}
+.comparativa-table th {
+    background: #f5f5f5;
+    color: #333;
+    font-weight: 600;
+}
+.comparativa-table td {
+    background: #fafbfc;
+    color: #222;
+}
+.comparativa-table tr td:first-child {
+    font-weight: bold;
+    background: #f0f0f0;
+    color: #1976D2;
+    text-align: left;
+}
+.comparativa-table tr:nth-child(even) td {
+    background: #f7f9fa;
+}
+.comparativa-table tr:hover td {
+    background: #e3f2fd;
+}
+@media (max-width: 900px) {
+    .comparativa-table {
+        min-width: 500px;
+        font-size: 13px;
+    }
+    .comparativa-table th, .comparativa-table td {
+        padding: 8px 4px;
+    }
+}
+@media (max-width: 600px) {
+    .comparativa-table {
+        min-width: 350px;
+        font-size: 12px;
+    }
+    .comparativa-table th, .comparativa-table td {
+        padding: 5px 2px;
+    }
+}
+.paginacion-comparativa {
+    margin-top: 10px;
+}
+
+/* Comparativa de estilos: encabezado de cerveza */
+.comparativa-table th:not(:first-child) {
+    background: #ff9800 !important;
+    color: #111 !important;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* Comparativa de estilos: columna de características */
+.comparativa-table td:first-child {
+    background: #ffe0b2 !important;
+    color: #111 !important;
+    font-weight: bold;
+    text-align: left;
+}
+
+/* Forzar texto negro en toda la tabla comparativa */
+.comparativa-table th, .comparativa-table td {
+    color: #111 !important;
+}
+
+.th-caracteristica-vacia {
+    background: #ffb74d !important;
+    border-left: none !important;
+    color: transparent !important;
+    min-width: 40px;
+    height: 100%;
+    box-shadow: none !important;
+}
+
+/* ========================================
+   ESTILOS PARA BOTÓN DE DESCARGA PDF
+   ======================================== */
+
+.btn-descargar-pdf {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, #4CAF50, #45a049);
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+    z-index: 1000;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.btn-descargar-pdf:hover {
+    background: linear-gradient(135deg, #45a049, #388E3C);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+}
+
+.btn-descargar-pdf:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 10px rgba(76, 175, 80, 0.3);
+}
+
+.btn-descargar-pdf i {
+    font-size: 16px;
+}
+
+/* Animación de carga para el botón */
+.btn-descargar-pdf.loading {
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+.btn-descargar-pdf.loading::after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    margin: auto;
+    border: 2px solid transparent;
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    right: 8px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Responsive para dispositivos móviles */
+@media (max-width: 768px) {
+    .btn-descargar-pdf {
+        top: 10px;
+        right: 10px;
+        padding: 10px 16px;
+        font-size: 12px;
+    }
+    
+    .btn-descargar-pdf span {
+        display: none;
+    }
+    
+    .btn-descargar-pdf i {
+        font-size: 18px;
+    }
+} 

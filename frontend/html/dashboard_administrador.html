@@ -5,7 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard Administrador - ACAUCAB</title>
     <link rel="stylesheet" href="../css/dashboard_gestion_ordenes_compra.css">
+    <link rel="stylesheet" href="../css/reportes.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- html2pdf.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body>
     <div class="dashboard-container">
@@ -210,8 +215,70 @@
                 <div class="reportes-navegacion">
                     <button id="reporte-prev" class="arrow-btn reporte-prev"><i class="fas fa-chevron-left"></i></button>
                     <div id="reporte-contenido" class="reporte-contenido">
-                        <!-- Aquí se mostrará el contenido del reporte -->
-                        <p>Selecciona un reporte para visualizarlo.</p>
+                        <!-- Título del reporte -->
+                        <div class="reporte-titulo">
+                            <h3 id="reporte-titulo-principal">Ranking de Clientes por Puntos de Fidelidad</h3>
+                            <p id="reporte-titulo-sub">Top 10 clientes más leales según puntos acumulados</p>
+                        </div>
+                        <!-- Contenedor del gráfico -->
+                        <div class="grafico-container">
+                            <canvas id="grafico-ranking-puntos" width="800" height="400"></canvas>
+                        </div>
+                        <!-- Contenedor del gráfico de vacaciones -->
+                        <div class="grafico-container" id="grafico-vacaciones-container" style="display: none;">
+                            <canvas id="grafico-vacaciones" width="800" height="400"></canvas>
+                        </div>
+                        <!-- Botones de paginación para el ranking de clientes -->
+                        <div class="paginacion-ranking" style="width:100%; display:flex; justify-content:flex-end; align-items:center; gap:10px; margin-top:10px;">
+                            <span id="ranking-rango" style="font-size:14px; color:#666;"></span>
+                            <button id="ranking-anterior" class="paginacion-btn">Anterior</button>
+                            <button id="ranking-siguiente" class="paginacion-btn">Siguiente</button>
+                        </div>
+                        <!-- Botones de paginación para vacaciones -->
+                        <div id="vacaciones-paginacion" class="paginacion-ranking" style="display: none;">
+                            <span id="vacaciones-rango" style="font-size:14px; color:#666;"></span>
+                            <button id="vacaciones-anterior" class="paginacion-btn">Anterior</button>
+                            <button id="vacaciones-siguiente" class="paginacion-btn">Siguiente</button>
+                        </div>
+                        <!-- Leyenda dinámica para reportes -->
+                        <div class="reporte-info">
+                            <div class="leyenda" id="leyenda-dinamica"></div>
+                        </div>
+                        <!-- Botones de paginación para cervezas por proveedores (ahora dentro del cuadro blanco) -->
+                        <div id="cervezas-paginacion" class="paginacion-cervezas">
+                            <span id="cervezas-rango" style="font-size:14px; color:#666;"></span>
+                            <button id="cervezas-anterior" class="paginacion-btn">Anterior</button>
+                            <button id="cervezas-siguiente" class="paginacion-btn">Siguiente</button>
+                        </div>
+                        <div class="grafico-container" id="grafico-cervezas-container" style="display: none;">
+                            <div class="proveedor-info" id="proveedor-info"></div>
+                            <canvas id="grafico-cervezas-proveedores" width="800" height="400"></canvas>
+                            <div class="leyenda-cervezas" id="leyenda-cervezas"></div>
+                        </div>
+                        <!-- Contenedor del gráfico de ingresos por tipo -->
+                        <div class="grafico-container" id="grafico-ingresos-container" style="display: none;">
+                            <div class="filtros-reporte">
+                                <label for="selector-anio-ingresos">Año:</label>
+                                <select id="selector-anio-ingresos">
+                                    <option value="">Todos los años</option>
+                                </select>
+                            </div>
+                            <canvas id="grafico-ingresos-por-tipo" width="1200" height="500"></canvas>
+                            <div class="leyenda-ingresos" id="leyenda-ingresos"></div>
+                        </div>
+                        <!-- Contenedor del grid comparativo de estilos -->
+                        <div class="grafico-container" id="grid-comparativa-estilos-container" style="display: none; flex-direction: column; align-items: stretch;">
+                            <div class="comparativa-table-responsive">
+                                <table class="comparativa-table" id="comparativa-estilos-table">
+                                    <!-- El contenido de la tabla se llenará dinámicamente con JS -->
+                                </table>
+                            </div>
+                            <div class="paginacion-comparativa" style="width:100%; display:flex; justify-content:flex-end; align-items:center; gap:10px; margin-top:10px;">
+                                <span id="comparativa-rango" style="font-size:14px; color:#666;"></span>
+                                <button id="comparativa-anterior" class="paginacion-btn">Anterior</button>
+                                <button id="comparativa-siguiente" class="paginacion-btn">Siguiente</button>
+                            </div>
+                        </div>
                     </div>
                     <button id="reporte-next" class="arrow-btn reporte-next"><i class="fas fa-chevron-right"></i></button>
                 </div>
@@ -451,9 +518,9 @@
         #modal-cambiar-estatus .estatus-btn {
             display: block;
             width: 100%;
-            margin: 0.5rem 0;
-            padding: 0.7rem 1rem;
-            background: #f0ad4e;
+            padding: 10px;
+            margin: 5px 0;
+            background: #007bff;
             color: #fff;
             border: none;
             border-radius: 4px;
@@ -1388,6 +1455,163 @@
         document.getElementById('close-modal-detalles-orden-proveedor').onclick = function() {
             document.getElementById('modal-detalles-orden-proveedor').classList.remove('active');
         };
+
+        // Funcionalidad para reportes
+        document.addEventListener('DOMContentLoaded', function() {
+            // Variables para la navegación de reportes
+            let reporteActual = 0;
+            const reportes = [
+                {
+                    titulo: 'Ranking de Clientes por Puntos de Fidelidad',
+                    descripcion: 'Top 10 clientes más leales según puntos acumulados',
+                    funcion: () => window.reportes.mostrarRankingPuntos(),
+                    contenedor: 'grafico-ranking-puntos',
+                    contenedorVacaciones: 'grafico-vacaciones-container'
+                },
+                {
+                    titulo: 'Resumen de Días de Vacaciones',
+                    descripcion: 'Distribución de períodos de vacaciones por empleado',
+                    funcion: () => window.reportes.mostrarVacacionesEmpleados(),
+                    contenedor: 'grafico-vacaciones-container',
+                    contenedorRanking: 'grafico-ranking-puntos'
+                },
+                {
+                    titulo: 'Cervezas Producidas por Proveedores',
+                    descripcion: 'Distribución de cervezas por proveedor',
+                    funcion: () => window.reportes.mostrarCervezasProveedores(),
+                    contenedor: 'grafico-cervezas-proveedores',
+                    contenedorRanking: 'grafico-ranking-puntos'
+                },
+                {
+                    titulo: 'Desglose de Ingresos por Tipo de Venta',
+                    descripcion: 'Comparación de ventas online vs físicas por mes',
+                    funcion: () => window.reportes.mostrarIngresosPorTipo(),
+                    contenedor: 'grafico-ingresos-container',
+                    contenedorRanking: 'grafico-ranking-puntos'
+                },
+                {
+                    titulo: 'Comparativa de Estilos de Cerveza',
+                    descripcion: 'Visualiza y compara el color, la graduación alcohólica y el amargor de las cervezas registradas.',
+                    funcion: () => window.reportes.mostrarComparativaEstilos(),
+                    contenedor: 'grid-comparativa-estilos-container',
+                }
+            ];
+
+            // Función para mostrar un reporte específico
+            function mostrarReporte(index) {
+                if (index < 0 || index >= reportes.length) return;
+                
+                reporteActual = index;
+                const reporte = reportes[index];
+                
+                // Actualizar título y descripción
+                const titulo = document.querySelector('.reporte-titulo h3');
+                const descripcion = document.querySelector('.reporte-titulo p');
+                if (titulo) titulo.textContent = reporte.titulo;
+                if (descripcion) descripcion.textContent = reporte.descripcion;
+                
+                // Ocultar todos los contenedores de gráficos
+                document.getElementById('grafico-ranking-puntos').parentElement.style.display = 'none';
+                document.getElementById('grafico-vacaciones-container').style.display = 'none';
+                document.getElementById('grafico-cervezas-container').style.display = 'none';
+                document.getElementById('grafico-ingresos-container').style.display = 'none';
+                document.getElementById('grid-comparativa-estilos-container').style.display = 'none';
+                
+                // Ocultar todas las paginaciones
+                const paginacionRanking = document.querySelector('.paginacion-ranking');
+                const paginacionVacaciones = document.getElementById('vacaciones-paginacion');
+                const paginacionCervezas = document.getElementById('cervezas-paginacion');
+                const paginacionComparativa = document.querySelector('.paginacion-comparativa');
+                
+                if (paginacionRanking) paginacionRanking.style.display = 'none';
+                if (paginacionVacaciones) paginacionVacaciones.style.display = 'none';
+                if (paginacionCervezas) paginacionCervezas.style.display = 'none';
+                if (paginacionComparativa) paginacionComparativa.style.display = 'none';
+                
+                // Mostrar el contenedor del reporte actual
+                if (index === 0) {
+                    document.getElementById('grafico-ranking-puntos').parentElement.style.display = 'block';
+                    if (paginacionRanking) paginacionRanking.style.display = 'flex';
+                } else if (index === 1) {
+                    document.getElementById('grafico-vacaciones-container').style.display = 'block';
+                    if (paginacionVacaciones) paginacionVacaciones.style.display = 'flex';
+                } else if (index === 2) {
+                    // Para cervezas, el contenido se genera dinámicamente
+                    if (paginacionCervezas) paginacionCervezas.style.display = 'flex';
+                } else if (index === 3) {
+                    // Para ingresos por tipo
+                    document.getElementById('grafico-ingresos-container').style.display = 'block';
+                } else if (index === 4) {
+                    document.getElementById('grid-comparativa-estilos-container').style.display = 'flex';
+                    if (paginacionComparativa) paginacionComparativa.style.display = 'flex';
+                }
+                
+                // Ejecutar la función del reporte
+                reporte.funcion();
+            }
+
+            // Event listeners para navegación de reportes
+            const btnPrev = document.getElementById('reporte-prev');
+            const btnNext = document.getElementById('reporte-next');
+            
+            if (btnPrev) {
+                btnPrev.addEventListener('click', function() {
+                    const nuevoIndex = (reporteActual - 1 + reportes.length) % reportes.length;
+                    mostrarReporte(nuevoIndex);
+                });
+            }
+            
+            if (btnNext) {
+                btnNext.addEventListener('click', function() {
+                    const nuevoIndex = (reporteActual + 1) % reportes.length;
+                    mostrarReporte(nuevoIndex);
+                });
+            }
+
+            // Agregar event listeners para la navegación de reportes
+            const reportesLink = document.querySelector('a[data-section="reportes"]');
+            if (reportesLink) {
+                reportesLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    // Mostrar la sección de reportes
+                    mostrarSeccion('reportes');
+                    // Cargar el primer reporte
+                    setTimeout(() => {
+                        mostrarReporte(0);
+                    }, 100);
+                });
+            }
+
+            // Función para mostrar secciones
+            function mostrarSeccion(seccion) {
+                // Ocultar todas las secciones
+                document.querySelectorAll('.content-section').forEach(section => {
+                    section.style.display = 'none';
+                });
+                
+                // Mostrar la sección seleccionada
+                const seccionElement = document.getElementById(seccion + '-section');
+                if (seccionElement) {
+                    seccionElement.style.display = 'block';
+                }
+                
+                // Actualizar navegación activa
+                document.querySelectorAll('.sidebar-nav li').forEach(li => {
+                    li.classList.remove('active');
+                });
+                
+                const linkActivo = document.querySelector(`a[data-section="${seccion}"]`);
+                if (linkActivo) {
+                    linkActivo.parentElement.classList.add('active');
+                }
+            }
+
+            // Si la sección de reportes está activa al cargar la página, mostrar el primer reporte
+            const reportesSection = document.getElementById('reportes-section');
+            if (reportesSection && reportesSection.style.display !== 'none') {
+                setTimeout(() => {
+                    mostrarReporte(0);
+                }, 100);
         
         // Funciones para la gestión de tasa
         async function cargarTasaActual() {
@@ -1475,5 +1699,8 @@
         }
         soloNumerosYMaxLength(document.getElementById('nuevo-empleado-cedula'), 8);
     </script>
+    
+    <!-- Script para reportes -->
+    <script src="../js/reportes.js"></script>
 </body>
 </html> 

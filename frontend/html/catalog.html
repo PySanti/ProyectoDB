@@ -265,6 +265,7 @@
       document.addEventListener('DOMContentLoaded', function() {
         const loginBtn = document.querySelector('.login-btn');
         if (loginBtn) {
+          loginBtn.href = 'inicio.html';
           if (localStorage.getItem('user')) {
             loginBtn.textContent = 'Cerrar Sesión';
             loginBtn.href = '#';
