@@ -2028,20 +2028,11 @@ CREATE OR REPLACE FUNCTION validar_uso_puntos(
 RETURNS BOOLEAN AS $$
 DECLARE
     v_saldo_actual INTEGER;
-    v_minimo_puntos INTEGER;
 BEGIN
     -- Obtener saldo actual
     SELECT obtener_saldo_puntos_cliente(p_id_cliente_natural) INTO v_saldo_actual;
-    
-    -- Obtener mínimo de puntos para canje (configurable, por defecto 5)
-    SELECT COALESCE(valor, 5) INTO v_minimo_puntos
-    FROM Tasa 
-    WHERE punto_id IS NOT NULL AND nombre LIKE '%mínimo%'
-    ORDER BY fecha DESC 
-    LIMIT 1;
-    
-    -- Validar que tenga suficientes puntos y cumpla el mínimo
-    RETURN v_saldo_actual >= p_puntos_a_usar AND p_puntos_a_usar >= v_minimo_puntos;
+    -- Validar solo que tenga suficientes puntos
+    RETURN v_saldo_actual >= p_puntos_a_usar;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -2765,20 +2756,11 @@ CREATE OR REPLACE FUNCTION validar_uso_puntos(
 RETURNS BOOLEAN AS $$
 DECLARE
     v_saldo_actual INTEGER;
-    v_minimo_puntos INTEGER;
 BEGIN
     -- Obtener saldo actual
     SELECT obtener_saldo_puntos_cliente(p_id_cliente_natural) INTO v_saldo_actual;
-    
-    -- Obtener mínimo de puntos para canje (configurable, por defecto 5)
-    SELECT COALESCE(valor, 5) INTO v_minimo_puntos
-    FROM Tasa 
-    WHERE punto_id IS NOT NULL AND nombre LIKE '%mínimo%'
-    ORDER BY fecha DESC 
-    LIMIT 1;
-    
-    -- Validar que tenga suficientes puntos y cumpla el mínimo
-    RETURN v_saldo_actual >= p_puntos_a_usar AND p_puntos_a_usar >= v_minimo_puntos;
+    -- Validar solo que tenga suficientes puntos
+    RETURN v_saldo_actual >= p_puntos_a_usar;
 END;
 $$ LANGUAGE plpgsql;
 

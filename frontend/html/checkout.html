@@ -60,6 +60,10 @@
                                 </label>
                                 <div class="payment-amount">
                                     <input type="number" class="amount-input" placeholder="0.00" step="0.01" min="0">
+                                    <select class="currency-select" id="credit-currency">
+                                        <option value="USD">$</option>
+                                        <option value="BS">Bs</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="payment-details" id="credit-details">
@@ -75,7 +79,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="credit-card-number">Número de Tarjeta</label>
-                                    <input type="text" id="credit-card-number" placeholder="1234 5678 9012 3456" required>
+                                    <input type="text" id="credit-card-number" placeholder="1234 5678 9012 3456" required maxlength="16">
                                 </div>
                                 <div class="form-group">
                                     <label for="credit-card-bank">Banco</label>
@@ -131,12 +135,16 @@
                                 </label>
                                 <div class="payment-amount">
                                     <input type="number" class="amount-input" placeholder="0.00" step="0.01" min="0">
+                                    <select class="currency-select" id="debit-currency">
+                                        <option value="USD">$</option>
+                                        <option value="BS">Bs</option>
+                                    </select>
                                 </div>
                             </div>
                             <div class="payment-details" id="debit-details">
                                 <div class="form-group">
                                     <label for="debit-card-number">Número de Tarjeta</label>
-                                    <input type="text" id="debit-card-number" placeholder="1234 5678 9012 3456" required>
+                                    <input type="text" id="debit-card-number" placeholder="1234 5678 9012 3456" required maxlength="16">
                                 </div>
                                 <div class="form-group">
                                     <label for="debit-card-bank">Banco</label>
@@ -216,13 +224,17 @@
                                 </label>
                                 <div class="payment-amount">
                                     <input type="number" class="amount-input" placeholder="0.00" step="0.01" min="0">
+                                    <select class="currency-select" id="check-currency">
+                                        <option value="USD">$</option>
+                                        <option value="BS">Bs</option>
+                                    </select>
                                 </div>
                             </div>
                             
                             <div class="payment-details" id="check-details">
                                 <div class="form-group">
                                     <label for="check-number">Número de Cheque</label>
-                                    <input type="text" id="check-number" placeholder="000000" required>
+                                    <input type="text" id="check-number" placeholder="000000" required maxlength="10">
                                 </div>
                                 
                                 <div class="form-group">
@@ -232,7 +244,7 @@
                                 
                                 <div class="form-group">
                                     <label for="check-account">Cuenta</label>
-                                    <input type="text" id="check-account" placeholder="Número de cuenta" required>
+                                    <input type="text" id="check-account" placeholder="Número de cuenta" required maxlength="20">
                                 </div>
                             </div>
                         </div>
@@ -245,7 +257,7 @@
                                     <i class="fas fa-star"></i> Puntos ACAUCAB
                                 </label>
                                 <div class="payment-amount">
-                                    <input type="number" class="amount-input" id="new-points-amount" placeholder="0.00" step="0.01" min="0" disabled>
+                                    <input type="number" class="amount-input" id="new-points-amount" readonly>
                                 </div>
                             </div>
                             <div class="payment-details" id="new-points-details">
@@ -273,31 +285,35 @@
                         <div class="payment-breakdown">
                             <div class="payment-row">
                                 <span>Tarjeta Crédito:</span>
-                                <span id="credit-total">$0.00</span>
+                                <span id="credit-total">$0.00 | Bs 0,00</span>
                             </div>
                             <div class="payment-row">
                                 <span>Tarjeta Débito:</span>
-                                <span id="debit-total">$0.00</span>
+                                <span id="debit-total">$0.00 | Bs 0,00</span>
                             </div>
                             <div class="payment-row">
                                 <span>Efectivo:</span>
-                                <span id="cash-total">$0.00</span>
+                                <span id="cash-total">$0.00 | Bs 0,00</span>
                             </div>
                             <div class="payment-row">
                                 <span>Cheque:</span>
-                                <span id="check-total">$0.00</span>
+                                <span id="check-total">$0.00 | Bs 0,00</span>
                             </div>
                             <div class="payment-row">
                                 <span>Puntos:</span>
-                                <span id="points-total">$0.00</span>
+                                <span id="points-total">$0.00 | Bs 0,00</span>
+                            </div>
+                            <div class="payment-row total-to-pay-row">
+                                <span><strong>Total a Pagar:</strong></span>
+                                <span id="summary-total-payment">$0.00 | Bs 0,00</span>
                             </div>
                             <div class="payment-row total">
                                 <span>Total Pagado:</span>
-                                <span id="total-paid">$0.00</span>
+                                <span id="total-paid">$0.00 | Bs 0,00</span>
                             </div>
                             <div class="payment-row remaining">
                                 <span>Restante:</span>
-                                <span id="amount-remaining">$0.00</span>
+                                <span id="amount-remaining">$0.00 | Bs 0,00</span>
                             </div>
                         </div>
                         <div id="payment-mismatch-error" style="display:none; color: #e74c3c; font-weight: bold; margin-top: 10px;">La suma de los métodos de pago debe ser igual al total a pagar.</div>

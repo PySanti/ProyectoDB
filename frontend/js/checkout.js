@@ -2,6 +2,7 @@
 // CONFIGURACIÓN E INICIALIZACIÓN
 // =================================================================
 const GUEST_USER_ID = 1;
+const TASA_BS = 100;
 
 document.addEventListener('DOMContentLoaded', () => {
     initCheckout();
@@ -262,25 +263,28 @@ async function loadCheckoutData() {
 function renderOrderSummary(summary) {
     const subtotalElement = document.getElementById('summary-subtotal');
     const totalElement = document.getElementById('summary-total');
-    
     if (subtotalElement && totalElement) {
         const total = Number(summary.monto_total || 0);
         subtotalElement.textContent = `$${total.toFixed(2)}`;
         totalElement.textContent = `$${total.toFixed(2)}`;
+        // Guardar el total del carrito en una variable global solo si es válido
+        if (total > 0) {
+            window.CARRITO_TOTAL = total;
+            console.log('[CARRITO] Total seteado correctamente:', total);
+        } else {
+            console.warn('[CARRITO] Total recibido es 0, se intentará refrescar después de cargar productos.');
+        }
     }
 }
 
 function renderOrderItems(items) {
     const summaryProducts = document.getElementById('summary-products');
     if (!summaryProducts) return;
-    
     summaryProducts.innerHTML = '';
-    
     if (items.length === 0) {
         summaryProducts.innerHTML = '<p class="no-items">No hay productos en el carrito</p>';
         return;
     }
-    
     items.forEach(item => {
         const productElement = document.createElement('div');
         productElement.className = 'summary-product';
@@ -294,6 +298,19 @@ function renderOrderItems(items) {
         `;
         summaryProducts.appendChild(productElement);
     });
+    // Si el total sigue en 0 pero hay productos, forzar refresco del resumen
+    if ((typeof window.CARRITO_TOTAL !== 'number' || window.CARRITO_TOTAL === 0) && items.length > 0) {
+        // Sumar subtotales de los items
+        let total = 0;
+        items.forEach(item => {
+            total += Number(item.subtotal) || 0;
+        });
+        window.CARRITO_TOTAL = total;
+        document.getElementById('summary-total').textContent = `$${total.toFixed(2)}`;
+        document.getElementById('summary-subtotal').textContent = `$${total.toFixed(2)}`;
+        console.log('[CARRITO] Total corregido tras cargar productos:', total);
+        updatePaymentSummary();
+    }
 }
 
 // =================================================================
@@ -441,28 +458,15 @@ function calculateCashTotal() {
 // CÁLCULO Y ACTUALIZACIÓN DEL RESUMEN DE PAGOS
 // =================================================================
 function updatePaymentSummary() {
-    const totalToPay = getTotalToPay();
-    const totalPaid = calculateTotalPaid();
-    const remaining = totalToPay - totalPaid;
-    
-    // Actualizar totales por método
+    // Solo delegar la actualización a updateMethodTotals (que a su vez llama a updateTotalsSummary)
     updateMethodTotals();
-    
-    // Actualizar total pagado y restante
-    document.getElementById('total-paid').textContent = `$${totalPaid.toFixed(2)}`;
-    document.getElementById('amount-remaining').textContent = `$${remaining.toFixed(2)}`;
-    
-    // Actualizar estado del botón
-    updatePlaceOrderButton(totalPaid, totalToPay);
+    // Ya no actualizar aquí los campos de total-paid ni amount-remaining
+    // La lógica completa está en updateTotalsSummary
 }
 
 function getTotalToPay() {
-    const totalElement = document.getElementById('summary-total');
-    if (totalElement) {
-        const totalText = totalElement.textContent.replace('$', '');
-        return Number(totalText) || 0;
-    }
-    return 0;
+    // Usar siempre el valor guardado del carrito
+    return typeof window.CARRITO_TOTAL === 'number' ? window.CARRITO_TOTAL : 0;
 }
 
 function calculateTotalPaid() {
@@ -470,7 +474,13 @@ function calculateTotalPaid() {
     // Calcular total de otros métodos de pago (tarjetas, cheque, etc.)
     const amountInputs = document.querySelectorAll('.amount-input:not([disabled])');
     amountInputs.forEach(input => {
-        const value = Number(input.value) || 0;
+        let value = Number(input.value) || 0;
+        // Buscar el select de moneda asociado a este input
+        const currencySelect = input.closest('.payment-method-header')?.querySelector('.currency-select');
+        let currency = currencySelect ? currencySelect.value : 'USD';
+        if (currency === 'BS') {
+            value = value / TASA_BS;
+        }
         total += value;
     });
     // Calcular total de efectivo basado en billetes
@@ -490,41 +500,117 @@ function calculateTotalPaid() {
 }
 
 function updateMethodTotals() {
-    const methods = ['credit', 'debit', 'cash', 'check', 'points'];
+    // Métodos de pago con moneda
+    const methods = [
+        { id: 'credit', currencyId: 'credit-currency' },
+        { id: 'debit', currencyId: 'debit-currency' },
+        { id: 'check', currencyId: 'check-currency' }
+    ];
     methods.forEach(method => {
-        const checkbox = document.getElementById(`payment-${method}`);
-        const totalElement = document.getElementById(`${method}-total`);
+        const checkbox = document.getElementById(`payment-${method.id}`);
+        const totalElement = document.getElementById(`${method.id}-total`);
+        const currencySelect = document.getElementById(method.currencyId);
         if (checkbox && totalElement) {
             if (checkbox.checked) {
+                const amountInput = checkbox.closest('.payment-method')?.querySelector('.amount-input');
                 let amount = 0;
-                if (method === 'cash') {
-                    amount = calculateCashTotal();
-                } else {
-                    const amountInput = checkbox.closest('.payment-method')?.querySelector('.amount-input');
-                    if (amountInput && !amountInput.disabled) {
-                        amount = Number(amountInput.value) || 0;
-                    }
+                let currency = 'USD';
+                if (amountInput && !amountInput.disabled) {
+                    currency = currencySelect ? currencySelect.value : 'USD';
+                    amount = parseFloat(amountInput.value) || 0;
                 }
-                totalElement.textContent = `$${amount.toFixed(2)}`;
+                totalElement.textContent = getCurrencyDisplay(amount, currency);
             } else {
-                totalElement.textContent = '$0.00';
+                totalElement.textContent = '$0.00 | Bs 0,00';
             }
         }
     });
-    // NUEVO: actualizar fila de puntos si existe la nueva sección
-    const newPointsCheckbox = document.getElementById('new-payment-points');
-    const newPointsTotal = document.getElementById('points-total');
-    if (newPointsCheckbox && newPointsTotal) {
-        if (newPointsCheckbox.checked) {
+    // Efectivo (si quieres agregar Bs, puedes hacerlo aquí)
+    const cashCheckbox = document.getElementById('payment-cash');
+    const cashTotal = document.getElementById('cash-total');
+    if (cashCheckbox && cashTotal) {
+        if (cashCheckbox.checked) {
+            const amount = calculateCashTotal();
+            cashTotal.textContent = getCurrencyDisplay(amount, 'USD');
+        } else {
+            cashTotal.textContent = '$0.00 | Bs 0,00';
+        }
+    }
+    // Puntos
+    const pointsCheckbox = document.getElementById('new-payment-points');
+    const pointsTotal = document.getElementById('points-total');
+    if (pointsCheckbox && pointsTotal) {
+        if (pointsCheckbox.checked) {
             const amountInput = document.getElementById('new-points-amount');
             let amount = 0;
             if (amountInput && !amountInput.disabled) {
-                amount = Number(amountInput.value) || 0;
+                amount = parseFloat(amountInput.value) || 0;
             }
-            newPointsTotal.textContent = `$${amount.toFixed(2)}`;
+            pointsTotal.textContent = getCurrencyDisplay(amount, 'USD');
         } else {
-            newPointsTotal.textContent = '$0.00';
+            pointsTotal.textContent = '$0.00 | Bs 0,00';
         }
+    }
+    updateTotalsSummary();
+}
+
+function updateTotalsSummary() {
+    // Sumar todos los pagos en $ y Bs
+    let totalUSD = 0;
+    let totalBS = 0;
+    // Métodos de pago con moneda
+    const methods = [
+        { id: 'credit', currencyId: 'credit-currency' },
+        { id: 'debit', currencyId: 'debit-currency' },
+        { id: 'check', currencyId: 'check-currency' }
+    ];
+    methods.forEach(method => {
+        const checkbox = document.getElementById(`payment-${method.id}`);
+        const currencySelect = document.getElementById(method.currencyId);
+        if (checkbox && checkbox.checked) {
+            const amountInput = checkbox.closest('.payment-method')?.querySelector('.amount-input');
+            let amount = 0;
+            let currency = 'USD';
+            if (amountInput && !amountInput.disabled) {
+                currency = currencySelect ? currencySelect.value : 'USD';
+                amount = parseFloat(amountInput.value) || 0;
+            }
+            if (currency === 'BS') {
+                totalUSD += amount / TASA_BS;
+                totalBS += amount;
+            } else {
+                totalUSD += amount;
+                totalBS += amount * TASA_BS;
+            }
+        }
+    });
+    // Efectivo
+    const cashCheckbox = document.getElementById('payment-cash');
+    if (cashCheckbox && cashCheckbox.checked) {
+        const amount = calculateCashTotal();
+        totalUSD += amount;
+        totalBS += amount * TASA_BS;
+    }
+    // Puntos
+    const pointsCheckbox = document.getElementById('new-payment-points');
+    if (pointsCheckbox && pointsCheckbox.checked) {
+        const amountInput = document.getElementById('new-points-amount');
+        let amount = 0;
+        if (amountInput && !amountInput.disabled) {
+            amount = parseFloat(amountInput.value) || 0;
+        }
+        totalUSD += amount;
+        totalBS += amount * TASA_BS;
+    }
+    // Usar el total del carrito guardado
+    const totalToPay = getTotalToPay();
+    document.getElementById('summary-total').textContent = `$${totalToPay.toFixed(2)} | Bs ${(totalToPay * TASA_BS).toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+    document.getElementById('total-paid').textContent = `$${totalUSD.toFixed(2)} | Bs ${totalBS.toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+    document.getElementById('amount-remaining').textContent = `$${(totalToPay - totalUSD).toFixed(2)} | Bs ${(totalToPay * TASA_BS - totalBS).toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+    // NUEVO: actualizar el total a pagar en el resumen de pagos
+    const summaryTotalPayment = document.getElementById('summary-total-payment');
+    if (summaryTotalPayment) {
+        summaryTotalPayment.textContent = `$${totalToPay.toFixed(2)} | Bs ${(totalToPay * TASA_BS).toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
     }
 }
 
@@ -580,12 +666,16 @@ async function handlePlaceOrder() {
 
 async function collectSelectedPayments() {
     const pagos = [];
-    
     // Tarjeta de Crédito
     const creditCheckbox = document.getElementById('payment-credit');
     if (creditCheckbox && creditCheckbox.checked) {
         const amountInput = creditCheckbox.closest('.payment-method').querySelector('.amount-input');
-        const amount = Number(amountInput.value) || 0;
+        const currencySelect = document.getElementById('credit-currency');
+        let amount = Number(amountInput.value) || 0;
+        let currency = currencySelect ? currencySelect.value : 'USD';
+        if (currency === 'BS') {
+            amount = amount / TASA_BS;
+        }
         if (amount > 0) {
             const tipo = document.getElementById('credit-card-type').value;
             const numero = document.getElementById('credit-card-number').value;
@@ -607,12 +697,16 @@ async function collectSelectedPayments() {
             });
         }
     }
-    
     // Tarjeta de Débito
     const debitCheckbox = document.getElementById('payment-debit');
     if (debitCheckbox && debitCheckbox.checked) {
         const amountInput = debitCheckbox.closest('.payment-method').querySelector('.amount-input');
-        const amount = Number(amountInput.value) || 0;
+        const currencySelect = document.getElementById('debit-currency');
+        let amount = Number(amountInput.value) || 0;
+        let currency = currencySelect ? currencySelect.value : 'USD';
+        if (currency === 'BS') {
+            amount = amount / TASA_BS;
+        }
         if (amount > 0) {
             const numero = document.getElementById('debit-card-number').value;
             const banco = document.getElementById('debit-card-bank').value;
@@ -632,7 +726,6 @@ async function collectSelectedPayments() {
             });
         }
     }
-    
     // Efectivo (nuevo)
     const cashCheckbox = document.getElementById('payment-cash');
     if (cashCheckbox && cashCheckbox.checked) {
@@ -654,22 +747,24 @@ async function collectSelectedPayments() {
             return [];
         }
     }
-    
     // Cheque
     const checkCheckbox = document.getElementById('payment-check');
     if (checkCheckbox && checkCheckbox.checked) {
         const amountInput = checkCheckbox.closest('.payment-method').querySelector('.amount-input');
-        const amount = Number(amountInput.value) || 0;
+        const currencySelect = document.getElementById('check-currency');
+        let amount = Number(amountInput.value) || 0;
+        let currency = currencySelect ? currencySelect.value : 'USD';
+        if (currency === 'BS') {
+            amount = amount / TASA_BS;
+        }
         if (amount > 0) {
             const num_cheque = document.getElementById('check-number').value;
             const banco = document.getElementById('check-bank').value;
             const num_cuenta = document.getElementById('check-account').value;
-            
             if (!num_cheque || !banco || !num_cuenta) {
                 showNotification('Por favor complete todos los campos del cheque', 'error');
                 return [];
             }
-            
             pagos.push({
                 tipo: 'cheque',
                 monto: amount,
@@ -679,7 +774,6 @@ async function collectSelectedPayments() {
             });
         }
     }
-    
     // Puntos (nueva sección)
     const newPointsCheckbox = document.getElementById('new-payment-points');
     if (newPointsCheckbox && newPointsCheckbox.checked) {
@@ -718,7 +812,6 @@ async function collectSelectedPayments() {
             });
         }
     }
-    
     return pagos;
 }
 
@@ -982,8 +1075,7 @@ function setupNewPointsSection() {
         .then(res => res.ok ? res.json() : null)
         .then(data => {
             if (data && data.success) {
-                // Forzar mínimo para canje a 5
-                data.data.minimo_canje = 5;
+                // Usar el mínimo de canje real del backend
                 updateNewPointsDisplay(data.data);
             } else {
                 updateNewPointsDisplay({ saldo_actual: 0, valor_punto: 1.0, minimo_canje: 5 });
@@ -1020,7 +1112,7 @@ function setupNewPointsSection() {
 function updateNewPointsDisplay(data) {
     document.getElementById('new-points-available').textContent = data.saldo_actual;
     document.getElementById('new-points-value').textContent = data.valor_punto.toFixed(2);
-    document.getElementById('new-points-minimum').textContent = 5;
+    document.getElementById('new-points-minimum').textContent = data.minimo_canje;
 }
 
 function handleNewPointsChange() {
@@ -1043,10 +1135,12 @@ function handleNewPointsChange() {
         errorDiv.style.display = 'none';
         pointsToUse.classList.remove('error');
     }
-    equivalent.textContent = (points * pointsValue).toFixed(2);
+    // Siempre usar punto decimal y dos decimales
+    const monto = parseFloat((points * pointsValue).toFixed(2));
+    equivalent.textContent = monto.toFixed(2);
     if (amountInput) {
-        amountInput.value = (points * pointsValue).toFixed(2);
-        // Habilitar el input si el método está seleccionado
+        amountInput.value = monto;
+        amountInput.readOnly = true;
         if (pointsCheckbox && pointsCheckbox.checked) {
             amountInput.disabled = false;
         }
@@ -1063,4 +1157,23 @@ function useNewMaxPoints() {
     handleNewPointsChange();
 }
 
-document.addEventListener('DOMContentLoaded', setupNewPointsSection); 
+document.addEventListener('DOMContentLoaded', setupNewPointsSection);
+
+function getCurrencyValue(input, currency) {
+    let value = parseFloat(input.value) || 0;
+    if (currency === 'BS') {
+        // Convertir Bs a $ para la lógica interna
+        return value / TASA_BS;
+    }
+    return value;
+}
+
+function getCurrencyDisplay(value, currency) {
+    if (currency === 'BS') {
+        // Mostrar Bs y su equivalente en $
+        return `Bs ${value.toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})} | $${(value / TASA_BS).toFixed(2)}`;
+    } else {
+        // Mostrar $ y su equivalente en Bs
+        return `$${value.toFixed(2)} | Bs ${(value * TASA_BS).toLocaleString('es-VE', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+    }
+} 
