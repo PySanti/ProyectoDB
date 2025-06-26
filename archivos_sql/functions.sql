@@ -8,7 +8,6 @@ RETURNS TABLE (
     id_usuario INTEGER,
     id_cliente_juridico INTEGER,
     id_cliente_natural INTEGER,
-    rol VARCHAR(50),
     fecha_creacion DATE,
     id_proveedor INTEGER,
     empleado_id INTEGER
@@ -19,14 +18,11 @@ BEGIN
         u.id_usuario,
         u.id_cliente_juridico,
         u.id_cliente_natural,
-        r.nombre AS rol,
         u.fecha_creacion,
         u.id_proveedor,
         u.empleado_id
     FROM
         Usuario u
-    JOIN
-        Rol r ON u.id_rol = r.id_rol
     JOIN
         Correo c ON (
             (u.id_cliente_natural IS NOT NULL AND c.id_cliente_natural = u.id_cliente_natural)

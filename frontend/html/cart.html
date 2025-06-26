@@ -130,5 +130,23 @@
     <script src="../js/config.js"></script>
     <script src="../js/utils.js"></script>
     <script src="../js/cart.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        const loginBtn = document.querySelector('.login-btn');
+        if (!loginBtn) return;
+        const user = localStorage.getItem('user');
+        if (user) {
+          loginBtn.textContent = 'Cerrar Sesión';
+          loginBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            localStorage.clear();
+            window.location.href = 'inicio.html';
+          });
+        } else {
+          loginBtn.textContent = 'Iniciar Sesión';
+          loginBtn.setAttribute('href', 'index.html');
+        }
+      });
+    </script>
   </body>
 </html>

@@ -428,6 +428,9 @@ ALTER TABLE Detalle_Orden_Reposicion_Anaquel
     ) 
 ;
 
+
+
+
 --  ERROR: FK name length exceeds maximum allowed length(30) 
 ALTER TABLE Detalle_Orden_Reposicion_Anaquel 
     ADD CONSTRAINT Detalle_Orden_Reposicion_Anaquel_Orden_Reposicion_Anaquel_FK FOREIGN KEY 
