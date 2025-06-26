@@ -29,6 +29,7 @@
                     <li class="active"><a href="#usuarios" data-section="usuarios"><i class="fas fa-users"></i> Usuarios</a></li>
                     <li><a href="#roles" data-section="roles"><i class="fas fa-user-tag"></i> Roles</a></li>
                     <li><a href="#ordenes" data-section="ordenes"><i class="fas fa-clipboard-list"></i> Órdenes</a></li>
+                    <li><a href="#tasa" data-section="tasa"><i class="fas fa-dollar-sign"></i> Tasa</a></li>
                     <li><a href="#reportes" data-section="reportes"><i class="fas fa-chart-bar"></i> Reportes</a></li>
                 </ul>
             </nav>
@@ -163,6 +164,41 @@
                                 <tr><td colspan="5">Cargando...</td></tr>
                             </tbody>
                         </table>
+                    </div>
+                </div>
+            </section>
+            <!-- Tasa Section -->
+            <section class="content-section" id="tasa-section">
+                <div class="section-header">
+                    <h2>Gestión de Tasa de Cambio</h2>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Modificar Tasa del Dólar</h3>
+                    </div>
+                    <div class="card-content">
+                        <div class="tasa-info">
+                            <div class="current-rate">
+                                <h4>Tasa Actual</h4>
+                                <div class="rate-display">
+                                    <span id="current-rate-value">Cargando...</span>
+                                    <span class="currency">VES/USD</span>
+                                </div>
+                                <p class="rate-date">Última actualización: <span id="current-rate-date">-</span></p>
+                            </div>
+                            <div class="rate-form">
+                                <h4>Nueva Tasa</h4>
+                                <form id="tasa-form">
+                                    <div class="form-group">
+                                        <label for="nueva-tasa">Valor (VES/USD):</label>
+                                        <input type="number" id="nueva-tasa" name="valor" step="0.01" min="0" required>
+                                    </div>
+                                    <button type="submit" class="primary-btn">
+                                        <i class="fas fa-save"></i> Actualizar Tasa
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -443,6 +479,90 @@
         }
         #add-privilegio-btn {
             margin-top: 0.5rem; background: #3498db; color: #fff; border: none; border-radius: 4px; cursor: pointer; padding: 0.5rem 1rem;
+        }
+        
+        /* Estilos para la sección de Tasa */
+        .tasa-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            padding: 1rem 0;
+        }
+        
+        .current-rate {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid #28a745;
+        }
+        
+        .rate-display {
+            display: flex;
+            align-items: baseline;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+        
+        #current-rate-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #28a745;
+        }
+        
+        .currency {
+            font-size: 1rem;
+            color: #6c757d;
+            font-weight: 500;
+        }
+        
+        .rate-date {
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+        
+        .rate-form {
+            background: #fff;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+        
+        .rate-form h4 {
+            margin-top: 0;
+            color: #495057;
+        }
+        
+        .rate-form .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .rate-form label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #495057;
+        }
+        
+        .rate-form input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .rate-form input:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+        
+        @media (max-width: 768px) {
+            .tasa-info {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
         }
     </style>
     
@@ -1268,6 +1388,82 @@
         document.getElementById('close-modal-detalles-orden-proveedor').onclick = function() {
             document.getElementById('modal-detalles-orden-proveedor').classList.remove('active');
         };
+        
+        // Funciones para la gestión de tasa
+        async function cargarTasaActual() {
+            try {
+                const res = await fetch('http://localhost:3000/tasa/actual');
+                if (!res.ok) throw new Error('Error al cargar la tasa actual');
+                const data = await res.json();
+                
+                document.getElementById('current-rate-value').textContent = data.valor;
+                document.getElementById('current-rate-date').textContent = new Date(data.fecha).toLocaleDateString('es-ES');
+            } catch (err) {
+                console.error('Error al cargar la tasa actual:', err);
+                document.getElementById('current-rate-value').textContent = 'Error';
+                document.getElementById('current-rate-date').textContent = 'Error al cargar';
+            }
+        }
+        
+        async function actualizarTasa(event) {
+            event.preventDefault();
+            
+            const valor = document.getElementById('nueva-tasa').value;
+            if (!valor || valor <= 0) {
+                alert('Por favor ingrese un valor válido para la tasa');
+                return;
+            }
+            
+            try {
+                const res = await fetch('http://localhost:3000/tasa/actualizar', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ valor: parseFloat(valor) })
+                });
+                
+                if (!res.ok) {
+                    const error = await res.json();
+                    throw new Error(error.error || 'Error al actualizar la tasa');
+                }
+                
+                const data = await res.json();
+                alert('Tasa actualizada exitosamente');
+                
+                // Recargar la tasa actual
+                await cargarTasaActual();
+                
+                // Limpiar el formulario
+                document.getElementById('tasa-form').reset();
+                
+            } catch (err) {
+                alert('Error: ' + err.message);
+            }
+        }
+        
+        // Event listeners para la sección de tasa
+        document.addEventListener('DOMContentLoaded', function() {
+            // Cargar tasa actual cuando se muestre la sección
+            const tasaSection = document.getElementById('tasa-section');
+            if (tasaSection) {
+                const observer = new MutationObserver(function(mutations) {
+                    mutations.forEach(function(mutation) {
+                        if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                            if (tasaSection.classList.contains('active')) {
+                                cargarTasaActual();
+                            }
+                        }
+                    });
+                });
+                
+                observer.observe(tasaSection, { attributes: true });
+            }
+            
+            // Event listener para el formulario de tasa
+            const tasaForm = document.getElementById('tasa-form');
+            if (tasaForm) {
+                tasaForm.addEventListener('submit', actualizarTasa);
+            }
+        });
     </script>
 </body>
 </html> 

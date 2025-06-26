@@ -401,8 +401,8 @@ CREATE TABLE Tasa (
     nombre       VARCHAR(50) NOT NULL,
     valor        DECIMAL NOT NULL,
     fecha        DATE NOT NULL,
-    punto_id     INTEGER NOT NULL,
-    id_metodo INTEGER NOT NULL
+    punto_id     INTEGER,
+    id_metodo       INTEGER
 );
 
 CREATE TABLE Pago_Compra (
