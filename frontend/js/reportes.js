@@ -32,6 +32,10 @@ let comparativaEstilosData = [];
 let paginaActualComparativa = 0;
 const cervezasPorPagina = 6;
 
+// Variables globales para la tabla de PDF
+let datosTablaReporte = [];
+let configTablaReporte = {};
+
 // ========================================
 // FUNCIONES COMUNES
 // ========================================
@@ -96,6 +100,13 @@ async function obtenerRankingPuntos() {
         }
         const data = await response.json();
         if (data.success) {
+            // Guardar datos y configuración para la tabla PDF
+            datosTablaReporte = data.data;
+            configTablaReporte = {
+                titulo: 'Tabla completa de Ranking de Clientes',
+                columnas: ['id_cliente', 'nombre_cliente', 'puntos_ganados', 'puntos_gastados'],
+                titulos: ['ID', 'Nombre', 'Puntos Ganados', 'Puntos Gastados']
+            };
             // Recibiendo los datos del ranking pidiendoselos al back 
             console.log('Datos del ranking obtenidos:', data.data);
             return data.data;
@@ -234,6 +245,8 @@ async function mostrarRankingPuntos() {
                 }
             };
         }
+        // Agregar botón de descarga PDF
+        agregarBotonDescargaPDF();
         return rankingData;
     } catch (error) {
         console.error('Error al mostrar ranking de puntos:', error);
@@ -263,6 +276,13 @@ async function obtenerVacacionesEmpleados() {
         }
         const data = await response.json();
         if (data.success) {
+            // Guardar datos y configuración para la tabla PDF
+            datosTablaReporte = data.data;
+            configTablaReporte = {
+                titulo: 'Tabla completa de Vacaciones de Empleados',
+                columnas: ['id_empleado', 'nombre_empleado', 'fecha_inicio', 'fecha_fin', 'descripcion', 'dias_periodo'],
+                titulos: ['ID', 'Nombre', 'Fecha Inicio', 'Fecha Fin', 'Descripción', 'Días']
+            };
             console.log('Datos de vacaciones obtenidos:', data.data);
             return data.data;
         } else {
@@ -420,6 +440,8 @@ async function mostrarVacacionesEmpleados() {
         vacacionesDataGlobal = vacacionesData;
         paginaActualVacaciones = 0;
         crearGraficoVacaciones(vacacionesDataGlobal, paginaActualVacaciones);
+        // Agregar botón de descarga PDF
+        agregarBotonDescargaPDF();
         return vacacionesData;
     } catch (error) {
         console.error('Error al mostrar vacaciones de empleados:', error);
@@ -498,6 +520,13 @@ async function obtenerCervezasProveedores() {
         }
         const data = await response.json();
         if (data.success) {
+            // Guardar datos y configuración para la tabla PDF
+            datosTablaReporte = data.data;
+            configTablaReporte = {
+                titulo: 'Tabla de Cervezas por Proveedor',
+                columnas: ['proveedor', 'cerveza', 'tipos_cerveza'],
+                titulos: ['Proveedor', 'Cerveza', 'Tipo de Cerveza']
+            };
             console.log('Datos de cervezas por proveedores obtenidos:', data.data);
             return data.data;
         } else {
@@ -633,6 +662,9 @@ function crearGraficoCervezasProveedores(datos, indiceProveedor) {
 
     crearLeyendaCervezas(cervezas, colores);
 
+    // Actualizar paginación
+    actualizarPaginacionCervezas(proveedores.length, indiceProveedor);
+
     // Muestra solo la paginación de cervezas
     mostrarPaginacion('cervezas');
 }
@@ -670,7 +702,7 @@ function actualizarPaginacionCervezas(totalProveedores, proveedorActual) {
     const btnSiguiente = document.getElementById('cervezas-siguiente');
     
     if (rango) {
-        rango.textContent = `Proveedor ${proveedorActual + 1} de ${totalProveedores}`;
+        rango.textContent = `Mostrando Proveedor ${proveedorActual + 1} / ${totalProveedores}`;
     }
     if (btnAnterior) {
         btnAnterior.disabled = proveedorActual === 0;
@@ -719,6 +751,9 @@ async function mostrarCervezasProveedores() {
             };
         }
         
+        // Agregar botón de descarga PDF
+        agregarBotonDescargaPDF();
+        
         return cervezasData;
     } catch (error) {
         console.error('Error al mostrar cervezas por proveedores:', error);
@@ -752,6 +787,13 @@ async function obtenerIngresosPorTipo(year = null) {
         }
         const data = await response.json();
         if (data.success) {
+            // Guardar datos y configuración para la tabla PDF
+            datosTablaReporte = data.data;
+            configTablaReporte = {
+                titulo: 'Tabla de Ingresos por Tipo de Venta',
+                columnas: ['anio', 'mes', 'periodo', 'tipo_venta', 'ingresos_totales'],
+                titulos: ['Año', 'Mes', 'Periodo', 'Tipo de Venta', 'Ingresos Totales']
+            };
             console.log('Datos de ingresos por tipo obtenidos:', data.data);
             return data.data;
         } else {
@@ -979,6 +1021,9 @@ async function mostrarIngresosPorTipo(year = null) {
         // Ocultar paginaciones de otros reportes
         mostrarPaginacion('ingresos');
         
+        // Agregar botón de descarga PDF
+        agregarBotonDescargaPDF();
+        
         return datos;
     } catch (error) {
         console.error('Error al mostrar ingresos por tipo:', error);
@@ -995,20 +1040,6 @@ async function mostrarIngresosPorTipo(year = null) {
     }
 }
 
-// Función para manejar el cambio de año en el selector
-function configurarSelectorAnios() {
-    const selector = document.getElementById('selector-anio-ingresos');
-    if (!selector) return;
-    
-    selector.addEventListener('change', async function() {
-        const year = this.value || null;
-        try {
-            await mostrarIngresosPorTipo(year);
-        } catch (error) {
-            console.error('Error al cambiar año:', error);
-        }
-    });
-}
 
 // =====================================================================================================
 // FUNCIONES DE REPORTE 4. COMPARATIVA DE ESTILOS DE CERVEZA
@@ -1020,6 +1051,13 @@ async function obtenerComparativaEstilos() {
         if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
         const data = await response.json();
         if (data.success) {
+            // Guardar datos y configuración para la tabla PDF
+            datosTablaReporte = data.data;
+            configTablaReporte = {
+                titulo: 'Tabla Comparativa de Estilos de Cerveza',
+                columnas: ['nombre_cerveza', 'color', 'graduacion_alcoholica', 'amargor'],
+                titulos: ['Nombre', 'Color', 'Graduación Alcohólica', 'Amargor']
+            };
             return data.data;
         } else {
             throw new Error(data.error || 'Error al obtener la comparativa de estilos');
@@ -1064,7 +1102,8 @@ function renderizarTablaComparativa(datos, pagina = 0) {
     // Amargor
     tbody += '<tr><td>Amargor</td>';
     cervezasPagina.forEach(c => {
-        tbody += `<td style="text-align:center;">${c.amargor || ''}</td>`;
+        const amargorVal = c.amargor || 'Medio';
+        tbody += `<td style="text-align:center;">${amargorVal}</td>`;
     });
     tbody += '</tr>';
     tbody += '</tbody>';
@@ -1116,26 +1155,338 @@ async function mostrarComparativaEstilos() {
             }
         };
     }
+    
+    // Agregar botón de descarga PDF
+    agregarBotonDescargaPDF();
 }
 
 // ========================================
-// FUNCIÓN DE INICIALIZACIÓN
+// FUNCIÓN PARA DESCARGAR PDF
 // ========================================
 
-// Función principal para inicializar los reportes
-function inicializarReportes() {
-    console.log('Inicializando reportes...');
-    
-    // Configurar el selector de años para el reporte de ingresos
-    configurarSelectorAnios();
-    
-    // Mostrar el ranking de puntos cuando se cargue la página
-    // mostrarRankingPuntos();
-    
-    // Aquí podemos agregar más reportes en el futuro
-    // mostrarVentasMensuales();
-    // etc...
+// Función para descargar el reporte actual como PDF
+async function descargarReportePDF(datosTabla = null, opcionesTabla = {}) {
+    const boton = document.getElementById('btn-descargar-pdf');
+    try {
+        if (boton) {
+            boton.classList.add('loading');
+            boton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generando PDF...';
+        }
+
+        if (typeof html2pdf === 'undefined') {
+            console.error('html2pdf no está cargado. Asegúrate de incluir la librería.');
+            alert('Error: La librería para generar PDF no está disponible.');
+            return;
+        }
+
+        // Obtener el contenedor del reporte
+        const contenedorReporte = document.querySelector('.reportes-navegacion');
+        if (!contenedorReporte) {
+            console.error('No se encontró el contenedor de reportes');
+            alert('Error: No se encontró el contenido del reporte.');
+            return;
+        }
+
+        // Obtener el título del reporte actual
+        const titulo = document.getElementById('reporte-titulo-principal');
+        const subtitulo = document.getElementById('reporte-titulo-sub');
+        const tituloReporte = titulo ? titulo.textContent : 'Reporte';
+        const subtituloReporte = subtitulo ? subtitulo.textContent : '';
+
+        // Crear un contenedor padre para el PDF
+        const contenedorPDF = document.createElement('div');
+        contenedorPDF.style.background = 'white';
+        contenedorPDF.style.color = 'black';
+        contenedorPDF.style.fontFamily = 'Arial, sans-serif';
+
+        // --- PRIMERA PÁGINA: contenido principal ---
+        const divPrimeraPagina = document.createElement('div');
+        divPrimeraPagina.style.padding = '20px';
+        divPrimeraPagina.style.minHeight = '100vh';
+        divPrimeraPagina.style.maxHeight = '950px';
+        divPrimeraPagina.style.overflow = 'hidden';
+
+        // Encabezado
+        divPrimeraPagina.innerHTML = `
+            <div style="text-align: center; margin-bottom: 30px; border-bottom: 2px solid #333; padding-bottom: 20px;">
+                <h1 style="color: #333; margin: 0; font-size: 24px;">${tituloReporte}</h1>
+                ${subtituloReporte ? `<p style="color: #666; margin: 10px 0 0 0; font-size: 16px;">${subtituloReporte}</p>` : ''}
+                <p style="color: #999; margin: 10px 0 0 0; font-size: 12px;">Generado el: ${new Date().toLocaleDateString('es-ES')} a las ${new Date().toLocaleTimeString('es-ES')}</p>
+            </div>
+        `;
+
+        // Clonar el contenido del reporte
+        const contenidoClonado = contenedorReporte.cloneNode(true);
+        // Reemplazar todos los canvas por imágenes en el DOM clonado
+        const canvasOriginales = contenedorReporte.querySelectorAll('canvas');
+        const canvasClonados = contenidoClonado.querySelectorAll('canvas');
+        canvasClonados.forEach((canvasClonado, idx) => {
+            const canvasOriginal = canvasOriginales[idx];
+            if (canvasOriginal) {
+                const img = document.createElement('img');
+                img.src = canvasOriginal.toDataURL('image/png');
+                img.style.maxWidth = '100%';
+                img.style.display = 'block';
+                img.style.margin = '0 auto';
+                img.style.background = '#fff';
+                img.style.border = '1px solid #ddd';
+                img.style.borderRadius = '4px';
+                img.width = canvasOriginal.width;
+                img.height = canvasOriginal.height;
+                canvasClonado.parentNode.replaceChild(img, canvasClonado);
+            }
+        });
+        // Aplicar estilos para PDF
+        aplicarEstilosParaPDF(contenidoClonado);
+        // Limitar el tamaño del contenido principal
+        contenidoClonado.style.maxHeight = '700px';
+        contenidoClonado.style.overflow = 'hidden';
+        divPrimeraPagina.appendChild(contenidoClonado);
+        contenedorPDF.appendChild(divPrimeraPagina);
+
+        // --- SEGUNDA PÁGINA: tabla ---
+        if (Array.isArray(datosTabla) && datosTabla.length > 0) {
+            const divTabla = document.createElement('div');
+            divTabla.style.pageBreakBefore = 'always';
+            divTabla.style.marginTop = '40px';
+            divTabla.style.padding = '10px';
+            divTabla.innerHTML = `
+                <h2 style="text-align:center; margin-bottom:20px;">${opcionesTabla.titulo || 'Datos Detallados'}</h2>
+                ${generarTablaHTML(datosTabla, opcionesTabla)}
+            `;
+            contenedorPDF.appendChild(divTabla);
+        }
+
+        // Configuración para html2pdf
+        const opciones = {
+            margin: [15, 15, 15, 15],
+            filename: `reporte_${tituloReporte.toLowerCase().replace(/[^a-z0-9]/g, '_')}_${new Date().toISOString().split('T')[0]}.pdf`,
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { 
+                scale: 2,
+                useCORS: true,
+                allowTaint: true,
+                backgroundColor: '#ffffff'
+            },
+            jsPDF: { 
+                unit: 'mm', 
+                format: 'a4', 
+                orientation: 'portrait' 
+            }
+        };
+
+        // Generar y descargar el PDF
+        await html2pdf().set(opciones).from(contenedorPDF).save();
+        
+        if (boton) {
+            boton.innerHTML = '<i class="fas fa-check"></i> ¡PDF Descargado!';
+            setTimeout(() => {
+                boton.innerHTML = '<i class="fas fa-download"></i> Descargar PDF';
+            }, 2000);
+        }
+    } catch (error) {
+        console.error('Error al generar PDF:', error);
+        alert('Error al generar el PDF. Por favor, inténtalo de nuevo.');
+    } finally {
+        if (boton) {
+            boton.classList.remove('loading');
+            boton.innerHTML = '<i class="fas fa-download"></i> Descargar PDF';
+        }
+    }
 }
+
+// Función para generar tabla HTML a partir de un array de objetos
+function generarTablaHTML(datos, opciones = {}) {
+    if (!Array.isArray(datos) || datos.length === 0) return '<p>No hay datos para mostrar.</p>';
+    // Determinar columnas
+    let columnas = opciones.columnas || Object.keys(datos[0]);
+    let titulos = opciones.titulos || columnas.map(c => c.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase()));
+    // Construir tabla
+    let html = '<div style="overflow-x:auto;"><table style="width:100%;border-collapse:collapse;font-size:12px;">';
+    html += '<thead><tr>';
+    titulos.forEach(t => {
+        html += `<th style="border:1px solid #ccc;padding:6px 8px;background:#f5f5f5;">${t}</th>`;
+    });
+    html += '</tr></thead><tbody>';
+    datos.forEach(row => {
+        html += '<tr>';
+        columnas.forEach(col => {
+            let valor = row[col];
+            if (valor === null || valor === undefined) valor = '';
+            // Formatear fechas
+            if ((col === 'fecha_inicio' || col === 'fecha_fin') && valor) {
+                try {
+                    const d = new Date(valor);
+                    if (!isNaN(d)) {
+                        valor = d.toLocaleDateString('es-ES');
+                    }
+                } catch (e) {}
+            }
+            html += `<td style="border:1px solid #ccc;padding:6px 8px;">${valor}</td>`;
+        });
+        html += '</tr>';
+    });
+    html += '</tbody></table></div>';
+    return html;
+}
+
+// Función para aplicar estilos específicos para PDF
+function aplicarEstilosParaPDF(elemento) {
+    // Ocultar elementos que no queremos en el PDF
+    const elementosAOcultar = elemento.querySelectorAll('.paginacion-ranking, .paginacion-vacaciones, .paginacion-cervezas, button, .btn, .arrow-btn');
+    elementosAOcultar.forEach(el => {
+        el.style.display = 'none';
+    });
+
+    // Aplicar estilos para mejor visualización en PDF
+    const elementosGraficos = elemento.querySelectorAll('canvas');
+    elementosGraficos.forEach(canvas => {
+        canvas.style.maxWidth = '100%';
+        canvas.style.height = 'auto';
+        canvas.style.border = '1px solid #ddd';
+        canvas.style.borderRadius = '4px';
+        canvas.style.margin = '10px 0';
+    });
+
+    // Asegurar que los colores sean visibles en PDF
+    const elementosConColor = elemento.querySelectorAll('[style*="color"]');
+    elementosConColor.forEach(el => {
+        const color = window.getComputedStyle(el).color;
+        if (color === 'rgb(255, 255, 255)' || color === 'white') {
+            el.style.color = '#000000';
+        }
+    });
+
+    // Mejorar la visualización de tablas
+    const tablas = elemento.querySelectorAll('table');
+    tablas.forEach(tabla => {
+        tabla.style.width = '100%';
+        tabla.style.borderCollapse = 'collapse';
+        tabla.style.margin = '15px 0';
+        tabla.style.fontSize = '12px';
+        
+        // Estilos para las celdas
+        const celdas = tabla.querySelectorAll('td, th');
+        celdas.forEach(celda => {
+            celda.style.border = '1px solid #ddd';
+            celda.style.padding = '8px';
+            celda.style.textAlign = 'left';
+        });
+        
+        // Estilos para encabezados
+        const encabezados = tabla.querySelectorAll('th');
+        encabezados.forEach(encabezado => {
+            encabezado.style.backgroundColor = '#f5f5f5';
+            encabezado.style.fontWeight = 'bold';
+        });
+    });
+
+    // Mejorar la visualización de leyendas
+    const leyendas = elemento.querySelectorAll('.leyenda-dinamica, .leyenda-cervezas');
+    leyendas.forEach(leyenda => {
+        leyenda.style.display = 'flex';
+        leyenda.style.flexWrap = 'wrap';
+        leyenda.style.gap = '10px';
+        leyenda.style.margin = '15px 0';
+        leyenda.style.padding = '10px';
+        leyenda.style.backgroundColor = '#f9f9f9';
+        leyenda.style.borderRadius = '4px';
+    });
+
+    // Mejorar la visualización de elementos de leyenda
+    const itemsLeyenda = elemento.querySelectorAll('.leyenda-item, .leyenda-item-cerveza');
+    itemsLeyenda.forEach(item => {
+        item.style.display = 'flex';
+        item.style.alignItems = 'center';
+        item.style.gap = '5px';
+        item.style.margin = '5px 0';
+        item.style.fontSize = '12px';
+    });
+
+    // Mejorar la visualización de colores de leyenda
+    const coloresLeyenda = elemento.querySelectorAll('.leyenda-color');
+    coloresLeyenda.forEach(color => {
+        color.style.width = '15px';
+        color.style.height = '15px';
+        color.style.borderRadius = '2px';
+        color.style.border = '1px solid #ccc';
+    });
+
+    // Asegurar que los contenedores tengan el ancho correcto
+    const contenedores = elemento.querySelectorAll('.grafico-container, .reporte-contenido');
+    contenedores.forEach(contenedor => {
+        contenedor.style.width = '100%';
+        contenedor.style.maxWidth = '100%';
+        contenedor.style.overflow = 'visible';
+    });
+
+    // Mejorar la visualización de títulos
+    const titulos = elemento.querySelectorAll('.reporte-titulo h3, .reporte-titulo p');
+    titulos.forEach(titulo => {
+        titulo.style.margin = '10px 0';
+        titulo.style.color = '#333';
+    });
+}
+
+// Función para agregar botón de descarga al reporte actual
+function agregarBotonDescargaPDF() {
+    // Buscar si ya existe un botón de descarga
+    let botonExistente = document.getElementById('btn-descargar-pdf');
+    
+    if (!botonExistente) {
+        // Crear el botón
+        botonExistente = document.createElement('button');
+        botonExistente.id = 'btn-descargar-pdf';
+        botonExistente.className = 'btn-descargar-pdf';
+        botonExistente.innerHTML = `
+            <i class="fas fa-download"></i>
+            Descargar PDF
+        `;
+        botonExistente.style.cssText = `
+            position: fixed;
+            top: 90px;
+            right: 20px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 1000;
+            transition: background 0.3s;
+        `;
+        
+        // Agregar evento hover
+        botonExistente.addEventListener('mouseenter', function() {
+            this.style.background = '#45a049';
+        });
+        
+        botonExistente.addEventListener('mouseleave', function() {
+            this.style.background = '#4CAF50';
+        });
+        
+        // Agregar evento click
+        botonExistente.addEventListener('click', () => descargarReportePDF(datosTablaReporte, configTablaReporte));
+        
+        // Agregar al body
+        document.body.appendChild(botonExistente);
+    } else {
+        // Si ya existe, actualizar el evento click para usar los datos actuales
+        botonExistente.onclick = () => descargarReportePDF(datosTablaReporte, configTablaReporte);
+    }
+}
+
+// Función para remover botón de descarga
+function removerBotonDescargaPDF() {
+    const boton = document.getElementById('btn-descargar-pdf');
+    if (boton) {
+        boton.remove();
+    }
+}
+
 
 // ========================================
 // EXPORTACIÓN DE FUNCIONES
@@ -1151,5 +1502,8 @@ window.reportes = {
     mostrarVacacionesEmpleados,
     mostrarCervezasProveedores,
     mostrarIngresosPorTipo,
-    mostrarComparativaEstilos
+    mostrarComparativaEstilos,
+    descargarReportePDF,
+    agregarBotonDescargaPDF,
+    removerBotonDescargaPDF
 };

@@ -1795,3 +1795,46 @@ BEGIN
         RAISE NOTICE 'No hay datos existentes. La secuencia mantendrá su valor por defecto.';
     END IF;
 END $$;
+
+-- =====================================================
+-- FUNCIÓN PARA INSERTAR NUEVA TASA DE CAMBIO
+-- =====================================================
+
+CREATE OR REPLACE FUNCTION insertar_nueva_tasa(
+    p_nombre VARCHAR(50),
+    p_valor DECIMAL
+)
+RETURNS TABLE(
+    id_tasa INTEGER,
+    nombre VARCHAR(50),
+    valor DECIMAL,
+    fecha DATE
+) AS $$
+BEGIN
+    RETURN QUERY
+    INSERT INTO Tasa (nombre, valor, fecha)
+    VALUES (p_nombre, p_valor, CURRENT_DATE)
+    RETURNING Tasa.id_tasa, Tasa.nombre, Tasa.valor, Tasa.fecha;
+END;
+$$ LANGUAGE plpgsql;
+
+-- =====================================================
+-- FUNCIÓN PARA OBTENER LA TASA ACTUAL DEL DÓLAR
+-- =====================================================
+
+CREATE OR REPLACE FUNCTION obtener_tasa_actual_dolar()
+RETURNS TABLE(
+    id_tasa INTEGER,
+    nombre VARCHAR(50),
+    valor DECIMAL,
+    fecha DATE
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT t.id_tasa, t.nombre, t.valor, t.fecha
+    FROM Tasa t
+    WHERE t.nombre = 'Dólar Estadounidense'
+    ORDER BY t.fecha DESC, t.id_tasa DESC
+    LIMIT 1;
+END;
+$$ LANGUAGE plpgsql;

@@ -495,4 +495,86 @@
     min-width: 40px;
     height: 100%;
     box-shadow: none !important;
+}
+
+/* ========================================
+   ESTILOS PARA BOTÓN DE DESCARGA PDF
+   ======================================== */
+
+.btn-descargar-pdf {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: linear-gradient(135deg, #4CAF50, #45a049);
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+    z-index: 1000;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.btn-descargar-pdf:hover {
+    background: linear-gradient(135deg, #45a049, #388E3C);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(76, 175, 80, 0.4);
+}
+
+.btn-descargar-pdf:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 10px rgba(76, 175, 80, 0.3);
+}
+
+.btn-descargar-pdf i {
+    font-size: 16px;
+}
+
+/* Animación de carga para el botón */
+.btn-descargar-pdf.loading {
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+.btn-descargar-pdf.loading::after {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    margin: auto;
+    border: 2px solid transparent;
+    border-top-color: #ffffff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    right: 8px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Responsive para dispositivos móviles */
+@media (max-width: 768px) {
+    .btn-descargar-pdf {
+        top: 10px;
+        right: 10px;
+        padding: 10px 16px;
+        font-size: 12px;
+    }
+    
+    .btn-descargar-pdf span {
+        display: none;
+    }
+    
+    .btn-descargar-pdf i {
+        font-size: 18px;
+    }
 } 

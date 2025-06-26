@@ -2363,33 +2363,102 @@ INSERT INTO Ubicacion_Tienda (tipo, nombre, ubicacion_tienda_relacion_id, id_tie
 ('Refrigerador', 'Nevera Cervezas Frías', NULL, 1, 1);
 
 
-/** Inserción de cervezas específicas con tipos correctos según nueva numeración **/
 INSERT INTO cerveza (nombre_cerveza, id_tipo_cerveza, id_proveedor) VALUES
-/** Cervezas artesanales venezolanas específicas **/
-('Destilo', 30,1 ), -- American Amber Ale (ID 30)
-('Dos Leones', 21,2), -- Belgian Specialty Ale (ID 21)
-('Benitz Pale Ale', 25,3), -- American Pale Ale (ID 25)
-('Candileja de Abadía', 19,4), -- Belgian Dubbel (ID 19)
-('Ángel o Demonio', 20,5), -- Belgian Golden Strong (ID 20)
-('Barricas Saison Belga', 21,6), -- Belgian Specialty Ale (ID 21)
-('Aldarra Mantuana', 23,7), -- Blonde Ale (ID 23)
+/** Proveedor 1 - Cerveza del Valle (3 cervezas) **/
+('Destilo', 30, 1), -- American Amber Ale (ID 30)
+('Valle Dorado', 25, 1), -- American Pale Ale (ID 25)
+('Cerveza del Valle Premium', 23, 1), -- Blonde Ale (ID 23)
 
-/** Cervezas americanas específicas **/
-('Tröegs HopBack Amber', 30,8), -- American Amber Ale (ID 30)
-('Full Sail Amber', 30,9), -- American Amber Ale (ID 30)
-('Deschutes Cinder Cone', 30,10), -- American Amber Ale (ID 30)  
-('Rogue American Amber', 30,11), -- American Amber Ale (ID 30)
+/** Proveedor 2 - Cerveza Premium (2 cervezas) **/
+('Dos Leones', 21, 2), -- Belgian Specialty Ale (ID 21)
+('Premium Lager', 3, 2), -- Pilsner (ID 3)
 
-/** Cervezas belgas específicas **/
-('La Chouffe', 21,12), -- Belgian Specialty Ale (ID 21)
-('Orval', 21,13), -- Belgian Specialty Ale (ID 21)
-('Chimay', 19,14), -- Belgian Dubbel (ID 19)
-('Leffe Blonde', 23,15), -- Blonde Ale (ID 23)
-('Hoegaarden', 47,16), -- Witbier (ID 47)
+/** Proveedor 3 - Cerveza El Paraíso (4 cervezas) **/
+('Benitz Pale Ale', 25, 3), -- American Pale Ale (ID 25)
+('Paraíso IPA', 26, 3), -- American IPA (ID 26)
+('El Paraíso Stout', 28, 3), -- American Stout (ID 28)
+('Paraíso Wheat', 47, 3), -- Witbier (ID 47)
 
-/** Cervezas específicas por estilo **/
-('Pilsner Urquell', 3,17), -- Pilsner (ID 3)
-('Samuel Adams', 9,18); -- Bohemian Pilsener (ID 9)
+/** Proveedor 4 - Cerveza Gourmet (1 cerveza) **/
+('Candileja de Abadía', 19, 4), -- Belgian Dubbel (ID 19)
+
+/** Proveedor 5 - Cerveza La Pastora (3 cervezas) **/
+('Ángel o Demonio', 20, 5), -- Belgian Golden Strong (ID 20)
+('La Pastora IPA', 26, 5), -- American IPA (ID 26)
+('Pastora Lager', 3, 5), -- Pilsner (ID 3)
+
+/** Proveedor 6 - Cerveza San Agustín (2 cervezas) **/
+('Barricas Saison Belga', 21, 6), -- Belgian Specialty Ale (ID 21)
+('San Agustín Pale Ale', 25, 6), -- American Pale Ale (ID 25)
+
+/** Proveedor 7 - Cerveza La Vega (4 cervezas) **/
+('Aldarra Mantuana', 23, 7), -- Blonde Ale (ID 23)
+('La Vega IPA', 26, 7), -- American IPA (ID 26)
+('Vega Stout', 28, 7), -- American Stout (ID 28)
+('Mantuana Wheat', 47, 7), -- Witbier (ID 47)
+
+/** Proveedor 8 - Cerveza San José (1 cerveza) **/
+('Tröegs HopBack Amber', 30, 8), -- American Amber Ale (ID 30)
+
+/** Proveedor 9 - Cerveza San Juan (3 cervezas) **/
+('Full Sail Amber', 30, 9), -- American Amber Ale (ID 30)
+('San Juan IPA', 26, 9), -- American IPA (ID 26)
+('Juan Pale Ale', 25, 9), -- American Pale Ale (ID 25)
+
+/** Proveedor 10 - Cerveza San Pedro (2 cervezas) **/
+('Deschutes Cinder Cone', 30, 10), -- American Amber Ale (ID 30)
+('San Pedro Stout', 28, 10), -- American Stout (ID 28)
+
+/** Proveedor 11 - Cerveza Santa Rosalía (4 cervezas) **/
+('Rogue American Amber', 30, 11), -- American Amber Ale (ID 30)
+('Rosalía IPA', 26, 11), -- American IPA (ID 26)
+('Santa Rosalía Blonde', 23, 11), -- Blonde Ale (ID 23)
+('Rosalía Wheat', 47, 11), -- Witbier (ID 47)
+
+/** Proveedor 12 - Cerveza Santa Teresa (1 cerveza) **/
+('La Chouffe', 21, 12), -- Belgian Specialty Ale (ID 21)
+
+/** Proveedor 13 - Cerveza Sucre (3 cervezas) **/
+('Orval', 21, 13), -- Belgian Specialty Ale (ID 21)
+('Sucre IPA', 26, 13), -- American IPA (ID 26)
+('Sucre Pale Ale', 25, 13), -- American Pale Ale (ID 25)
+
+/** Proveedor 14 - Cerveza 23 de Enero (2 cervezas) **/
+('Chimay', 19, 14), -- Belgian Dubbel (ID 19)
+('23 de Enero Lager', 3, 14), -- Pilsner (ID 3)
+
+/** Proveedor 15 - Cerveza Altagracia (5 cervezas) **/
+('Leffe Blonde', 23, 15), -- Blonde Ale (ID 23)
+('Altagracia IPA', 26, 15), -- American IPA (ID 26)
+('Altagracia Stout', 28, 15), -- American Stout (ID 28)
+('Altagracia Wheat', 47, 15), -- Witbier (ID 47)
+('Altagracia Amber', 30, 15), -- American Amber Ale (ID 30)
+
+/** Proveedor 16 - Cerveza Antímano (1 cerveza) **/
+('Hoegaarden', 47, 16), -- Witbier (ID 47)
+
+/** Proveedor 17 - Cerveza Catedral (3 cervezas) **/
+('Pilsner Urquell', 3, 17), -- Pilsner (ID 3)
+('Catedral IPA', 26, 17), -- American IPA (ID 26)
+('Catedral Pale Ale', 25, 17), -- American Pale Ale (ID 25)
+
+/** Proveedor 18 - Cerveza Coche (2 cervezas) **/
+('Samuel Adams', 9, 18), -- Bohemian Pilsener (ID 9)
+('Coche Stout', 28, 18), -- American Stout (ID 28)
+
+/** Proveedor 19 - Cerveza El Junquito (4 cervezas) **/
+('Junquito IPA', 26, 19), -- American IPA (ID 26)
+('El Junquito Blonde', 23, 19), -- Blonde Ale (ID 23)
+('Junquito Wheat', 47, 19), -- Witbier (ID 47)
+('Junquito Amber', 30, 19), -- American Amber Ale (ID 30)
+
+/** Proveedor 20 - Cervecería Artesanal de Caricuao (6 cervezas) **/
+('Caricuao IPA', 26, 20), -- American IPA (ID 26)
+('Caricuao Pale Ale', 25, 20), -- American Pale Ale (ID 25)
+('Caricuao Stout', 28, 20), -- American Stout (ID 28)
+('Caricuao Blonde', 23, 20), -- Blonde Ale (ID 23)
+('Caricuao Wheat', 47, 20), -- Witbier (ID 47)
+('Caricuao Amber', 30, 20); -- American Amber Ale (ID 30)
 
 
 INSERT INTO Evento (nombre, descripcion, fecha_inicio, fecha_fin, lugar_id_lugar, n_entradas_vendidas, precio_unitario_entrada, tipo_evento_id) VALUES
@@ -2765,36 +2834,48 @@ INSERT INTO Asistencia (fecha_hora_entrada, fecha_hora_salida, empleado_id_emple
 
 
 INSERT INTO Vacacion (fecha_inicio, fecha_fin, descripcion, empleado_id) VALUES
--- Empleado 1 (Carlos González)
+-- Empleado 1 (Carlos González) - 3 vacaciones
 ('2024-07-15', '2024-07-26', 'Vacaciones anuales de verano - Viaje familiar a Margarita', 1),
 ('2024-12-23', '2024-12-30', 'Vacaciones de fin de año - Celebraciones navideñas', 1),
--- Empleado 2 (María Rodríguez)
+('2024-03-10', '2024-03-15', 'Vacaciones de Semana Santa - Descanso familiar', 1),
+
+-- Empleado 2 (María Rodríguez) - 4 vacaciones
 ('2024-03-18', '2024-03-22', 'Vacaciones de Semana Santa - Descanso familiar', 2),
 ('2024-08-05', '2024-08-16', 'Vacaciones anuales - Viaje a Los Roques', 2),
--- Empleado 3 (José Hernández)
+('2024-11-20', '2024-11-25', 'Vacaciones personales - Asuntos familiares', 2),
+('2024-01-15', '2024-01-19', 'Vacaciones de inicio de año - Descanso post-navideño', 2),
+
+-- Empleado 3 (José Hernández) - 1 vacación
 ('2024-06-10', '2024-06-14', 'Vacaciones personales - Asuntos familiares', 3),
-('2024-11-04', '2024-11-08', 'Vacaciones por motivos de salud - Recuperación médica', 3),
--- Empleado 4 (Ana López)
+
+-- Empleado 4 (Ana López) - 2 vacaciones
 ('2024-04-22', '2024-04-26', 'Vacaciones de primavera - Descanso personal', 4),
 ('2024-09-16', '2024-09-27', 'Vacaciones anuales - Viaje al exterior', 4),
--- Empleado 5 (Miguel Fernández)
-('2024-05-13', '2024-05-17', 'Vacaciones por matrimonio - Luna de miel', 5),
-('2024-12-16', '2024-12-20', 'Vacaciones de fin de año - Preparativos navideños', 5),
--- Empleado 6 (Carmen Jiménez)
+
+-- Empleado 5 (Miguel Fernández) - 0 vacaciones (empleado nuevo o sin vacaciones registradas)
+
+-- Empleado 6 (Carmen Jiménez) - 3 vacaciones
 ('2024-02-12', '2024-02-16', 'Vacaciones de carnaval - Celebraciones tradicionales', 6),
 ('2024-10-07', '2024-10-18', 'Vacaciones anuales - Visita a familiares en el interior', 6),
--- Empleado 7 (Roberto Mendoza)
+('2024-12-10', '2024-12-14', 'Vacaciones de fin de año - Preparativos navideños', 6),
+
+-- Empleado 7 (Roberto Mendoza) - 4 vacaciones
 ('2024-01-08', '2024-01-12', 'Vacaciones de inicio de año - Descanso post-navideño', 7),
 ('2024-08-19', '2024-08-30', 'Vacaciones anuales - Viaje a Mérida', 7),
--- Empleado 8 (Luisa Torres)
+('2024-05-20', '2024-05-24', 'Vacaciones por motivos de salud - Recuperación médica', 7),
+('2024-11-05', '2024-11-09', 'Vacaciones personales - Asuntos académicos', 7),
+
+-- Empleado 8 (Luisa Torres) - 1 vacación
 ('2024-06-24', '2024-06-28', 'Vacaciones de San Juan - Celebraciones regionales', 8),
-('2024-11-18', '2024-11-22', 'Vacaciones personales - Asuntos académicos', 8),
--- Empleado 9 (Pedro Moreno)
+
+-- Empleado 9 (Pedro Moreno) - 2 vacaciones
 ('2024-03-25', '2024-03-29', 'Vacaciones de Semana Santa - Retiro espiritual', 9),
 ('2024-07-29', '2024-08-02', 'Vacaciones de verano - Descanso familiar', 9),
--- Empleado 10 (Gabriela Ruiz)
+
+-- Empleado 10 (Gabriela Ruiz) - 3 vacaciones
 ('2024-05-27', '2024-05-31', 'Vacaciones por maternidad - Cuidado familiar', 10),
-('2024-09-02', '2024-09-06', 'Vacaciones de regreso a clases - Asuntos familiares', 10);
+('2024-09-02', '2024-09-06', 'Vacaciones de regreso a clases - Asuntos familiares', 10),
+('2024-12-28', '2025-01-02', 'Vacaciones de fin de año - Celebraciones navideñas', 10);
 
 
 INSERT INTO Beneficio (nombre, descripcion, monto, activo) VALUES
@@ -2918,7 +2999,6 @@ INSERT INTO presentacion_cerveza (cantidad, id_presentacion, id_cerveza, precio)
 
 
 
--- ... existing code ...
 INSERT INTO Caracteristica_Especifica (id_tipo_cerveza, id_caracteristica, valor) VALUES
 -- Lager
 (1, 4, 'Dorado'), (1, 12, '5.0%'), (1, 15, 'Medio'),
@@ -3363,1401 +3443,584 @@ INSERT INTO Tarjeta_Debito (id_metodo, numero, banco) VALUES
 
 -- Ejemplo de inserciones para Punto_Cliente (historial de movimientos)
 INSERT INTO Punto_Cliente (id_cliente_natural, id_metodo, cantidad_mov, fecha, tipo_movimiento) VALUES
+-- Cliente 1: Gana y gasta puntos
 (1, 41, 150, '2025-01-10', 'GANADO'),
 (1, 41, -50, '2025-02-15', 'GASTADO'),
+(1, 41, 75, '2025-03-20', 'GANADO'),
+(1, 41, -25, '2025-04-10', 'GASTADO'),
+
+-- Cliente 2: Gana y gasta puntos
 (2, 42, 200, '2025-01-12', 'GANADO'),
 (2, 42, -80, '2025-03-10', 'GASTADO'),
+(2, 42, 120, '2025-04-05', 'GANADO'),
+(2, 42, -40, '2025-05-15', 'GASTADO'),
+
+-- Cliente 3: Solo gana puntos (cliente acumulador)
 (3, 41, 300, '2025-01-08', 'GANADO'),
-(3, 41, -120, '2025-04-05', 'GASTADO'),
+(3, 41, 180, '2025-02-20', 'GANADO'),
+(3, 41, 220, '2025-03-15', 'GANADO'),
+(3, 41, 150, '2025-04-25', 'GANADO'),
+
+-- Cliente 4: Gana y gasta puntos
 (4, 43, 180, '2025-01-11', 'GANADO'),
 (4, 43, -60, '2025-02-20', 'GASTADO'),
-(5, 42, 120, '2025-01-09', 'GANADO'),
-(5, 42, -30, '2025-03-15', 'GASTADO'),
+(4, 43, 90, '2025-03-30', 'GANADO'),
+(4, 43, -30, '2025-05-05', 'GASTADO'),
+
+-- Cliente 6: Gana y gasta puntos
 (6, 44, 250, '2025-01-13', 'GANADO'),
 (6, 44, -100, '2025-05-01', 'GASTADO'),
+(6, 44, 160, '2025-05-20', 'GANADO'),
+(6, 44, -70, '2025-06-10', 'GASTADO'),
+
+-- Cliente 7: Solo gana puntos
 (7, 45, 170, '2025-01-14', 'GANADO'),
-(7, 45, -70, '2025-03-25', 'GASTADO'),
+(7, 45, 140, '2025-02-25', 'GANADO'),
+(7, 45, 110, '2025-03-18', 'GANADO'),
+(7, 45, 95, '2025-04-30', 'GANADO'),
+
+-- Cliente 8: Gana y gasta puntos
 (8, 46, 220, '2025-01-15', 'GANADO'),
 (8, 46, -90, '2025-04-10', 'GASTADO'),
-(9, 47, 190, '2025-01-16', 'GANADO'),
-(9, 47, -40, '2025-02-28', 'GASTADO'),
+(8, 46, 130, '2025-05-05', 'GANADO'),
+(8, 46, -50, '2025-06-15', 'GASTADO'),
+
+-- Cliente 10: Gana y gasta puntos
 (10, 48, 210, '2025-01-17', 'GANADO'),
-(10, 48, -60, '2025-03-30', 'GASTADO');
+(10, 48, -60, '2025-03-30', 'GASTADO'),
+(10, 48, 180, '2025-04-20', 'GANADO'),
+(10, 48, -90, '2025-05-25', 'GASTADO'),
+
+-- Cliente 11: Solo gana puntos
+(11, 49, 280, '2025-01-18', 'GANADO'),
+(11, 49, 190, '2025-02-22', 'GANADO'),
+(11, 49, 160, '2025-03-28', 'GANADO'),
+(11, 49, 140, '2025-04-18', 'GANADO'),
+
+-- Cliente 12: Gana y gasta puntos
+(12, 50, 195, '2025-01-19', 'GANADO'),
+(12, 50, -85, '2025-03-12', 'GASTADO'),
+(12, 50, 125, '2025-04-08', 'GANADO'),
+(12, 50, -45, '2025-05-20', 'GASTADO'),
+
+
+-- Cliente 14: Gana y gasta puntos
+(14, 42, 165, '2025-01-21', 'GANADO'),
+(14, 42, -75, '2025-03-05', 'GASTADO'),
+(14, 42, 110, '2025-04-12', 'GANADO'),
+(14, 42, -35, '2025-05-28', 'GASTADO'),
+
+-- Cliente 15: Solo gana puntos
+(15, 43, 320, '2025-01-22', 'GANADO'),
+(15, 43, 210, '2025-02-28', 'GANADO'),
+(15, 43, 180, '2025-03-15', 'GANADO'),
+(15, 43, 150, '2025-04-25', 'GANADO'),
+
+-- Cliente 16: Gana y gasta puntos
+(16, 44, 145, '2025-01-23', 'GANADO'),
+(16, 44, -65, '2025-03-08', 'GASTADO'),
+(16, 44, 95, '2025-04-18', 'GANADO'),
+(16, 44, -30, '2025-05-30', 'GASTADO'),
+
+
+-- Cliente 18: Gana y gasta puntos
+(18, 46, 175, '2025-01-25', 'GANADO'),
+(18, 46, -85, '2025-03-15', 'GASTADO'),
+(18, 46, 135, '2025-04-22', 'GANADO'),
+(18, 46, -55, '2025-05-18', 'GASTADO'),
+
+-- Cliente 19: Solo gana puntos
+(19, 47, 260, '2025-01-26', 'GANADO'),
+(19, 47, 185, '2025-02-18', 'GANADO'),
+(19, 47, 155, '2025-03-30', 'GANADO'),
+(19, 47, 125, '2025-04-28', 'GANADO'),
+
+-- Cliente 20: Gana y gasta puntos
+(20, 48, 185, '2025-01-27', 'GANADO'),
+(20, 48, -95, '2025-03-20', 'GASTADO'),
+(20, 48, 145, '2025-04-10', 'GANADO'),
+(20, 48, -50, '2025-05-25', 'GASTADO');
 
 
 --- Compras de usuarios de clientes naturales
+INSERT INTO Compra (monto_total, id_cliente_juridico, id_cliente_natural, tienda_web_id_tienda, tienda_fisica_id_tienda) VALUES
+-- Junio 2024 - 2 compras web
+(150.00, NULL, 1, 1, NULL),
+(180.00, NULL, 2, 1, NULL),
 
-INSERT INTO Compra (monto_total, id_cliente_juridico, id_cliente_natural, usuario_id_usuario, tienda_web_id_tienda, tienda_fisica_id_tienda) VALUES
-(0, NULL, NULL, 21, 1, NULL),
-(0, NULL, NULL, 21, 1, NULL),
-(0, NULL, NULL, 22, 1, NULL),
-(0, NULL, NULL, 22, 1, NULL),
-(0, NULL, NULL, 23, 1, NULL),
-(0, NULL, NULL, 23, 1, NULL),
-(0, NULL, NULL, 24, 1, NULL),
-(0, NULL, NULL, 24, 1, NULL),
-(0, NULL, NULL, 25, 1, NULL),
-(0, NULL, NULL, 25, 1, NULL),
-(0, NULL, NULL, 26, 1, NULL),
-(0, NULL, NULL, 26, 1, NULL),
-(0, NULL, NULL, 27, 1, NULL),
-(0, NULL, NULL, 27, 1, NULL),
-(0, NULL, NULL, 28, 1, NULL),
-(0, NULL, NULL, 28, 1, NULL),
-(0, NULL, NULL, 29, 1, NULL),
-(0, NULL, NULL, 29, 1, NULL),
-(0, NULL, NULL, 30, 1, NULL),
-(0, NULL, NULL, 30, 1, NULL),
-(0, NULL, NULL, 31, 1, NULL),
-(0, NULL, NULL, 31, 1, NULL),
-(0, NULL, NULL, 32, 1, NULL),
-(0, NULL, NULL, 32, 1, NULL),
-(0, NULL, NULL, 33, 1, NULL),
-(0, NULL, NULL, 33, 1, NULL),
-(0, NULL, NULL, 34, 1, NULL),
-(0, NULL, NULL, 34, 1, NULL),
-(0, NULL, NULL, 35, 1, NULL),
-(0, NULL, NULL, 35, 1, NULL),
-(0, NULL, NULL, 36, 1, NULL),
-(0, NULL, NULL, 36, 1, NULL),
-(0, NULL, NULL, 37, 1, NULL),
-(0, NULL, NULL, 37, 1, NULL),
-(0, NULL, NULL, 38, 1, NULL),
-(0, NULL, NULL, 38, 1, NULL),
-(0, NULL, NULL, 39, 1, NULL),
-(0, NULL, NULL, 39, 1, NULL),
-(0, NULL, NULL, 40, 1, NULL),
-(0, NULL, NULL, 40, 1, NULL);
+-- Junio 2024 - 2 compras física
+(120.00, NULL, 3, NULL, 1),
+(200.00, NULL, 4, NULL, 1),
 
+-- Julio 2024 - 2 compras web
+(160.00, NULL, 5, 1, NULL),
+(140.00, NULL, 6, 1, NULL),
 
-INSERT INTO Compra (monto_total, id_cliente_juridico, id_cliente_natural, usuario_id_usuario, tienda_web_id_tienda, tienda_fisica_id_tienda) VALUES
-(0, NULL, NULL, 41, 1, NULL),
-(0, NULL, NULL, 41, 1, NULL),
-(0, NULL, NULL, 42, 1, NULL),
-(0, NULL, NULL, 42, 1, NULL),
-(0, NULL, NULL, 43, 1, NULL),
-(0, NULL, NULL, 43, 1, NULL),
-(0, NULL, NULL, 44, 1, NULL),
-(0, NULL, NULL, 44, 1, NULL),
-(0, NULL, NULL, 45, 1, NULL),
-(0, NULL, NULL, 45, 1, NULL),
-(0, NULL, NULL, 46, 1, NULL),
-(0, NULL, NULL, 46, 1, NULL),
-(0, NULL, NULL, 47, 1, NULL),
-(0, NULL, NULL, 47, 1, NULL),
-(0, NULL, NULL, 48, 1, NULL),
-(0, NULL, NULL, 48, 1, NULL),
-(0, NULL, NULL, 49, 1, NULL),
-(0, NULL, NULL, 49, 1, NULL),
-(0, NULL, NULL, 50, 1, NULL),
-(0, NULL, NULL, 50, 1, NULL),
-(0, NULL, NULL, 51, 1, NULL),
-(0, NULL, NULL, 51, 1, NULL),
-(0, NULL, NULL, 52, 1, NULL),
-(0, NULL, NULL, 52, 1, NULL),
-(0, NULL, NULL, 53, 1, NULL),
-(0, NULL, NULL, 53, 1, NULL),
-(0, NULL, NULL, 54, 1, NULL),
-(0, NULL, NULL, 54, 1, NULL),
-(0, NULL, NULL, 55, 1, NULL),
-(0, NULL, NULL, 55, 1, NULL),
-(0, NULL, NULL, 56, 1, NULL),
-(0, NULL, NULL, 56, 1, NULL),
-(0, NULL, NULL, 57, 1, NULL),
-(0, NULL, NULL, 57, 1, NULL),
-(0, NULL, NULL, 58, 1, NULL),
-(0, NULL, NULL, 58, 1, NULL),
-(0, NULL, NULL, 59, 1, NULL),
-(0, NULL, NULL, 59, 1, NULL),
-(0, NULL, NULL, 60, 1, NULL),
-(0, NULL, NULL, 60, 1, NULL); 
+-- Julio 2024 - 2 compras física
+(190.00, NULL, 7, NULL, 1),
+(170.00, NULL, 8, NULL, 1),
+
+-- Agosto 2024 - 2 compras web
+(130.00, NULL, 9, 1, NULL),
+(210.00, NULL, 10, 1, NULL),
+
+-- Agosto 2024 - 2 compras física
+(145.00, NULL, 11, NULL, 1),
+(175.00, NULL, 12, NULL, 1),
+
+-- Septiembre 2024 - 2 compras web
+(155.00, NULL, 13, 1, NULL),
+(185.00, NULL, 14, 1, NULL),
+
+-- Septiembre 2024 - 2 compras física
+(135.00, NULL, 15, NULL, 1),
+(195.00, NULL, 16, NULL, 1),
+
+-- Octubre 2024 - 2 compras web
+(165.00, NULL, 17, 1, NULL),
+(125.00, NULL, 18, 1, NULL),
+
+-- Octubre 2024 - 2 compras física
+(205.00, NULL, 19, NULL, 1),
+(150.00, NULL, 20, NULL, 1),
+
+-- Noviembre 2024 - 2 compras web
+(140.00, NULL, 1, 1, NULL),
+(190.00, NULL, 2, 1, NULL),
+
+-- Noviembre 2024 - 2 compras física
+(170.00, NULL, 3, NULL, 1),
+(160.00, NULL, 4, NULL, 1),
+
+-- Diciembre 2024 - 2 compras web
+(180.00, NULL, 5, 1, NULL),
+(130.00, NULL, 6, 1, NULL),
+
+-- Diciembre 2024 - 2 compras física
+(145.00, NULL, 7, NULL, 1),
+(200.00, NULL, 8, NULL, 1),
+
+-- Enero 2025 - 2 compras web
+(155.00, NULL, 9, 1, NULL),
+(175.00, NULL, 10, 1, NULL),
+
+-- Enero 2025 - 2 compras física
+(120.00, NULL, 11, NULL, 1),
+(185.00, NULL, 12, NULL, 1),
+
+-- Febrero 2025 - 2 compras web
+(165.00, NULL, 13, 1, NULL),
+(140.00, NULL, 14, 1, NULL),
+
+-- Febrero 2025 - 2 compras física
+(195.00, NULL, 15, NULL, 1),
+(150.00, NULL, 16, NULL, 1),
+
+-- Marzo 2025 - 2 compras web
+(170.00, NULL, 17, 1, NULL),
+(190.00, NULL, 18, 1, NULL),
+
+-- Marzo 2025 - 2 compras física
+(125.00, NULL, 19, NULL, 1),
+(180.00, NULL, 20, NULL, 1),
+
+-- Abril 2025 - 2 compras web
+(145.00, NULL, 1, 1, NULL),
+(205.00, NULL, 2, 1, NULL),
+
+-- Abril 2025 - 2 compras física
+(160.00, NULL, 3, NULL, 1),
+(135.00, NULL, 4, NULL, 1),
+
+-- Mayo 2025 - 2 compras web
+(185.00, NULL, 5, 1, NULL),
+(155.00, NULL, 6, 1, NULL),
+
+-- Mayo 2025 - 2 compras física
+(170.00, NULL, 7, NULL, 1),
+(200.00, NULL, 8, NULL, 1),
+
+-- Junio 2025 - 2 compras web
+(140.00, NULL, 9, 1, NULL),
+(175.00, NULL, 10, 1, NULL),
+
+-- Junio 2025 - 2 compras física
+(190.00, NULL, 11, NULL, 1),
+(150.00, NULL, 12, NULL, 1);
+
 
 
 INSERT INTO Detalle_Compra (precio_unitario, cantidad, id_inventario, id_compra) VALUES
--- detalles para la compra 41
-(10.00, 1, 1, 41),
-(10.00, 1, 2, 41),
-(10.00, 1, 3, 41),
-(10.00, 1, 4, 41),
-(10.00, 1, 5, 41),
-(10.00, 1, 6, 41),
-(10.00, 1, 7, 41),
-(10.00, 1, 8, 41),
-(10.00, 1, 9, 41),
-(10.00, 1, 10, 41),
--- detalles para la compra 42
-(10.00, 1, 1, 42),
-(10.00, 1, 2, 42),
-(10.00, 1, 3, 42),
-(10.00, 1, 4, 42),
-(10.00, 1, 5, 42),
-(10.00, 1, 6, 42),
-(10.00, 1, 7, 42),
-(10.00, 1, 8, 42),
-(10.00, 1, 9, 42),
-(10.00, 1, 10, 42),
--- detalles para la compra 43
-(10.00, 1, 1, 43),
-(10.00, 1, 2, 43),
-(10.00, 1, 3, 43),
-(10.00, 1, 4, 43),
-(10.00, 1, 5, 43),
-(10.00, 1, 6, 43),
-(10.00, 1, 7, 43),
-(10.00, 1, 8, 43),
-(10.00, 1, 9, 43),
-(10.00, 1, 10, 43),
--- detalles para la compra 44
-(10.00, 1, 1, 44),
-(10.00, 1, 2, 44),
-(10.00, 1, 3, 44),
-(10.00, 1, 4, 44),
-(10.00, 1, 5, 44),
-(10.00, 1, 6, 44),
-(10.00, 1, 7, 44),
-(10.00, 1, 8, 44),
-(10.00, 1, 9, 44),
-(10.00, 1, 10, 44),
--- detalles para la compra 45
-(10.00, 1, 1, 45),
-(10.00, 1, 2, 45),
-(10.00, 1, 3, 45),
-(10.00, 1, 4, 45),
-(10.00, 1, 5, 45),
-(10.00, 1, 6, 45),
-(10.00, 1, 7, 45),
-(10.00, 1, 8, 45),
-(10.00, 1, 9, 45),
-(10.00, 1, 10, 45),
--- detalles para la compra 46
-(10.00, 1, 1, 46),
-(10.00, 1, 2, 46),
-(10.00, 1, 3, 46),
-(10.00, 1, 4, 46),
-(10.00, 1, 5, 46),
-(10.00, 1, 6, 46),
-(10.00, 1, 7, 46),
-(10.00, 1, 8, 46),
-(10.00, 1, 9, 46),
-(10.00, 1, 10, 46),
--- detalles para la compra 47
-(10.00, 1, 1, 47),
-(10.00, 1, 2, 47),
-(10.00, 1, 3, 47),
-(10.00, 1, 4, 47),
-(10.00, 1, 5, 47),
-(10.00, 1, 6, 47),
-(10.00, 1, 7, 47),
-(10.00, 1, 8, 47),
-(10.00, 1, 9, 47),
-(10.00, 1, 10, 47),
--- detalles para la compra 48
-(10.00, 1, 1, 48),
-(10.00, 1, 2, 48),
-(10.00, 1, 3, 48),
-(10.00, 1, 4, 48),
-(10.00, 1, 5, 48),
-(10.00, 1, 6, 48),
-(10.00, 1, 7, 48),
-(10.00, 1, 8, 48),
-(10.00, 1, 9, 48),
-(10.00, 1, 10, 48),
--- detalles para la compra 49
-(10.00, 1, 1, 49),
-(10.00, 1, 2, 49),
-(10.00, 1, 3, 49),
-(10.00, 1, 4, 49),
-(10.00, 1, 5, 49),
-(10.00, 1, 6, 49),
-(10.00, 1, 7, 49),
-(10.00, 1, 8, 49),
-(10.00, 1, 9, 49),
-(10.00, 1, 10, 49),
--- detalles para la compra 50
-(10.00, 1, 1, 50),
-(10.00, 1, 2, 50),
-(10.00, 1, 3, 50),
-(10.00, 1, 4, 50),
-(10.00, 1, 5, 50),
-(10.00, 1, 6, 50),
-(10.00, 1, 7, 50),
-(10.00, 1, 8, 50),
-(10.00, 1, 9, 50),
-(10.00, 1, 10, 50),
--- detalles para la compra 51
-(10.00, 1, 1, 51),
-(10.00, 1, 2, 51),
-(10.00, 1, 3, 51),
-(10.00, 1, 4, 51),
-(10.00, 1, 5, 51),
-(10.00, 1, 6, 51),
-(10.00, 1, 7, 51),
-(10.00, 1, 8, 51),
-(10.00, 1, 9, 51),
-(10.00, 1, 10, 51),
--- detalles para la compra 52
-(10.00, 1, 1, 52),
-(10.00, 1, 2, 52),
-(10.00, 1, 3, 52),
-(10.00, 1, 4, 52),
-(10.00, 1, 5, 52),
-(10.00, 1, 6, 52),
-(10.00, 1, 7, 52),
-(10.00, 1, 8, 52),
-(10.00, 1, 9, 52),
-(10.00, 1, 10, 52),
--- detalles para la compra 53
-(10.00, 1, 1, 53),
-(10.00, 1, 2, 53),
-(10.00, 1, 3, 53),
-(10.00, 1, 4, 53),
-(10.00, 1, 5, 53),
-(10.00, 1, 6, 53),
-(10.00, 1, 7, 53),
-(10.00, 1, 8, 53),
-(10.00, 1, 9, 53),
-(10.00, 1, 10, 53),
--- detalles para la compra 54
-(10.00, 1, 1, 54),
-(10.00, 1, 2, 54),
-(10.00, 1, 3, 54),
-(10.00, 1, 4, 54),
-(10.00, 1, 5, 54),
-(10.00, 1, 6, 54),
-(10.00, 1, 7, 54),
-(10.00, 1, 8, 54),
-(10.00, 1, 9, 54),
-(10.00, 1, 10, 54),
--- detalles para la compra 55
-(10.00, 1, 1, 55),
-(10.00, 1, 2, 55),
-(10.00, 1, 3, 55),
-(10.00, 1, 4, 55),
-(10.00, 1, 5, 55),
-(10.00, 1, 6, 55),
-(10.00, 1, 7, 55),
-(10.00, 1, 8, 55),
-(10.00, 1, 9, 55),
-(10.00, 1, 10, 55),
--- detalles para la compra 56
-(10.00, 1, 1, 56),
-(10.00, 1, 2, 56),
-(10.00, 1, 3, 56),
-(10.00, 1, 4, 56),
-(10.00, 1, 5, 56),
-(10.00, 1, 6, 56),
-(10.00, 1, 7, 56),
-(10.00, 1, 8, 56),
-(10.00, 1, 9, 56),
-(10.00, 1, 10, 56),
--- detalles para la compra 57
-(10.00, 1, 1, 57),
-(10.00, 1, 2, 57),
-(10.00, 1, 3, 57),
-(10.00, 1, 4, 57),
-(10.00, 1, 5, 57),
-(10.00, 1, 6, 57),
-(10.00, 1, 7, 57),
-(10.00, 1, 8, 57),
-(10.00, 1, 9, 57),
-(10.00, 1, 10, 57),
--- detalles para la compra 58
-(10.00, 1, 1, 58),
-(10.00, 1, 2, 58),
-(10.00, 1, 3, 58),
-(10.00, 1, 4, 58),
-(10.00, 1, 5, 58),
-(10.00, 1, 6, 58),
-(10.00, 1, 7, 58),
-(10.00, 1, 8, 58),
-(10.00, 1, 9, 58),
-(10.00, 1, 10, 58),
--- detalles para la compra 59
-(10.00, 1, 1, 59),
-(10.00, 1, 2, 59),
-(10.00, 1, 3, 59),
-(10.00, 1, 4, 59),
-(10.00, 1, 5, 59),
-(10.00, 1, 6, 59),
-(10.00, 1, 7, 59),
-(10.00, 1, 8, 59),
-(10.00, 1, 9, 59),
-(10.00, 1, 10, 59),
--- detalles para la compra 60
-(10.00, 1, 1, 60),
-(10.00, 1, 2, 60),
-(10.00, 1, 3, 60),
-(10.00, 1, 4, 60),
-(10.00, 1, 5, 60),
-(10.00, 1, 6, 60),
-(10.00, 1, 7, 60),
-(10.00, 1, 8, 60),
-(10.00, 1, 9, 60),
-(10.00, 1, 10, 60),
--- detalles para la compra 61
-(10.00, 1, 1, 61),
-(10.00, 1, 2, 61),
-(10.00, 1, 3, 61),
-(10.00, 1, 4, 61),
-(10.00, 1, 5, 61),
-(10.00, 1, 6, 61),
-(10.00, 1, 7, 61),
-(10.00, 1, 8, 61),
-(10.00, 1, 9, 61),
-(10.00, 1, 10, 61),
--- detalles para la compra 62
-(10.00, 1, 1, 62),
-(10.00, 1, 2, 62),
-(10.00, 1, 3, 62),
-(10.00, 1, 4, 62),
-(10.00, 1, 5, 62),
-(10.00, 1, 6, 62),
-(10.00, 1, 7, 62),
-(10.00, 1, 8, 62),
-(10.00, 1, 9, 62),
-(10.00, 1, 10, 62),
--- detalles para la compra 63
-(10.00, 1, 1, 63),
-(10.00, 1, 2, 63),
-(10.00, 1, 3, 63),
-(10.00, 1, 4, 63),
-(10.00, 1, 5, 63),
-(10.00, 1, 6, 63),
-(10.00, 1, 7, 63),
-(10.00, 1, 8, 63),
-(10.00, 1, 9, 63),
-(10.00, 1, 10, 63),
--- detalles para la compra 64
-(10.00, 1, 1, 64),
-(10.00, 1, 2, 64),
-(10.00, 1, 3, 64),
-(10.00, 1, 4, 64),
-(10.00, 1, 5, 64),
-(10.00, 1, 6, 64),
-(10.00, 1, 7, 64),
-(10.00, 1, 8, 64),
-(10.00, 1, 9, 64),
-(10.00, 1, 10, 64),
--- detalles para la compra 65
-(10.00, 1, 1, 65),
-(10.00, 1, 2, 65),
-(10.00, 1, 3, 65),
-(10.00, 1, 4, 65),
-(10.00, 1, 5, 65),
-(10.00, 1, 6, 65),
-(10.00, 1, 7, 65),
-(10.00, 1, 8, 65),
-(10.00, 1, 9, 65),
-(10.00, 1, 10, 65),
--- detalles para la compra 66
-(10.00, 1, 1, 66),
-(10.00, 1, 2, 66),
-(10.00, 1, 3, 66),
-(10.00, 1, 4, 66),
-(10.00, 1, 5, 66),
-(10.00, 1, 6, 66),
-(10.00, 1, 7, 66),
-(10.00, 1, 8, 66),
-(10.00, 1, 9, 66),
-(10.00, 1, 10, 66),
--- detalles para la compra 67
-(10.00, 1, 1, 67),
-(10.00, 1, 2, 67),
-(10.00, 1, 3, 67),
-(10.00, 1, 4, 67),
-(10.00, 1, 5, 67),
-(10.00, 1, 6, 67),
-(10.00, 1, 7, 67),
-(10.00, 1, 8, 67),
-(10.00, 1, 9, 67),
-(10.00, 1, 10, 67),
--- detalles para la compra 68
-(10.00, 1, 1, 68),
-(10.00, 1, 2, 68),
-(10.00, 1, 3, 68),
-(10.00, 1, 4, 68),
-(10.00, 1, 5, 68),
-(10.00, 1, 6, 68),
-(10.00, 1, 7, 68),
-(10.00, 1, 8, 68),
-(10.00, 1, 9, 68),
-(10.00, 1, 10, 68),
--- detalles para la compra 69
-(10.00, 1, 1, 69),
-(10.00, 1, 2, 69),
-(10.00, 1, 3, 69),
-(10.00, 1, 4, 69),
-(10.00, 1, 5, 69),
-(10.00, 1, 6, 69),
-(10.00, 1, 7, 69),
-(10.00, 1, 8, 69),
-(10.00, 1, 9, 69),
-(10.00, 1, 10, 69),
--- detalles para la compra 70
-(10.00, 1, 1, 70),
-(10.00, 1, 2, 70),
-(10.00, 1, 3, 70),
-(10.00, 1, 4, 70),
-(10.00, 1, 5, 70),
-(10.00, 1, 6, 70),
-(10.00, 1, 7, 70),
-(10.00, 1, 8, 70),
-(10.00, 1, 9, 70),
-(10.00, 1, 10, 70),
--- detalles para la compra 71
-(10.00, 1, 1, 71),
-(10.00, 1, 2, 71),
-(10.00, 1, 3, 71),
-(10.00, 1, 4, 71),
-(10.00, 1, 5, 71),
-(10.00, 1, 6, 71),
-(10.00, 1, 7, 71),
-(10.00, 1, 8, 71),
-(10.00, 1, 9, 71),
-(10.00, 1, 10, 71),
--- detalles para la compra 72
-(10.00, 1, 1, 72),
-(10.00, 1, 2, 72),
-(10.00, 1, 3, 72),
-(10.00, 1, 4, 72),
-(10.00, 1, 5, 72),
-(10.00, 1, 6, 72),
-(10.00, 1, 7, 72),
-(10.00, 1, 8, 72),
-(10.00, 1, 9, 72),
-(10.00, 1, 10, 72),
--- detalles para la compra 73
-(10.00, 1, 1, 73),
-(10.00, 1, 2, 73),
-(10.00, 1, 3, 73),
-(10.00, 1, 4, 73),
-(10.00, 1, 5, 73),
-(10.00, 1, 6, 73),
-(10.00, 1, 7, 73),
-(10.00, 1, 8, 73),
-(10.00, 1, 9, 73),
-(10.00, 1, 10, 73),
--- detalles para la compra 74
-(10.00, 1, 1, 74),
-(10.00, 1, 2, 74),
-(10.00, 1, 3, 74),
-(10.00, 1, 4, 74),
-(10.00, 1, 5, 74),
-(10.00, 1, 6, 74),
-(10.00, 1, 7, 74),
-(10.00, 1, 8, 74),
-(10.00, 1, 9, 74),
-(10.00, 1, 10, 74),
--- detalles para la compra 75
-(10.00, 1, 1, 75),
-(10.00, 1, 2, 75),
-(10.00, 1, 3, 75),
-(10.00, 1, 4, 75),
-(10.00, 1, 5, 75),
-(10.00, 1, 6, 75),
-(10.00, 1, 7, 75),
-(10.00, 1, 8, 75),
-(10.00, 1, 9, 75),
-(10.00, 1, 10, 75),
--- detalles para la compra 76
-(10.00, 1, 1, 76),
-(10.00, 1, 2, 76),
-(10.00, 1, 3, 76),
-(10.00, 1, 4, 76),
-(10.00, 1, 5, 76),
-(10.00, 1, 6, 76),
-(10.00, 1, 7, 76),
-(10.00, 1, 8, 76),
-(10.00, 1, 9, 76),
-(10.00, 1, 10, 76),
--- detalles para la compra 77
-(10.00, 1, 1, 77),
-(10.00, 1, 2, 77),
-(10.00, 1, 3, 77),
-(10.00, 1, 4, 77),
-(10.00, 1, 5, 77),
-(10.00, 1, 6, 77),
-(10.00, 1, 7, 77),
-(10.00, 1, 8, 77),
-(10.00, 1, 9, 77),
-(10.00, 1, 10, 77),
--- detalles para la compra 78
-(10.00, 1, 1, 78),
-(10.00, 1, 2, 78),
-(10.00, 1, 3, 78),
-(10.00, 1, 4, 78),
-(10.00, 1, 5, 78),
-(10.00, 1, 6, 78),
-(10.00, 1, 7, 78),
-(10.00, 1, 8, 78),
-(10.00, 1, 9, 78),
-(10.00, 1, 10, 78),
--- detalles para la compra 79
-(10.00, 1, 1, 79),
-(10.00, 1, 2, 79),
-(10.00, 1, 3, 79),
-(10.00, 1, 4, 79),
-(10.00, 1, 5, 79),
-(10.00, 1, 6, 79),
-(10.00, 1, 7, 79),
-(10.00, 1, 8, 79),
-(10.00, 1, 9, 79),
-(10.00, 1, 10, 79),
--- detalles para la compra 80
-(10.00, 1, 1, 80),
-(10.00, 1, 2, 80),
-(10.00, 1, 3, 80),
-(10.00, 1, 4, 80),
-(10.00, 1, 5, 80),
-(10.00, 1, 6, 80),
-(10.00, 1, 7, 80),
-(10.00, 1, 8, 80),
-(10.00, 1, 9, 80),
-(10.00, 1, 10, 80);
+-- Detalles para compra 1 (monto_total: 150.00)
+(25.00, 2, 1, 1),    -- 50.00
+(30.00, 2, 15, 1),   -- 60.00
+(40.00, 1, 30, 1),   -- 40.00 (Total: 150.00)
 
--- Detalles de compras de clientes naturales
+-- Detalles para compra 2 (monto_total: 180.00)
+(35.00, 2, 5, 2),    -- 70.00
+(25.00, 3, 20, 2),   -- 75.00
+(35.00, 1, 35, 2),   -- 35.00 (Total: 180.00)
 
-INSERT INTO Detalle_Compra (precio_unitario, cantidad, id_inventario, id_compra) VALUES
--- detalles para la compra 1
-(10.00, 1, 1, 1),
-(10.00, 1, 2, 1),
-(10.00, 1, 3, 1),
-(10.00, 1, 4, 1),
-(10.00, 1, 5, 1),
-(10.00, 1, 6, 1),
-(10.00, 1, 7, 1),
-(10.00, 1, 8, 1),
-(10.00, 1, 9, 1),
-(10.00, 1, 10, 1),
--- detalles para la compra 2
-(10.00, 1, 1, 2),
-(10.00, 1, 2, 2),
-(10.00, 1, 3, 2),
-(10.00, 1, 4, 2),
-(10.00, 1, 5, 2),
-(10.00, 1, 6, 2),
-(10.00, 1, 7, 2),
-(10.00, 1, 8, 2),
-(10.00, 1, 9, 2),
-(10.00, 1, 10, 2),
--- detalles para la compra 3
-(10.00, 1, 1, 3),
-(10.00, 1, 2, 3),
-(10.00, 1, 3, 3),
-(10.00, 1, 4, 3),
-(10.00, 1, 5, 3),
-(10.00, 1, 6, 3),
-(10.00, 1, 7, 3),
-(10.00, 1, 8, 3),
-(10.00, 1, 9, 3),
-(10.00, 1, 10, 3),
--- detalles para la compra 4
-(10.00, 1, 1, 4),
-(10.00, 1, 2, 4),
-(10.00, 1, 3, 4),
-(10.00, 1, 4, 4),
-(10.00, 1, 5, 4),
-(10.00, 1, 6, 4),
-(10.00, 1, 7, 4),
-(10.00, 1, 8, 4),
-(10.00, 1, 9, 4),
-(10.00, 1, 10, 4),
--- detalles para la compra 5
-(10.00, 1, 1, 5),
-(10.00, 1, 2, 5),
-(10.00, 1, 3, 5),
-(10.00, 1, 4, 5),
-(10.00, 1, 5, 5),
-(10.00, 1, 6, 5),
-(10.00, 1, 7, 5),
-(10.00, 1, 8, 5),
-(10.00, 1, 9, 5),
-(10.00, 1, 10, 5),
--- detalles para la compra 6
-(10.00, 1, 1, 6),
-(10.00, 1, 2, 6),
-(10.00, 1, 3, 6),
-(10.00, 1, 4, 6),
-(10.00, 1, 5, 6),
-(10.00, 1, 6, 6),
-(10.00, 1, 7, 6),
-(10.00, 1, 8, 6),
-(10.00, 1, 9, 6),
-(10.00, 1, 10, 6),
--- detalles para la compra 7
-(10.00, 1, 1, 7),
-(10.00, 1, 2, 7),
-(10.00, 1, 3, 7),
-(10.00, 1, 4, 7),
-(10.00, 1, 5, 7),
-(10.00, 1, 6, 7),
-(10.00, 1, 7, 7),
-(10.00, 1, 8, 7),
-(10.00, 1, 9, 7),
-(10.00, 1, 10, 7),
--- detalles para la compra 8
-(10.00, 1, 1, 8),
-(10.00, 1, 2, 8),
-(10.00, 1, 3, 8),
-(10.00, 1, 4, 8),
-(10.00, 1, 5, 8),
-(10.00, 1, 6, 8),
-(10.00, 1, 7, 8),
-(10.00, 1, 8, 8),
-(10.00, 1, 9, 8),
-(10.00, 1, 10, 8),
--- detalles para la compra 9
-(10.00, 1, 1, 9),
-(10.00, 1, 2, 9),
-(10.00, 1, 3, 9),
-(10.00, 1, 4, 9),
-(10.00, 1, 5, 9),
-(10.00, 1, 6, 9),
-(10.00, 1, 7, 9),
-(10.00, 1, 8, 9),
-(10.00, 1, 9, 9),
-(10.00, 1, 10, 9),
--- detalles para la compra 10
-(10.00, 1, 1, 10),
-(10.00, 1, 2, 10),
-(10.00, 1, 3, 10),
-(10.00, 1, 4, 10),
-(10.00, 1, 5, 10),
-(10.00, 1, 6, 10),
-(10.00, 1, 7, 10),
-(10.00, 1, 8, 10),
-(10.00, 1, 9, 10),
-(10.00, 1, 10, 10),
--- detalles para la compra 11
-(10.00, 1, 1, 11),
-(10.00, 1, 2, 11),
-(10.00, 1, 3, 11),
-(10.00, 1, 4, 11),
-(10.00, 1, 5, 11),
-(10.00, 1, 6, 11),
-(10.00, 1, 7, 11),
-(10.00, 1, 8, 11),
-(10.00, 1, 9, 11),
-(10.00, 1, 10, 11),
--- detalles para la compra 12
-(10.00, 1, 1, 12),
-(10.00, 1, 2, 12),
-(10.00, 1, 3, 12),
-(10.00, 1, 4, 12),
-(10.00, 1, 5, 12),
-(10.00, 1, 6, 12),
-(10.00, 1, 7, 12),
-(10.00, 1, 8, 12),
-(10.00, 1, 9, 12),
-(10.00, 1, 10, 12),
--- detalles para la compra 13
-(10.00, 1, 1, 13),
-(10.00, 1, 2, 13),
-(10.00, 1, 3, 13),
-(10.00, 1, 4, 13),
-(10.00, 1, 5, 13),
-(10.00, 1, 6, 13),
-(10.00, 1, 7, 13),
-(10.00, 1, 8, 13),
-(10.00, 1, 9, 13),
-(10.00, 1, 10, 13),
--- detalles para la compra 14
-(10.00, 1, 1, 14),
-(10.00, 1, 2, 14),
-(10.00, 1, 3, 14),
-(10.00, 1, 4, 14),
-(10.00, 1, 5, 14),
-(10.00, 1, 6, 14),
-(10.00, 1, 7, 14),
-(10.00, 1, 8, 14),
-(10.00, 1, 9, 14),
-(10.00, 1, 10, 14),
--- detalles para la compra 15
-(10.00, 1, 1, 15),
-(10.00, 1, 2, 15),
-(10.00, 1, 3, 15),
-(10.00, 1, 4, 15),
-(10.00, 1, 5, 15),
-(10.00, 1, 6, 15),
-(10.00, 1, 7, 15),
-(10.00, 1, 8, 15),
-(10.00, 1, 9, 15),
-(10.00, 1, 10, 15),
--- detalles para la compra 16
-(10.00, 1, 1, 16),
-(10.00, 1, 2, 16),
-(10.00, 1, 3, 16),
-(10.00, 1, 4, 16),
-(10.00, 1, 5, 16),
-(10.00, 1, 6, 16),
-(10.00, 1, 7, 16),
-(10.00, 1, 8, 16),
-(10.00, 1, 9, 16),
-(10.00, 1, 10, 16),
--- detalles para la compra 17
-(10.00, 1, 1, 17),
-(10.00, 1, 2, 17),
-(10.00, 1, 3, 17),
-(10.00, 1, 4, 17),
-(10.00, 1, 5, 17),
-(10.00, 1, 6, 17),
-(10.00, 1, 7, 17),
-(10.00, 1, 8, 17),
-(10.00, 1, 9, 17),
-(10.00, 1, 10, 17),
--- detalles para la compra 18
-(10.00, 1, 1, 18),
-(10.00, 1, 2, 18),
-(10.00, 1, 3, 18),
-(10.00, 1, 4, 18),
-(10.00, 1, 5, 18),
-(10.00, 1, 6, 18),
-(10.00, 1, 7, 18),
-(10.00, 1, 8, 18),
-(10.00, 1, 9, 18),
-(10.00, 1, 10, 18),
--- detalles para la compra 19
-(10.00, 1, 1, 19),
-(10.00, 1, 2, 19),
-(10.00, 1, 3, 19),
-(10.00, 1, 4, 19),
-(10.00, 1, 5, 19),
-(10.00, 1, 6, 19),
-(10.00, 1, 7, 19),
-(10.00, 1, 8, 19),
-(10.00, 1, 9, 19),
-(10.00, 1, 10, 19),
--- detalles para la compra 20
-(10.00, 1, 1, 20),
-(10.00, 1, 2, 20),
-(10.00, 1, 3, 20),
-(10.00, 1, 4, 20),
-(10.00, 1, 5, 20),
-(10.00, 1, 6, 20),
-(10.00, 1, 7, 20),
-(10.00, 1, 8, 20),
-(10.00, 1, 9, 20),
-(10.00, 1, 10, 20),
--- detalles para la compra 21
-(10.00, 1, 1, 21),
-(10.00, 1, 2, 21),
-(10.00, 1, 3, 21),
-(10.00, 1, 4, 21),
-(10.00, 1, 5, 21),
-(10.00, 1, 6, 21),
-(10.00, 1, 7, 21),
-(10.00, 1, 8, 21),
-(10.00, 1, 9, 21),
-(10.00, 1, 10, 21),
--- detalles para la compra 22
-(10.00, 1, 1, 22),
-(10.00, 1, 2, 22),
-(10.00, 1, 3, 22),
-(10.00, 1, 4, 22),
-(10.00, 1, 5, 22),
-(10.00, 1, 6, 22),
-(10.00, 1, 7, 22),
-(10.00, 1, 8, 22),
-(10.00, 1, 9, 22),
-(10.00, 1, 10, 22),
--- detalles para la compra 23
-(10.00, 1, 1, 23),
-(10.00, 1, 2, 23),
-(10.00, 1, 3, 23),
-(10.00, 1, 4, 23),
-(10.00, 1, 5, 23),
-(10.00, 1, 6, 23),
-(10.00, 1, 7, 23),
-(10.00, 1, 8, 23),
-(10.00, 1, 9, 23),
-(10.00, 1, 10, 23),
--- detalles para la compra 24
-(10.00, 1, 1, 24),
-(10.00, 1, 2, 24),
-(10.00, 1, 3, 24),
-(10.00, 1, 4, 24),
-(10.00, 1, 5, 24),
-(10.00, 1, 6, 24),
-(10.00, 1, 7, 24),
-(10.00, 1, 8, 24),
-(10.00, 1, 9, 24),
-(10.00, 1, 10, 24),
--- detalles para la compra 25
-(10.00, 1, 1, 25),
-(10.00, 1, 2, 25),
-(10.00, 1, 3, 25),
-(10.00, 1, 4, 25),
-(10.00, 1, 5, 25),
-(10.00, 1, 6, 25),
-(10.00, 1, 7, 25),
-(10.00, 1, 8, 25),
-(10.00, 1, 9, 25),
-(10.00, 1, 10, 25),
--- detalles para la compra 26
-(10.00, 1, 1, 26),
-(10.00, 1, 2, 26),
-(10.00, 1, 3, 26),
-(10.00, 1, 4, 26),
-(10.00, 1, 5, 26),
-(10.00, 1, 6, 26),
-(10.00, 1, 7, 26),
-(10.00, 1, 8, 26),
-(10.00, 1, 9, 26),
-(10.00, 1, 10, 26),
--- detalles para la compra 27
-(10.00, 1, 1, 27),
-(10.00, 1, 2, 27),
-(10.00, 1, 3, 27),
-(10.00, 1, 4, 27),
-(10.00, 1, 5, 27),
-(10.00, 1, 6, 27),
-(10.00, 1, 7, 27),
-(10.00, 1, 8, 27),
-(10.00, 1, 9, 27),
-(10.00, 1, 10, 27),
--- detalles para la compra 28
-(10.00, 1, 1, 28),
-(10.00, 1, 2, 28),
-(10.00, 1, 3, 28),
-(10.00, 1, 4, 28),
-(10.00, 1, 5, 28),
-(10.00, 1, 6, 28),
-(10.00, 1, 7, 28),
-(10.00, 1, 8, 28),
-(10.00, 1, 9, 28),
-(10.00, 1, 10, 28),
--- detalles para la compra 29
-(10.00, 1, 1, 29),
-(10.00, 1, 2, 29),
-(10.00, 1, 3, 29),
-(10.00, 1, 4, 29),
-(10.00, 1, 5, 29),
-(10.00, 1, 6, 29),
-(10.00, 1, 7, 29),
-(10.00, 1, 8, 29),
-(10.00, 1, 9, 29),
-(10.00, 1, 10, 29),
--- detalles para la compra 30
-(10.00, 1, 1, 30),
-(10.00, 1, 2, 30),
-(10.00, 1, 3, 30),
-(10.00, 1, 4, 30),
-(10.00, 1, 5, 30),
-(10.00, 1, 6, 30),
-(10.00, 1, 7, 30),
-(10.00, 1, 8, 30),
-(10.00, 1, 9, 30),
-(10.00, 1, 10, 30),
--- detalles para la compra 31
-(10.00, 1, 1, 31),
-(10.00, 1, 2, 31),
-(10.00, 1, 3, 31),
-(10.00, 1, 4, 31),
-(10.00, 1, 5, 31),
-(10.00, 1, 6, 31),
-(10.00, 1, 7, 31),
-(10.00, 1, 8, 31),
-(10.00, 1, 9, 31),
-(10.00, 1, 10, 31),
--- detalles para la compra 32
-(10.00, 1, 1, 32),
-(10.00, 1, 2, 32),
-(10.00, 1, 3, 32),
-(10.00, 1, 4, 32),
-(10.00, 1, 5, 32),
-(10.00, 1, 6, 32),
-(10.00, 1, 7, 32),
-(10.00, 1, 8, 32),
-(10.00, 1, 9, 32),
-(10.00, 1, 10, 32),
--- detalles para la compra 33
-(10.00, 1, 1, 33),
-(10.00, 1, 2, 33),
-(10.00, 1, 3, 33),
-(10.00, 1, 4, 33),
-(10.00, 1, 5, 33),
-(10.00, 1, 6, 33),
-(10.00, 1, 7, 33),
-(10.00, 1, 8, 33),
-(10.00, 1, 9, 33),
-(10.00, 1, 10, 33),
--- detalles para la compra 34
-(10.00, 1, 1, 34),
-(10.00, 1, 2, 34),
-(10.00, 1, 3, 34),
-(10.00, 1, 4, 34),
-(10.00, 1, 5, 34),
-(10.00, 1, 6, 34),
-(10.00, 1, 7, 34),
-(10.00, 1, 8, 34),
-(10.00, 1, 9, 34),
-(10.00, 1, 10, 34),
--- detalles para la compra 35
-(10.00, 1, 1, 35),
-(10.00, 1, 2, 35),
-(10.00, 1, 3, 35),
-(10.00, 1, 4, 35),
-(10.00, 1, 5, 35),
-(10.00, 1, 6, 35),
-(10.00, 1, 7, 35),
-(10.00, 1, 8, 35),
-(10.00, 1, 9, 35),
-(10.00, 1, 10, 35),
--- detalles para la compra 36
-(10.00, 1, 1, 36),
-(10.00, 1, 2, 36),
-(10.00, 1, 3, 36),
-(10.00, 1, 4, 36),
-(10.00, 1, 5, 36),
-(10.00, 1, 6, 36),
-(10.00, 1, 7, 36),
-(10.00, 1, 8, 36),
-(10.00, 1, 9, 36),
-(10.00, 1, 10, 36),
--- detalles para la compra 37
-(10.00, 1, 1, 37),
-(10.00, 1, 2, 37),
-(10.00, 1, 3, 37),
-(10.00, 1, 4, 37),
-(10.00, 1, 5, 37),
-(10.00, 1, 6, 37),
-(10.00, 1, 7, 37),
-(10.00, 1, 8, 37),
-(10.00, 1, 9, 37),
-(10.00, 1, 10, 37),
--- detalles para la compra 38
-(10.00, 1, 1, 38),
-(10.00, 1, 2, 38),
-(10.00, 1, 3, 38),
-(10.00, 1, 4, 38),
-(10.00, 1, 5, 38),
-(10.00, 1, 6, 38),
-(10.00, 1, 7, 38),
-(10.00, 1, 8, 38),
-(10.00, 1, 9, 38),
-(10.00, 1, 10, 38),
--- detalles para la compra 39
-(10.00, 1, 1, 39),
-(10.00, 1, 2, 39),
-(10.00, 1, 3, 39),
-(10.00, 1, 4, 39),
-(10.00, 1, 5, 39),
-(10.00, 1, 6, 39),
-(10.00, 1, 7, 39),
-(10.00, 1, 8, 39),
-(10.00, 1, 9, 39),
-(10.00, 1, 10, 39),
--- detalles para la compra 40
-(10.00, 1, 1, 40),
-(10.00, 1, 2, 40),
-(10.00, 1, 3, 40),
-(10.00, 1, 4, 40),
-(10.00, 1, 5, 40),
-(10.00, 1, 6, 40),
-(10.00, 1, 7, 40),
-(10.00, 1, 8, 40),
-(10.00, 1, 9, 40),
-(10.00, 1, 10, 40); 
+-- Detalles para compra 3 (monto_total: 120.00)
+(20.00, 3, 10, 3),   -- 60.00
+(30.00, 1, 25, 3),   -- 30.00
+(30.00, 1, 40, 3),   -- 30.00 (Total: 120.00)
 
-INSERT INTO Compra (monto_total, id_cliente_juridico, id_cliente_natural, tienda_web_id_tienda, tienda_fisica_id_tienda) VALUES
-(100.00, NULL, 1, 1, NULL),
-(100.00, NULL, 2, 1, NULL),
-(100.00, NULL, 3, 1, NULL);
+-- Detalles para compra 4 (monto_total: 200.00)
+(40.00, 2, 8, 4),    -- 80.00
+(30.00, 3, 18, 4),   -- 90.00
+(30.00, 1, 45, 4),   -- 30.00 (Total: 200.00)
 
--- Febrero 2024 - 3 ventas web
-INSERT INTO Compra (monto_total, id_cliente_juridico, id_cliente_natural, tienda_web_id_tienda, tienda_fisica_id_tienda) VALUES
-(100.00, NULL, 4, 1, NULL),
-(100.00, NULL, 5, 1, NULL),
-(100.00, NULL, 6, 1, NULL);
+-- Detalles para compra 5 (monto_total: 160.00)
+(25.00, 3, 12, 5),   -- 75.00
+(35.00, 2, 22, 5),   -- 70.00
+(15.00, 1, 50, 5),   -- 15.00 (Total: 160.00)
 
--- Marzo 2024 - 3 ventas web
-INSERT INTO Compra (monto_total, id_cliente_juridico, id_cliente_natural, tienda_web_id_tienda, tienda_fisica_id_tienda) VALUES
-(100.00, NULL, 7, 1, NULL),
-(100.00, NULL, 8, 1, NULL),
-(100.00, NULL, 9, 1, NULL);
+-- Detalles para compra 6 (monto_total: 140.00)
+(20.00, 4, 7, 6),    -- 80.00
+(30.00, 1, 28, 6),   -- 30.00
+(30.00, 1, 42, 6),   -- 30.00 (Total: 140.00)
 
--- Abril 2024 - 3 ventas web
-INSERT INTO Compra (monto_total, id_cliente_juridico, id_cliente_natural, tienda_web_id_tienda, tienda_fisica_id_tienda) VALUES
-(100.00, NULL, 10, 1, NULL),
-(100.00, NULL, 11, 1, NULL),
-(100.00, NULL, 12, 1, NULL);
+-- Detalles para compra 7 (monto_total: 190.00)
+(35.00, 2, 14, 7),   -- 70.00
+(40.00, 2, 32, 7),   -- 80.00
+(40.00, 1, 48, 7),   -- 40.00 (Total: 190.00)
 
--- Mayo 2024 - 3 ventas web
-INSERT INTO Compra (monto_total, id_cliente_juridico, id_cliente_natural, tienda_web_id_tienda, tienda_fisica_id_tienda) VALUES
-(100.00, NULL, 13, 1, NULL),
-(100.00, NULL, 14, 1, NULL),
-(100.00, NULL, 15, 1, NULL);
+-- Detalles para compra 8 (monto_total: 170.00)
+(30.00, 3, 9, 8),    -- 90.00
+(25.00, 2, 26, 8),   -- 50.00
+(30.00, 1, 44, 8),   -- 30.00 (Total: 170.00)
 
--- Junio 2024 - 3 ventas web
-INSERT INTO Compra (monto_total, id_cliente_juridico, id_cliente_natural, tienda_web_id_tienda, tienda_fisica_id_tienda) VALUES
-(100.00, NULL, 16, 1, NULL),
-(100.00, NULL, 17, 1, NULL),
-(100.00, NULL, 18, 1, NULL);
+-- Detalles para compra 9 (monto_total: 130.00)
+(25.00, 2, 16, 9),   -- 50.00
+(40.00, 1, 33, 9),   -- 40.00
+(40.00, 1, 49, 9),   -- 40.00 (Total: 130.00)
 
--- Julio 2024 - 3 ventas web
-INSERT INTO Compra (monto_total, id_cliente_juridico, id_cliente_natural, tienda_web_id_tienda, tienda_fisica_id_tienda) VALUES
-(100.00, NULL, 19, 1, NULL),
-(100.00, NULL, 20, 1, NULL),
-(100.00, NULL, 1, 1, NULL);
+-- Detalles para compra 10 (monto_total: 210.00)
+(35.00, 3, 11, 10),   -- 105.00
+(35.00, 2, 29, 10),   -- 70.00
+(35.00, 1, 46, 10),   -- 35.00 (Total: 210.00)
 
--- Agosto 2024 - 3 ventas web
-INSERT INTO Compra (monto_total, id_cliente_juridico, id_cliente_natural, tienda_web_id_tienda, tienda_fisica_id_tienda) VALUES
-(100.00, NULL, 2, 1, NULL),
-(100.00, NULL, 3, 1, NULL),
-(100.00, NULL, 4, 1, NULL);
+-- Detalles para compra 11 (monto_total: 145.00)
+(30.00, 2, 19, 11),   -- 60.00
+(25.00, 2, 36, 11),   -- 50.00
+(35.00, 1, 51, 11),   -- 35.00 (Total: 145.00)
 
--- Septiembre 2024 - 3 ventas web
-INSERT INTO Compra (monto_total, id_cliente_juridico, id_cliente_natural, tienda_web_id_tienda, tienda_fisica_id_tienda) VALUES
-(100.00, NULL, 5, 1, NULL),
-(100.00, NULL, 6, 1, NULL),
-(100.00, NULL, 7, 1, NULL);
+-- Detalles para compra 12 (monto_total: 175.00)
+(35.00, 2, 13, 12),   -- 70.00
+(30.00, 2, 31, 12),   -- 60.00
+(45.00, 1, 47, 12),   -- 45.00 (Total: 175.00)
 
--- Octubre 2024 - 3 ventas web
-INSERT INTO Compra (monto_total, id_cliente_juridico, id_cliente_natural, tienda_web_id_tienda, tienda_fisica_id_tienda) VALUES
-(100.00, NULL, 8, 1, NULL),
-(100.00, NULL, 9, 1, NULL),
-(100.00, NULL, 10, 1, NULL);
+-- Detalles para compra 13 (monto_total: 155.00)
+(25.00, 3, 17, 13),   -- 75.00
+(40.00, 1, 34, 13),   -- 40.00
+(40.00, 1, 52, 13),   -- 40.00 (Total: 155.00)
 
--- Noviembre 2024 - 3 ventas web
-INSERT INTO Compra (monto_total, id_cliente_juridico, id_cliente_natural, tienda_web_id_tienda, tienda_fisica_id_tienda) VALUES
-(100.00, NULL, 11, 1, NULL),
-(100.00, NULL, 12, 1, NULL),
-(100.00, NULL, 13, 1, NULL);
+-- Detalles para compra 14 (monto_total: 185.00)
+(30.00, 3, 21, 14),   -- 90.00
+(35.00, 2, 38, 14),   -- 70.00
+(25.00, 1, 53, 14),   -- 25.00 (Total: 185.00)
 
--- Diciembre 2024 - 3 ventas web
-INSERT INTO Compra (monto_total, id_cliente_juridico, id_cliente_natural, tienda_web_id_tienda, tienda_fisica_id_tienda) VALUES
-(100.00, NULL, 14, 1, NULL),
-(100.00, NULL, 15, 1, NULL),
-(100.00, NULL, 16, 1, NULL);
+-- Detalles para compra 15 (monto_total: 135.00)
+(25.00, 2, 23, 15),   -- 50.00
+(30.00, 2, 39, 15),   -- 60.00
+(25.00, 1, 54, 15),   -- 25.00 (Total: 135.00)
 
--- Enero 2025 - 3 ventas web
-INSERT INTO Compra (monto_total, id_cliente_juridico, id_cliente_natural, tienda_web_id_tienda, tienda_fisica_id_tienda) VALUES
-(100.00, NULL, 17, 1, NULL),
-(100.00, NULL, 18, 1, NULL),
-(100.00, NULL, 19, 1, NULL);
+-- Detalles para compra 16 (monto_total: 195.00)
+(35.00, 3, 27, 16),   -- 105.00
+(30.00, 2, 41, 16),   -- 60.00
+(30.00, 1, 6, 16),    -- 30.00 (Total: 195.00)
 
--- Febrero 2025 - 3 ventas web
-INSERT INTO Compra (monto_total, id_cliente_juridico, id_cliente_natural, tienda_web_id_tienda, tienda_fisica_id_tienda) VALUES
-(100.00, NULL, 20, 1, NULL),
-(100.00, NULL, 1, 1, NULL),
-(100.00, NULL, 2, 1, NULL);
+-- Detalles para compra 17 (monto_total: 165.00)
+(30.00, 3, 24, 17),   -- 90.00
+(25.00, 2, 37, 17),   -- 50.00
+(25.00, 1, 43, 17),   -- 25.00 (Total: 165.00)
 
--- Marzo 2025 - 3 ventas web
-INSERT INTO Compra (monto_total, id_cliente_juridico, id_cliente_natural, tienda_web_id_tienda, tienda_fisica_id_tienda) VALUES
-(100.00, NULL, 3, 1, NULL),
-(100.00, NULL, 4, 1, NULL),
-(100.00, NULL, 5, 1, NULL);
+-- Detalles para compra 18 (monto_total: 125.00)
+(25.00, 2, 3, 18),    -- 50.00
+(35.00, 1, 4, 18),    -- 35.00
+(40.00, 1, 2, 18),    -- 40.00 (Total: 125.00)
 
--- Abril 2025 - 3 ventas web
-INSERT INTO Compra (monto_total, id_cliente_juridico, id_cliente_natural, tienda_web_id_tienda, tienda_fisica_id_tienda) VALUES
-(100.00, NULL, 6, 1, NULL),
-(100.00, NULL, 7, 1, NULL),
-(100.00, NULL, 8, 1, NULL);
+-- Detalles para compra 19 (monto_total: 205.00)
+(35.00, 3, 6, 19),    -- 105.00
+(40.00, 2, 8, 19),    -- 80.00
+(20.00, 1, 10, 19),   -- 20.00 (Total: 205.00)
 
--- Mayo 2025 - 3 ventas web
-INSERT INTO Compra (monto_total, id_cliente_juridico, id_cliente_natural, tienda_web_id_tienda, tienda_fisica_id_tienda) VALUES
-(100.00, NULL, 9, 1, NULL),
-(100.00, NULL, 10, 1, NULL),
-(100.00, NULL, 11, 1, NULL);
+-- Detalles para compra 20 (monto_total: 150.00)
+(30.00, 2, 12, 20),   -- 60.00
+(30.00, 2, 14, 20),   -- 60.00
+(30.00, 1, 16, 20),   -- 30.00 (Total: 150.00)
 
--- Junio 2025 - 3 ventas web
-INSERT INTO Compra (monto_total, id_cliente_juridico, id_cliente_natural, tienda_web_id_tienda, tienda_fisica_id_tienda) VALUES
-(100.00, NULL, 12, 1, NULL),
-(100.00, NULL, 13, 1, NULL),
-(100.00, NULL, 14, 1, NULL);
+-- Detalles para compra 21 (monto_total: 160.00)
+(25.00, 3, 18, 21),   -- 75.00
+(35.00, 2, 20, 21),   -- 70.00
+(15.00, 1, 22, 21),   -- 15.00 (Total: 160.00)
 
--- =====================================================
--- VENTAS EN TIENDA FÍSICA (tienda_web_id_tienda = NULL, tienda_fisica_id_tienda = 1)
--- =====================================================
+-- Detalles para compra 22 (monto_total: 175.00)
+(35.00, 2, 24, 22),   -- 70.00
+(30.00, 2, 26, 22),   -- 60.00
+(45.00, 1, 28, 22),   -- 45.00 (Total: 175.00)
 
--- Enero 2024 - 3 ventas física
-INSERT INTO Compra (monto_total, id_cliente_juridico, id_cliente_natural, tienda_web_id_tienda, tienda_fisica_id_tienda) VALUES
-(100.00, NULL, 15, NULL, 1),
-(100.00, NULL, 16, NULL, 1),
-(100.00, NULL, 17, NULL, 1);
+-- Detalles para compra 23 (monto_total: 120.00)
+(20.00, 3, 30, 23),   -- 60.00
+(30.00, 1, 32, 23),   -- 30.00
+(30.00, 1, 34, 23),   -- 30.00 (Total: 120.00)
 
--- Febrero 2024 - 3 ventas física
-INSERT INTO Compra (monto_total, id_cliente_juridico, id_cliente_natural, tienda_web_id_tienda, tienda_fisica_id_tienda) VALUES
-(100.00, NULL, 18, NULL, 1),
-(100.00, NULL, 19, NULL, 1),
-(100.00, NULL, 20, NULL, 1);
+-- Detalles para compra 24 (monto_total: 185.00)
+(30.00, 3, 36, 24),   -- 90.00
+(35.00, 2, 38, 24),   -- 70.00
+(25.00, 1, 40, 24),   -- 25.00 (Total: 185.00)
 
--- Marzo 2024 - 3 ventas física
-INSERT INTO Compra (monto_total, id_cliente_juridico, id_cliente_natural, tienda_web_id_tienda, tienda_fisica_id_tienda) VALUES
-(100.00, NULL, 1, NULL, 1),
-(100.00, NULL, 2, NULL, 1),
-(100.00, NULL, 3, NULL, 1);
+-- Detalles para compra 25 (monto_total: 140.00)
+(25.00, 2, 42, 25),   -- 50.00
+(30.00, 2, 44, 25),   -- 60.00
+(30.00, 1, 46, 25),   -- 30.00 (Total: 140.00)
 
--- Abril 2024 - 3 ventas física
-INSERT INTO Compra (monto_total, id_cliente_juridico, id_cliente_natural, tienda_web_id_tienda, tienda_fisica_id_tienda) VALUES
-(100.00, NULL, 4, NULL, 1),
-(100.00, NULL, 5, NULL, 1),
-(100.00, NULL, 6, NULL, 1);
+-- Detalles para compra 26 (monto_total: 200.00)
+(40.00, 2, 48, 26),   -- 80.00
+(30.00, 3, 50, 26),   -- 90.00
+(30.00, 1, 52, 26),   -- 30.00 (Total: 200.00)
 
--- Mayo 2024 - 3 ventas física
-INSERT INTO Compra (monto_total, id_cliente_juridico, id_cliente_natural, tienda_web_id_tienda, tienda_fisica_id_tienda) VALUES
-(100.00, NULL, 7, NULL, 1),
-(100.00, NULL, 8, NULL, 1),
-(100.00, NULL, 9, NULL, 1);
+-- Detalles para compra 27 (monto_total: 155.00)
+(25.00, 3, 54, 27),   -- 75.00
+(40.00, 1, 1, 27),    -- 40.00
+(40.00, 1, 3, 27),    -- 40.00 (Total: 155.00)
 
--- Junio 2024 - 3 ventas física
-INSERT INTO Compra (monto_total, id_cliente_juridico, id_cliente_natural, tienda_web_id_tienda, tienda_fisica_id_tienda) VALUES
-(100.00, NULL, 10, NULL, 1),
-(100.00, NULL, 11, NULL, 1),
-(100.00, NULL, 12, NULL, 1);
+-- Detalles para compra 28 (monto_total: 175.00)
+(35.00, 2, 5, 28),    -- 70.00
+(30.00, 2, 7, 28),    -- 60.00
+(45.00, 1, 9, 28),    -- 45.00 (Total: 175.00)
 
--- Julio 2024 - 3 ventas física
-INSERT INTO Compra (monto_total, id_cliente_juridico, id_cliente_natural, tienda_web_id_tienda, tienda_fisica_id_tienda) VALUES
-(100.00, NULL, 13, NULL, 1),
-(100.00, NULL, 14, NULL, 1),
-(100.00, NULL, 15, NULL, 1);
+-- Detalles para compra 29 (monto_total: 125.00)
+(25.00, 2, 11, 29),   -- 50.00
+(35.00, 1, 13, 29),   -- 35.00
+(40.00, 1, 15, 29),   -- 40.00 (Total: 125.00)
 
--- Agosto 2024 - 3 ventas física
-INSERT INTO Compra (monto_total, id_cliente_juridico, id_cliente_natural, tienda_web_id_tienda, tienda_fisica_id_tienda) VALUES
-(100.00, NULL, 16, NULL, 1),
-(100.00, NULL, 17, NULL, 1),
-(100.00, NULL, 18, NULL, 1);
+-- Detalles para compra 30 (monto_total: 205.00)
+(35.00, 3, 17, 30),   -- 105.00
+(40.00, 2, 19, 30),   -- 80.00
+(20.00, 1, 21, 30),   -- 20.00 (Total: 205.00)
 
--- Septiembre 2024 - 3 ventas física
-INSERT INTO Compra (monto_total, id_cliente_juridico, id_cliente_natural, tienda_web_id_tienda, tienda_fisica_id_tienda) VALUES
-(100.00, NULL, 19, NULL, 1),
-(100.00, NULL, 20, NULL, 1),
-(100.00, NULL, 1, NULL, 1);
+-- Detalles para compra 31 (monto_total: 160.00)
+(30.00, 3, 23, 31),   -- 90.00
+(25.00, 2, 25, 31),   -- 50.00
+(20.00, 1, 27, 31),   -- 20.00 (Total: 160.00)
 
--- Octubre 2024 - 3 ventas física
-INSERT INTO Compra (monto_total, id_cliente_juridico, id_cliente_natural, tienda_web_id_tienda, tienda_fisica_id_tienda) VALUES
-(100.00, NULL, 2, NULL, 1),
-(100.00, NULL, 3, NULL, 1),
-(100.00, NULL, 4, NULL, 1);
+-- Detalles para compra 32 (monto_total: 135.00)
+(25.00, 2, 29, 32),   -- 50.00
+(30.00, 2, 31, 32),   -- 60.00
+(25.00, 1, 33, 32),   -- 25.00 (Total: 135.00)
 
--- Noviembre 2024 - 3 ventas física
-INSERT INTO Compra (monto_total, id_cliente_juridico, id_cliente_natural, tienda_web_id_tienda, tienda_fisica_id_tienda) VALUES
-(100.00, NULL, 5, NULL, 1),
-(100.00, NULL, 6, NULL, 1),
-(100.00, NULL, 7, NULL, 1);
+-- Detalles para compra 33 (monto_total: 195.00)
+(35.00, 3, 35, 33),   -- 105.00
+(30.00, 2, 37, 33),   -- 60.00
+(30.00, 1, 39, 33),   -- 30.00 (Total: 195.00)
 
--- Diciembre 2024 - 3 ventas física
-INSERT INTO Compra (monto_total, id_cliente_juridico, id_cliente_natural, tienda_web_id_tienda, tienda_fisica_id_tienda) VALUES
-(100.00, NULL, 8, NULL, 1),
-(100.00, NULL, 9, NULL, 1),
-(100.00, NULL, 10, NULL, 1);
+-- Detalles para compra 34 (monto_total: 170.00)
+(30.00, 3, 41, 34),   -- 90.00
+(25.00, 2, 43, 34),   -- 50.00
+(30.00, 1, 45, 34),   -- 30.00 (Total: 170.00)
 
--- Enero 2025 - 3 ventas física
-INSERT INTO Compra (monto_total, id_cliente_juridico, id_cliente_natural, tienda_web_id_tienda, tienda_fisica_id_tienda) VALUES
-(100.00, NULL, 11, NULL, 1),
-(100.00, NULL, 12, NULL, 1),
-(100.00, NULL, 13, NULL, 1);
+-- Detalles para compra 35 (monto_total: 145.00)
+(30.00, 2, 47, 35),   -- 60.00
+(25.00, 2, 49, 35),   -- 50.00
+(35.00, 1, 51, 35),   -- 35.00 (Total: 145.00)
 
--- Febrero 2025 - 3 ventas física
-INSERT INTO Compra (monto_total, id_cliente_juridico, id_cliente_natural, tienda_web_id_tienda, tienda_fisica_id_tienda) VALUES
-(100.00, NULL, 14, NULL, 1),
-(100.00, NULL, 15, NULL, 1),
-(100.00, NULL, 16, NULL, 1);
+-- Detalles para compra 36 (monto_total: 205.00)
+(35.00, 3, 53, 36),   -- 105.00
+(40.00, 2, 2, 36),    -- 80.00
+(20.00, 1, 4, 36),    -- 20.00 (Total: 205.00)
 
--- Marzo 2025 - 3 ventas física
-INSERT INTO Compra (monto_total, id_cliente_juridico, id_cliente_natural, tienda_web_id_tienda, tienda_fisica_id_tienda) VALUES
-(100.00, NULL, 17, NULL, 1),
-(100.00, NULL, 18, NULL, 1),
-(100.00, NULL, 19, NULL, 1);
+-- Detalles para compra 37 (monto_total: 160.00)
+(25.00, 3, 6, 37),    -- 75.00
+(35.00, 2, 8, 37),    -- 70.00
+(15.00, 1, 10, 37),   -- 15.00 (Total: 160.00)
 
--- Abril 2025 - 3 ventas física
-INSERT INTO Compra (monto_total, id_cliente_juridico, id_cliente_natural, tienda_web_id_tienda, tienda_fisica_id_tienda) VALUES
-(100.00, NULL, 20, NULL, 1),
-(100.00, NULL, 1, NULL, 1),
-(100.00, NULL, 2, NULL, 1);
+-- Detalles para compra 38 (monto_total: 135.00)
+(25.00, 2, 12, 38),   -- 50.00
+(30.00, 2, 14, 38),   -- 60.00
+(25.00, 1, 16, 38),   -- 25.00 (Total: 135.00)
 
--- Mayo 2025 - 3 ventas física
-INSERT INTO Compra (monto_total, id_cliente_juridico, id_cliente_natural, tienda_web_id_tienda, tienda_fisica_id_tienda) VALUES
-(100.00, NULL, 3, NULL, 1),
-(100.00, NULL, 4, NULL, 1),
-(100.00, NULL, 5, NULL, 1);
+-- Detalles para compra 39 (monto_total: 195.00)
+(35.00, 3, 18, 39),   -- 105.00
+(30.00, 2, 20, 39),   -- 60.00
+(30.00, 1, 22, 39),   -- 30.00 (Total: 195.00)
 
--- Junio 2025 - 3 ventas física
-INSERT INTO Compra (monto_total, id_cliente_juridico, id_cliente_natural, tienda_web_id_tienda, tienda_fisica_id_tienda) VALUES
-(100.00, NULL, 6, NULL, 1),
-(100.00, NULL, 7, NULL, 1),
-(100.00, NULL, 8, NULL, 1);
+-- Detalles para compra 40 (monto_total: 170.00)
+(30.00, 3, 24, 40),   -- 90.00
+(25.00, 2, 26, 40),   -- 50.00
+(30.00, 1, 28, 40),   -- 30.00 (Total: 170.00)
 
--- =====================================================
--- INSERTS DE COMPRA_ESTATUS PARA TODAS LAS VENTAS
--- =====================================================
--- Asigna el estatus "Atendida" (ID=3) a todas las ventas con fechas distribuidas por mes
+-- Detalles para compra 41 (monto_total: 145.00)
+(30.00, 2, 30, 41),   -- 60.00
+(25.00, 2, 32, 41),   -- 50.00
+(35.00, 1, 34, 41),   -- 35.00 (Total: 145.00)
 
-INSERT INTO Compra_Estatus (compra_id_compra, estatus_id_estatus, fecha_hora_asignacion, fecha_hora_fin) VALUES
--- Enero 2024 - Ventas Web (IDs 61-63)
-(61, 3, '2024-01-05 14:30:00', NULL),
-(62, 3, '2024-01-12 16:45:00', NULL),
-(63, 3, '2024-01-18 11:20:00', NULL),
--- Enero 2024 - Ventas Física (IDs 64-66)
-(64, 3, '2024-01-08 09:15:00', NULL),
-(65, 3, '2024-01-15 13:40:00', NULL),
-(66, 3, '2024-01-22 17:25:00', NULL),
+-- Detalles para compra 42 (monto_total: 205.00)
+(35.00, 3, 36, 42),   -- 105.00
+(40.00, 2, 38, 42),   -- 80.00
+(20.00, 1, 40, 42),   -- 20.00 (Total: 205.00)
 
--- Febrero 2024 - Ventas Web (IDs 67-69)
-(67, 3, '2024-02-03 15:10:00', NULL),
-(68, 3, '2024-02-10 12:35:00', NULL),
-(69, 3, '2024-02-17 18:50:00', NULL),
--- Febrero 2024 - Ventas Física (IDs 70-72)
-(70, 3, '2024-02-06 10:20:00', NULL),
-(71, 3, '2024-02-13 14:55:00', NULL),
-(72, 3, '2024-02-20 16:30:00', NULL),
+-- Detalles para compra 43 (monto_total: 160.00)
+(25.00, 3, 42, 43),   -- 75.00
+(35.00, 2, 44, 43),   -- 70.00
+(15.00, 1, 46, 43),   -- 15.00 (Total: 160.00)
 
--- Marzo 2024 - Ventas Web (IDs 73-75)
-(73, 3, '2024-03-02 11:45:00', NULL),
-(74, 3, '2024-03-09 13:20:00', NULL),
-(75, 3, '2024-03-16 15:40:00', NULL),
--- Marzo 2024 - Ventas Física (IDs 76-78)
-(76, 3, '2024-03-05 09:30:00', NULL),
-(77, 3, '2024-03-12 17:15:00', NULL),
-(78, 3, '2024-03-19 12:50:00', NULL),
+-- Detalles para compra 44 (monto_total: 135.00)
+(25.00, 2, 48, 44),   -- 50.00
+(30.00, 2, 50, 44),   -- 60.00
+(25.00, 1, 52, 44),   -- 25.00 (Total: 135.00)
 
--- Abril 2024 - Ventas Web (IDs 79-81)
-(79, 3, '2024-04-01 14:25:00', NULL),
-(80, 3, '2024-04-08 16:40:00', NULL),
-(81, 3, '2024-04-15 10:55:00', NULL),
--- Abril 2024 - Ventas Física (IDs 82-84)
-(82, 3, '2024-04-04 11:30:00', NULL),
-(83, 3, '2024-04-11 13:45:00', NULL),
-(84, 3, '2024-04-18 18:20:00', NULL),
+-- Detalles para compra 45 (monto_total: 195.00)
+(35.00, 3, 54, 45),   -- 105.00
+(30.00, 2, 1, 45),    -- 60.00
+(30.00, 1, 3, 45),    -- 30.00 (Total: 195.00)
 
--- Mayo 2024 - Ventas Web (IDs 85-87)
-(85, 3, '2024-05-03 12:15:00', NULL),
-(86, 3, '2024-05-10 15:30:00', NULL),
-(87, 3, '2024-05-17 17:45:00', NULL),
--- Mayo 2024 - Ventas Física (IDs 88-90)
-(88, 3, '2024-05-06 09:40:00', NULL),
-(89, 3, '2024-05-13 14:25:00', NULL),
-(90, 3, '2024-05-20 16:50:00', NULL),
+-- Detalles para compra 46 (monto_total: 170.00)
+(30.00, 3, 5, 46),    -- 90.00
+(25.00, 2, 7, 46),    -- 50.00
+(30.00, 1, 9, 46),    -- 30.00 (Total: 170.00)
 
--- Junio 2024 - Ventas Web (IDs 91-93)
-(91, 3, '2024-06-01 11:20:00', NULL),
-(92, 3, '2024-06-08 13:35:00', NULL),
-(93, 3, '2024-06-15 15:50:00', NULL),
--- Junio 2024 - Ventas Física (IDs 94-96)
-(94, 3, '2024-06-04 10:15:00', NULL),
-(95, 3, '2024-06-11 12:40:00', NULL),
-(96, 3, '2024-06-18 18:25:00', NULL),
+-- Detalles para compra 47 (monto_total: 145.00)
+(30.00, 2, 11, 47),   -- 60.00
+(25.00, 2, 13, 47),   -- 50.00
+(35.00, 1, 15, 47),   -- 35.00 (Total: 145.00)
 
--- Julio 2024 - Ventas Web (IDs 97-99)
-(97, 3, '2024-07-02 14:30:00', NULL),
-(98, 3, '2024-07-09 16:45:00', NULL),
-(99, 3, '2024-07-16 11:10:00', NULL),
--- Julio 2024 - Ventas Física (IDs 100-102)
-(100, 3, '2024-07-05 09:25:00', NULL),
-(101, 3, '2024-07-12 13:50:00', NULL),
-(102, 3, '2024-07-19 17:35:00', NULL),
+-- Detalles para compra 48 (monto_total: 205.00)
+(35.00, 3, 17, 48),   -- 105.00
+(40.00, 2, 19, 48),   -- 80.00
+(20.00, 1, 21, 48),   -- 20.00 (Total: 205.00)
 
--- Agosto 2024 - Ventas Web (IDs 103-105)
-(103, 3, '2024-08-01 12:40:00', NULL),
-(104, 3, '2024-08-08 15:55:00', NULL),
-(105, 3, '2024-08-15 18:20:00', NULL),
--- Agosto 2024 - Ventas Física (IDs 106-108)
-(106, 3, '2024-08-04 10:30:00', NULL),
-(107, 3, '2024-08-11 14:45:00', NULL),
-(108, 3, '2024-08-18 16:10:00', NULL),
+-- Detalles para compra 49 (monto_total: 160.00)
+(25.00, 3, 23, 49),   -- 75.00
+(35.00, 2, 25, 49),   -- 70.00
+(15.00, 1, 27, 49),   -- 15.00 (Total: 160.00)
 
--- Septiembre 2024 - Ventas Web (IDs 109-111)
-(109, 3, '2024-09-02 11:35:00', NULL),
-(110, 3, '2024-09-09 13:50:00', NULL),
-(111, 3, '2024-09-16 15:25:00', NULL),
--- Septiembre 2024 - Ventas Física (IDs 112-114)
-(112, 3, '2024-09-05 09:40:00', NULL),
-(113, 3, '2024-09-12 14:15:00', NULL),
-(114, 3, '2024-09-19 17:30:00', NULL),
+-- Detalles para compra 50 (monto_total: 135.00)
+(25.00, 2, 29, 50),   -- 50.00
+(30.00, 2, 31, 50),   -- 60.00
+(25.00, 1, 33, 50),   -- 25.00 (Total: 135.00)
 
--- Octubre 2024 - Ventas Web (IDs 115-117)
-(115, 3, '2024-10-01 12:45:00', NULL),
-(116, 3, '2024-10-08 15:20:00', NULL),
-(117, 3, '2024-10-15 18:35:00', NULL),
--- Octubre 2024 - Ventas Física (IDs 118-120)
-(118, 3, '2024-10-04 10:50:00', NULL),
-(119, 3, '2024-10-11 13:25:00', NULL),
-(120, 3, '2024-10-18 16:40:00', NULL),
+-- Detalles para compra 51 (monto_total: 195.00)
+(35.00, 3, 35, 51),   -- 105.00
+(30.00, 2, 37, 51),   -- 60.00
+(30.00, 1, 39, 51),   -- 30.00 (Total: 195.00)
 
--- Noviembre 2024 - Ventas Web (IDs 121-123)
-(121, 3, '2024-11-02 11:15:00', NULL),
-(122, 3, '2024-11-09 13:30:00', NULL),
-(123, 3, '2024-11-16 15:45:00', NULL),
--- Noviembre 2024 - Ventas Física (IDs 124-126)
-(124, 3, '2024-11-05 09:20:00', NULL),
-(125, 3, '2024-11-12 14:35:00', NULL),
-(126, 3, '2024-11-19 17:50:00', NULL),
-
--- Diciembre 2024 - Ventas Web (IDs 127-129)
-(127, 3, '2024-12-01 12:25:00', NULL),
-(128, 3, '2024-12-08 15:40:00', NULL),
-(129, 3, '2024-12-15 18:15:00', NULL),
--- Diciembre 2024 - Ventas Física (IDs 130-132)
-(130, 3, '2024-12-04 10:30:00', NULL),
-(131, 3, '2024-12-11 13:45:00', NULL),
-(132, 3, '2024-12-18 16:20:00', NULL),
-
--- Enero 2025 - Ventas Web (IDs 133-135)
-(133, 3, '2025-01-03 11:35:00', NULL),
-(134, 3, '2025-01-10 13:50:00', NULL),
-(135, 3, '2025-01-17 15:25:00', NULL),
--- Enero 2025 - Ventas Física (IDs 136-138)
-(136, 3, '2025-01-06 09:40:00', NULL),
-(137, 3, '2025-01-13 14:15:00', NULL),
-(138, 3, '2025-01-20 17:30:00', NULL),
-
--- Febrero 2025 - Ventas Web (IDs 139-141)
-(139, 3, '2025-02-02 12:45:00', NULL),
-(140, 3, '2025-02-09 15:20:00', NULL),
-(141, 3, '2025-02-16 18:35:00', NULL),
--- Febrero 2025 - Ventas Física (IDs 142-144)
-(142, 3, '2025-02-05 10:50:00', NULL),
-(143, 3, '2025-02-12 13:25:00', NULL),
-(144, 3, '2025-02-19 16:40:00', NULL),
-
--- Marzo 2025 - Ventas Web (IDs 145-147)
-(145, 3, '2025-03-02 11:15:00', NULL),
-(146, 3, '2025-03-09 13:30:00', NULL),
-(147, 3, '2025-03-16 15:45:00', NULL),
--- Marzo 2025 - Ventas Física (IDs 148-150)
-(148, 3, '2025-03-05 09:20:00', NULL),
-(149, 3, '2025-03-12 14:35:00', NULL),
-(150, 3, '2025-03-19 17:50:00', NULL),
-
--- Abril 2025 - Ventas Web (IDs 151-153)
-(151, 3, '2025-04-01 12:25:00', NULL),
-(152, 3, '2025-04-08 15:40:00', NULL),
-(153, 3, '2025-04-15 18:15:00', NULL),
--- Abril 2025 - Ventas Física (IDs 154-156)
-(154, 3, '2025-04-04 10:30:00', NULL),
-(155, 3, '2025-04-11 13:45:00', NULL),
-(156, 3, '2025-04-18 16:20:00', NULL),
-
--- Mayo 2025 - Ventas Web (IDs 157-159)
-(157, 3, '2025-05-03 11:35:00', NULL),
-(158, 3, '2025-05-10 13:50:00', NULL),
-(159, 3, '2025-05-17 15:25:00', NULL),
--- Mayo 2025 - Ventas Física (IDs 160-162)
-(160, 3, '2025-05-06 09:40:00', NULL),
-(161, 3, '2025-05-13 14:15:00', NULL),
-(162, 3, '2025-05-20 17:30:00', NULL),
-
--- Junio 2025 - Ventas Web (IDs 163-165)
-(163, 3, '2025-06-02 12:45:00', NULL),
-(164, 3, '2025-06-09 15:20:00', NULL),
-(165, 3, '2025-06-16 18:35:00', NULL),
--- Junio 2025 - Ventas Física (IDs 166-168)
-(166, 3, '2025-06-05 10:50:00', NULL),
-(167, 3, '2025-06-12 13:25:00', NULL),
-(168, 3, '2025-06-19 16:40:00', NULL);
-
-
+-- Detalles para compra 52 (monto_total: 170.00)
+(30.00, 3, 41, 52),   -- 90.00
+(25.00, 2, 43, 52),   -- 50.00
+(30.00, 1, 45, 52);   -- 30.00 (Total: 170.00)
 
 
 INSERT INTO Compra_Estatus (compra_id_compra, estatus_id_estatus, fecha_hora_asignacion, fecha_hora_fin) VALUES
-(1, 1, '2025-01-15 08:00:00', '2025-01-15 08:30:00'), 
-(1, 2, '2025-01-15 08:30:00', '2025-01-15 09:00:00'),
-(1, 3, '2025-01-15 09:00:00', '2025-01-15 09:15:00'),
-(2, 1, '2025-01-16 10:00:00', '2025-01-16 10:20:00'), 
-(2, 3, '2025-01-16 11:00:00', '2025-01-16 11:10:00'), 
-(2, 2, '2025-01-16 11:10:00', '2025-01-16 13:10:00'), 
-(3, 1, '2025-01-17 14:00:00', '2025-01-17 14:15:00'),  
-(3, 2, '2025-01-17 14:15:00', '2025-01-17 14:30:00'); 
+-- Junio 2024 - 2 compras web
+(1, 3, '2024-06-05 14:30:00', NULL),
+(2, 3, '2024-06-12 16:45:00', NULL),
+
+-- Junio 2024 - 2 compras física
+(3, 3, '2024-06-08 09:15:00', NULL),
+(4, 3, '2024-06-15 13:40:00', NULL),
+
+-- Julio 2024 - 2 compras web
+(5, 3, '2024-07-03 15:10:00', NULL),
+(6, 3, '2024-07-10 12:35:00', NULL),
+
+-- Julio 2024 - 2 compras física
+(7, 3, '2024-07-06 10:20:00', NULL),
+(8, 3, '2024-07-13 14:55:00', NULL),
+
+-- Agosto 2024 - 2 compras web
+(9, 3, '2024-08-02 11:45:00', NULL),
+(10, 3, '2024-08-09 13:20:00', NULL),
+
+-- Agosto 2024 - 2 compras física
+(11, 3, '2024-08-05 09:30:00', NULL),
+(12, 3, '2024-08-12 17:15:00', NULL),
+
+-- Septiembre 2024 - 2 compras web
+(13, 3, '2024-09-01 14:25:00', NULL),
+(14, 3, '2024-09-08 16:40:00', NULL),
+
+-- Septiembre 2024 - 2 compras física
+(15, 3, '2024-09-04 11:30:00', NULL),
+(16, 3, '2024-09-11 13:45:00', NULL),
+
+-- Octubre 2024 - 2 compras web
+(17, 3, '2024-10-03 12:15:00', NULL),
+(18, 3, '2024-10-10 15:30:00', NULL),
+
+-- Octubre 2024 - 2 compras física
+(19, 3, '2024-10-06 09:40:00', NULL),
+(20, 3, '2024-10-13 14:25:00', NULL),
+
+-- Noviembre 2024 - 2 compras web
+(21, 3, '2024-11-02 11:20:00', NULL),
+(22, 3, '2024-11-09 13:35:00', NULL),
+
+-- Noviembre 2024 - 2 compras física
+(23, 3, '2024-11-05 10:15:00', NULL),
+(24, 3, '2024-11-12 12:40:00', NULL),
+
+-- Diciembre 2024 - 2 compras web
+(25, 3, '2024-12-01 14:30:00', NULL),
+(26, 3, '2024-12-08 16:45:00', NULL),
+
+-- Diciembre 2024 - 2 compras física
+(27, 3, '2024-12-04 09:25:00', NULL),
+(28, 3, '2024-12-11 13:50:00', NULL),
+
+-- Enero 2025 - 2 compras web
+(29, 3, '2025-01-02 12:40:00', NULL),
+(30, 3, '2025-01-09 15:55:00', NULL),
+
+-- Enero 2025 - 2 compras física
+(31, 3, '2025-01-05 10:30:00', NULL),
+(32, 3, '2025-01-12 14:45:00', NULL),
+
+-- Febrero 2025 - 2 compras web
+(33, 3, '2025-02-02 11:35:00', NULL),
+(34, 3, '2025-02-09 13:50:00', NULL),
+
+-- Febrero 2025 - 2 compras física
+(35, 3, '2025-02-05 09:40:00', NULL),
+(36, 3, '2025-02-12 14:15:00', NULL),
+
+-- Marzo 2025 - 2 compras web
+(37, 3, '2025-03-01 12:25:00', NULL),
+(38, 3, '2025-03-08 15:40:00', NULL),
+
+-- Marzo 2025 - 2 compras física
+(39, 3, '2025-03-04 10:30:00', NULL),
+(40, 3, '2025-03-11 13:45:00', NULL),
+
+-- Abril 2025 - 2 compras web
+(41, 3, '2025-04-02 11:35:00', NULL),
+(42, 3, '2025-04-09 13:50:00', NULL),
+
+-- Abril 2025 - 2 compras física
+(43, 3, '2025-04-05 09:40:00', NULL),
+(44, 3, '2025-04-12 14:15:00', NULL),
+
+-- Mayo 2025 - 2 compras web
+(45, 3, '2025-05-01 12:25:00', NULL),
+(46, 3, '2025-05-08 15:40:00', NULL),
+
+-- Mayo 2025 - 2 compras física
+(47, 3, '2025-05-04 10:30:00', NULL),
+(48, 3, '2025-05-11 13:45:00', NULL),
+
+-- Junio 2025 - 2 compras web
+(49, 3, '2025-06-02 11:35:00', NULL),
+(50, 3, '2025-06-09 13:50:00', NULL),
+
+-- Junio 2025 - 2 compras física
+(51, 3, '2025-06-05 09:40:00', NULL),
+(52, 3, '2025-06-12 14:15:00', NULL);
+
+
+
+
+
 
 
 INSERT INTO Venta_Evento (evento_id, id_cliente_natural, fecha_compra, total) VALUES
@@ -4854,95 +4117,85 @@ INSERT INTO Descuento (porcentaje, id_promocion, id_tipo_cerveza, id_presentacio
 -- =====================================================
 -- BLOQUE 5: PAGOS (Último - dependen de todo)
 -- =====================================================
-
-
+-- CORRECCIÓN: INSERT INTO Pago_Compra con IDs 1-52 en lugar de 169-220
 INSERT INTO Pago_Compra (metodo_id, compra_id, monto, fecha_hora, referencia, tasa_id) VALUES
-(21, 1, 100.00, '2025-01-15 10:30:00', 'COMP-001-001', 1),
-(22, 2, 100.00, '2025-01-15 11:45:00', 'COMP-002-001', 1),
-(23, 3, 60.00, '2025-01-16 09:15:00', 'COMP-003-001', 2),
-(1, 3, 40.00, '2025-01-16 09:16:00', 'COMP-003-002', 2),
-(24, 4, 100.00, '2025-01-16 14:20:00', 'COMP-004-001', 2),
-(25, 5, 100.00, '2025-01-17 08:30:00', 'COMP-005-001', 3),
-(26, 6, 70.00, '2025-01-17 16:45:00', 'COMP-006-001', 3),
-(2, 6, 30.00, '2025-01-17 16:46:00', 'COMP-006-002', 3),
-(27, 7, 100.00, '2025-01-18 12:10:00', 'COMP-007-001', 4),
-(28, 8, 100.00, '2025-01-18 15:25:00', 'COMP-008-001', 4),
-(29, 9, 100.00, '2025-01-19 09:40:00', 'COMP-009-001', 5),
-(30, 10, 80.00, '2025-01-19 13:55:00', 'COMP-010-001', 5),
-(3, 10, 20.00, '2025-01-19 13:56:00', 'COMP-010-002', 5),
-(31, 11, 100.00, '2025-01-20 10:15:00', 'COMP-011-001', 6),
-(32, 12, 100.00, '2025-01-20 14:30:00', 'COMP-012-001', 6),
-(33, 13, 100.00, '2025-01-21 08:45:00', 'COMP-013-001', 7),
-(34, 14, 100.00, '2025-01-21 11:20:00', 'COMP-014-001', 7),
-(35, 15, 100.00, '2025-01-22 09:35:00', 'COMP-015-001', 8),
-(36, 16, 75.00, '2025-01-22 16:10:00', 'COMP-016-001', 8),
-(4, 16, 25.00, '2025-01-22 16:11:00', 'COMP-016-002', 8),
-(37, 17, 100.00, '2025-01-23 10:25:00', 'COMP-017-001', 9),
-(38, 18, 100.00, '2025-01-23 13:40:00', 'COMP-018-001', 9),
-(39, 19, 100.00, '2025-01-24 08:55:00', 'COMP-019-001', 10),
-(40, 20, 100.00, '2025-01-24 15:15:00', 'COMP-020-001', 10),
-(11, 21, 100.00, '2025-01-25 09:30:00', 'COMP-021-001', 1),
-(12, 22, 100.00, '2025-01-25 12:45:00', 'COMP-022-001', 1),
-(13, 23, 100.00, '2025-01-26 10:00:00', 'COMP-023-001', 2),
-(14, 24, 90.00, '2025-01-26 14:15:00', 'COMP-024-001', 2),
-(5, 24, 10.00, '2025-01-26 14:16:00', 'COMP-024-002', 2),
-(15, 25, 100.00, '2025-01-27 08:30:00', 'COMP-025-001', 3),
-(16, 26, 100.00, '2025-01-27 11:45:00', 'COMP-026-001', 3),
-(17, 27, 100.00, '2025-01-28 09:00:00', 'COMP-027-001', 4),
-(18, 28, 100.00, '2025-01-28 13:20:00', 'COMP-028-001', 4),
-(19, 29, 100.00, '2025-01-29 10:35:00', 'COMP-029-001', 5),
-(20, 30, 100.00, '2025-01-29 15:50:00', 'COMP-030-001', 5),
-(21, 31, 100.00, '2025-01-30 09:15:00', 'COMP-031-001', 6),
-(22, 32, 85.00, '2025-01-30 12:30:00', 'COMP-032-001', 6),
-(6, 32, 15.00, '2025-01-30 12:31:00', 'COMP-032-002', 6),
-(23, 33, 100.00, '2025-01-31 08:45:00', 'COMP-033-001', 7),
-(24, 34, 100.00, '2025-01-31 14:00:00', 'COMP-034-001', 7),
-(25, 35, 100.00, '2025-02-01 10:20:00', 'COMP-035-001', 8),
-(26, 36, 100.00, '2025-02-01 13:35:00', 'COMP-036-001', 8),
-(27, 37, 100.00, '2025-02-02 09:50:00', 'COMP-037-001', 9),
-(28, 38, 100.00, '2025-02-02 12:05:00', 'COMP-038-001', 9),
-(29, 39, 100.00, '2025-02-03 08:20:00', 'COMP-039-001', 10),
-(30, 40, 100.00, '2025-02-03 15:40:00', 'COMP-040-001', 10),
-(11, 41, 100.00, '2025-02-04 09:10:00', 'COMP-041-001', 1),
-(12, 42, 100.00, '2025-02-04 11:25:00', 'COMP-042-001', 1),
-(13, 43, 100.00, '2025-02-05 08:40:00', 'COMP-043-001', 2),
-(14, 44, 100.00, '2025-02-05 13:55:00', 'COMP-044-001', 2),
-(15, 45, 100.00, '2025-02-06 10:10:00', 'COMP-045-001', 3),
-(16, 46, 100.00, '2025-02-06 14:25:00', 'COMP-046-001', 3),
-(17, 47, 100.00, '2025-02-07 09:40:00', 'COMP-047-001', 4),
-(18, 48, 100.00, '2025-02-07 12:55:00', 'COMP-048-001', 4),
-(19, 49, 100.00, '2025-02-08 08:15:00', 'COMP-049-001', 5),
-(20, 50, 100.00, '2025-02-08 15:30:00', 'COMP-050-001', 5),
-(21, 51, 100.00, '2025-02-09 10:45:00', 'COMP-051-001', 6),
-(22, 52, 100.00, '2025-02-09 13:00:00', 'COMP-052-001', 6),
-(23, 53, 100.00, '2025-02-10 09:20:00', 'COMP-053-001', 7),
-(24, 54, 100.00, '2025-02-10 14:35:00', 'COMP-054-001', 7),
-(25, 55, 100.00, '2025-02-11 08:50:00', 'COMP-055-001', 8),
-(26, 56, 100.00, '2025-02-11 12:05:00', 'COMP-056-001', 8),
-(27, 57, 100.00, '2025-02-12 10:20:00', 'COMP-057-001', 9),
-(28, 58, 100.00, '2025-02-12 15:35:00', 'COMP-058-001', 9),
-(29, 59, 100.00, '2025-02-13 09:50:00', 'COMP-059-001', 10),
-(30, 60, 100.00, '2025-02-13 13:05:00', 'COMP-060-001', 10),
-(31, 61, 100.00, '2025-02-14 08:25:00', 'COMP-061-001', 1),
-(32, 62, 100.00, '2025-02-14 11:40:00', 'COMP-062-001', 1),
-(33, 63, 100.00, '2025-02-15 09:55:00', 'COMP-063-001', 2),
-(34, 64, 100.00, '2025-02-15 14:10:00', 'COMP-064-001', 2),
-(35, 65, 100.00, '2025-02-16 10:25:00', 'COMP-065-001', 3),
-(36, 66, 100.00, '2025-02-16 13:40:00', 'COMP-066-001', 3),
-(37, 67, 100.00, '2025-02-17 08:55:00', 'COMP-067-001', 4),
-(38, 68, 100.00, '2025-02-17 12:10:00', 'COMP-068-001', 4),
-(39, 69, 100.00, '2025-02-18 09:30:00', 'COMP-069-001', 5),
-(40, 70, 100.00, '2025-02-18 14:45:00', 'COMP-070-001', 5),
-(11, 71, 100.00, '2025-02-19 10:00:00', 'COMP-071-001', 6),
-(12, 72, 100.00, '2025-02-19 13:15:00', 'COMP-072-001', 6),
-(13, 73, 100.00, '2025-02-20 08:35:00', 'COMP-073-001', 7),
-(14, 74, 100.00, '2025-02-20 11:50:00', 'COMP-074-001', 7),
-(15, 75, 100.00, '2025-02-21 09:05:00', 'COMP-075-001', 8),
-(16, 76, 100.00, '2025-02-21 14:20:00', 'COMP-076-001', 8),
-(17, 77, 100.00, '2025-02-22 10:40:00', 'COMP-077-001', 9),
-(18, 78, 100.00, '2025-02-22 13:55:00', 'COMP-078-001', 9),
-(19, 79, 100.00, '2025-02-23 09:15:00', 'COMP-079-001', 10),
-(20, 80, 100.00, '2025-02-23 15:30:00', 'COMP-080-001', 10);
+-- Pagos para compras 1-4 (Junio 2024)
+(1, 1, 150.00, '2024-06-05 14:30:00', 'PAG-2024-001', 1),
+(2, 2, 180.00, '2024-06-12 16:45:00', 'PAG-2024-002', 1),
+(3, 3, 120.00, '2024-06-08 09:15:00', 'PAG-2024-003', 1),
+(4, 4, 200.00, '2024-06-15 13:40:00', 'PAG-2024-004', 1),
+
+-- Pagos para compras 5-8 (Julio 2024)
+(5, 5, 160.00, '2024-07-03 15:10:00', 'PAG-2024-005', 1),
+(6, 6, 140.00, '2024-07-10 12:35:00', 'PAG-2024-006', 1),
+(7, 7, 190.00, '2024-07-06 10:20:00', 'PAG-2024-007', 1),
+(8, 8, 170.00, '2024-07-13 14:55:00', 'PAG-2024-008', 1),
+
+-- Pagos para compras 9-12 (Agosto 2024)
+(9, 9, 130.00, '2024-08-02 11:45:00', 'PAG-2024-009', 1),
+(10, 10, 210.00, '2024-08-09 13:20:00', 'PAG-2024-010', 1),
+(11, 11, 145.00, '2024-08-05 09:30:00', 'PAG-2024-011', 1),
+(12, 12, 175.00, '2024-08-12 17:15:00', 'PAG-2024-012', 1),
+
+-- Pagos para compras 13-16 (Septiembre 2024)
+(13, 13, 155.00, '2024-09-01 14:25:00', 'PAG-2024-013', 1),
+(14, 14, 185.00, '2024-09-08 16:40:00', 'PAG-2024-014', 1),
+(15, 15, 135.00, '2024-09-04 11:30:00', 'PAG-2024-015', 1),
+(16, 16, 195.00, '2024-09-11 13:45:00', 'PAG-2024-016', 1),
+
+-- Pagos para compras 17-20 (Octubre 2024)
+(17, 17, 165.00, '2024-10-03 12:15:00', 'PAG-2024-017', 1),
+(18, 18, 125.00, '2024-10-10 15:30:00', 'PAG-2024-018', 1),
+(19, 19, 205.00, '2024-10-06 09:40:00', 'PAG-2024-019', 1),
+(20, 20, 150.00, '2024-10-13 14:25:00', 'PAG-2024-020', 1),
+
+-- Pagos para compras 21-24 (Noviembre 2024)
+(21, 21, 160.00, '2024-11-02 11:20:00', 'PAG-2024-021', 1),
+(22, 22, 175.00, '2024-11-09 13:35:00', 'PAG-2024-022', 1),
+(23, 23, 120.00, '2024-11-05 10:15:00', 'PAG-2024-023', 1),
+(24, 24, 185.00, '2024-11-12 12:40:00', 'PAG-2024-024', 1),
+
+-- Pagos para compras 25-28 (Diciembre 2024)
+(25, 25, 140.00, '2024-12-01 14:30:00', 'PAG-2024-025', 1),
+(26, 26, 200.00, '2024-12-08 16:45:00', 'PAG-2024-026', 1),
+(27, 27, 155.00, '2024-12-04 09:25:00', 'PAG-2024-027', 1),
+(28, 28, 175.00, '2024-12-11 13:50:00', 'PAG-2024-028', 1),
+
+-- Pagos para compras 29-32 (Enero 2025)
+(29, 29, 125.00, '2025-01-02 12:40:00', 'PAG-2025-001', 1),
+(30, 30, 205.00, '2025-01-09 15:55:00', 'PAG-2025-002', 1),
+(31, 31, 160.00, '2025-01-05 10:30:00', 'PAG-2025-003', 1),
+(32, 32, 135.00, '2025-01-12 14:45:00', 'PAG-2025-004', 1),
+
+-- Pagos para compras 33-36 (Febrero 2025)
+(33, 33, 195.00, '2025-02-02 11:35:00', 'PAG-2025-005', 1),
+(34, 34, 170.00, '2025-02-09 13:50:00', 'PAG-2025-006', 1),
+(35, 35, 145.00, '2025-02-05 09:40:00', 'PAG-2025-007', 1),
+(36, 36, 205.00, '2025-02-12 14:15:00', 'PAG-2025-008', 1),
+
+-- Pagos para compras 37-40 (Marzo 2025)
+(37, 37, 160.00, '2025-03-01 12:25:00', 'PAG-2025-009', 1),
+(38, 38, 135.00, '2025-03-08 15:40:00', 'PAG-2025-010', 1),
+(39, 39, 195.00, '2025-03-04 10:30:00', 'PAG-2025-011', 1),
+(40, 40, 170.00, '2025-03-11 13:45:00', 'PAG-2025-012', 1),
+
+-- Pagos para compras 41-44 (Abril 2025)
+(41, 41, 145.00, '2025-04-02 11:35:00', 'PAG-2025-013', 1),
+(42, 42, 205.00, '2025-04-09 13:50:00', 'PAG-2025-014', 1),
+(43, 43, 160.00, '2025-04-05 09:40:00', 'PAG-2025-015', 1),
+(44, 44, 135.00, '2025-04-12 14:15:00', 'PAG-2025-016', 1),
+
+-- Pagos para compras 45-48 (Mayo 2025)
+(45, 45, 195.00, '2025-05-01 12:25:00', 'PAG-2025-017', 1),
+(46, 46, 170.00, '2025-05-08 15:40:00', 'PAG-2025-018', 1),
+(47, 47, 145.00, '2025-05-04 10:30:00', 'PAG-2025-019', 1),
+(48, 48, 205.00, '2025-05-11 13:45:00', 'PAG-2025-020', 1),
+
+-- Pagos para compras 49-52 (Junio 2025)
+(49, 49, 160.00, '2025-06-02 11:35:00', 'PAG-2025-021', 1),
+(50, 50, 135.00, '2025-06-09 13:50:00', 'PAG-2025-022', 1),
+(1, 51, 190.00, '2025-06-05 09:40:00', 'PAG-2025-023', 1),
+(2, 52, 150.00, '2025-06-12 14:15:00', 'PAG-2025-024', 1);
 
 
 INSERT INTO Pago_Evento (metodo_id, evento_id, id_cliente_natural, fecha_hora, monto, tasa_id, referencia) VALUES
