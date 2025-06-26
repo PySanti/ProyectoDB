@@ -2991,8 +2991,7 @@ $$ LANGUAGE plpgsql;
 -- =============================================
 -- FUNCIÓN DE DIAGNÓSTICO PARA VERIFICAR TASAS DE PUNTOS
 -- =============================================
-CREATE OR REPLACE FUNCTION diagnosticar_tasas_puntos()
-RETURNS TABLE (
+
 CREATE OR REPLACE FUNCTION obtener_tasa_actual_dolar()
 RETURNS TABLE(
     id_tasa INTEGER,
