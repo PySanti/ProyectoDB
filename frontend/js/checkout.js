@@ -825,16 +825,20 @@ async function getCompraId() {
 function showPaymentSuccessCountdown() {
     // Actualizar el contador del carrito inmediatamente después del pago exitoso
     updateCartCounter();
-    
-    let seconds = 3;
-    showNotification(`Pago realizado exitosamente, volviendo al inicio en: ${seconds}...`, 'success');
+    let seconds = 2;
+    showNotification(`Pago realizado exitosamente, generando factura en: ${seconds}...`, 'success');
+    const compraId = sessionStorage.getItem('compra_id');
     const interval = setInterval(() => {
         seconds--;
         if (seconds > 0) {
-            showNotification(`Pago realizado exitosamente, volviendo al inicio en: ${seconds}...`, 'success');
+            showNotification(`Pago realizado exitosamente, generando factura en: ${seconds}...`, 'success');
         } else {
             clearInterval(interval);
-            window.location.href = 'tiempo-muerto.html';
+            if (compraId) {
+                window.location.href = `factura.html?compra_id=${compraId}`;
+            } else {
+                window.location.href = 'factura.html';
+            }
         }
     }, 1000);
 }
