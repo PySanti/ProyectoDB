@@ -403,7 +403,7 @@ CREATE TABLE Tasa (
     valor        DECIMAL NOT NULL,
     fecha        DATE NOT NULL,
     punto_id     INTEGER NOT NULL,
-    id_metodo INTEGER NOT NULL
+    id_metodo INTEGER
 );
 
 CREATE TABLE Pago_Compra (
@@ -516,7 +516,8 @@ CREATE TABLE Proveedor (
 
 CREATE TABLE Punto (
     id_metodo    INTEGER PRIMARY KEY,
-    origen       VARCHAR(20) NOT NULL
+    origen       VARCHAR(20) NOT NULL,
+    FOREIGN KEY (id_metodo) REFERENCES Metodo_Pago(id_metodo)
 );
 
 CREATE TABLE Punto_Cliente (

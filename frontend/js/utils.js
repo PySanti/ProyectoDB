@@ -38,12 +38,15 @@ function showNotification(message, type = 'info') {
  * Llama al backend para obtener el total de ítems para el usuario invitado.
  */
 async function updateCartCounter() {
-    const GUEST_USER_ID = 1; // ID del usuario invitado genérico
     const cartCountElement = document.querySelector('.cart-count');
     if (!cartCountElement) return;
-
     try {
-        const response = await fetch(`${API_BASE_URL}/carrito/resumen/${GUEST_USER_ID}`);
+        const compraId = sessionStorage.getItem('compra_id');
+        if (!compraId) {
+            cartCountElement.textContent = '0';
+            return;
+        }
+        const response = await fetch(`${API_BASE_URL}/carrito/resumen-por-id/${compraId}`);
         if (!response.ok) {
             if (response.status === 404) {
                 cartCountElement.textContent = '0';
@@ -54,10 +57,68 @@ async function updateCartCounter() {
         const summary = await response.json();
         cartCountElement.textContent = summary.total_items || '0';
     } catch (error) {
-        // No mostramos error en consola para no generar ruido, pero aseguramos el 0.
         cartCountElement.textContent = '0';
     }
 }
 
 // Actualizar el contador en cuanto cargue cualquier página que incluya este script.
-document.addEventListener('DOMContentLoaded', updateCartCounter); 
+document.addEventListener('DOMContentLoaded', updateCartCounter);
+
+/**
+ * Obtiene o crea el id de la compra pendiente para el cliente actual.
+ * Devuelve el id de compra o null si no hay cliente.
+ */
+async function ensureCompraId() {
+    let compraId = sessionStorage.getItem('compra_id');
+    const currentClient = getCurrentClient ? getCurrentClient() : null;
+    // Si hay compraId, verificar que realmente exista en el backend y esté en proceso
+    if (compraId) {
+        try {
+            const response = await fetch(`${API_BASE_URL}/carrito/resumen-por-id/${compraId}`);
+            if (response.ok) {
+                const resumen = await response.json();
+                // Solo permitir si la compra está en proceso
+                if (resumen && resumen.estatus_nombre && resumen.estatus_nombre.toLowerCase() === 'en proceso') {
+                    return compraId;
+                }
+            }
+            // Si no está en proceso o no existe, limpiar
+            sessionStorage.removeItem('compra_id');
+            compraId = null;
+        } catch {
+            sessionStorage.removeItem('compra_id');
+            compraId = null;
+        }
+    }
+    // Si no hay cliente, no se puede crear carrito
+    if (!currentClient) return null;
+    // Llama al backend para crear o asociar la compra con el cliente
+    const requestBody = {
+        cliente: currentClient
+    };
+    try {
+        const response = await fetch(`${API_BASE_URL}/carrito/create-or-get`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(requestBody)
+        });
+        const data = await response.json();
+        if (data.success && data.id_compra) {
+            compraId = data.id_compra;
+            sessionStorage.setItem('compra_id', compraId);
+            return compraId;
+        } else {
+            return null;
+        }
+    } catch (error) {
+        return null;
+    }
+}
+
+function getCurrentClient() {
+    try {
+        return JSON.parse(sessionStorage.getItem('currentClient'));
+    } catch {
+        return null;
+    }
+} 

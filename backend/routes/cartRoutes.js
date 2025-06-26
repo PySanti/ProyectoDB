@@ -13,6 +13,9 @@ router.post('/agregar', cartController.addToCart);
 // POST /api/carrito/agregar-por-producto - Agregar producto al carrito por nombre y presentación
 router.post('/agregar-por-producto', cartController.addToCartByProduct);
 
+// POST /api/carrito/agregar-producto - Agregar producto al carrito por compra_id
+router.post('/agregar-producto', cartController.addProductToCart);
+
 // PUT /api/carrito/actualizar - Actualizar cantidad de un producto
 router.put('/actualizar', cartController.updateCart);
 
@@ -36,5 +39,12 @@ router.post('/pago', cartController.registrarPagosCompra);
 
 // POST /api/carrito/create-or-get - Crear o asociar compra con cliente
 router.post('/create-or-get', cartController.createOrGetCart);
+
+// Rutas robustas por compra_id
+router.get('/por-id/:compra_id', cartController.getCartByCompraId);
+router.put('/actualizar-por-id', cartController.updateCartByCompraId);
+router.delete('/eliminar-por-id', cartController.removeFromCartByCompraId);
+router.delete('/limpiar-por-id/:compra_id', cartController.clearCartByCompraId);
+router.get('/resumen-por-id/:compra_id', cartController.getCartSummaryByCompraId);
 
 module.exports = router; 

@@ -2076,8 +2076,8 @@ INSERT INTO Tipo_Invitado (nombre) VALUES
 INSERT INTO Estatus (id_estatus, nombre) VALUES
 (1, 'Iniciada'),
 (2, 'En proceso'),
-(3, 'Atendida'),
-(13, 'Pendiente');
+(3, 'pagado');
+
 
 
 INSERT INTO Horario (dia, hora_entrada, hora_salida) VALUES

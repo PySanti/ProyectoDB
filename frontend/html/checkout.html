@@ -191,26 +191,19 @@
                                     <i class="fas fa-money-bill-wave"></i> Efectivo
                                 </label>
                                 <div class="payment-amount">
-                                    <input type="number" class="amount-input" placeholder="0.00" step="0.01" min="0">
+                                    <span class="cash-total-display">$0.00</span>
                                 </div>
                             </div>
                             <div class="payment-details" id="cash-details">
-                                <div class="form-group">
-                                    <label for="cash-denomination">Denominación</label>
-                                    <select id="cash-denomination" required>
-                                        <option value="">Seleccionar denominación</option>
-                                        <option value="1">$1</option>
-                                        <option value="5">$5</option>
-                                        <option value="10">$10</option>
-                                        <option value="20">$20</option>
-                                        <option value="50">$50</option>
-                                        <option value="100">$100</option>
-                                        <option value="200">$200</option>
-                                        <option value="500">$500</option>
-                                        <option value="1000">$1000</option>
-                                    </select>
+                                <div class="cash-bills-container">
+                                    <h4>¿Con cuántos billetes quieres pagar?</h4>
+                                    <input type="number" id="num-cash-bills" min="1" max="5" value="1" style="width: 60px; margin-bottom: 10px;">
+                                    <div id="cash-bills-selectors"></div>
+                                    <div class="cash-summary">
+                                        <p><strong>Total en efectivo: <span id="cash-total-amount">$0.00</span></strong></p>
+                                    </div>
                                 </div>
-                                <p>Pago en efectivo al momento de la entrega.</p>
+                               
                             </div>
                         </div>
                         
@@ -244,24 +237,32 @@
                             </div>
                         </div>
                         
-                        <!-- Puntos (deshabilitado por ahora) -->
-                        <div class="payment-method disabled">
+                        <!-- NUEVA SECCIÓN DE PUNTOS ACAUCAB -->
+                        <div class="payment-method" id="new-points-method">
                             <div class="payment-method-header">
-                                <input type="checkbox" name="payment-methods" id="payment-points" class="payment-checkbox" disabled>
-                                <label for="payment-points" class="payment-label">
+                                <input type="checkbox" name="payment-methods" id="new-payment-points" class="payment-checkbox">
+                                <label for="new-payment-points" class="payment-label">
                                     <i class="fas fa-star"></i> Puntos ACAUCAB
                                 </label>
                                 <div class="payment-amount">
-                                    <input type="number" class="amount-input" placeholder="0.00" step="0.01" min="0" disabled>
+                                    <input type="number" class="amount-input" id="new-points-amount" placeholder="0.00" step="0.01" min="0" disabled>
                                 </div>
                             </div>
-                            
-                            <div class="payment-details" id="points-details">
-                                <p class="disabled-message">Sistema de puntos próximamente disponible</p>
+                            <div class="payment-details" id="new-points-details">
                                 <div class="points-info">
-                                    <p><strong>Puntos disponibles:</strong> 0</p>
-                                    <p><strong>Valor por punto:</strong> $0.01</p>
+                                    <p><strong>Puntos disponibles:</strong> <span id="new-points-available">0</span></p>
+                                    <p><strong>Valor por punto:</strong> $<span id="new-points-value">1.00</span></p>
+                                    <p><strong>Mínimo para canje:</strong> <span id="new-points-minimum">50</span> puntos</p>
                                 </div>
+                                <div class="points-input-container">
+                                    <label for="new-points-to-use">Puntos a usar:</label>
+                                    <input type="number" id="new-points-to-use" min="0" placeholder="0" style="width: 100px;">
+                                    <button type="button" id="new-use-max-points" class="secondary-btn">Usar Máximo</button>
+                                </div>
+                                <div class="points-equivalent">
+                                    <p><strong>Equivalente en dinero:</strong> $<span id="new-points-equivalent">0.00</span></p>
+                                </div>
+                                <div id="new-points-error" class="error-message" style="display: none;"></div>
                             </div>
                         </div>
                     </div>
@@ -299,6 +300,7 @@
                                 <span id="amount-remaining">$0.00</span>
                             </div>
                         </div>
+                        <div id="payment-mismatch-error" style="display:none; color: #e74c3c; font-weight: bold; margin-top: 10px;">La suma de los métodos de pago debe ser igual al total a pagar.</div>
                     </div>
                     
                     <!-- Términos y Condiciones -->
@@ -310,7 +312,7 @@
                     <!-- Botones de Acción -->
                     <div class="form-actions">
                         <a href="cart.html" class="back-btn"><i class="fas fa-arrow-left"></i> Volver al Carrito</a>
-                        <button class="place-order-btn" id="place-order-btn" disabled>Completar Pago</button>
+                        <button class="place-order-btn" id="place-order-btn" disabled>Pagar</button>
                     </div>
                 </div>
                 

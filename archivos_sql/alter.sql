@@ -1074,6 +1074,10 @@ ALTER TABLE Punto_Cliente
 ALTER TABLE Punto_Cliente 
     ADD CONSTRAINT Punto_Cliente_Punto_FK FOREIGN KEY (id_metodo) REFERENCES Punto(id_metodo);
 
+-- Restricción para Punto como subtipo de Metodo_Pago
+ALTER TABLE Punto 
+    ADD CONSTRAINT Punto_Metodo_Pago_FK FOREIGN KEY (id_metodo) REFERENCES Metodo_Pago(id_metodo);
+
 --  ERROR: FK name length exceeds maximum allowed length(30) 
 ALTER TABLE Receta_Ingrediente 
     ADD CONSTRAINT Receta_Ingrediente_Ingrediente_FK FOREIGN KEY 

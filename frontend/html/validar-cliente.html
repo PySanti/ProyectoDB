@@ -250,9 +250,14 @@
                                         id="rif_cliente" 
                                         name="rif_cliente" 
                                         placeholder="Ingrese el RIF o 0 si no aplica"
+                                        min="0"
+                                        max="2147483647"
+                                        maxlength="10"
+                                        oninput="validateRIF(this)"
                                         required
                                     >
                                 </div>
+                                <small class="input-help">Máximo 10 dígitos (0 si no aplica)</small>
                             </div>
                         </div>
 
