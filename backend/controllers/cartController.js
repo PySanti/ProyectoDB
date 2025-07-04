@@ -39,11 +39,20 @@ async function addToCart(req, res) {
 // AGREGAR PRODUCTO AL CARRITO POR NOMBRE Y PRESENTACIÓN (FUNCIÓN)
 // =================================================================
 async function addToCartByProduct(req, res) {
-    const { id_usuario, nombre_cerveza, nombre_presentacion, cantidad, id_cliente_natural, id_cliente_juridico } = req.body;
+    const { id_usuario, nombre_cerveza, nombre_presentacion, cantidad, tipo_venta, id_ubicacion, id_cliente_natural, id_cliente_juridico } = req.body;
     try {
         await db.query(
-            'SELECT agregar_al_carrito_por_producto($1, $2, $3, $4, $5, $6)', 
-            [id_usuario, nombre_cerveza, nombre_presentacion, cantidad, id_cliente_natural || null, id_cliente_juridico || null]
+            'SELECT agregar_al_carrito_por_producto($1, $2, $3, $4, $5, $6, $7, $8)',
+            [
+                id_usuario,
+                nombre_cerveza,
+                nombre_presentacion,
+                cantidad,
+                tipo_venta, // 'web' o 'fisica'
+                id_ubicacion || null, // null para web, id del anaquel para física
+                id_cliente_natural || null,
+                id_cliente_juridico || null
+            ]
         );
         res.json({ success: true, message: 'Producto agregado al carrito' });
     } catch (error) {
@@ -248,6 +257,23 @@ async function createOrGetCart(req, res) {
     }
 }
 
+// =================================================================
+// OBTENER ID DE COMPRA EN PROCESO PARA USUARIO/CLIENTE
+// =================================================================
+async function getCompraId(req, res) {
+    const { id_usuario, id_cliente_natural, id_cliente_juridico } = req.query;
+    try {
+        const result = await db.query(
+            'SELECT obtener_carrito_por_tipo($1, $2, $3) AS id_compra',
+            [id_usuario, id_cliente_natural || null, id_cliente_juridico || null]
+        );
+        res.json({ id_compra: result.rows[0].id_compra });
+    } catch (error) {
+        console.error('Error al obtener id_compra:', error);
+        res.status(500).json({ success: false, message: 'Error interno del servidor' });
+    }
+}
+
 module.exports = {
     getCart,
     addToCart,
@@ -259,5 +285,6 @@ module.exports = {
     updatePurchaseAmount,
     verifyStock,
     registrarPagosCompra,
+    getCompraId,
     createOrGetCart
 }; 

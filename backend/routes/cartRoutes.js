@@ -37,4 +37,7 @@ router.post('/pago', cartController.registrarPagosCompra);
 // POST /api/carrito/create-or-get - Crear o asociar compra con cliente
 router.post('/create-or-get', cartController.createOrGetCart);
 
+// GET /api/carrito/compra-id - Obtener id_compra en proceso para usuario/cliente
+router.get('/compra-id', cartController.getCompraId);
+
 module.exports = router; 
