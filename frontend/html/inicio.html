@@ -257,9 +257,15 @@
     <script>
       function redirectUser(){
         const user = JSON.parse(localStorage.getItem('user'));
+        const tipoVenta = sessionStorage.getItem('tipoVenta');
+        
         if (user.rol.toLowerCase() === 'administrador') {
           window.location.href = './dashboard_administrador.html';
+        } else if (tipoVenta === 'web') {
+          // Si viene de compra en línea, ir al catálogo
+          window.location.href = './catalog.html';
         } else {
+          // Por defecto, ir al catálogo
           window.location.href = './catalog.html';
         }
       }

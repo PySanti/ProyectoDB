@@ -15,8 +15,7 @@
     <header class="main-header">
         <div class="header-container">
             <div class="logo-header">
-                
-                <h1>ACAUCAB</h1>
+                <h1 id="logo-title">ACAUCAB</h1>
             </div>
             <nav class="main-nav">
                 <ul class="nav-list">
@@ -259,6 +258,7 @@
     <!-- Scripts -->
     <script src="../js/config.js"></script>
     <script src="../js/utils.js"></script>
+    <script src="../js/venta-type.js"></script>
     <script src="../js/cart.js"></script>
     <script src="../js/catalog.js"></script>
     <script>
@@ -276,6 +276,27 @@
             });
           }
         }
+        
+        // Establecer tipo de venta según el contexto
+        if (localStorage.getItem('user')) {
+          // Si hay usuario autenticado, es compra web
+          setVentaType('web');
+          console.log('Tipo de venta establecido como web (usuario autenticado)');
+        } else {
+          // Si no hay usuario, verificar si hay cliente validado
+          const currentClient = sessionStorage.getItem('currentClient');
+          if (currentClient) {
+            setVentaType('tienda');
+            console.log('Tipo de venta establecido como tienda (cliente validado)');
+          } else {
+            // Por defecto, establecer como web si no hay contexto claro
+            setVentaType('web');
+            console.log('Tipo de venta establecido como web (por defecto)');
+          }
+        }
+        
+        // Actualizar título según el tipo de venta
+        inicializarTipoVenta();
       });
     </script>
 </body>

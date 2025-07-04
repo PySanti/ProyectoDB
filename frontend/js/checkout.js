@@ -9,6 +9,20 @@ document.addEventListener('DOMContentLoaded', () => {
     poblarSelectAnios();
 });
 
+// Función para obtener el ID de usuario actual
+function getCurrentUserId() {
+    const userStr = localStorage.getItem('user');
+    if (userStr) {
+        try {
+            const user = JSON.parse(userStr);
+            return user.id_usuario;
+        } catch (error) {
+            console.error('Error al parsear usuario:', error);
+        }
+    }
+    return GUEST_USER_ID;
+}
+
 function initCheckout() {
     // Solo ejecuta la lógica de la página del checkout si encuentra el contenedor principal.
     if (document.querySelector('.checkout-section')) {
@@ -23,26 +37,50 @@ function initCheckout() {
 async function loadCheckoutData() {
     try {
         console.log('=== INICIANDO CARGA DE DATOS DEL CHECKOUT ===');
-        const compraId = await ensureCompraId();
-        console.log('Compra ID obtenida:', compraId);
         
-        if (!compraId) {
-            throw new Error('No se pudo obtener el ID de la compra');
+        const userId = getCurrentUserId();
+        console.log('Cargando checkout para usuario ID:', userId);
+        
+        // Verificar el tipo de venta
+        const tipoVenta = getVentaType();
+        console.log('Tipo de venta en loadCheckoutData:', tipoVenta);
+        let currentClient = null;
+        let clientParams = '';
+        
+        if (tipoVenta === 'tienda') {
+            // Para compras físicas, necesitamos el cliente validado
+            currentClient = getCurrentClient();
+            if (currentClient) {
+                clientParams = `?id_cliente_natural=${currentClient.id}`;
+            }
+        } else if (tipoVenta === 'web') {
+            // Para compras web, no necesitamos cliente adicional
+            console.log('Compra web - cargando datos sin cliente adicional');
+        } else {
+            console.warn('Tipo de venta no válido:', tipoVenta);
+            // Intentar inferir el tipo de venta
+            const user = localStorage.getItem('user');
+            if (user) {
+                console.log('Usuario autenticado detectado, asumiendo compra web');
+            } else {
+                console.log('No hay usuario autenticado, asumiendo compra física');
+                currentClient = getCurrentClient();
+                if (currentClient) {
+                    clientParams = `?id_cliente_natural=${currentClient.id}`;
+                }
+            }
         }
         
-        const currentClient = getCurrentClient();
-        const clientParams = currentClient ? `?id_cliente_natural=${currentClient.id}` : '';
-        
-        // Cargar resumen del carrito usando la compra_id correcta
-        const summaryResponse = await fetch(`${API_BASE_URL}/carrito/resumen/${compraId}${clientParams}`);
+        // Cargar resumen del carrito usando el usuario real
+        const summaryResponse = await fetch(`${API_BASE_URL}/carrito/resumen/${userId}${clientParams}`);
         if (!summaryResponse.ok) throw new Error('No se pudo cargar el resumen del carrito.');
         
         const summary = await summaryResponse.json();
         console.log('Resumen del carrito:', summary);
         renderOrderSummary(summary);
         
-        // Cargar items del carrito usando la compra_id correcta
-        const itemsResponse = await fetch(`${API_BASE_URL}/carrito/usuario/${compraId}${clientParams}`);
+        // Cargar items del carrito usando el usuario real
+        const itemsResponse = await fetch(`${API_BASE_URL}/carrito/usuario/${userId}${clientParams}`);
         if (!itemsResponse.ok) throw new Error('No se pudo cargar los items del carrito.');
         
         const items = await itemsResponse.json();
@@ -256,21 +294,62 @@ async function handlePlaceOrder() {
         showNotification('No se pudo identificar la compra.', 'error');
         return;
     }
-    const currentClient = getCurrentClient();
-    if (!currentClient) {
-        showNotification('Debe validar un cliente antes de pagar.', 'error');
-        return;
+    
+    // Verificar el tipo de venta
+    const tipoVenta = getVentaType();
+    console.log('Tipo de venta detectado:', tipoVenta);
+    let currentClient = null;
+    
+    if (tipoVenta === 'tienda') {
+        // Para compras físicas, necesitamos un cliente validado
+        currentClient = getCurrentClient();
+        if (!currentClient) {
+            showNotification('Debe validar un cliente antes de pagar.', 'error');
+            return;
+        }
+    } else if (tipoVenta === 'web') {
+        // Para compras web, el usuario ya está autenticado, no necesitamos cliente adicional
+        console.log('Compra web - usuario autenticado:', getCurrentUserId());
+    } else {
+        // Si no hay tipo de venta establecido, intentar inferirlo
+        console.log('Tipo de venta no detectado, intentando inferir...');
+        const user = localStorage.getItem('user');
+        if (user) {
+            // Si hay usuario autenticado, asumir que es compra web
+            console.log('Usuario autenticado detectado, asumiendo compra web');
+        } else {
+            // Si no hay usuario, asumir que es compra física
+            console.log('No hay usuario autenticado, asumiendo compra física');
+            currentClient = getCurrentClient();
+            if (!currentClient) {
+                showNotification('Debe validar un cliente antes de pagar.', 'error');
+                return;
+            }
+        }
     }
+    
     const pagos = collectSelectedPayments();
     if (pagos.length === 0) {
         showNotification('Debe seleccionar al menos un método de pago con monto.', 'error');
         return;
     }
+    
     try {
+        const requestBody = { 
+            compra_id: compraId, 
+            pagos, 
+            id_usuario: getCurrentUserId()  // Usar el usuario real
+        };
+        
+        // Solo incluir cliente si es compra física
+        if (currentClient) {
+            requestBody.cliente = currentClient;
+        }
+        
         const response = await fetch(`${API_BASE_URL}/carrito/pago`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ compra_id: compraId, pagos, cliente: currentClient })
+            body: JSON.stringify(requestBody)
         });
         const data = await response.json();
         if (response.ok && data.success) {
@@ -388,10 +467,16 @@ function collectSelectedPayments() {
 }
 
 async function getCompraId() {
-    // Aquí deberías obtener el id de la compra real del usuario
-    // Por ahora, simulo con sessionStorage o un valor dummy
-    // TODO: Integrar con el backend real
-    return sessionStorage.getItem('compra_id') || 1;
+    const userId = getCurrentUserId();
+    let params = `id_usuario=${userId}`;
+    // Si hay cliente validado, agregarlo a la consulta
+    const currentClient = getCurrentClient();
+    if (currentClient) {
+        params += `&id_cliente_natural=${currentClient.id}`;
+    }
+    const response = await fetch(`${API_BASE_URL}/carrito/compra-id?${params}`);
+    const data = await response.json();
+    return data.id_compra;
 }
 
 function showPaymentSuccessCountdown() {
@@ -484,33 +569,6 @@ function esSumaDeDenominaciones(monto, denominaciones) {
 }
 
 async function ensureCompraId() {
-    let compraId = sessionStorage.getItem('compra_id');
-    const currentClient = getCurrentClient();
-    
-    if (!compraId && currentClient) {
-        // Para compra en tienda física, NO usar id_usuario, solo el cliente
-        const requestBody = {
-            id_usuario: null,  // Para tienda física, usuario debe ser NULL
-            cliente: currentClient  // El cliente ya tiene el ID correcto
-        };
-        
-        console.log('Creando compra con:', requestBody);
-        
-        // Llama al backend para crear o asociar la compra con el cliente
-        const response = await fetch(`${API_BASE_URL}/carrito/create-or-get`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(requestBody)
-        });
-        
-        const data = await response.json();
-        if (data.success && data.id_compra) {
-            compraId = data.id_compra;
-            sessionStorage.setItem('compra_id', compraId);
-            console.log('Compra creada con ID:', compraId);
-        } else {
-            console.error('Error al crear compra:', data);
-        }
-    }
-    return compraId;
+    // Usar el usuario real para asegurar consistencia
+    return getCurrentUserId();
 } 

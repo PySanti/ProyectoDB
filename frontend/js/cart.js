@@ -13,12 +13,29 @@ function initCart() {
     }
 }
 
+// Función para obtener el ID de usuario actual
+function getCurrentUserId() {
+    const userStr = localStorage.getItem('user');
+    if (userStr) {
+        try {
+            const user = JSON.parse(userStr);
+            return user.id_usuario;
+        } catch (error) {
+            console.error('Error al parsear usuario:', error);
+        }
+    }
+    return GUEST_USER_ID;
+}
+
 // =================================================================
 // RENDERIZADO DEL CARRITO
 // =================================================================
 async function loadCart() {
     try {
-        const response = await fetch(`${API_BASE_URL}/carrito/usuario/${GUEST_USER_ID}`);
+        const userId = getCurrentUserId();
+        console.log('Cargando carrito para usuario ID:', userId);
+        
+        const response = await fetch(`${API_BASE_URL}/carrito/usuario/${userId}`);
         if (!response.ok) throw new Error('No se pudo cargar el carrito.');
         
         const items = await response.json();
@@ -27,7 +44,7 @@ async function loadCart() {
             renderEmptyCart();
         } else {
             renderCartItems(items);
-            const summaryResponse = await fetch(`${API_BASE_URL}/carrito/resumen/${GUEST_USER_ID}`);
+            const summaryResponse = await fetch(`${API_BASE_URL}/carrito/resumen/${userId}`);
             const summary = await summaryResponse.json();
             renderSummary(summary);
         }
@@ -87,6 +104,9 @@ async function proceedToCheckout() {
     console.log('Función proceedToCheckout llamada');
     
     try {
+        const userId = getCurrentUserId();
+        console.log('Procediendo al checkout con usuario ID:', userId);
+        
         // Primero actualizar el monto de la compra
         const response = await fetch(`${API_BASE_URL}/carrito/actualizar-monto`, {
             method: 'PUT',
@@ -94,7 +114,7 @@ async function proceedToCheckout() {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                id_usuario: GUEST_USER_ID
+                id_usuario: userId
             }),
         });
 
@@ -192,11 +212,13 @@ async function apiCall(endpoint, method, body) {
 }
 
 function updateQuantity(inventarioId, nueva_cantidad) {
-    apiCall('/carrito/actualizar', 'PUT', { id_usuario: GUEST_USER_ID, id_inventario: inventarioId, nueva_cantidad });
+    const userId = getCurrentUserId();
+    apiCall('/carrito/actualizar', 'PUT', { id_usuario: userId, id_inventario: inventarioId, nueva_cantidad });
 }
 
 function removeFromCart(inventarioId) {
-    apiCall('/carrito/eliminar', 'DELETE', { id_usuario: GUEST_USER_ID, id_inventario: inventarioId });
+    const userId = getCurrentUserId();
+    apiCall('/carrito/eliminar', 'DELETE', { id_usuario: userId, id_inventario: inventarioId });
 }
 
 function clearCart() {

@@ -1,0 +1,1706 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Administrador - ACAUCAB</title>
+    <link rel="stylesheet" href="../css/dashboard_gestion_ordenes_compra.css">
+    <link rel="stylesheet" href="../css/reportes.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- html2pdf.js CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="dashboard-sidebar">
+            <div class="sidebar-header">
+                <h1>ACAUCAB</h1>
+                <p>Panel de Administración</p>
+            </div>
+            <div class="sidebar-user">
+                <div class="user-avatar">
+                    <i class="fas fa-user-shield"></i>
+                </div>
+                <div class="user-info">
+                    <h3 id="nombre-usuario">Administrador</h3>
+                    <p id="email-usuario">Superusuario</p>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="active"><a href="#usuarios" data-section="usuarios"><i class="fas fa-users"></i> Usuarios</a></li>
+                    <li><a href="#roles" data-section="roles"><i class="fas fa-user-tag"></i> Roles</a></li>
+                    <li><a href="#ordenes" data-section="ordenes"><i class="fas fa-clipboard-list"></i> Órdenes</a></li>
+                    <li><a href="#tasa" data-section="tasa"><i class="fas fa-dollar-sign"></i> Tasa</a></li>
+                    <li><a href="#reportes" data-section="reportes"><i class="fas fa-chart-bar"></i> Reportes</a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <a href="#" class="logout-btn" id="logout-btn"><i class="fas fa-sign-out-alt"></i> <span>Cerrar Sesión</span></a>
+            </div>
+        </aside>
+        <!-- Main Content -->
+        <main class="dashboard-content">
+            <header class="content-header">
+                <div class="header-left">
+                    <button class="toggle-sidebar"><i class="fas fa-bars"></i></button>
+                    <h2>Panel de Administrador</h2>
+                </div>
+                <div class="header-right">
+                    <div class="search-box">
+                        <input type="text" placeholder="Buscar usuario, rol u orden...">
+                        <button><i class="fas fa-search"></i></button>
+                    </div>
+                </div>
+            </header>
+            <!-- Usuarios Section -->
+            <section class="content-section active" id="usuarios-section">
+                <div class="section-header">
+                    <h2>Usuarios</h2>
+                    <button class="primary-btn" id="add-usuario-btn"><i class="fas fa-plus"></i> Nuevo Empleado</button>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Lista de Usuarios</h3>
+                        <div class="card-actions">
+                            <select id="filter-rol">
+                                <option value="admin">Empleado</option>
+                                <option value="proveedor">Proveedor</option>
+                                <option value="cliente_natural">Cliente Natural</option>
+                                <option value="cliente_juridico">Cliente Juridico</option>
+                            </select>
+                            <button class="export-btn"><i class="fas fa-download"></i> Exportar</button>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nombre</th>
+                                    <th>Email</th>
+                                    <th>Estado</th>
+                                    <th>Rol</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+            <!-- Roles Section -->
+            <section class="content-section" id="roles-section">
+                <div class="section-header">
+                    <h2>Roles y Privilegios</h2>
+                    <button class="primary-btn" id="add-rol-btn"><i class="fas fa-plus"></i> Nuevo Rol</button>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Gestión de Roles</h3>
+                        <div class="card-actions">
+                            <button class="export-btn"><i class="fas fa-download"></i> Exportar</button>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID Rol</th>
+                                    <th>Nombre</th>
+                                    <th>Privilegios</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+            <!-- Órdenes Section -->
+            <section class="content-section" id="ordenes-section">
+                <div class="section-header">
+                    <h2>Órdenes</h2>
+                    <div class="card-actions">
+                        <select id="filter-orden">
+                            <option value="reposicion">Órdenes de Reposición a Proveedores</option>
+                            <option value="anaquel">Órdenes de Reposición de Anaquel</option>
+                        </select>
+                        <button class="export-btn"><i class="fas fa-download"></i> Exportar</button>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3 id="ordenes-titulo">Órdenes de Reposición a Proveedores</h3>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="data-table" id="tabla-ordenes-reposicion">
+                            <thead>
+                                <tr>
+                                    <th>ID Orden</th>
+                                    <th>Departamento</th>
+                                    <th>Proveedor</th>
+                                    <th>Fecha Emisión</th>
+                                    <th>Fecha Fin</th>
+                                    <th>Estatus Actual</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td colspan="7">(Aquí irán las órdenes de reposición a proveedores)</td></tr>
+                            </tbody>
+                        </table>
+                        <table class="data-table" id="tabla-ordenes-anaquel" style="display: none;">
+                            <thead>
+                                <tr>
+                                    <th>ID Orden</th>
+                                    <th>Fecha de Generación</th>
+                                    <th>Ubicación en Tienda</th>
+                                    <th>Estatus Actual</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td colspan="5">Cargando...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+            <!-- Tasa Section -->
+            <section class="content-section" id="tasa-section">
+                <div class="section-header">
+                    <h2>Gestión de Tasa de Cambio</h2>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Modificar Tasa del Dólar</h3>
+                    </div>
+                    <div class="card-content">
+                        <div class="tasa-info">
+                            <div class="current-rate">
+                                <h4>Tasa Actual</h4>
+                                <div class="rate-display">
+                                    <span id="current-rate-value">Cargando...</span>
+                                    <span class="currency">VES/USD</span>
+                                </div>
+                                <p class="rate-date">Última actualización: <span id="current-rate-date">-</span></p>
+                            </div>
+                            <div class="rate-form">
+                                <h4>Nueva Tasa</h4>
+                                <form id="tasa-form">
+                                    <div class="form-group">
+                                        <label for="nueva-tasa">Valor (VES/USD):</label>
+                                        <input type="number" id="nueva-tasa" name="valor" step="0.01" min="0" required>
+                                    </div>
+                                    <button type="submit" class="primary-btn">
+                                        <i class="fas fa-save"></i> Actualizar Tasa
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <!-- Reportes Section -->
+            <section class="content-section" id="reportes-section" style="display: none;">
+                <div class="section-header">
+                    <h2>Reportes</h2>
+                </div>
+                <div class="reportes-navegacion">
+                    <button id="reporte-prev" class="arrow-btn reporte-prev"><i class="fas fa-chevron-left"></i></button>
+                    <div id="reporte-contenido" class="reporte-contenido">
+                        <!-- Título del reporte -->
+                        <div class="reporte-titulo">
+                            <h3 id="reporte-titulo-principal">Ranking de Clientes por Puntos de Fidelidad</h3>
+                            <p id="reporte-titulo-sub">Top 10 clientes más leales según puntos acumulados</p>
+                        </div>
+                        <!-- Contenedor del gráfico -->
+                        <div class="grafico-container">
+                            <canvas id="grafico-ranking-puntos" width="800" height="400"></canvas>
+                        </div>
+                        <!-- Contenedor del gráfico de vacaciones -->
+                        <div class="grafico-container" id="grafico-vacaciones-container" style="display: none;">
+                            <canvas id="grafico-vacaciones" width="800" height="400"></canvas>
+                        </div>
+                        <!-- Botones de paginación para el ranking de clientes -->
+                        <div class="paginacion-ranking" style="width:100%; display:flex; justify-content:flex-end; align-items:center; gap:10px; margin-top:10px;">
+                            <span id="ranking-rango" style="font-size:14px; color:#666;"></span>
+                            <button id="ranking-anterior" class="paginacion-btn">Anterior</button>
+                            <button id="ranking-siguiente" class="paginacion-btn">Siguiente</button>
+                        </div>
+                        <!-- Botones de paginación para vacaciones -->
+                        <div id="vacaciones-paginacion" class="paginacion-ranking" style="display: none;">
+                            <span id="vacaciones-rango" style="font-size:14px; color:#666;"></span>
+                            <button id="vacaciones-anterior" class="paginacion-btn">Anterior</button>
+                            <button id="vacaciones-siguiente" class="paginacion-btn">Siguiente</button>
+                        </div>
+                        <!-- Leyenda dinámica para reportes -->
+                        <div class="reporte-info">
+                            <div class="leyenda" id="leyenda-dinamica"></div>
+                        </div>
+                        <!-- Botones de paginación para cervezas por proveedores (ahora dentro del cuadro blanco) -->
+                        <div id="cervezas-paginacion" class="paginacion-cervezas">
+                            <span id="cervezas-rango" style="font-size:14px; color:#666;"></span>
+                            <button id="cervezas-anterior" class="paginacion-btn">Anterior</button>
+                            <button id="cervezas-siguiente" class="paginacion-btn">Siguiente</button>
+                        </div>
+                        <div class="grafico-container" id="grafico-cervezas-container" style="display: none;">
+                            <div class="proveedor-info" id="proveedor-info"></div>
+                            <canvas id="grafico-cervezas-proveedores" width="800" height="400"></canvas>
+                            <div class="leyenda-cervezas" id="leyenda-cervezas"></div>
+                        </div>
+                        <!-- Contenedor del gráfico de ingresos por tipo -->
+                        <div class="grafico-container" id="grafico-ingresos-container" style="display: none;">
+                            <div class="filtros-reporte">
+                                <label for="selector-anio-ingresos">Año:</label>
+                                <select id="selector-anio-ingresos">
+                                    <option value="">Todos los años</option>
+                                </select>
+                            </div>
+                            <canvas id="grafico-ingresos-por-tipo" width="1200" height="500"></canvas>
+                            <div class="leyenda-ingresos" id="leyenda-ingresos"></div>
+                        </div>
+                        <!-- Contenedor del grid comparativo de estilos -->
+                        <div class="grafico-container" id="grid-comparativa-estilos-container" style="display: none; flex-direction: column; align-items: stretch;">
+                            <div class="comparativa-table-responsive">
+                                <table class="comparativa-table" id="comparativa-estilos-table">
+                                    <!-- El contenido de la tabla se llenará dinámicamente con JS -->
+                                </table>
+                            </div>
+                            <div class="paginacion-comparativa" style="width:100%; display:flex; justify-content:flex-end; align-items:center; gap:10px; margin-top:10px;">
+                                <span id="comparativa-rango" style="font-size:14px; color:#666;"></span>
+                                <button id="comparativa-anterior" class="paginacion-btn">Anterior</button>
+                                <button id="comparativa-siguiente" class="paginacion-btn">Siguiente</button>
+                            </div>
+                        </div>
+                    </div>
+                    <button id="reporte-next" class="arrow-btn reporte-next"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </section>
+        </main>
+    </div>
+    
+    <!-- Modal para detalles de usuario -->
+    <div id="usuario-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" id="close-modal">&times;</span>
+            <h2>Detalles del Usuario</h2>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+    
+    <!-- Modal para Nuevo/Editar Rol -->
+    <div id="rol-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" id="close-rol-modal">&times;</span>
+            <h2 id="rol-modal-title">Nuevo Rol</h2>
+            <form id="rol-form">
+                <div class="form-group">
+                    <label for="rol-nombre">Nombre del Rol</label>
+                    <input type="text" id="rol-nombre" required />
+                </div>
+                <div class="form-group">
+                    <label>Privilegios asignados</label>
+                    <div id="privilegios-list"></div>
+                    <button type="button" id="add-privilegio-btn">+ Agregar privilegio</button>
+                </div>
+                <div class="modal-footer" style="padding-top: 1rem;">
+                    <button type="submit" class="primary-btn">Guardar Rol</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Modal para asignar rol a usuario empleado -->
+    <div id="asignar-rol-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" id="close-asignar-rol-modal">&times;</span>
+            <h2>Asignar Rol a <span id="nombre-usuario-rol"></span></h2>
+            <form id="asignar-rol-form">
+                <div class="form-group">
+                    <label for="select-rol">Rol:</label>
+                    <select id="select-rol" name="rol"></select>
+                </div>
+                <div class="modal-footer" style="padding-top: 1rem;">
+                    <button type="submit" class="primary-btn">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Modal para crear nuevo empleado -->
+    <div id="nuevo-empleado-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" id="close-nuevo-empleado-modal">&times;</span>
+            <h2>Nuevo Empleado</h2>
+            <form id="nuevo-empleado-form">
+                <fieldset>
+                    <legend>Datos de usuario</legend>
+                    <div class="form-group">
+                        <label for="nuevo-usuario-correo">Correo electrónico</label>
+                        <input type="email" id="nuevo-usuario-correo" name="correo" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="nuevo-usuario-contrasena">Contraseña</label>
+                        <input type="password" id="nuevo-usuario-contrasena" name="contrasena" required>
+                    </div>
+                </fieldset>
+                <fieldset>
+                    <legend>Datos del empleado</legend>
+                    <div class="form-group">
+                        <label for="nuevo-empleado-cedula">Cédula</label>
+                        <input type="text" id="nuevo-empleado-cedula" name="cedula" required maxlength="8" pattern="[0-9]{1,8}" inputmode="numeric" title="Ingrese solo números, máximo 8 dígitos" />
+                    </div>
+                    <div class="form-group">
+                        <label for="nuevo-empleado-primer-nombre">Primer nombre</label>
+                        <input type="text" id="nuevo-empleado-primer-nombre" name="primer_nombre" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="nuevo-empleado-segundo-nombre">Segundo nombre</label>
+                        <input type="text" id="nuevo-empleado-segundo-nombre" name="segundo_nombre">
+                    </div>
+                    <div class="form-group">
+                        <label for="nuevo-empleado-primer-apellido">Primer apellido</label>
+                        <input type="text" id="nuevo-empleado-primer-apellido" name="primer_apellido" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="nuevo-empleado-segundo-apellido">Segundo apellido</label>
+                        <input type="text" id="nuevo-empleado-segundo-apellido" name="segundo_apellido">
+                    </div>
+                    <div class="form-group">
+                        <label for="nuevo-empleado-direccion">Dirección específica</label>
+                        <textarea id="nuevo-empleado-direccion" name="direccion" rows="2" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="nuevo-empleado-estado">Estado</label>
+                        <select id="nuevo-empleado-estado" name="estado" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="nuevo-empleado-municipio">Municipio</label>
+                        <select id="nuevo-empleado-municipio" name="municipio" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="nuevo-empleado-parroquia">Parroquia</label>
+                        <select id="nuevo-empleado-parroquia" name="parroquia" required></select>
+                    </div>
+                </fieldset>
+                <div class="modal-footer" style="padding-top: 1rem;">
+                    <button type="submit" class="primary-btn">Crear Empleado</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Modal para modificar estatus de orden de reposición a proveedores -->
+    <div id="modal-cambiar-estatus" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" id="close-modal-cambiar-estatus">&times;</span>
+            <h2>Cambiar Estatus de Orden</h2>
+            <div id="estatus-lista"></div>
+        </div>
+    </div>
+    
+    <!-- Modal para detalles de orden de anaquel -->
+    <div id="modal-detalles-orden-anaquel" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" id="close-modal-detalles-orden-anaquel">&times;</span>
+            <h2>Detalles de la Orden de Reposición</h2>
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Presentación</th>
+                            <th>Cerveza</th>
+                            <th>Cantidad a Reponer</th>
+                        </tr>
+                    </thead>
+                    <tbody id="detalles-orden-anaquel-tbody">
+                        <!-- Los detalles se cargarán aquí -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal para detalles de orden de proveedor -->
+    <div id="modal-detalles-orden-proveedor" class="modal">
+        <div class="modal-content">
+            <span class="close-modal" id="close-modal-detalles-orden-proveedor">&times;</span>
+            <h2>Detalles de la Orden a Proveedor</h2>
+            <div class="table-responsive">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Presentación</th>
+                            <th>Cerveza</th>
+                            <th>Cantidad</th>
+                        </tr>
+                    </thead>
+                    <tbody id="detalles-orden-proveedor-tbody">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <style>
+        .modal { 
+            position: fixed; 
+            z-index: 9999; 
+            left: 0; 
+            top: 0; 
+            width: 100vw; 
+            height: 100vh; 
+            overflow: auto; 
+            background: rgba(0,0,0,0.4); 
+            display: none; 
+            align-items: center; 
+            justify-content: center; 
+        }
+        .modal.active { 
+            display: flex; 
+        }
+        .modal-content { 
+            background: #fff; 
+            padding: 2rem; 
+            border-radius: 8px; 
+            max-width: 95vw; 
+            width: 100%; 
+            max-width: 500px; 
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2); 
+            position: relative; 
+        }
+        .close-modal { 
+            position: absolute; 
+            top: 10px; 
+            right: 20px; 
+            font-size: 2rem; 
+            cursor: pointer; 
+        }
+        @media (max-width: 600px) {
+            .modal-content { 
+                padding: 1rem; 
+                max-width: 98vw; 
+            }
+        }
+        .action-btn.assign-role {
+            background: #f0ad4e;
+            color: #fff;
+            border: none;
+            margin-left: 5px;
+            border-radius: 4px;
+            padding: 4px 8px;
+            cursor: pointer;
+        }
+        .action-btn.assign-role i {
+            font-size: 1.1em;
+        }
+        #nuevo-empleado-modal .form-group {
+            margin-bottom: 1rem;
+        }
+        #nuevo-empleado-modal fieldset {
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+        }
+        #nuevo-empleado-modal legend {
+            font-weight: bold;
+            color: #333;
+            padding: 0 0.5rem;
+        }
+        #modal-cambiar-estatus .estatus-btn {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            background: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: left;
+            transition: background 0.2s;
+        }
+        #modal-cambiar-estatus .estatus-btn:hover {
+            background: #ec971f;
+        }
+        #privilegios-list {
+            margin-bottom: 1rem;
+        }
+        .privilegio-row {
+            display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.5rem;
+        }
+        .privilegio-row select, .privilegio-row button {
+            height: 2rem;
+        }
+        .privilegio-row .remove-privilegio-btn {
+            background: #e74c3c; color: #fff; border: none; border-radius: 4px; cursor: pointer; padding: 0 0.5rem;
+        }
+        #add-privilegio-btn {
+            margin-top: 0.5rem; background: #3498db; color: #fff; border: none; border-radius: 4px; cursor: pointer; padding: 0.5rem 1rem;
+        }
+        
+        /* Estilos para la sección de Tasa */
+        .tasa-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            padding: 1rem 0;
+        }
+        
+        .current-rate {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid #28a745;
+        }
+        
+        .rate-display {
+            display: flex;
+            align-items: baseline;
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+        
+        #current-rate-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #28a745;
+        }
+        
+        .currency {
+            font-size: 1rem;
+            color: #6c757d;
+            font-weight: 500;
+        }
+        
+        .rate-date {
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+        
+        .rate-form {
+            background: #fff;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+        
+        .rate-form h4 {
+            margin-top: 0;
+            color: #495057;
+        }
+        
+        .rate-form .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .rate-form label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #495057;
+        }
+        
+        .rate-form input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .rate-form input:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+        }
+        
+        @media (max-width: 768px) {
+            .tasa-info {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+        }
+    </style>
+    
+    <script src="../js/lugares.js"></script>
+    <script>
+        // Variables globales
+        let usuarios = [];
+        let editingRoleId = null;
+        let usuarioSeleccionadoId = null;
+        let ordenSeleccionadaId = null;
+        let estatusActualId = null;
+        const PRIVILEGIOS = ["Crear", "Leer", "Actualizar", "Eliminar"];
+        let TABLAS = [];
+
+        async function cargarTablas() {
+            const res = await fetch('../lista_tablas.json');
+            TABLAS = await res.json();
+        }
+
+        function agregarFilaPrivilegio(privilegio = '', tabla = '') {
+            const row = document.createElement('div');
+            row.className = 'privilegio-row';
+
+            const selectPriv = document.createElement('select');
+            PRIVILEGIOS.forEach(p => {
+                const opt = document.createElement('option');
+                opt.value = p;
+                opt.textContent = p;
+                if (p === privilegio) opt.selected = true;
+                selectPriv.appendChild(opt);
+            });
+
+            const selectTabla = document.createElement('select');
+            TABLAS.forEach(t => {
+                const opt = document.createElement('option');
+                opt.value = t;
+                opt.textContent = t;
+                if (t === tabla) opt.selected = true;
+                selectTabla.appendChild(opt);
+            });
+
+            const btnRemove = document.createElement('button');
+            btnRemove.type = 'button';
+            btnRemove.className = 'remove-privilegio-btn';
+            btnRemove.textContent = 'X';
+            btnRemove.onclick = () => row.remove();
+
+            row.appendChild(selectPriv);
+            row.appendChild(selectTabla);
+            row.appendChild(btnRemove);
+
+            document.getElementById('privilegios-list').appendChild(row);
+        }
+
+        function abrirModalRol(modo = 'crear', rol = null) {
+            document.getElementById('rol-modal-title').textContent = modo === 'crear' ? 'Nuevo Rol' : 'Editar Rol';
+            document.getElementById('rol-nombre').value = rol ? rol.nombre : '';
+            document.getElementById('privilegios-list').innerHTML = '';
+            if (rol && rol.privilegios && rol.privilegios.length) {
+                rol.privilegios.forEach(p => agregarFilaPrivilegio(p.privilegio, p.tabla));
+            } else {
+                agregarFilaPrivilegio();
+            }
+            document.getElementById('rol-modal').classList.add('active');
+        }
+
+        function cerrarModalRol() {
+            document.getElementById('rol-modal').classList.remove('active');
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await cargarTablas();
+            document.getElementById('add-privilegio-btn').onclick = () => agregarFilaPrivilegio();
+            document.getElementById('close-rol-modal').onclick = cerrarModalRol;
+            document.getElementById('rol-form').onsubmit = async function(e) {
+                e.preventDefault();
+                const nombre = document.getElementById('rol-nombre').value.trim();
+                const privilegios = [];
+                document.querySelectorAll('#privilegios-list .privilegio-row').forEach(row => {
+                    const privilegio = row.children[0].value;
+                    const tabla = row.children[1].value;
+                    if (privilegio && tabla) {
+                        privilegios.push({ privilegio, tabla });
+                    }
+                });
+                if (!nombre) {
+                    alert('El nombre del rol es obligatorio.');
+                    return;
+                }
+                if (privilegios.length === 0) {
+                    alert('Debe agregar al menos un privilegio.');
+                    return;
+                }
+                const set = new Set(privilegios.map(p => p.privilegio + '-' + p.tabla));
+                if (set.size !== privilegios.length) {
+                    alert('No puede haber pares privilegio+tabla duplicados.');
+                    return;
+                }
+                const esEdicion = !!editingRoleId;
+                const url = "http://localhost:3000" + (esEdicion ? `/roles/${editingRoleId}` : '/roles/');
+                const method = esEdicion ? 'PUT' : 'POST';
+                console.log(nombre, privilegios)
+                try {
+                    const resp = await fetch(url, {
+                        method,
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ nombre, privilegios })
+                    });
+                    const data = await resp.json();
+                    if (!resp.ok) throw new Error(data.error || 'Error');
+                    alert(data.message);
+                    cerrarModalRol();
+                    renderRolesTable();
+                } catch (err) {
+                    alert('Error: ' + err.message);
+                }
+            };
+        });
+
+        // Función para mostrar modal de usuario
+        function mostrarModal(tipo, idx) {
+            const usuarios = JSON.parse(localStorage.getItem('users_list'));
+            let u = null;
+            if (tipo === 'empleado') u = usuarios['empleados'][idx];
+            if (tipo === 'proveedor') u = usuarios['proveedores'][idx];
+            if (tipo === 'cliente_natural') u = usuarios['clientes_naturales'][idx];
+            if (tipo === 'cliente_juridico') u = usuarios['clientes_juridicos'][idx];
+            if (!u) return;
+            
+            let html = '<table style="width:100%">';
+            for (const key in u) {
+                if (key.includes('estado') || key.includes('municipio') || key.includes('parroquia')) {
+                    html += `<tr><td style='font-weight:bold;text-transform:capitalize;'>${key.replace(/_/g,' ')}</td><td>${u[key] ?? ''}</td></tr>`;
+                } else {
+                    html += `<tr><td style='font-weight:bold;text-transform:capitalize;'>${key.replace(/_/g,' ')}</td><td>${u[key] ?? ''}</td></tr>`;
+                }
+            }
+            html += '</table>';
+            document.getElementById('modal-body').innerHTML = html;
+            document.getElementById('usuario-modal').classList.add('active');
+        }
+
+        // Función para renderizar tabla de usuarios
+        function renderUsuariosTable() {
+            const filter = document.getElementById('filter-rol').value;
+            const tbody = document.querySelector('#usuarios-section .data-table tbody');
+            const thead = document.querySelector('#usuarios-section .data-table thead tr');
+            tbody.innerHTML = '';
+            usuarios = JSON.parse(localStorage.getItem('users_list')) || [];
+            
+            if (filter === 'admin') {
+                thead.innerHTML = `
+                    <th>Nombre completo</th>
+                    <th>Email</th>
+                    <th>Estado</th>
+                    <th>Rol</th>
+                    <th>Acciones</th>
+                `;
+                usuarios['empleados'].forEach((u, idx) => {
+                    tbody.innerHTML += `
+                    <tr>
+                        <td>${u.nombre_completo}</td>
+                        <td>${u.email}</td>
+                        <td><span class="status ${u.activo === 'S' ? 'active' : 'inactive'}">${u.activo === 'S' ? 'Activo' : 'Inactivo'}</span></td>
+                        <td>${u.rol || ''}</td>
+                        <td class="actions">
+                            <button class="action-btn view" title="Ver detalles" onclick="mostrarModal('empleado', ${idx})"><i class="fas fa-eye"></i></button>
+                            <button class="action-btn assign-role" title="Asignar Rol" onclick="abrirModalRolUsuario(${u.id_usuario}, '${u.nombre_completo.replace(/'/g, '\'')}', ${u.id_rol})"><i class="fas fa-user-tag"></i></button>
+                        </td>
+                    </tr>`;
+                });
+            } else if (filter === 'proveedor') {
+                thead.innerHTML = `
+                    <th>Denominación comercial</th>
+                    <th>Email</th>
+                    <th>Página web</th>
+                    <th>Acciones</th>
+                `;
+                usuarios['proveedores'].forEach((u, idx) => {
+                    tbody.innerHTML += `
+                    <tr>
+                        <td>${u.denominacion_comercial || ''}</td>
+                        <td>${u.email}</td>
+                        <td>${u.pagina_web || ''}</td>
+                        <td class="actions">
+                            <button class="action-btn view" title="Ver detalles" onclick="mostrarModal('proveedor', ${idx})"><i class="fas fa-eye"></i></button>
+                        </td>
+                    </tr>`;
+                });
+            } else if (filter === 'cliente_natural') {
+                thead.innerHTML = `
+                    <th>Nombre completo</th>
+                    <th>RIF</th>
+                    <th>Cédula</th>
+                    <th>Acciones</th>
+                `;
+                usuarios['clientes_naturales'].forEach((u, idx) => {
+                    tbody.innerHTML += `
+                    <tr>
+                        <td>${u.nombre_completo}</td>
+                        <td>${u.rif || ''}</td>
+                        <td>${u.cedula || ''}</td>
+                        <td class="actions">
+                            <button class="action-btn view" title="Ver detalles" onclick="mostrarModal('cliente_natural', ${idx})"><i class="fas fa-eye"></i></button>
+                        </td>
+                    </tr>`;
+                });
+            } else if (filter === 'cliente_juridico') {
+                thead.innerHTML = `
+                    <th>Email</th>
+                    <th>Razón social</th>
+                    <th>Denominación comercial</th>
+                    <th>RIF</th>
+                    <th>Acciones</th>
+                `;
+                usuarios['clientes_juridicos'].forEach((u, idx) => {
+                    tbody.innerHTML += `
+                    <tr>
+                        <td>${u.email}</td>
+                        <td>${u.razon_social || ''}</td>
+                        <td>${u.denominacion_comercial || ''}</td>
+                        <td>${u.rif || ''}</td>
+                        <td class="actions">
+                            <button class="action-btn view" title="Ver detalles" onclick="mostrarModal('cliente_juridico', ${idx})"><i class="fas fa-eye"></i></button>
+                        </td>
+                    </tr>`;
+                });
+            }
+        }
+
+        // Función para renderizar tabla de roles
+        async function renderRolesTable() {
+            try {
+                const res = await fetch('http://localhost:3000/roles/');
+                if (!res.ok) throw new Error('Error al cargar roles');
+                const { roles } = await res.json();
+                
+                const rolesTbody = document.querySelector('#roles-section .data-table tbody');
+                rolesTbody.innerHTML = '';
+                
+                roles.forEach(rol => {
+                    const privs = (rol.privilegios || []).map(p => `${p.privilegio} sobre ${p.tabla}`).join('<br>');
+                    rolesTbody.innerHTML += `
+                        <tr>
+                            <td>${rol.id_rol}</td>
+                            <td>${rol.nombre_rol}</td>
+                            <td>${privs || 'Sin privilegios'}</td>
+                            <td class="actions">
+                                <button class="action-btn edit" title="Editar" data-rol-id="${rol.id_rol}" data-rol-nombre="${rol.nombre_rol}" data-rol-privilegios='${JSON.stringify(rol.privilegios)}'><i class="fas fa-edit"></i></button>
+                                <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                            </td>
+                        </tr>
+                    `;
+                });
+                
+                // Agregar event listeners a los botones de editar
+                document.querySelectorAll('#roles-section .action-btn.edit').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const id = parseInt(this.getAttribute('data-rol-id'));
+                        const nombre = this.getAttribute('data-rol-nombre');
+                        const privilegios = JSON.parse(this.getAttribute('data-rol-privilegios'));
+                        editRole(id, nombre, privilegios);
+                    });
+                });
+            } catch (err) {
+                console.error('Error al cargar roles:', err);
+                const rolesTbody = document.querySelector('#roles-section .data-table tbody');
+                rolesTbody.innerHTML = '<tr><td colspan="4">Error al cargar roles.</td></tr>';
+            }
+        }
+
+        // Renderizar tabla de órdenes de reposición a proveedores
+        async function renderOrdenesReposicion() {
+            const tbody = document.querySelector('#tabla-ordenes-reposicion tbody');
+            tbody.innerHTML = '<tr><td colspan="7">Cargando...</td></tr>';
+            try {
+                const res = await fetch('http://localhost:3000/ordenes/reposicion');
+                const ordenes = await res.json();
+                if (!ordenes.length) {
+                    tbody.innerHTML = '<tr><td colspan="7">No hay órdenes registradas.</td></tr>';
+                    return;
+                }
+                tbody.innerHTML = '';
+                ordenes.forEach(orden => {
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${orden.id_orden_reposicion}</td>
+                            <td>${orden.nombre_departamento}</td>
+                            <td>${orden.razon_social_proveedor}</td>
+                            <td>${orden.fecha_emision ? orden.fecha_emision.split('T')[0] : ''}</td>
+                            <td>${orden.fecha_fin ? orden.fecha_fin.split('T')[0] : ''}</td>
+                            <td>${orden.estatus_actual}</td>
+                            <td class="actions">
+                                <div class="actions">
+                                <button class="action-btn assign-role" title="Modificar estatus" onclick="abrirModalCambiarEstatus(${orden.id_orden_reposicion}, ${orden.id_estatus_actual})">
+                                    <i class="fas fa-exchange-alt"></i>
+                                </button>
+                                <button class="action-btn view" title="Ver Detalles" onclick="abrirModalDetallesOrdenProveedor(${orden.id_orden_reposicion})">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } catch (err) {
+                tbody.innerHTML = '<tr><td colspan="7">Error al cargar las órdenes.</td></tr>';
+            }
+        }
+
+        // Abrir modal de cambio de estatus
+        async function abrirModalCambiarEstatus(idOrden, idEstatusActual) {
+            ordenSeleccionadaId = idOrden;
+            estatusActualId = idEstatusActual;
+            const lista = document.getElementById('estatus-lista');
+            lista.innerHTML = 'Cargando estatus...';
+            document.getElementById('modal-cambiar-estatus').classList.add('active');
+            try {
+                const res = await fetch('http://localhost:3000/ordenes/estatus');
+                const estatus = await res.json();
+                // Filtrar: mostrar todos menos el actual
+                const disponibles = estatus.filter(e => e.id_estatus !== idEstatusActual);
+                if (!disponibles.length) {
+                    lista.innerHTML = '<p>No hay otros estatus disponibles.</p>';
+                    return;
+                }
+                lista.innerHTML = '';
+                disponibles.forEach(e => {
+                    const btn = document.createElement('button');
+                    btn.className = 'estatus-btn';
+                    btn.textContent = e.nombre;
+                    btn.onclick = () => cambiarEstatusOrden(ordenSeleccionadaId, e.id_estatus, e.nombre);
+                    lista.appendChild(btn);
+                });
+            } catch (err) {
+                lista.innerHTML = '<p>Error al cargar los estatus.</p>';
+            }
+        }
+
+        // Cierre robusto de modales (solo el modal correspondiente)
+        document.querySelectorAll('.close-modal').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const modal = btn.closest('.modal');
+                if (modal) {
+                    modal.classList.remove('active');
+                }
+            });
+        });
+
+        // Cambiar estatus de la orden
+        async function cambiarEstatusOrden(idOrden, idEstatusNuevo, nombreEstatusNuevo) {
+            try {
+                const res = await fetch(`http://localhost:3000/ordenes/reposicion/${idOrden}/estatus`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id_estatus: idEstatusNuevo })
+                });
+                if (res.ok) {
+                    alert('Estatus actualizado a: ' + nombreEstatusNuevo);
+                    document.getElementById('modal-cambiar-estatus').classList.remove('active');
+                    await renderOrdenesReposicion();
+                } else {
+                    alert('Error al actualizar el estatus');
+                }
+            } catch (err) {
+                alert('Error de conexión al actualizar el estatus');
+            }
+        }
+
+        // Inicializar tabla de órdenes al cargar la sección de órdenes
+        // (y también al alternar el filtro de órdenes)
+        function inicializarOrdenesReposicion() {
+            const filterOrden = document.getElementById('filter-orden');
+            if (filterOrden && filterOrden.value === 'reposicion') {
+                renderOrdenesReposicion();
+            }
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+            // ... (otras inicializaciones)
+            // Cargar órdenes de reposición a proveedores al mostrar la sección
+            inicializarOrdenesReposicion();
+            // Si tienes navegación por tabs, puedes llamar inicializarOrdenesReposicion() al cambiar a la sección de órdenes
+            const filterOrden = document.getElementById('filter-orden');
+            if (filterOrden) {
+                filterOrden.addEventListener('change', function() {
+                    if (filterOrden.value === 'reposicion') {
+                        renderOrdenesReposicion();
+                    }
+                });
+            }
+        });
+
+        // Inicialización cuando el DOM esté listo
+        document.addEventListener('DOMContentLoaded', function() {
+            // Cargar datos del usuario
+            const datosUsuario = localStorage.getItem("user");
+            if (datosUsuario) {
+                const usuario = JSON.parse(datosUsuario);
+                if(usuario.nombre) document.getElementById("nombre-usuario").textContent = usuario.nombre;
+                if(usuario.email) document.getElementById("email-usuario").textContent = usuario.email;
+            }
+
+            // Logout handler
+            const logoutBtn = document.getElementById("logout-btn");
+            if (logoutBtn) {
+                logoutBtn.addEventListener("click", function(e) {
+                    e.preventDefault();
+                    localStorage.removeItem("user");
+                    localStorage.removeItem("users_list");
+                    window.location.href = "inicio.html";
+                });
+            }
+
+            // Cargar usuarios al montar
+            fetch('http://localhost:3000/api/users/usuarios')
+                .then(res => res.json())
+                .then(data => {
+                    console.log(data);
+                    localStorage.setItem('users_list', JSON.stringify(data));
+                    renderUsuariosTable();
+                })
+                .catch(err => {
+                    console.error('Error cargando usuarios:', err);
+                });
+
+            // Filtro de roles
+            document.getElementById('filter-rol').addEventListener('change', function() {
+                renderUsuariosTable();
+                actualizarBotonNuevoUsuario();
+            });
+
+            // Navegación de secciones
+            const navLinks = document.querySelectorAll('.sidebar-nav a');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+
+                    // Update active link
+                    navLinks.forEach(l => l.parentElement.classList.remove('active'));
+                    this.parentElement.classList.add('active');
+
+                    // Show correct section
+                    const sectionId = this.getAttribute('data-section');
+                    document.querySelectorAll('.content-section').forEach(section => {
+                        section.classList.remove('active');
+                        section.style.display = 'none';
+                    });
+                    const targetSection = document.getElementById(sectionId + '-section');
+                    if (targetSection) {
+                        targetSection.classList.add('active');
+                        targetSection.style.display = '';
+                    }
+
+                    // Load data if it's the roles section
+                    if (sectionId === 'roles') {
+                        renderRolesTable();
+                    }
+                    // Load data if it's the ordenes section
+                    if (sectionId === 'ordenes') {
+                        alternarTablasOrdenes();
+                    }
+                    // Si es reportes, podrías inicializar lógica de reportes aquí en el futuro
+                });
+            });
+
+            // Botón agregar rol
+            const addRolBtn = document.getElementById('add-rol-btn');
+            addRolBtn.addEventListener('click', () => {
+                abrirModalRol();
+            });
+
+            // Cambia el texto y visibilidad del botón de nuevo usuario según el filtro
+            function actualizarBotonNuevoUsuario() {
+                const btn = document.getElementById('add-usuario-btn');
+                const filter = document.getElementById('filter-rol').value;
+                if (filter === 'admin') {
+                    btn.style.display = '';
+                    btn.textContent = 'Nuevo Empleado';
+                } else {
+                    btn.style.display = 'none';
+                }
+            }
+            actualizarBotonNuevoUsuario();
+
+            // Abrir modal de nuevo empleado
+            const addUsuarioBtn = document.getElementById('add-usuario-btn');
+            if (addUsuarioBtn) {
+                addUsuarioBtn.onclick = function() {
+                    document.getElementById('nuevo-empleado-form').reset();
+                    document.getElementById('nuevo-empleado-modal').classList.add('active');
+                    // Cargar selects de estado, municipio y parroquia usando lugares.js
+                    const estadoSelect = document.getElementById('nuevo-empleado-estado');
+                    const municipioSelect = document.getElementById('nuevo-empleado-municipio');
+                    const parroquiaSelect = document.getElementById('nuevo-empleado-parroquia');
+                    poblarEstados(estadoSelect, function() {
+                        poblarMunicipios(municipioSelect, estadoSelect.value, function() {
+                            poblarParroquias(parroquiaSelect, estadoSelect.value, municipioSelect.value);
+                        });
+                        parroquiaSelect.innerHTML = '<option value="">Seleccione Parroquia</option>';
+                    });
+                    municipioSelect.innerHTML = '<option value="">Seleccione Municipio</option>';
+                    parroquiaSelect.innerHTML = '<option value="">Seleccione Parroquia</option>';
+                };
+            }
+            // Cerrar modal de nuevo empleado
+            const closeNuevoEmpleadoBtn = document.getElementById('close-nuevo-empleado-modal');
+            if (closeNuevoEmpleadoBtn) {
+                closeNuevoEmpleadoBtn.onclick = function() {
+                    document.getElementById('nuevo-empleado-modal').classList.remove('active');
+                };
+            }
+        });
+        function editRole(id, nombre, privilegios) {
+            editingRoleId = id;
+            abrirModalRol('editar', { nombre, privilegios });
+        }
+
+        // Hacer funciones globales
+        window.editRole = editRole;
+        window.mostrarModal = mostrarModal;
+
+        // Abrir modal de asignación de rol
+        async function abrirModalRolUsuario(idUsuario, nombreUsuario, idRolActual) {
+            usuarioSeleccionadoId = idUsuario;
+            document.getElementById('nombre-usuario-rol').textContent = nombreUsuario;
+            // Obtener todos los roles
+            const rolesRes = await fetch('http://localhost:3000/roles');
+            const { roles } = await rolesRes.json();
+
+            // Ordenar: el rol actual primero, luego los demás por nombre
+            roles.sort((a, b) => {
+                if (a.id_rol === idRolActual) return -1;
+                if (b.id_rol === idRolActual) return 1;
+                return a.nombre_rol.localeCompare(b.nombre_rol);
+            });
+
+            // Renderizar select
+            const select = document.getElementById('select-rol');
+            select.innerHTML = '';
+            roles.forEach(rol => {
+                select.innerHTML += `<option value="${rol.id_rol}" ${rol.id_rol === idRolActual ? 'selected' : ''}>${rol.nombre_rol}</option>`;
+            });
+            document.getElementById('asignar-rol-modal').classList.add('active');
+        }
+        document.getElementById('close-asignar-rol-modal').onclick = function() {
+            document.getElementById('asignar-rol-modal').classList.remove('active');
+        };
+        document.getElementById('asignar-rol-form').onsubmit = async function(e) {
+            e.preventDefault();
+            const id_rol = parseInt(document.getElementById('select-rol').value);
+            try {
+                const res = await fetch(`http://localhost:3000/roles/usuario/${usuarioSeleccionadoId}/cambiar-rol`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id_rol })
+                });
+                if (res.ok) {
+                    alert('Rol actualizado correctamente');
+                    document.getElementById('asignar-rol-modal').classList.remove('active');
+                    // Opcional: refrescar la tabla de usuarios empleados aquí
+                } else {
+                    alert('Error al actualizar el rol');
+                }
+            } catch (err) {
+                alert('Error de conexión');
+            }
+        };
+
+        document.getElementById('nuevo-empleado-form').onsubmit = async function(e) {
+            e.preventDefault();
+            const cedula = document.getElementById('nuevo-empleado-cedula').value.trim();
+            const primer_nombre = document.getElementById('nuevo-empleado-primer-nombre').value.trim();
+            const segundo_nombre = document.getElementById('nuevo-empleado-segundo-nombre').value.trim();
+            const primer_apellido = document.getElementById('nuevo-empleado-primer-apellido').value.trim();
+            const segundo_apellido = document.getElementById('nuevo-empleado-segundo-apellido').value.trim();
+            const direccion = document.getElementById('nuevo-empleado-direccion').value.trim();
+            const lugar_id_lugar = document.getElementById('nuevo-empleado-parroquia').value;
+            const correo = document.getElementById('nuevo-usuario-correo').value.trim();
+            const contrasena = document.getElementById('nuevo-usuario-contrasena').value;
+
+            // Separar correo en nombre y extension
+            const [correo_nombre, correo_extension] = correo.split('@');
+            if (!correo_nombre || !correo_extension) {
+                alert('Correo inválido. Debe tener formato usuario@dominio');
+                return;
+            }
+
+            const data = {
+                cedula,
+                primer_nombre,
+                segundo_nombre,
+                primer_apellido,
+                segundo_apellido,
+                direccion,
+                lugar_id_lugar,
+                correo_nombre,
+                correo_extension,
+                contrasena
+            };
+
+            try {
+                const res = await fetch('http://localhost:3000/api/users/empleados', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const responseData = await res.json();
+                if (res.ok && responseData.empleado) {
+                    alert('Empleado creado exitosamente');
+                    document.getElementById('nuevo-empleado-modal').classList.remove('active');
+                    // Agregar el nuevo empleado al localStorage y refrescar la tabla
+                    let usuariosLS = JSON.parse(localStorage.getItem('users_list')) || {};
+                    if (!usuariosLS['empleados']) usuariosLS['empleados'] = [];
+                    // Usar todos los datos retornados por la API
+                    const nuevoEmpleado = responseData.empleado;
+                    // Normalizar id_usuario si viene como usuario_id
+                    if (nuevoEmpleado.usuario_id && !nuevoEmpleado.id_usuario) {
+                        nuevoEmpleado.id_usuario = nuevoEmpleado.usuario_id;
+                    }
+                    usuariosLS['empleados'].push(nuevoEmpleado);
+                    localStorage.setItem('users_list', JSON.stringify(usuariosLS));
+                    renderUsuariosTable();
+                } else {
+                    alert('Error al crear el empleado: ' + (responseData.error || ''));
+                }
+            } catch (err) {
+                alert('Error de conexión al crear el empleado');
+            }
+        };
+
+        // Renderizar tabla de órdenes de reposición de anaqueles
+        async function renderOrdenesAnaquel() {
+            const tbody = document.querySelector('#tabla-ordenes-anaquel tbody');
+            tbody.innerHTML = '<tr><td colspan="5">Cargando...</td></tr>';
+            try {
+                const res = await fetch('http://localhost:3000/ordenes/anaquel');
+                const ordenes = await res.json();
+                if (!ordenes.length) {
+                    tbody.innerHTML = '<tr><td colspan="5">No hay órdenes registradas.</td></tr>';
+                    return;
+                }
+                tbody.innerHTML = '';
+                ordenes.forEach(orden => {
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${orden.id_orden_reposicion}</td>
+                            <td>${orden.fecha_hora_generacion ? orden.fecha_hora_generacion.replace('T', ' ').slice(0, 16) : ''}</td>
+                            <td>${orden.ubicacion_completa || 'No especificada'}</td>
+                            <td>${orden.estatus_actual}</td>
+                            <td class="actions">
+                                <div class="actions">
+                                <button class="action-btn assign-role" title="Modificar estatus" onclick="abrirModalCambiarEstatusAnaquel(${orden.id_orden_reposicion}, ${orden.id_estatus_actual})">
+                                    <i class="fas fa-exchange-alt"></i>
+                                </button>
+                                <button class="action-btn view" title="Ver Detalles" onclick="abrirModalDetallesOrdenAnaquel(${orden.id_orden_reposicion})">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } catch (err) {
+                tbody.innerHTML = '<tr><td colspan="5">Error al cargar las órdenes.</td></tr>';
+            }
+        }
+
+        // Abrir modal de cambio de estatus para anaquel
+        async function abrirModalCambiarEstatusAnaquel(idOrden, idEstatusActual) {
+            ordenSeleccionadaId = idOrden;
+            estatusActualId = idEstatusActual;
+            const lista = document.getElementById('estatus-lista');
+            lista.innerHTML = 'Cargando estatus...';
+            document.getElementById('modal-cambiar-estatus').classList.add('active');
+            try {
+                const res = await fetch('http://localhost:3000/ordenes/estatus');
+                const estatus = await res.json();
+                // Filtrar: mostrar todos menos el actual
+                const disponibles = estatus.filter(e => e.id_estatus !== idEstatusActual);
+                if (!disponibles.length) {
+                    lista.innerHTML = '<p>No hay otros estatus disponibles.</p>';
+                    return;
+                }
+                lista.innerHTML = '';
+                disponibles.forEach(e => {
+                    const btn = document.createElement('button');
+                    btn.className = 'estatus-btn';
+                    btn.textContent = e.nombre;
+                    btn.onclick = () => cambiarEstatusOrdenAnaquel(ordenSeleccionadaId, e.id_estatus, e.nombre);
+                    lista.appendChild(btn);
+                });
+            } catch (err) {
+                lista.innerHTML = '<p>Error al cargar los estatus.</p>';
+            }
+        }
+
+        // Cambiar estatus de la orden de anaquel
+        async function cambiarEstatusOrdenAnaquel(idOrden, idEstatusNuevo, nombreEstatusNuevo) {
+            try {
+                const res = await fetch(`http://localhost:3000/ordenes/anaquel/${idOrden}/estatus`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ id_estatus: idEstatusNuevo })
+                });
+                if (res.ok) {
+                    alert('Estatus actualizado a: ' + nombreEstatusNuevo);
+                    document.getElementById('modal-cambiar-estatus').classList.remove('active');
+                    await renderOrdenesAnaquel();
+                } else {
+                    alert('Error al actualizar el estatus');
+                }
+            } catch (err) {
+                alert('Error de conexión al actualizar el estatus');
+            }
+        }
+
+        // Inicializar tabla de órdenes de anaquel al alternar el filtro
+        function inicializarOrdenesAnaquel() {
+            const filterOrden = document.getElementById('filter-orden');
+            if (filterOrden && filterOrden.value === 'anaquel') {
+                renderOrdenesAnaquel();
+            }
+            if (filterOrden) {
+            filterOrden.addEventListener('change', function() {
+                if (filterOrden.value === 'anaquel') {
+                    renderOrdenesAnaquel();
+                }
+            });
+        }
+        }
+
+
+        // Alternar visualización de tablas de órdenes según el filtro
+        function alternarTablasOrdenes() {
+            const filterOrden = document.getElementById('filter-orden');
+            const tablaReposicion = document.getElementById('tabla-ordenes-reposicion');
+            const tablaAnaquel = document.getElementById('tabla-ordenes-anaquel');
+            if (filterOrden.value === 'reposicion') {
+                tablaReposicion.style.display = '';
+                tablaAnaquel.style.display = 'none';
+                renderOrdenesReposicion();
+            } else {
+                tablaReposicion.style.display = 'none';
+                tablaAnaquel.style.display = '';
+                renderOrdenesAnaquel();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const filterOrden = document.getElementById('filter-orden');
+            if (filterOrden) {
+                filterOrden.addEventListener('change', alternarTablasOrdenes);
+                alternarTablasOrdenes();
+            }
+        });
+
+        // Abrir modal de detalles de la orden de anaquel
+        async function abrirModalDetallesOrdenAnaquel(idOrden) {
+            const modal = document.getElementById('modal-detalles-orden-anaquel');
+            const tbody = document.getElementById('detalles-orden-anaquel-tbody');
+            tbody.innerHTML = '<tr><td colspan="3">Cargando detalles...</td></tr>';
+            modal.classList.add('active');
+
+            try {
+                const res = await fetch(`http://localhost:3000/ordenes/anaquel/${idOrden}/detalles`);
+                const detalles = await res.json();
+
+                if (!detalles.length) {
+                    tbody.innerHTML = '<tr><td colspan="3">No se encontraron detalles para esta orden.</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = '';
+                detalles.forEach(detalle => {
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${detalle.presentacion}</td>
+                            <td>${detalle.cerveza}</td>
+                            <td>${detalle.cantidad}</td>
+                        </tr>
+                    `;
+                });
+            } catch (err) {
+                tbody.innerHTML = '<tr><td colspan="3">Error al cargar los detalles.</td></tr>';
+            }
+        }
+
+        document.getElementById('close-modal-detalles-orden-anaquel').onclick = function() {
+            document.getElementById('modal-detalles-orden-anaquel').classList.remove('active');
+        };
+
+        // Abrir modal de detalles de la orden de proveedor
+        async function abrirModalDetallesOrdenProveedor(idOrden) {
+            const modal = document.getElementById('modal-detalles-orden-proveedor');
+            const tbody = document.getElementById('detalles-orden-proveedor-tbody');
+            tbody.innerHTML = '<tr><td colspan="3">Cargando detalles...</td></tr>';
+            modal.classList.add('active');
+
+            try {
+                const res = await fetch(`http://localhost:3000/ordenes/reposicion/${idOrden}/detalles`);
+                const detalles = await res.json();
+
+                if (!detalles.length) {
+                    tbody.innerHTML = '<tr><td colspan="3">No se encontraron detalles para esta orden.</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = '';
+                detalles.forEach(detalle => {
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${detalle.presentacion}</td>
+                            <td>${detalle.cerveza}</td>
+                            <td>${detalle.cantidad}</td>
+                        </tr>
+                    `;
+                });
+            } catch (err) {
+                tbody.innerHTML = '<tr><td colspan="3">Error al cargar los detalles.</td></tr>';
+            }
+        }
+
+        document.getElementById('close-modal-detalles-orden-proveedor').onclick = function() {
+            document.getElementById('modal-detalles-orden-proveedor').classList.remove('active');
+        };
+
+        // Funcionalidad para reportes
+        document.addEventListener('DOMContentLoaded', function() {
+            // Variables para la navegación de reportes
+            let reporteActual = 0;
+            const reportes = [
+                {
+                    titulo: 'Ranking de Clientes por Puntos de Fidelidad',
+                    descripcion: 'Top 10 clientes más leales según puntos acumulados',
+                    funcion: () => window.reportes.mostrarRankingPuntos(),
+                    contenedor: 'grafico-ranking-puntos',
+                    contenedorVacaciones: 'grafico-vacaciones-container'
+                },
+                {
+                    titulo: 'Resumen de Días de Vacaciones',
+                    descripcion: 'Distribución de períodos de vacaciones por empleado',
+                    funcion: () => window.reportes.mostrarVacacionesEmpleados(),
+                    contenedor: 'grafico-vacaciones-container',
+                    contenedorRanking: 'grafico-ranking-puntos'
+                },
+                {
+                    titulo: 'Cervezas Producidas por Proveedores',
+                    descripcion: 'Distribución de cervezas por proveedor',
+                    funcion: () => window.reportes.mostrarCervezasProveedores(),
+                    contenedor: 'grafico-cervezas-proveedores',
+                    contenedorRanking: 'grafico-ranking-puntos'
+                },
+                {
+                    titulo: 'Desglose de Ingresos por Tipo de Venta',
+                    descripcion: 'Comparación de ventas online vs físicas por mes',
+                    funcion: () => window.reportes.mostrarIngresosPorTipo(),
+                    contenedor: 'grafico-ingresos-container',
+                    contenedorRanking: 'grafico-ranking-puntos'
+                },
+                {
+                    titulo: 'Comparativa de Estilos de Cerveza',
+                    descripcion: 'Visualiza y compara el color, la graduación alcohólica y el amargor de las cervezas registradas.',
+                    funcion: () => window.reportes.mostrarComparativaEstilos(),
+                    contenedor: 'grid-comparativa-estilos-container',
+                }
+            ];
+
+            // Función para mostrar un reporte específico
+            function mostrarReporte(index) {
+                if (index < 0 || index >= reportes.length) return;
+                
+                reporteActual = index;
+                const reporte = reportes[index];
+                
+                // Actualizar título y descripción
+                const titulo = document.querySelector('.reporte-titulo h3');
+                const descripcion = document.querySelector('.reporte-titulo p');
+                if (titulo) titulo.textContent = reporte.titulo;
+                if (descripcion) descripcion.textContent = reporte.descripcion;
+                
+                // Ocultar todos los contenedores de gráficos
+                document.getElementById('grafico-ranking-puntos').parentElement.style.display = 'none';
+                document.getElementById('grafico-vacaciones-container').style.display = 'none';
+                document.getElementById('grafico-cervezas-container').style.display = 'none';
+                document.getElementById('grafico-ingresos-container').style.display = 'none';
+                document.getElementById('grid-comparativa-estilos-container').style.display = 'none';
+                
+                // Ocultar todas las paginaciones
+                const paginacionRanking = document.querySelector('.paginacion-ranking');
+                const paginacionVacaciones = document.getElementById('vacaciones-paginacion');
+                const paginacionCervezas = document.getElementById('cervezas-paginacion');
+                const paginacionComparativa = document.querySelector('.paginacion-comparativa');
+                
+                if (paginacionRanking) paginacionRanking.style.display = 'none';
+                if (paginacionVacaciones) paginacionVacaciones.style.display = 'none';
+                if (paginacionCervezas) paginacionCervezas.style.display = 'none';
+                if (paginacionComparativa) paginacionComparativa.style.display = 'none';
+                
+                // Mostrar el contenedor del reporte actual
+                if (index === 0) {
+                    document.getElementById('grafico-ranking-puntos').parentElement.style.display = 'block';
+                    if (paginacionRanking) paginacionRanking.style.display = 'flex';
+                } else if (index === 1) {
+                    document.getElementById('grafico-vacaciones-container').style.display = 'block';
+                    if (paginacionVacaciones) paginacionVacaciones.style.display = 'flex';
+                } else if (index === 2) {
+                    // Para cervezas, el contenido se genera dinámicamente
+                    if (paginacionCervezas) paginacionCervezas.style.display = 'flex';
+                } else if (index === 3) {
+                    // Para ingresos por tipo
+                    document.getElementById('grafico-ingresos-container').style.display = 'block';
+                } else if (index === 4) {
+                    document.getElementById('grid-comparativa-estilos-container').style.display = 'flex';
+                    if (paginacionComparativa) paginacionComparativa.style.display = 'flex';
+                }
+                
+                // Ejecutar la función del reporte
+                reporte.funcion();
+            }
+
+            // Event listeners para navegación de reportes
+            const btnPrev = document.getElementById('reporte-prev');
+            const btnNext = document.getElementById('reporte-next');
+            
+            if (btnPrev) {
+                btnPrev.addEventListener('click', function() {
+                    const nuevoIndex = (reporteActual - 1 + reportes.length) % reportes.length;
+                    mostrarReporte(nuevoIndex);
+                });
+            }
+            
+            if (btnNext) {
+                btnNext.addEventListener('click', function() {
+                    const nuevoIndex = (reporteActual + 1) % reportes.length;
+                    mostrarReporte(nuevoIndex);
+                });
+            }
+
+            // Agregar event listeners para la navegación de reportes
+            const reportesLink = document.querySelector('a[data-section="reportes"]');
+            if (reportesLink) {
+                reportesLink.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    // Mostrar la sección de reportes
+                    mostrarSeccion('reportes');
+                    // Cargar el primer reporte
+                    setTimeout(() => {
+                        mostrarReporte(0);
+                    }, 100);
+                });
+            }
+
+            // Función para mostrar secciones
+            function mostrarSeccion(seccion) {
+                // Ocultar todas las secciones
+                document.querySelectorAll('.content-section').forEach(section => {
+                    section.style.display = 'none';
+                });
+                
+                // Mostrar la sección seleccionada
+                const seccionElement = document.getElementById(seccion + '-section');
+                if (seccionElement) {
+                    seccionElement.style.display = 'block';
+                }
+                
+                // Actualizar navegación activa
+                document.querySelectorAll('.sidebar-nav li').forEach(li => {
+                    li.classList.remove('active');
+                });
+                
+                const linkActivo = document.querySelector(`a[data-section="${seccion}"]`);
+                if (linkActivo) {
+                    linkActivo.parentElement.classList.add('active');
+                }
+            }
+
+            // Si la sección de reportes está activa al cargar la página, mostrar el primer reporte
+            const reportesSection = document.getElementById('reportes-section');
+            if (reportesSection && reportesSection.style.display !== 'none') {
+                setTimeout(() => {
+                    mostrarReporte(0);
+                }, 100);
+        
+        // Funciones para la gestión de tasa
+        async function cargarTasaActual() {
+            try {
+                const res = await fetch('http://localhost:3000/tasa/actual');
+                if (!res.ok) throw new Error('Error al cargar la tasa actual');
+                const data = await res.json();
+                
+                document.getElementById('current-rate-value').textContent = data.valor;
+                document.getElementById('current-rate-date').textContent = new Date(data.fecha).toLocaleDateString('es-ES');
+            } catch (err) {
+                console.error('Error al cargar la tasa actual:', err);
+                document.getElementById('current-rate-value').textContent = 'Error';
+                document.getElementById('current-rate-date').textContent = 'Error al cargar';
+            }
+        }
+        
+        async function actualizarTasa(event) {
+            event.preventDefault();
+            
+            const valor = document.getElementById('nueva-tasa').value;
+            if (!valor || valor <= 0) {
+                alert('Por favor ingrese un valor válido para la tasa');
+                return;
+            }
+            
+            try {
+                const res = await fetch('http://localhost:3000/tasa/actualizar', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ valor: parseFloat(valor) })
+                });
+                
+                if (!res.ok) {
+                    const error = await res.json();
+                    throw new Error(error.error || 'Error al actualizar la tasa');
+                }
+                
+                const data = await res.json();
+                alert('Tasa actualizada exitosamente');
+                
+                // Recargar la tasa actual
+                await cargarTasaActual();
+                
+                // Limpiar el formulario
+                document.getElementById('tasa-form').reset();
+                
+            } catch (err) {
+                alert('Error: ' + err.message);
+            }
+        }
+        
+        // Event listeners para la sección de tasa
+        document.addEventListener('DOMContentLoaded', function() {
+            // Cargar tasa actual cuando se muestre la sección
+            const tasaSection = document.getElementById('tasa-section');
+            if (tasaSection) {
+                const observer = new MutationObserver(function(mutations) {
+                    mutations.forEach(function(mutation) {
+                        if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                            if (tasaSection.classList.contains('active')) {
+                                cargarTasaActual();
+                            }
+                        }
+                    });
+                });
+                
+                observer.observe(tasaSection, { attributes: true });
+            }
+            
+            // Event listener para el formulario de tasa
+            const tasaForm = document.getElementById('tasa-form');
+            if (tasaForm) {
+                tasaForm.addEventListener('submit', actualizarTasa);
+            }
+        });
+
+        // Validación en tiempo real para solo números y longitud máxima en cédula del modal
+        function soloNumerosYMaxLength(input, maxLength) {
+            input.addEventListener('input', function() {
+                let value = input.value.replace(/\D/g, ''); // Solo dígitos
+                if (value.length > maxLength) value = value.slice(0, maxLength);
+                input.value = value;
+            });
+        }
+        soloNumerosYMaxLength(document.getElementById('nuevo-empleado-cedula'), 8);
+    </script>
+    
+    <!-- Script para reportes -->
+    <script src="../js/reportes.js"></script>
+</body>
+</html> 

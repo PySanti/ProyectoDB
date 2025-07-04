@@ -263,6 +263,22 @@ async function handleRegistroSubmit(event) {
  */
 function continueToCatalog() {
     console.log('Continuando al catálogo...');
+    // Limpiar carrito si el cliente cambió
+    const lastUserKey = 'lastUserOrClient';
+    let currentClient = null;
+    if (sessionStorage.getItem('currentClient')) {
+        try {
+            currentClient = JSON.parse(sessionStorage.getItem('currentClient'));
+        } catch {}
+    }
+    let currentId = currentClient ? currentClient.id : null;
+    const lastUserOrClient = sessionStorage.getItem(lastUserKey);
+    if (lastUserOrClient && lastUserOrClient !== String(currentId)) {
+        // Limpiar carrito en backend
+        fetch(`${API_BASE_URL}/carrito/limpiar/1?id_cliente_natural=${currentId}`, { method: 'DELETE' });
+    }
+    if (currentId) sessionStorage.setItem(lastUserKey, String(currentId));
+    setVentaType('tienda');
     window.location.href = 'catalog.html';
 }
 

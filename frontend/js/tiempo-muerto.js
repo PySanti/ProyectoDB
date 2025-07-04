@@ -41,6 +41,9 @@ function updateTime() {
 function startPurchase() {
     console.log('Iniciando proceso de compra...');
     
+    // Establecer tipo de venta como tienda física
+    setVentaType('tienda');
+    
     // Mostrar indicador de carga
     const button = document.querySelector('.start-purchase-btn');
     const originalContent = button.innerHTML;

@@ -35,15 +35,27 @@ function showNotification(message, type = 'info') {
 
 /**
  * Actualiza el contador de productos en el ícono del carrito.
- * Llama al backend para obtener el total de ítems para el usuario invitado.
+ * Llama al backend para obtener el total de ítems para el usuario actual.
  */
 async function updateCartCounter() {
-    const GUEST_USER_ID = 1; // ID del usuario invitado genérico
     const cartCountElement = document.querySelector('.cart-count');
     if (!cartCountElement) return;
 
+    // Obtener el usuario actual
+    const userStr = localStorage.getItem('user');
+    let userId = 1; // GUEST_USER_ID por defecto
+    
+    if (userStr) {
+        try {
+            const user = JSON.parse(userStr);
+            userId = user.id_usuario;
+        } catch (error) {
+            console.error('Error al parsear usuario:', error);
+        }
+    }
+
     try {
-        const response = await fetch(`${API_BASE_URL}/carrito/resumen/${GUEST_USER_ID}`);
+        const response = await fetch(`${API_BASE_URL}/carrito/resumen/${userId}`);
         if (!response.ok) {
             if (response.status === 404) {
                 cartCountElement.textContent = '0';

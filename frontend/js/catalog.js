@@ -45,7 +45,47 @@ let catalogState = {
 // =====================================================
 // INICIALIZACIÓN
 // =====================================================
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    // Detectar cambio de usuario/cliente
+    const lastUserKey = 'lastUserOrClient';
+    let currentUser = null;
+    let currentClient = null;
+    let userType = null;
+    
+    if (localStorage.getItem('user')) {
+        try {
+            currentUser = JSON.parse(localStorage.getItem('user'));
+            userType = 'usuario';
+        } catch {}
+    } else if (sessionStorage.getItem('currentClient')) {
+        try {
+            currentClient = JSON.parse(sessionStorage.getItem('currentClient'));
+            userType = 'cliente';
+        } catch {}
+    }
+    
+    let currentId = null;
+    if (userType === 'usuario' && currentUser) currentId = currentUser.id_usuario;
+    if (userType === 'cliente' && currentClient) currentId = currentClient.id;
+    
+    const lastUserOrClient = sessionStorage.getItem(lastUserKey);
+    if (lastUserOrClient && lastUserOrClient !== String(currentId)) {
+        // Limpiar carrito en backend
+        try {
+            let url = '';
+            if (userType === 'usuario') {
+                url = `${API_BASE_URL}/carrito/limpiar/${currentId}`;
+            } else if (userType === 'cliente') {
+                url = `${API_BASE_URL}/carrito/limpiar/1?id_cliente_natural=${currentId}`;
+            }
+            if (url) {
+                await fetch(url, { method: 'DELETE' });
+            }
+        } catch (e) { console.error('Error limpiando carrito:', e); }
+    }
+    // Guardar el usuario/cliente actual para la próxima vez
+    if (currentId) sessionStorage.setItem(lastUserKey, String(currentId));
+    
     initCatalog();
 });
 
@@ -205,12 +245,47 @@ function updateProductCount() {
 // =====================================================
 
 /**
- * Agrega un producto al carrito en la base de datos para un usuario genérico.
+ * Agrega un producto al carrito en la base de datos.
+ * Usa el usuario real si está logueado, o GUEST_USER_ID si no.
  */
 async function addToCart(nombre_cerveza, nombre_presentacion, cantidad = 1) {
     if (!nombre_cerveza || !nombre_presentacion) {
         showNotification('Por favor, selecciona una presentación.', 'info');
         return;
+    }
+
+    // Obtener el usuario actual
+    const userStr = localStorage.getItem('user');
+    let idUsuario = 1; // GUEST_USER_ID por defecto
+    if (userStr) {
+        try {
+            const user = JSON.parse(userStr);
+            idUsuario = user.id_usuario;
+            console.log('Usuario logueado detectado, ID:', idUsuario);
+        } catch (error) {
+            console.error('Error al parsear usuario:', error);
+        }
+    }
+
+    // Detectar tipo de venta
+    let tipo_venta = 'web';
+    let id_ubicacion = null;
+    let id_cliente_natural = null;
+    let id_cliente_juridico = null;
+    // Si hay un currentClient en sessionStorage, asumimos venta física
+    const currentClientStr = sessionStorage.getItem('currentClient');
+    if (currentClientStr) {
+        tipo_venta = 'fisica';
+        try {
+            const client = JSON.parse(currentClientStr);
+            if (client.tipo === 'natural') {
+                id_cliente_natural = client.id;
+            } else if (client.tipo === 'juridico') {
+                id_cliente_juridico = client.id;
+            }
+        } catch (e) {
+            console.error('Error al parsear currentClient:', e);
+        }
     }
 
     try {
@@ -220,10 +295,14 @@ async function addToCart(nombre_cerveza, nombre_presentacion, cantidad = 1) {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                id_usuario: 1, // Asumiendo ID de usuario 1
+                id_usuario: tipo_venta === 'web' ? idUsuario : null,
                 nombre_cerveza: nombre_cerveza,
                 nombre_presentacion: nombre_presentacion,
                 cantidad: cantidad,
+                tipo_venta: tipo_venta,
+                id_ubicacion: id_ubicacion,
+                id_cliente_natural: id_cliente_natural,
+                id_cliente_juridico: id_cliente_juridico
             }),
         });
 

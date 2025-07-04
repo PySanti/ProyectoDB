@@ -3169,13 +3169,54 @@ INSERT INTO Fermentacion (receta_id_receta, fecha_inicio, fecha_fin_estimada) VA
 
 
 
+-- Inventario para Tienda Física (almacén para rellenar anaqueles)
 INSERT INTO Inventario (cantidad, id_tienda_fisica, id_presentacion, id_cerveza)
 SELECT
-    35 AS cantidad,
+    500 AS cantidad,
     1 AS id_tienda_fisica,
     pc.id_presentacion,
     pc.id_cerveza
 FROM presentacion_cerveza pc;
+
+-- Inventario para Tienda Web
+INSERT INTO Inventario (cantidad, id_tienda_web, id_presentacion, id_cerveza)
+SELECT
+    500 AS cantidad,
+    1 AS id_tienda_web,
+    pc.id_presentacion,
+    pc.id_cerveza
+FROM presentacion_cerveza pc;
+
+-- Inventario para Ubicaciones en Tienda (anaqueles)
+-- Asignamos ubicaciones específicas según el tipo de cerveza
+INSERT INTO Inventario (cantidad, id_ubicacion, id_presentacion, id_cerveza)
+SELECT
+    35 AS cantidad,
+    CASE 
+        -- Cervezas tipo Pilsner van al anaquel Pilsner (ubicacion 4)
+        WHEN tc.nombre LIKE '%Pilsner%' OR tc.nombre LIKE '%Lager%' THEN 4
+        -- Cervezas tipo IPA van al anaquel IPA (ubicacion 6)
+        WHEN tc.nombre LIKE '%IPA%' THEN 6
+        -- Cervezas tipo Pale Ale van al anaquel Pale Ale (ubicacion 7)
+        WHEN tc.nombre LIKE '%Pale Ale%' THEN 7
+        -- Cervezas tipo Stout van al anaquel Stout (ubicacion 8)
+        WHEN tc.nombre LIKE '%Stout%' THEN 8
+        -- Cervezas tipo Wheat van al anaquel Wheat Beer (ubicacion 9)
+        WHEN tc.nombre LIKE '%Wheat%' OR tc.nombre LIKE '%Witbier%' THEN 9
+        -- Cervezas tipo Amber van al anaquel Munich Helles (ubicacion 5)
+        WHEN tc.nombre LIKE '%Amber%' THEN 5
+        -- Cervezas tipo Belgian van a la sección de cervezas especiales (ubicacion 3)
+        WHEN tc.nombre LIKE '%Belgian%' THEN 3
+        -- Cervezas tipo Ale van a la sección de cervezas Ale (ubicacion 2)
+        WHEN tc.nombre LIKE '%Ale%' THEN 2
+        -- Por defecto van a la sección de cervezas Lager (ubicacion 1)
+        ELSE 1
+    END AS id_ubicacion,
+    pc.id_presentacion,
+    pc.id_cerveza
+FROM presentacion_cerveza pc
+JOIN cerveza c ON pc.id_cerveza = c.id_cerveza
+JOIN tipo_cerveza tc ON c.id_tipo_cerveza = tc.id_tipo_cerveza;
 
 
 
@@ -3308,68 +3349,69 @@ INSERT INTO Orden_Reposicion (id_departamento, id_proveedor, fecha_emision) VALU
 (3, 9, CURRENT_DATE),
 (3, 10, CURRENT_DATE); 
 
--- Detalles de órdenes de reposición (solo combinaciones válidas de id_presentacion y id_cerveza)
+
 INSERT INTO Detalle_Orden_Reposicion (cantidad, id_orden_reposicion, id_proveedor, id_departamento, precio, id_tipo_cerveza, id_presentacion, id_cerveza) VALUES
 -- Detalles para la orden 1
-(5, 1, 1, 3, 5, 7, 1, 1),
-(5, 1, 1, 3, 5, 15, 2, 2),
-(5, 1, 1, 3, 5, 22, 3, 3),
-(5, 1, 1, 3, 5, 4, 3, 4),
-(5, 1, 1, 3, 5, 29, 2, 5),
+(5, 1, 1, 3, 5, 30, 1, 1),
+(5, 1, 1, 3, 5, 21, 2, 2),
+(5, 1, 1, 3, 5, 25, 3, 3),
+(5, 1, 1, 3, 5, 19, 3, 4),
+(5, 1, 1, 3, 5, 20, 2, 5),
 -- Detalles para la orden 2
-(5, 2, 2, 3, 5, 11, 1, 6),
-(5, 2, 2, 3, 5, 18, 1, 7),
-(5, 2, 2, 3, 5, 25, 1, 8),
-(5, 2, 2, 3, 5, 6, 1, 9),
+(5, 2, 2, 3, 5, 47, 1, 6),
+(5, 2, 2, 3, 5, 23, 1, 7),
+(5, 2, 2, 3, 5, 30, 1, 8),
+(5, 2, 2, 3, 5, 30, 1, 9),
 (5, 2, 2, 3, 5, 30, 1, 10),
 -- Detalles para la orden 3
-(5, 3, 3, 3, 5, 2, 1, 1),
-(5, 3, 3, 3, 5, 13, 2, 2),
-(5, 3, 3, 3, 5, 21, 3, 3),
-(5, 3, 3, 3, 5, 8, 3, 4),
-(5, 3, 3, 3, 5, 27, 2, 5),
+(5, 3, 3, 3, 5, 25, 1, 1),
+(5, 3, 3, 3, 5, 26, 2, 2),
+(5, 3, 3, 3, 5, 28, 3, 3),
+(5, 3, 3, 3, 5, 19, 3, 4),
+(5, 3, 3, 3, 5, 20, 2, 5),
 -- Detalles para la orden 4
-(5, 4, 4, 3, 5, 5, 1, 6),
-(5, 4, 4, 3, 5, 19, 1, 7),
-(5, 4, 4, 3, 5, 23, 1, 8),
-(5, 4, 4, 3, 5, 10, 1, 9),
-(5, 4, 4, 3, 5, 28, 1, 10),
+(5, 4, 4, 3, 5, 47, 1, 6),
+(5, 4, 4, 3, 5, 23, 1, 7),
+(5, 4, 4, 3, 5, 30, 1, 8),
+(5, 4, 4, 3, 5, 30, 1, 9),
+(5, 4, 4, 3, 5, 30, 1, 10),
 -- Detalles para la orden 5
-(5, 5, 5, 3, 5, 12, 1, 1),
-(5, 5, 5, 3, 5, 16, 2, 2),
-(5, 5, 5, 3, 5, 24, 3, 3),
-(5, 5, 5, 3, 5, 3, 3, 4),
-(5, 5, 5, 3, 5, 26, 2, 5),
+(5, 5, 5, 3, 5, 30, 1, 1),
+(5, 5, 5, 3, 5, 21, 2, 2),
+(5, 5, 5, 3, 5, 25, 3, 3),
+(5, 5, 5, 3, 5, 19, 3, 4),
+(5, 5, 5, 3, 5, 20, 2, 5),
 -- Detalles para la orden 6
-(5, 6, 6, 3, 5, 9, 1, 6),
-(5, 6, 6, 3, 5, 20, 1, 7),
-(5, 6, 6, 3, 5, 14, 1, 8),
-(5, 6, 6, 3, 5, 1, 1, 9),
-(5, 6, 6, 3, 5, 17, 1, 10),
+(5, 6, 6, 3, 5, 47, 1, 6),
+(5, 6, 6, 3, 5, 23, 1, 7),
+(5, 6, 6, 3, 5, 30, 1, 8),
+(5, 6, 6, 3, 5, 30, 1, 9),
+(5, 6, 6, 3, 5, 30, 1, 10),
 -- Detalles para la orden 7
-(5, 7, 7, 3, 5, 6, 1, 1),
-(5, 7, 7, 3, 5, 28, 2, 2),
-(5, 7, 7, 3, 5, 11, 3, 3),
-(5, 7, 7, 3, 5, 24, 3, 4),
-(5, 7, 7, 3, 5, 15, 2, 5),
+(5, 7, 7, 3, 5, 30, 1, 1),
+(5, 7, 7, 3, 5, 21, 2, 2),
+(5, 7, 7, 3, 5, 25, 3, 3),
+(5, 7, 7, 3, 5, 19, 3, 4),
+(5, 7, 7, 3, 5, 20, 2, 5),
 -- Detalles para la orden 8
-(5, 8, 8, 3, 5, 7, 1, 6),
-(5, 8, 8, 3, 5, 18, 1, 7),
-(5, 8, 8, 3, 5, 22, 1, 8),
-(5, 8, 8, 3, 5, 13, 1, 9),
-(5, 8, 8, 3, 5, 29, 1, 10),
+(5, 8, 8, 3, 5, 47, 1, 6),
+(5, 8, 8, 3, 5, 23, 1, 7),
+(5, 8, 8, 3, 5, 30, 1, 8),
+(5, 8, 8, 3, 5, 30, 1, 9),
+(5, 8, 8, 3, 5, 30, 1, 10),
 -- Detalles para la orden 9
-(5, 9, 9, 3, 5, 2, 1, 1),
-(5, 9, 9, 3, 5, 17, 2, 2),
+(5, 9, 9, 3, 5, 30, 1, 1),
+(5, 9, 9, 3, 5, 21, 2, 2),
 (5, 9, 9, 3, 5, 25, 3, 3),
-(5, 9, 9, 3, 5, 8, 3, 4),
-(5, 9, 9, 3, 5, 30, 2, 5),
+(5, 9, 9, 3, 5, 19, 3, 4),
+(5, 9, 9, 3, 5, 20, 2, 5),
 -- Detalles para la orden 10
-(5, 10, 10, 3, 5, 10, 1, 6),
-(5, 10, 10, 3, 5, 21, 1, 7),
-(5, 10, 10, 3, 5, 14, 1, 8),
-(5, 10, 10, 3, 5, 4, 1, 9),
-(5, 10, 10, 3, 5, 27, 1, 10); 
+(5, 10, 10, 3, 5, 47, 1, 6),
+(5, 10, 10, 3, 5, 23, 1, 7),
+(5, 10, 10, 3, 5, 30, 1, 8),
+(5, 10, 10, 3, 5, 30, 1, 9),
+(5, 10, 10, 3, 5, 30, 1, 10);
+
 
 
 INSERT INTO Orden_Reposicion_Estatus (id_orden_reposicion, id_proveedor, id_departamento, id_estatus, fecha_asignacion, fecha_fin) VALUES
@@ -3649,267 +3691,90 @@ INSERT INTO Compra (monto_total, id_cliente_juridico, id_cliente_natural, tienda
 (150.00, NULL, 12, NULL, 1);
 
 
+-- Luego insertamos los detalles corregidos con IDs válidos
 
+-- Detalles para compras web (usando inventario de tienda web - IDs 55-108)
 INSERT INTO Detalle_Compra (precio_unitario, cantidad, id_inventario, id_compra) VALUES
--- Detalles para compra 1 (monto_total: 150.00)
-(25.00, 2, 1, 1),    -- 50.00
-(30.00, 2, 15, 1),   -- 60.00
-(40.00, 1, 30, 1),   -- 40.00 (Total: 150.00)
+-- Compra 1 (web) - monto_total: 150.00
+(25.00, 2, 55, 1),    -- Inventario tienda web para presentacion_cerveza 1
+(30.00, 2, 69, 1),    -- Inventario tienda web para presentacion_cerveza 15
+(40.00, 1, 84, 1),    -- Inventario tienda web para presentacion_cerveza 30
 
--- Detalles para compra 2 (monto_total: 180.00)
-(35.00, 2, 5, 2),    -- 70.00
-(25.00, 3, 20, 2),   -- 75.00
-(35.00, 1, 35, 2),   -- 35.00 (Total: 180.00)
+-- Compra 2 (web) - monto_total: 180.00
+(35.00, 2, 59, 2),    -- Inventario tienda web para presentacion_cerveza 5
+(25.00, 3, 74, 2),    -- Inventario tienda web para presentacion_cerveza 20
+(35.00, 1, 89, 2),    -- Inventario tienda web para presentacion_cerveza 35
 
--- Detalles para compra 3 (monto_total: 120.00)
-(20.00, 3, 10, 3),   -- 60.00
-(30.00, 1, 25, 3),   -- 30.00
-(30.00, 1, 40, 3),   -- 30.00 (Total: 120.00)
+-- Compra 5 (web) - monto_total: 160.00
+(25.00, 3, 66, 5),    -- Inventario tienda web para presentacion_cerveza 12
+(35.00, 2, 76, 5),    -- Inventario tienda web para presentacion_cerveza 22
+(15.00, 1, 94, 5),    -- Inventario tienda web para presentacion_cerveza 40
 
--- Detalles para compra 4 (monto_total: 200.00)
-(40.00, 2, 8, 4),    -- 80.00
-(30.00, 3, 18, 4),   -- 90.00
-(30.00, 1, 45, 4),   -- 30.00 (Total: 200.00)
+-- Compra 6 (web) - monto_total: 140.00
+(20.00, 4, 61, 6),    -- Inventario tienda web para presentacion_cerveza 7
+(30.00, 1, 82, 6),    -- Inventario tienda web para presentacion_cerveza 28
+(30.00, 1, 96, 6),    -- Inventario tienda web para presentacion_cerveza 42
 
--- Detalles para compra 5 (monto_total: 160.00)
-(25.00, 3, 12, 5),   -- 75.00
-(35.00, 2, 22, 5),   -- 70.00
-(15.00, 1, 50, 5),   -- 15.00 (Total: 160.00)
+-- Compra 9 (web) - monto_total: 130.00
+(25.00, 2, 70, 9),    -- Inventario tienda web para presentacion_cerveza 16
+(40.00, 1, 87, 9),    -- Inventario tienda web para presentacion_cerveza 33
+(40.00, 1, 93, 9),    -- Inventario tienda web para presentacion_cerveza 39
 
--- Detalles para compra 6 (monto_total: 140.00)
-(20.00, 4, 7, 6),    -- 80.00
-(30.00, 1, 28, 6),   -- 30.00
-(30.00, 1, 42, 6),   -- 30.00 (Total: 140.00)
+-- Compra 10 (web) - monto_total: 210.00
+(35.00, 3, 65, 10),   -- Inventario tienda web para presentacion_cerveza 11
+(35.00, 2, 83, 10),   -- Inventario tienda web para presentacion_cerveza 29
+(35.00, 1, 100, 10),  -- Inventario tienda web para presentacion_cerveza 46
 
--- Detalles para compra 7 (monto_total: 190.00)
-(35.00, 2, 14, 7),   -- 70.00
-(40.00, 2, 32, 7),   -- 80.00
-(40.00, 1, 48, 7),   -- 40.00 (Total: 190.00)
+-- Detalles para compras físicas (usando inventario de ubicaciones/anaqueles - IDs 109-162)
+-- Compra 3 (física) - monto_total: 120.00
+(20.00, 3, 109, 3),   -- Inventario ubicacion para presentacion_cerveza 1
+(30.00, 1, 123, 3),   -- Inventario ubicacion para presentacion_cerveza 15
+(30.00, 1, 138, 3),   -- Inventario ubicacion para presentacion_cerveza 30
 
--- Detalles para compra 8 (monto_total: 170.00)
-(30.00, 3, 9, 8),    -- 90.00
-(25.00, 2, 26, 8),   -- 50.00
-(30.00, 1, 44, 8),   -- 30.00 (Total: 170.00)
+-- Compra 4 (física) - monto_total: 200.00
+(40.00, 2, 116, 4),   -- Inventario ubicacion para presentacion_cerveza 8
+(30.00, 3, 126, 4),   -- Inventario ubicacion para presentacion_cerveza 18
+(30.00, 1, 143, 4),   -- Inventario ubicacion para presentacion_cerveza 35
 
--- Detalles para compra 9 (monto_total: 130.00)
-(25.00, 2, 16, 9),   -- 50.00
-(40.00, 1, 33, 9),   -- 40.00
-(40.00, 1, 49, 9),   -- 40.00 (Total: 130.00)
+-- Compra 7 (física) - monto_total: 190.00
+(35.00, 2, 112, 7),   -- Inventario ubicacion para presentacion_cerveza 4
+(40.00, 2, 130, 7),   -- Inventario ubicacion para presentacion_cerveza 22
+(40.00, 1, 146, 7),   -- Inventario ubicacion para presentacion_cerveza 38
 
--- Detalles para compra 10 (monto_total: 210.00)
-(35.00, 3, 11, 10),   -- 105.00
-(35.00, 2, 29, 10),   -- 70.00
-(35.00, 1, 46, 10),   -- 35.00 (Total: 210.00)
+-- Compra 8 (física) - monto_total: 170.00
+(30.00, 3, 117, 8),   -- Inventario ubicacion para presentacion_cerveza 9
+(25.00, 2, 134, 8),   -- Inventario ubicacion para presentacion_cerveza 26
+(30.00, 1, 150, 8),   -- Inventario ubicacion para presentacion_cerveza 44
 
--- Detalles para compra 11 (monto_total: 145.00)
-(30.00, 2, 19, 11),   -- 60.00
-(25.00, 2, 36, 11),   -- 50.00
-(35.00, 1, 51, 11),   -- 35.00 (Total: 145.00)
+-- Compra 11 (física) - monto_total: 145.00
+(30.00, 2, 127, 11),  -- Inventario ubicacion para presentacion_cerveza 19
+(25.00, 2, 144, 11),  -- Inventario ubicacion para presentacion_cerveza 36
+(35.00, 1, 159, 11),  -- Inventario ubicacion para presentacion_cerveza 51
 
--- Detalles para compra 12 (monto_total: 175.00)
-(35.00, 2, 13, 12),   -- 70.00
-(30.00, 2, 31, 12),   -- 60.00
-(45.00, 1, 47, 12),   -- 45.00 (Total: 175.00)
+-- Compra 12 (física) - monto_total: 175.00
+(35.00, 2, 121, 12),  -- Inventario ubicacion para presentacion_cerveza 13
+(30.00, 2, 139, 12),  -- Inventario ubicacion para presentacion_cerveza 31
+(45.00, 1, 155, 12),  -- Inventario ubicacion para presentacion_cerveza 47
 
--- Detalles para compra 13 (monto_total: 155.00)
-(25.00, 3, 17, 13),   -- 75.00
-(40.00, 1, 34, 13),   -- 40.00
-(40.00, 1, 52, 13),   -- 40.00 (Total: 155.00)
+-- Compra 15 (física) - monto_total: 135.00
+(25.00, 2, 131, 15),  -- Inventario ubicacion para presentacion_cerveza 23
+(30.00, 2, 147, 15),  -- Inventario ubicacion para presentacion_cerveza 39
+(25.00, 1, 162, 15),  -- Inventario ubicacion para presentacion_cerveza 54
 
--- Detalles para compra 14 (monto_total: 185.00)
-(30.00, 3, 21, 14),   -- 90.00
-(35.00, 2, 38, 14),   -- 70.00
-(25.00, 1, 53, 14),   -- 25.00 (Total: 185.00)
+-- Compra 16 (física) - monto_total: 195.00
+(35.00, 3, 135, 16),  -- Inventario ubicacion para presentacion_cerveza 27
+(30.00, 2, 149, 16),  -- Inventario ubicacion para presentacion_cerveza 41
+(30.00, 1, 114, 16),  -- Inventario ubicacion para presentacion_cerveza 6
 
--- Detalles para compra 15 (monto_total: 135.00)
-(25.00, 2, 23, 15),   -- 50.00
-(30.00, 2, 39, 15),   -- 60.00
-(25.00, 1, 54, 15),   -- 25.00 (Total: 135.00)
+-- Compra 19 (física) - monto_total: 205.00
+(35.00, 3, 114, 19),  -- Inventario ubicacion para presentacion_cerveza 6
+(40.00, 2, 116, 19),  -- Inventario ubicacion para presentacion_cerveza 8
+(20.00, 1, 118, 19),  -- Inventario ubicacion para presentacion_cerveza 10
 
--- Detalles para compra 16 (monto_total: 195.00)
-(35.00, 3, 27, 16),   -- 105.00
-(30.00, 2, 41, 16),   -- 60.00
-(30.00, 1, 6, 16),    -- 30.00 (Total: 195.00)
-
--- Detalles para compra 17 (monto_total: 165.00)
-(30.00, 3, 24, 17),   -- 90.00
-(25.00, 2, 37, 17),   -- 50.00
-(25.00, 1, 43, 17),   -- 25.00 (Total: 165.00)
-
--- Detalles para compra 18 (monto_total: 125.00)
-(25.00, 2, 3, 18),    -- 50.00
-(35.00, 1, 4, 18),    -- 35.00
-(40.00, 1, 2, 18),    -- 40.00 (Total: 125.00)
-
--- Detalles para compra 19 (monto_total: 205.00)
-(35.00, 3, 6, 19),    -- 105.00
-(40.00, 2, 8, 19),    -- 80.00
-(20.00, 1, 10, 19),   -- 20.00 (Total: 205.00)
-
--- Detalles para compra 20 (monto_total: 150.00)
-(30.00, 2, 12, 20),   -- 60.00
-(30.00, 2, 14, 20),   -- 60.00
-(30.00, 1, 16, 20),   -- 30.00 (Total: 150.00)
-
--- Detalles para compra 21 (monto_total: 160.00)
-(25.00, 3, 18, 21),   -- 75.00
-(35.00, 2, 20, 21),   -- 70.00
-(15.00, 1, 22, 21),   -- 15.00 (Total: 160.00)
-
--- Detalles para compra 22 (monto_total: 175.00)
-(35.00, 2, 24, 22),   -- 70.00
-(30.00, 2, 26, 22),   -- 60.00
-(45.00, 1, 28, 22),   -- 45.00 (Total: 175.00)
-
--- Detalles para compra 23 (monto_total: 120.00)
-(20.00, 3, 30, 23),   -- 60.00
-(30.00, 1, 32, 23),   -- 30.00
-(30.00, 1, 34, 23),   -- 30.00 (Total: 120.00)
-
--- Detalles para compra 24 (monto_total: 185.00)
-(30.00, 3, 36, 24),   -- 90.00
-(35.00, 2, 38, 24),   -- 70.00
-(25.00, 1, 40, 24),   -- 25.00 (Total: 185.00)
-
--- Detalles para compra 25 (monto_total: 140.00)
-(25.00, 2, 42, 25),   -- 50.00
-(30.00, 2, 44, 25),   -- 60.00
-(30.00, 1, 46, 25),   -- 30.00 (Total: 140.00)
-
--- Detalles para compra 26 (monto_total: 200.00)
-(40.00, 2, 48, 26),   -- 80.00
-(30.00, 3, 50, 26),   -- 90.00
-(30.00, 1, 52, 26),   -- 30.00 (Total: 200.00)
-
--- Detalles para compra 27 (monto_total: 155.00)
-(25.00, 3, 54, 27),   -- 75.00
-(40.00, 1, 1, 27),    -- 40.00
-(40.00, 1, 3, 27),    -- 40.00 (Total: 155.00)
-
--- Detalles para compra 28 (monto_total: 175.00)
-(35.00, 2, 5, 28),    -- 70.00
-(30.00, 2, 7, 28),    -- 60.00
-(45.00, 1, 9, 28),    -- 45.00 (Total: 175.00)
-
--- Detalles para compra 29 (monto_total: 125.00)
-(25.00, 2, 11, 29),   -- 50.00
-(35.00, 1, 13, 29),   -- 35.00
-(40.00, 1, 15, 29),   -- 40.00 (Total: 125.00)
-
--- Detalles para compra 30 (monto_total: 205.00)
-(35.00, 3, 17, 30),   -- 105.00
-(40.00, 2, 19, 30),   -- 80.00
-(20.00, 1, 21, 30),   -- 20.00 (Total: 205.00)
-
--- Detalles para compra 31 (monto_total: 160.00)
-(30.00, 3, 23, 31),   -- 90.00
-(25.00, 2, 25, 31),   -- 50.00
-(20.00, 1, 27, 31),   -- 20.00 (Total: 160.00)
-
--- Detalles para compra 32 (monto_total: 135.00)
-(25.00, 2, 29, 32),   -- 50.00
-(30.00, 2, 31, 32),   -- 60.00
-(25.00, 1, 33, 32),   -- 25.00 (Total: 135.00)
-
--- Detalles para compra 33 (monto_total: 195.00)
-(35.00, 3, 35, 33),   -- 105.00
-(30.00, 2, 37, 33),   -- 60.00
-(30.00, 1, 39, 33),   -- 30.00 (Total: 195.00)
-
--- Detalles para compra 34 (monto_total: 170.00)
-(30.00, 3, 41, 34),   -- 90.00
-(25.00, 2, 43, 34),   -- 50.00
-(30.00, 1, 45, 34),   -- 30.00 (Total: 170.00)
-
--- Detalles para compra 35 (monto_total: 145.00)
-(30.00, 2, 47, 35),   -- 60.00
-(25.00, 2, 49, 35),   -- 50.00
-(35.00, 1, 51, 35),   -- 35.00 (Total: 145.00)
-
--- Detalles para compra 36 (monto_total: 205.00)
-(35.00, 3, 53, 36),   -- 105.00
-(40.00, 2, 2, 36),    -- 80.00
-(20.00, 1, 4, 36),    -- 20.00 (Total: 205.00)
-
--- Detalles para compra 37 (monto_total: 160.00)
-(25.00, 3, 6, 37),    -- 75.00
-(35.00, 2, 8, 37),    -- 70.00
-(15.00, 1, 10, 37),   -- 15.00 (Total: 160.00)
-
--- Detalles para compra 38 (monto_total: 135.00)
-(25.00, 2, 12, 38),   -- 50.00
-(30.00, 2, 14, 38),   -- 60.00
-(25.00, 1, 16, 38),   -- 25.00 (Total: 135.00)
-
--- Detalles para compra 39 (monto_total: 195.00)
-(35.00, 3, 18, 39),   -- 105.00
-(30.00, 2, 20, 39),   -- 60.00
-(30.00, 1, 22, 39),   -- 30.00 (Total: 195.00)
-
--- Detalles para compra 40 (monto_total: 170.00)
-(30.00, 3, 24, 40),   -- 90.00
-(25.00, 2, 26, 40),   -- 50.00
-(30.00, 1, 28, 40),   -- 30.00 (Total: 170.00)
-
--- Detalles para compra 41 (monto_total: 145.00)
-(30.00, 2, 30, 41),   -- 60.00
-(25.00, 2, 32, 41),   -- 50.00
-(35.00, 1, 34, 41),   -- 35.00 (Total: 145.00)
-
--- Detalles para compra 42 (monto_total: 205.00)
-(35.00, 3, 36, 42),   -- 105.00
-(40.00, 2, 38, 42),   -- 80.00
-(20.00, 1, 40, 42),   -- 20.00 (Total: 205.00)
-
--- Detalles para compra 43 (monto_total: 160.00)
-(25.00, 3, 42, 43),   -- 75.00
-(35.00, 2, 44, 43),   -- 70.00
-(15.00, 1, 46, 43),   -- 15.00 (Total: 160.00)
-
--- Detalles para compra 44 (monto_total: 135.00)
-(25.00, 2, 48, 44),   -- 50.00
-(30.00, 2, 50, 44),   -- 60.00
-(25.00, 1, 52, 44),   -- 25.00 (Total: 135.00)
-
--- Detalles para compra 45 (monto_total: 195.00)
-(35.00, 3, 54, 45),   -- 105.00
-(30.00, 2, 1, 45),    -- 60.00
-(30.00, 1, 3, 45),    -- 30.00 (Total: 195.00)
-
--- Detalles para compra 46 (monto_total: 170.00)
-(30.00, 3, 5, 46),    -- 90.00
-(25.00, 2, 7, 46),    -- 50.00
-(30.00, 1, 9, 46),    -- 30.00 (Total: 170.00)
-
--- Detalles para compra 47 (monto_total: 145.00)
-(30.00, 2, 11, 47),   -- 60.00
-(25.00, 2, 13, 47),   -- 50.00
-(35.00, 1, 15, 47),   -- 35.00 (Total: 145.00)
-
--- Detalles para compra 48 (monto_total: 205.00)
-(35.00, 3, 17, 48),   -- 105.00
-(40.00, 2, 19, 48),   -- 80.00
-(20.00, 1, 21, 48),   -- 20.00 (Total: 205.00)
-
--- Detalles para compra 49 (monto_total: 160.00)
-(25.00, 3, 23, 49),   -- 75.00
-(35.00, 2, 25, 49),   -- 70.00
-(15.00, 1, 27, 49),   -- 15.00 (Total: 160.00)
-
--- Detalles para compra 50 (monto_total: 135.00)
-(25.00, 2, 29, 50),   -- 50.00
-(30.00, 2, 31, 50),   -- 60.00
-(25.00, 1, 33, 50),   -- 25.00 (Total: 135.00)
-
--- Detalles para compra 51 (monto_total: 195.00)
-(35.00, 3, 35, 51),   -- 105.00
-(30.00, 2, 37, 51),   -- 60.00
-(30.00, 1, 39, 51),   -- 30.00 (Total: 195.00)
-
--- Detalles para compra 52 (monto_total: 170.00)
-(30.00, 3, 41, 52),   -- 90.00
-(25.00, 2, 43, 52),   -- 50.00
-(30.00, 1, 45, 52);   -- 30.00 (Total: 170.00)
+-- Compra 20 (física) - monto_total: 150.00
+(30.00, 2, 120, 20),  -- Inventario ubicacion para presentacion_cerveza 12
+(30.00, 2, 122, 20),  -- Inventario ubicacion para presentacion_cerveza 14
+(30.00, 1, 124, 20);  -- Inventario ubicacion para presentacion_cerveza 16
 
 
 INSERT INTO Compra_Estatus (compra_id_compra, estatus_id_estatus, fecha_hora_asignacion, fecha_hora_fin) VALUES
@@ -4261,3 +4126,5 @@ INSERT INTO Pago_Orden_Reposicion (id_proveedor, id_departamento, id_orden_repos
 (8, 3, 8, CURRENT_TIMESTAMP + INTERVAL '2 days 6 hours', 3850.00),
 (9, 3, 9, CURRENT_TIMESTAMP + INTERVAL '3 days', 3100.00),
 (10, 3, 10, CURRENT_TIMESTAMP + INTERVAL '3 days 2 hours', 3500.00);
+-- ORDEN DE EJECUCIÓN DE BLOQUES DE INSERT
+-- Sistema de Gestión de Cervecería Artesanal UCAB

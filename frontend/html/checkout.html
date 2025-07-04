@@ -13,7 +13,7 @@
     <header class="main-header">
         <div class="header-container">
             <div class="logo-header">
-                <h1>ACAUCAB</h1>
+                <h1 id="logo-title">ACAUCAB</h1>
             </div>
             <nav class="main-nav">
                 <ul class="nav-list">
@@ -34,7 +34,7 @@
     <!-- Checkout Page Title -->
     <section class="page-title">
         <div class="section-container">
-            <h1>Proceso de Pago - Tienda Física</h1>
+            <h1 id="checkout-title">Proceso de Pago</h1>
             <div class="breadcrumb">
                 <a href="home.html">Inicio</a> / <a href="cart.html">Carrito</a> / <span>Pago</span>
             </div>
@@ -384,6 +384,36 @@
     <!-- Scripts -->
     <script src="../js/config.js"></script>
     <script src="../js/utils.js"></script>
+    <script src="../js/venta-type.js"></script>
     <script src="../js/checkout.js"></script>
+    <script>
+        // Ejecutar cuando se carga la página
+        document.addEventListener('DOMContentLoaded', function() {
+            // Debug: mostrar información del tipo de venta
+            console.log('=== DEBUG CHECKOUT ===');
+            console.log('Tipo de venta actual:', getVentaType());
+            console.log('Usuario en localStorage:', localStorage.getItem('user'));
+            console.log('Cliente en sessionStorage:', sessionStorage.getItem('currentClient'));
+            
+            // Si no hay tipo de venta establecido, establecerlo
+            if (!getVentaType()) {
+                if (localStorage.getItem('user')) {
+                    setVentaType('web');
+                    console.log('Tipo de venta establecido como web en checkout');
+                } else if (sessionStorage.getItem('currentClient')) {
+                    setVentaType('tienda');
+                    console.log('Tipo de venta establecido como tienda en checkout');
+                } else {
+                    setVentaType('web'); // Por defecto
+                    console.log('Tipo de venta establecido como web por defecto en checkout');
+                }
+            }
+            
+            inicializarTipoVenta({
+                tituloId: 'checkout-title',
+                tituloBase: 'Proceso de Pago'
+            });
+        });
+    </script>
 </body>
 </html>
