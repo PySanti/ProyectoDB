@@ -428,6 +428,9 @@ ALTER TABLE Detalle_Orden_Reposicion_Anaquel
     ) 
 ;
 
+
+
+
 --  ERROR: FK name length exceeds maximum allowed length(30) 
 ALTER TABLE Detalle_Orden_Reposicion_Anaquel 
     ADD CONSTRAINT Detalle_Orden_Reposicion_Anaquel_Orden_Reposicion_Anaquel_FK FOREIGN KEY 
@@ -1073,6 +1076,10 @@ ALTER TABLE Punto_Cliente
     ADD CONSTRAINT Punto_Cliente_Cliente_FK FOREIGN KEY (id_cliente_natural) REFERENCES Cliente_Natural(id_cliente);
 ALTER TABLE Punto_Cliente 
     ADD CONSTRAINT Punto_Cliente_Punto_FK FOREIGN KEY (id_metodo) REFERENCES Punto(id_metodo);
+
+-- Restricción para Punto como subtipo de Metodo_Pago
+ALTER TABLE Punto 
+    ADD CONSTRAINT Punto_Metodo_Pago_FK FOREIGN KEY (id_metodo) REFERENCES Metodo_Pago(id_metodo);
 
 --  ERROR: FK name length exceeds maximum allowed length(30) 
 ALTER TABLE Receta_Ingrediente 

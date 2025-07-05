@@ -94,6 +94,50 @@ function validateCedulaInput(event) {
 }
 
 /**
+ * Valida el input de RIF en tiempo real
+ */
+function validateRIF(input) {
+    const value = input.value;
+    const wrapper = input.closest('.input-wrapper');
+    
+    // Si está vacío, no mostrar error
+    if (!value) {
+        wrapper.classList.remove('error', 'success');
+        return;
+    }
+    
+    // Convertir a número
+    const numericValue = parseInt(value, 10);
+    
+    // Validar que sea un número válido
+    if (isNaN(numericValue)) {
+        wrapper.classList.add('error');
+        wrapper.classList.remove('success');
+        return;
+    }
+    
+    // Validar rango (0 a 2147483647 - límite de INTEGER en PostgreSQL)
+    if (numericValue < 0 || numericValue > 2147483647) {
+        wrapper.classList.add('error');
+        wrapper.classList.remove('success');
+        return;
+    }
+    
+    // Validar longitud máxima (10 dígitos)
+    if (value.length > 10) {
+        // Truncar a 10 dígitos
+        input.value = value.substring(0, 10);
+        wrapper.classList.add('error');
+        wrapper.classList.remove('success');
+        return;
+    }
+    
+    // Si pasa todas las validaciones
+    wrapper.classList.remove('error');
+    wrapper.classList.add('success');
+}
+
+/**
  * Maneja el envío del formulario de cédula
  */
 async function handleCedulaSubmit(event) {
