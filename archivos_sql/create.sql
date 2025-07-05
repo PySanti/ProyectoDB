@@ -283,7 +283,7 @@ CREATE TABLE Fermentacion (
 
 CREATE TABLE Horario (
     id_horario   SERIAL PRIMARY KEY,
-    dia          DATE NOT NULL,
+    dia          VARCHAR(15) NOT NULL,
     hora_entrada TIME NOT NULL,
     hora_salida  TIME NOT NULL
 );

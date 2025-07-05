@@ -8,6 +8,7 @@ const cartRoutes = require('./routes/cartRoutes.js');
 const productRoutes = require('./routes/productRoutes.js');
 const ordenesRoutes = require('./routes/ordenesRoutes.js');
 const reportesRoutes = require('./routes/reportesRoutes.js');
+const eventosRoutes = require('./routes/eventosRoutes.js');
 
 // Middleware para Favicon
 app.get('/favicon.ico', (req, res) => res.status(204).send());
@@ -24,6 +25,7 @@ app.use('/api/users', userRoutes);
 app.use('/roles', roleRoutes);
 app.use('/ordenes', ordenesRoutes);
 app.use('/api/reportes', reportesRoutes);
+app.use('/api/eventos', eventosRoutes);
 
 // Iniciar servidor
 const PORT = process.env.PORT || 3000;

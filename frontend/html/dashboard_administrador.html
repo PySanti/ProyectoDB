@@ -34,6 +34,7 @@
                     <li class="active"><a href="#usuarios" data-section="usuarios"><i class="fas fa-users"></i> Usuarios</a></li>
                     <li><a href="#roles" data-section="roles"><i class="fas fa-user-tag"></i> Roles</a></li>
                     <li><a href="#ordenes" data-section="ordenes"><i class="fas fa-clipboard-list"></i> Órdenes</a></li>
+                    <li><a href="#eventos" data-section="eventos"><i class="fas fa-calendar-alt"></i> Eventos</a></li>
                     <li><a href="#reportes" data-section="reportes"><i class="fas fa-chart-bar"></i> Reportes</a></li>
                 </ul>
             </nav>
@@ -168,6 +169,234 @@
                                 <tr><td colspan="5">Cargando...</td></tr>
                             </tbody>
                         </table>
+                    </div>
+                </div>
+            </section>
+            <!-- Eventos Section -->
+            <section class="content-section" id="eventos-section">
+                <div class="section-header">
+                    <h2>Gestión de Eventos</h2>
+                    <button class="primary-btn" id="add-evento-btn"><i class="fas fa-plus"></i> Nuevo Evento</button>
+                </div>
+                
+                <div class="dashboard-cards">
+                    <div class="dashboard-card">
+                        <div class="card-icon"><i class="fas fa-calendar-check"></i></div>
+                        <div class="card-info">
+                            <h3>8</h3>
+                            <p>Eventos Programados</p>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-icon warning"><i class="fas fa-clock"></i></div>
+                        <div class="card-info">
+                            <h3>3</h3>
+                            <p>Eventos Esta Semana</p>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-icon success"><i class="fas fa-calendar-day"></i></div>
+                        <div class="card-info">
+                            <h3>2</h3>
+                            <p>Eventos En Curso</p>
+                        </div>
+                    </div>
+                    
+                    <div class="dashboard-card">
+                        <div class="card-icon info"><i class="fas fa-clipboard-check"></i></div>
+                        <div class="card-info">
+                            <h3>15</h3>
+                            <p>Eventos Finalizados</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="filter-bar">
+                    <div class="filter-group">
+                        <label for="filter-estado">Estado:</label>
+                        <select id="filter-estado">
+                            <option value="all">Todos los estados</option>
+                            <option value="programado">Programado</option>
+                            <option value="en-curso">En curso</option>
+                            <option value="finalizado">Finalizado</option>
+                            <option value="cancelado">Cancelado</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="filter-fecha">Fecha:</label>
+                        <select id="filter-fecha">
+                            <option value="all">Todas las fechas</option>
+                            <option value="hoy">Hoy</option>
+                            <option value="semana">Esta semana</option>
+                            <option value="mes">Este mes</option>
+                            <option value="trimestre">Próximo trimestre</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="filter-locacion">Locación:</label>
+                        <select id="filter-locacion">
+                            <option value="all">Todas las locaciones</option>
+                            <option value="salon-principal">Salón Principal</option>
+                            <option value="terraza">Terraza</option>
+                            <option value="jardin">Jardín</option>
+                            <option value="externo">Evento Externo</option>
+                        </select>
+                    </div>
+                    
+                    <button class="secondary-btn"><i class="fas fa-filter"></i> Filtrar</button>
+                    <button class="outline-btn"><i class="fas fa-sync-alt"></i> Reiniciar</button>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Eventos</h3>
+                        <div class="card-actions">
+                            <select id="sort-eventos">
+                                <option value="date-asc">Fecha (Próxima a Lejana)</option>
+                                <option value="date-desc">Fecha (Lejana a Próxima)</option>
+                                <option value="name-asc">Nombre (A-Z)</option>
+                                <option value="name-desc">Nombre (Z-A)</option>
+                                <option value="capacity-asc">Capacidad (Menor a Mayor)</option>
+                                <option value="capacity-desc">Capacidad (Mayor a Menor)</option>
+                            </select>
+                            <button class="export-btn"><i class="fas fa-download"></i> Exportar</button>
+                        </div>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nombre</th>
+                                    <th>Fecha</th>
+                                    <th>Hora</th>
+                                    <th>Locación</th>
+                                    <th>Capacidad</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>EVT001</td>
+                                    <td>Festival de Cervezas Artesanales</td>
+                                    <td>15/07/2025</td>
+                                    <td>18:00 - 23:00</td>
+                                    <td>Salón Principal</td>
+                                    <td>200</td>
+                                    <td><span class="status active">Programado</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                        <button class="action-btn download" title="Generar reporte"><i class="fas fa-file-alt"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>EVT002</td>
+                                    <td>Cata de Cervezas Premium</td>
+                                    <td>22/07/2025</td>
+                                    <td>19:00 - 21:00</td>
+                                    <td>Terraza</td>
+                                    <td>50</td>
+                                    <td><span class="status active">Programado</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                        <button class="action-btn download" title="Generar reporte"><i class="fas fa-file-alt"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>EVT003</td>
+                                    <td>Lanzamiento Cerveza Temporada</td>
+                                    <td>10/07/2025</td>
+                                    <td>20:00 - 23:00</td>
+                                    <td>Jardín</td>
+                                    <td>100</td>
+                                    <td><span class="status pending">En curso</span></td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                        <button class="action-btn download" title="Generar reporte"><i class="fas fa-file-alt"></i></button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div class="table-footer">
+                        <div class="pagination">
+                            <button class="page-btn prev"><i class="fas fa-chevron-left"></i></button>
+                            <button class="page-btn active">1</button>
+                            <button class="page-btn">2</button>
+                            <button class="page-btn">3</button>
+                            <button class="page-btn next"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                        <div class="page-info">
+                            Mostrando 1-3 de 25 eventos
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Eventos Próximos</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="alert-list">
+                                    <div class="alert-item warning">
+                                        <div class="alert-icon"><i class="fas fa-calendar-day"></i></div>
+                                        <div class="alert-content">
+                                            <h4>Festival de Cervezas Artesanales</h4>
+                                            <p>En 5 días (15/07/2025)</p>
+                                            <span class="alert-time">18:00 - 23:00 | Salón Principal</span>
+                                        </div>
+                                        <button class="alert-action">Detalles</button>
+                                    </div>
+                                    <div class="alert-item warning">
+                                        <div class="alert-icon"><i class="fas fa-calendar-day"></i></div>
+                                        <div class="alert-content">
+                                            <h4>Cata de Cervezas Premium</h4>
+                                            <p>En 12 días (22/07/2025)</p>
+                                            <span class="alert-time">19:00 - 21:00 | Terraza</span>
+                                        </div>
+                                        <button class="alert-action">Detalles</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header">
+                                <h3>Estadísticas de Eventos</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="chart-container">
+                                    <div class="chart-placeholder">
+                                        <i class="fas fa-chart-pie"></i>
+                                        <p>Distribución de eventos por tipo</p>
+                                        <ul class="chart-legend">
+                                            <li><span class="legend-color" style="background-color: var(--primary-color);"></span> Festivales (35%)</li>
+                                            <li><span class="legend-color" style="background-color: var(--info-color);"></span> Catas (25%)</li>
+                                            <li><span class="legend-color" style="background-color: var(--success-color);"></span> Lanzamientos (20%)</li>
+                                            <li><span class="legend-color" style="background-color: var(--warning-color);"></span> Workshops (15%)</li>
+                                            <li><span class="legend-color" style="background-color: var(--error-color);"></span> Otros (5%)</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -413,6 +642,209 @@
         </div>
     </div>
     
+    <!-- Modal para Nuevo Evento -->
+    <div class="modal" id="nuevo-evento-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Nuevo Evento</h3>
+                <button class="close-modal"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <form class="form-grid" id="evento-form">
+                    <!-- SECCIÓN 1: DATOS BÁSICOS DEL EVENTO -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-calendar-alt"></i> Datos Básicos del Evento</h3>
+                        
+                        <div class="form-group full-width">
+                            <label for="evento-nombre">Nombre del Evento *</label>
+                            <input type="text" id="evento-nombre" placeholder="Ej: Festival de Cervezas Artesanales" required>
+                        </div>
+                        
+                        <div class="form-group full-width">
+                            <label for="evento-descripcion">Descripción</label>
+                            <textarea id="evento-descripcion" rows="3" placeholder="Descripción detallada del evento"></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="evento-fecha-inicio">Fecha de Inicio *</label>
+                            <input type="date" id="evento-fecha-inicio" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="evento-hora-inicio">Hora de Inicio *</label>
+                            <input type="time" id="evento-hora-inicio" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="evento-fecha-fin">Fecha de Fin *</label>
+                            <input type="date" id="evento-fecha-fin" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="evento-hora-fin">Hora de Fin *</label>
+                            <input type="time" id="evento-hora-fin" required>
+                        </div>
+                    </div>
+
+                    <!-- SECCIÓN 2: GESTIÓN DE ENTRADAS -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-ticket-alt"></i> Gestión de Entradas</h3>
+                        
+                        <div class="form-group">
+                            <label for="evento-entradas-vendidas">Número de Entradas Vendidas</label>
+                            <input type="number" id="evento-entradas-vendidas" min="0" value="0">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="evento-precio-entrada">Precio Unitario por Entrada ($)</label>
+                            <input type="number" id="evento-precio-entrada" min="0" step="0.01" placeholder="0.00">
+                        </div>
+                    </div>
+
+                    <!-- SECCIÓN 3: UBICACIÓN -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-map-marker-alt"></i> Ubicación del Evento</h3>
+                        
+                        <div class="form-group">
+                            <label for="evento-estado">Estado *</label>
+                            <select id="evento-estado" required>
+                                <option value="">Seleccione Estado</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="evento-municipio">Municipio *</label>
+                            <select id="evento-municipio" required disabled>
+                                <option value="">Seleccione Municipio</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="evento-parroquia">Parroquia *</label>
+                            <select id="evento-parroquia" required disabled>
+                                <option value="">Seleccione Parroquia</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- SECCIÓN 4: TIPO DE EVENTO -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-tags"></i> Clasificación</h3>
+                        
+                        <div class="form-group">
+                            <label for="evento-tipo">Tipo de Evento *</label>
+                            <select id="evento-tipo" required>
+                                <option value="">Seleccione Tipo de Evento</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- SECCIÓN 5: HORARIOS DEL EVENTO -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-clock"></i> Horarios del Evento</h3>
+                        
+                        <div class="horarios-lista">
+                            <div class="horario-item">
+                                <select class="horario-dia-select">
+                                    <option value="">Día de la semana</option>
+                                    <option value="lunes">Lunes</option>
+                                    <option value="martes">Martes</option>
+                                    <option value="miercoles">Miércoles</option>
+                                    <option value="jueves">Jueves</option>
+                                    <option value="viernes">Viernes</option>
+                                    <option value="sabado">Sábado</option>
+                                    <option value="domingo">Domingo</option>
+                                </select>
+                                <input type="time" class="horario-inicio" placeholder="Inicio">
+                                <input type="time" class="horario-fin" placeholder="Fin">
+                                <button type="button" class="horario-eliminar"><i class="fas fa-trash-alt"></i></button>
+                            </div>
+                        </div>
+                        <button type="button" class="secondary-btn" id="agregar-horario"><i class="fas fa-plus"></i> Agregar Horario</button>
+                    </div>
+
+                    <!-- SECCIÓN 6: INVITADOS -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-users"></i> Invitados del Evento</h3>
+                        
+                        <div class="invitados-lista">
+                            <div class="invitado-item">
+                                <select class="invitado-select">
+                                    <option value="">Seleccione Invitado</option>
+                                </select>
+                                <select class="tipo-invitado-select">
+                                    <option value="">Tipo de Invitado</option>
+                                </select>
+                                <button type="button" class="invitado-eliminar"><i class="fas fa-trash-alt"></i></button>
+                            </div>
+                        </div>
+                        <button type="button" class="secondary-btn" id="agregar-invitado"><i class="fas fa-plus"></i> Agregar Invitado</button>
+                    </div>
+
+                    <!-- SECCIÓN 7: PROVEEDORES -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-truck"></i> Proveedores del Evento</h3>
+                        
+                        <div class="proveedores-lista">
+                            <div class="proveedor-item">
+                                <select class="proveedor-select">
+                                    <option value="">Seleccione Proveedor</option>
+                                </select>
+                                <button type="button" class="proveedor-eliminar"><i class="fas fa-trash-alt"></i></button>
+                            </div>
+                        </div>
+                        <button type="button" class="secondary-btn" id="agregar-proveedor"><i class="fas fa-plus"></i> Agregar Proveedor</button>
+                    </div>
+
+                    <!-- SECCIÓN 8: ACTIVIDADES -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-tasks"></i> Actividades del Evento</h3>
+                        
+                        <div class="actividades-lista">
+                            <div class="actividad-item">
+                                <input type="text" class="actividad-tema" placeholder="Tema de la actividad">
+                                <select class="tipo-actividad-select">
+                                    <option value="">Tipo de Actividad</option>
+                                </select>
+                                <select class="actividad-invitado-select">
+                                    <option value="">Invitado Responsable</option>
+                                </select>
+                                <button type="button" class="actividad-eliminar"><i class="fas fa-trash-alt"></i></button>
+                            </div>
+                        </div>
+                        <button type="button" class="secondary-btn" id="agregar-actividad"><i class="fas fa-plus"></i> Agregar Actividad</button>
+                    </div>
+
+                    <!-- SECCIÓN 9: INVENTARIO DEL EVENTO -->
+                    <div class="form-section">
+                        <h3><i class="fas fa-boxes"></i> Inventario del Evento por Proveedor</h3>
+                        
+                        <div class="inventario-lista">
+                            <div class="inventario-item">
+                                <select class="inventario-cerveza-select">
+                                    <option value="">Cerveza</option>
+                                </select>
+                                <select class="inventario-presentacion-select">
+                                    <option value="">Presentación</option>
+                                </select>
+                                <select class="inventario-proveedor-select">
+                                    <option value="">Proveedor</option>
+                                </select>
+                                <input type="number" class="inventario-cantidad" min="1" value="1" placeholder="Cantidad">
+                                <button type="button" class="inventario-eliminar"><i class="fas fa-trash-alt"></i></button>
+                            </div>
+                        </div>
+                        <button type="button" class="secondary-btn" id="agregar-inventario"><i class="fas fa-plus"></i> Agregar al Inventario</button>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="secondary-btn">Cancelar</button>
+                <button class="primary-btn" id="guardar-evento-btn">Guardar Evento</button>
+            </div>
+        </div>
+    </div>
+    
     <style>
         .modal { 
             position: fixed; 
@@ -434,11 +866,29 @@
             background: #fff; 
             padding: 2rem; 
             border-radius: 8px; 
-            max-width: 95vw; 
+            max-width: 1400px; 
             width: 100%; 
-            max-width: 500px; 
+            max-height: 140vh; 
             box-shadow: 0 2px 8px rgba(0,0,0,0.2); 
             position: relative; 
+            display: flex; 
+            flex-direction: column; 
+        }
+        .modal-body {
+            overflow-y: auto;
+            max-height: 70vh;
+            padding-right: 8px;
+        }
+        @media (max-width: 1000px) {
+            .modal-content {
+                max-width: 95vw;
+            }
+        }
+        @media (max-width: 600px) {
+            .modal-content {
+                padding: 1rem;
+                max-width: 98vw;
+            }
         }
         .close-modal { 
             position: absolute; 
@@ -446,12 +896,6 @@
             right: 20px; 
             font-size: 2rem; 
             cursor: pointer; 
-        }
-        @media (max-width: 600px) {
-            .modal-content { 
-                padding: 1rem; 
-                max-width: 98vw; 
-            }
         }
         .action-btn.assign-role {
             background: #f0ad4e;
@@ -502,6 +946,141 @@
         .privilegio-row {
             display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.5rem;
         }
+        
+        /* Estilos mejorados para selects y formularios de eventos */
+        .form-section {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            background: #fafafa;
+        }
+        
+        .form-section h3 {
+            color: #333;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 0.5rem;
+        }
+        
+        .form-section h3 i {
+            margin-right: 0.5rem;
+            color: #007bff;
+        }
+        
+        /* Estilos para selects */
+        select {
+            padding: 10px 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            background: #fff;
+            font-size: 14px;
+            color: #333;
+            transition: all 0.3s ease;
+            min-width: 150px;
+            cursor: pointer;
+        }
+        
+        select:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+        }
+        
+        select:hover {
+            border-color: #007bff;
+        }
+        
+        /* Estilos para inputs */
+        input[type="text"], input[type="email"], input[type="number"], input[type="time"], input[type="date"] {
+            padding: 10px 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            background: #fff;
+            font-size: 14px;
+            color: #333;
+            transition: all 0.3s ease;
+            min-width: 150px;
+        }
+        
+        input[type="text"]:focus, input[type="email"]:focus, input[type="number"]:focus, input[type="time"]:focus, input[type="date"]:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+        }
+        
+        input[type="text"]:hover, input[type="email"]:hover, input[type="number"]:hover, input[type="time"]:hover, input[type="date"]:hover {
+            border-color: #007bff;
+        }
+        
+        /* Estilos para elementos de lista (horarios, invitados, etc.) */
+        .horario-item, .invitado-item, .proveedor-item, .actividad-item, .inventario-item {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 15px;
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .horario-item:hover, .invitado-item:hover, .proveedor-item:hover, .actividad-item:hover, .inventario-item:hover {
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+            border-color: #007bff;
+        }
+        
+        /* Botones de eliminar */
+        .horario-eliminar, .invitado-eliminar, .proveedor-eliminar, .actividad-eliminar, .inventario-eliminar {
+            background: #dc3545;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 40px;
+        }
+        
+        .horario-eliminar:hover, .invitado-eliminar:hover, .proveedor-eliminar:hover, .actividad-eliminar:hover, .inventario-eliminar:hover {
+            background: #c82333;
+            transform: scale(1.05);
+        }
+        
+        /* Botones secundarios */
+        .secondary-btn {
+            background: #6c757d;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .secondary-btn:hover {
+            background: #5a6268;
+            transform: translateY(-1px);
+        }
+        
+        /* Responsive para elementos de lista */
+        @media (max-width: 768px) {
+            .horario-item, .invitado-item, .proveedor-item, .actividad-item, .inventario-item {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            select, input[type="text"], input[type="email"], input[type="number"], input[type="time"], input[type="date"] {
+                width: 100%;
+                min-width: auto;
+            }
+        }
         .privilegio-row select, .privilegio-row button {
             height: 2rem;
         }
@@ -510,6 +1089,549 @@
         }
         #add-privilegio-btn {
             margin-top: 0.5rem; background: #3498db; color: #fff; border: none; border-radius: 4px; cursor: pointer; padding: 0.5rem 1rem;
+        }
+        
+        /* Estilos para la sección de eventos */
+        .dashboard-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .dashboard-card {
+            background: #fff;
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--primary-color, #007bff);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+        }
+        
+        .card-icon.warning { background: var(--warning-color, #ffc107); }
+        .card-icon.success { background: var(--success-color, #28a745); }
+        .card-icon.info { background: var(--info-color, #17a2b8); }
+        
+        .card-info h3 {
+            margin: 0;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .card-info p {
+            margin: 0;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .filter-bar {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            align-items: end;
+        }
+        
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .filter-group label {
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .filter-group select {
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            min-width: 150px;
+        }
+        
+        .secondary-btn, .outline-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid #007bff;
+            background: #007bff;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .outline-btn {
+            background: transparent;
+            color: #007bff;
+        }
+        
+        .outline-btn:hover {
+            background: #007bff;
+            color: white;
+        }
+        
+        .status {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .status.active {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .status.pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+        
+        .status.inactive {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .action-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.9rem;
+        }
+        
+        .action-btn.view { background: #17a2b8; }
+        .action-btn.edit { background: #ffc107; }
+        .action-btn.delete { background: #dc3545; }
+        .action-btn.download { background: #28a745; }
+        
+        .table-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #ddd;
+        }
+        
+        .pagination {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .page-btn {
+            padding: 0.5rem 0.75rem;
+            border: 1px solid #ddd;
+            background: white;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        
+        .page-btn.active {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+        
+        .page-info {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .col-md-6 {
+            width: 100%;
+        }
+        
+        .alert-list {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .alert-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 4px solid;
+        }
+        
+        .alert-item.warning {
+            background: #fff3cd;
+            border-left-color: #ffc107;
+        }
+        
+        .alert-item.success {
+            background: #d4edda;
+            border-left-color: #28a745;
+        }
+        
+        .alert-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #ffc107;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        
+        .alert-content h4 {
+            margin: 0 0 0.25rem 0;
+            font-size: 1rem;
+        }
+        
+        .alert-content p {
+            margin: 0 0 0.25rem 0;
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .alert-time {
+            font-size: 0.8rem;
+            color: #999;
+        }
+        
+        .alert-action {
+            margin-left: auto;
+            padding: 0.5rem 1rem;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .chart-container {
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .chart-placeholder {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .chart-placeholder i {
+            font-size: 3rem;
+            color: #ddd;
+        }
+        
+        .chart-legend {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            text-align: left;
+        }
+        
+        .chart-legend li {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+        }
+        
+        /* Estilos para el modal de eventos */
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .modal-body {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        
+        .form-group label {
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        .input-suffix {
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+        }
+        
+        .productos-lista {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .producto-item {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .producto-select {
+            flex: 1;
+        }
+        
+        .producto-eliminar {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: #dc3545;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #ddd;
+        }
+        
+        .primary-btn {
+            padding: 0.75rem 1.5rem;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+        
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .row {
+                grid-template-columns: 1fr;
+            }
+            
+            .filter-bar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .dashboard-cards {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Estilos para las secciones del modal de eventos */
+        .form-section {
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            background: #fafafa;
+        }
+        
+        .form-section h3 {
+            margin: 0 0 1rem 0;
+            color: #333;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .form-section h3 i {
+            color: #007bff;
+        }
+        
+        /* Estilos para listas dinámicas */
+        .horarios-lista,
+        .invitados-lista,
+        .proveedores-lista,
+        .actividades-lista,
+        .inventario-lista {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .horario-item,
+        .invitado-item,
+        .proveedor-item,
+        .actividad-item,
+        .inventario-item {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+            padding: 0.75rem;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .horario-item {
+            grid-template-columns: 1fr 1fr 1fr auto;
+        }
+        
+        .invitado-item {
+            grid-template-columns: 1fr 1fr auto;
+        }
+        
+        .proveedor-item {
+            grid-template-columns: 1fr auto;
+        }
+        
+        .actividad-item {
+            grid-template-columns: 1fr 1fr 1fr auto;
+        }
+        
+        .inventario-item {
+            grid-template-columns: 1fr 1fr 1fr 100px auto;
+        }
+        
+        .horario-fecha,
+        .horario-inicio,
+        .horario-fin,
+        .actividad-tema,
+        .inventario-cantidad {
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+        
+        .horario-eliminar,
+        .invitado-eliminar,
+        .proveedor-eliminar,
+        .actividad-eliminar,
+        .inventario-eliminar {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: #dc3545;
+            color: white;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .horario-eliminar:hover,
+        .invitado-eliminar:hover,
+        .proveedor-eliminar:hover,
+        .actividad-eliminar:hover,
+        .inventario-eliminar:hover {
+            background: #c82333;
+        }
+        
+        /* Responsive para las listas */
+        @media (max-width: 768px) {
+            .horario-item,
+            .invitado-item,
+            .proveedor-item,
+            .actividad-item,
+            .inventario-item {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .horario-item > *,
+            .invitado-item > *,
+            .proveedor-item > *,
+            .actividad-item > *,
+            .inventario-item > * {
+                width: 100%;
+            }
+            
+            .horario-eliminar,
+            .invitado-eliminar,
+            .proveedor-eliminar,
+            .actividad-eliminar,
+            .inventario-eliminar {
+                align-self: flex-end;
+                width: auto;
+                padding: 0.5rem 1rem;
+            }
         }
     </style>
     
@@ -584,6 +1706,182 @@
             await cargarTablas();
             document.getElementById('add-privilegio-btn').onclick = () => agregarFilaPrivilegio();
             document.getElementById('close-rol-modal').onclick = cerrarModalRol;
+            
+            // Funcionalidad para la sección de eventos
+            console.log('Inicializando funcionalidad de eventos...');
+            
+            // Modal de nuevo evento
+            const addEventoBtn = document.getElementById('add-evento-btn');
+            const nuevoEventoModal = document.getElementById('nuevo-evento-modal');
+            
+            console.log('Botón agregar evento:', addEventoBtn);
+            console.log('Modal evento:', nuevoEventoModal);
+            
+            if (addEventoBtn && nuevoEventoModal) {
+                addEventoBtn.addEventListener('click', function() {
+                    initEventosForm();
+                    nuevoEventoModal.classList.add('active');
+                });
+                
+                // Cerrar modal de evento
+                const closeEventoModal = nuevoEventoModal.querySelector('.close-modal');
+                const cancelarBtn = nuevoEventoModal.querySelector('.secondary-btn');
+                
+                if (closeEventoModal) {
+                    closeEventoModal.addEventListener('click', function() {
+                        console.log('Cerrando modal de evento...');
+                        nuevoEventoModal.classList.remove('active');
+                    });
+                }
+                
+                if (cancelarBtn) {
+                    cancelarBtn.addEventListener('click', function() {
+                        console.log('Cancelando modal de evento...');
+                        nuevoEventoModal.classList.remove('active');
+                    });
+                }
+                
+                // Cerrar modal al hacer clic fuera de él
+                nuevoEventoModal.addEventListener('click', function(e) {
+                    if (e.target === nuevoEventoModal) {
+                        nuevoEventoModal.classList.remove('active');
+                    }
+                });
+                
+                // Agregar horario
+                const agregarHorarioBtn = document.getElementById('agregar-horario');
+                if (agregarHorarioBtn) {
+                    agregarHorarioBtn.addEventListener('click', function() {
+                        const container = document.querySelector('.horarios-lista');
+                        const newItem = document.querySelector('.horario-item').cloneNode(true);
+                        
+                        // Limpiar valores
+                        newItem.querySelector('.horario-fecha').value = '';
+                        newItem.querySelector('.horario-inicio').value = '';
+                        newItem.querySelector('.horario-fin').value = '';
+                        
+                        // Agregar evento para eliminar
+                        newItem.querySelector('.horario-eliminar').addEventListener('click', function() {
+                            container.removeChild(newItem);
+                        });
+                        
+                        container.appendChild(newItem);
+                    });
+                }
+                
+                // Agregar invitado
+                const agregarInvitadoBtn = document.getElementById('agregar-invitado');
+                if (agregarInvitadoBtn) {
+                    agregarInvitadoBtn.addEventListener('click', function() {
+                        const container = document.querySelector('.invitados-lista');
+                        const newItem = document.querySelector('.invitado-item').cloneNode(true);
+                        
+                        // Limpiar valores
+                        newItem.querySelector('.invitado-select').value = '';
+                        newItem.querySelector('.tipo-invitado-select').value = '';
+                        
+                        // Agregar evento para eliminar
+                        newItem.querySelector('.invitado-eliminar').addEventListener('click', function() {
+                            container.removeChild(newItem);
+                        });
+                        
+                        container.appendChild(newItem);
+                    });
+                }
+                
+                // Agregar proveedor
+                const agregarProveedorBtn = document.getElementById('agregar-proveedor');
+                if (agregarProveedorBtn) {
+                    agregarProveedorBtn.addEventListener('click', function() {
+                        const container = document.querySelector('.proveedores-lista');
+                        const newItem = document.querySelector('.proveedor-item').cloneNode(true);
+                        
+                        // Limpiar valores
+                        newItem.querySelector('.proveedor-select').value = '';
+                        
+                        // Agregar evento para eliminar
+                        newItem.querySelector('.proveedor-eliminar').addEventListener('click', function() {
+                            container.removeChild(newItem);
+                        });
+                        
+                        container.appendChild(newItem);
+                    });
+                }
+                
+                // Agregar actividad
+                const agregarActividadBtn = document.getElementById('agregar-actividad');
+                if (agregarActividadBtn) {
+                    agregarActividadBtn.addEventListener('click', function() {
+                        const container = document.querySelector('.actividades-lista');
+                        const newItem = document.querySelector('.actividad-item').cloneNode(true);
+                        
+                        // Limpiar valores
+                        newItem.querySelector('.actividad-tema').value = '';
+                        newItem.querySelector('.tipo-actividad-select').value = '';
+                        newItem.querySelector('.actividad-invitado-select').value = '';
+                        
+                        // Agregar evento para eliminar
+                        newItem.querySelector('.actividad-eliminar').addEventListener('click', function() {
+                            container.removeChild(newItem);
+                        });
+                        
+                        container.appendChild(newItem);
+                    });
+                }
+                
+                // Agregar inventario
+                const agregarInventarioBtn = document.getElementById('agregar-inventario');
+                if (agregarInventarioBtn) {
+                    agregarInventarioBtn.addEventListener('click', function() {
+                        const container = document.querySelector('.inventario-lista');
+                        const newItem = document.querySelector('.inventario-item').cloneNode(true);
+                        
+                        // Limpiar valores
+                        newItem.querySelector('.inventario-cerveza-select').value = '';
+                        newItem.querySelector('.inventario-presentacion-select').value = '';
+                        newItem.querySelector('.inventario-proveedor-select').value = '';
+                        newItem.querySelector('.inventario-cantidad').value = '1';
+                        
+                        // Agregar evento para eliminar
+                        newItem.querySelector('.inventario-eliminar').addEventListener('click', function() {
+                            container.removeChild(newItem);
+                        });
+                        
+                        container.appendChild(newItem);
+                    });
+                }
+                
+                // Event listeners para eliminar elementos existentes
+                document.querySelectorAll('.horario-eliminar').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        this.closest('.horario-item').remove();
+                    });
+                });
+                
+                document.querySelectorAll('.invitado-eliminar').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        this.closest('.invitado-item').remove();
+                    });
+                });
+                
+                document.querySelectorAll('.proveedor-eliminar').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        this.closest('.proveedor-item').remove();
+                    });
+                });
+                
+                document.querySelectorAll('.actividad-eliminar').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        this.closest('.actividad-item').remove();
+                    });
+                });
+                
+                document.querySelectorAll('.inventario-eliminar').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        this.closest('.inventario-item').remove();
+                    });
+                });
+            }
             document.getElementById('rol-form').onsubmit = async function(e) {
                 e.preventDefault();
                 const nombre = document.getElementById('rol-nombre').value.trim();
@@ -970,6 +2268,11 @@
                     // Load data if it's the ordenes section
                     if (sectionId === 'ordenes') {
                         alternarTablasOrdenes();
+                    }
+                    // Load data if it's the eventos section
+                    if (sectionId === 'eventos') {
+                        console.log('Sección de eventos cargada');
+                        // Aquí podríamos cargar datos de eventos desde la API
                     }
                     // Si es reportes, podrías inicializar lógica de reportes aquí en el futuro
                 });
@@ -1486,17 +2789,31 @@
                 }
             }
 
-            // Si la sección de reportes está activa al cargar la página, mostrar el primer reporte
-            const reportesSection = document.getElementById('reportes-section');
-            if (reportesSection && reportesSection.style.display !== 'none') {
-                setTimeout(() => {
-                    mostrarReporte(0);
-                }, 100);
-            }
-        });
+                    // Si la sección de reportes está activa al cargar la página, mostrar el primer reporte
+        const reportesSection = document.getElementById('reportes-section');
+        if (reportesSection && reportesSection.style.display !== 'none') {
+            setTimeout(() => {
+                mostrarReporte(0);
+            }, 100);
+        }
+        
+
+    });
     </script>
     
     <!-- Script para reportes -->
     <script src="../js/reportes.js"></script>
+    <script type="module">
+    import { initEventosForm } from '../js/eventos.js';
+
+    const addEventoBtn = document.getElementById('add-evento-btn');
+    const nuevoEventoModal = document.getElementById('nuevo-evento-modal');
+    if (addEventoBtn && nuevoEventoModal) {
+        addEventoBtn.addEventListener('click', function() {
+            initEventosForm();
+            nuevoEventoModal.classList.add('active');
+        });
+    }
+    </script>
 </body>
 </html> 
