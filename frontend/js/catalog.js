@@ -176,9 +176,19 @@ async function loadProducts(page = 1, sortBy = 'relevance') {
             url = new URL(`${API_BASE_URL}/eventos/${eventoData.id_evento}/inventario`);
             console.log('Cargando inventario del evento:', eventoData.id_evento);
         } else {
-            // Cargar productos normales del catálogo
-            url = new URL(`${API_BASE_URL}/productos`);
-            console.log('Cargando productos del catálogo general');
+            // Determinar el tipo de venta y cargar el inventario correspondiente
+            const tipoVenta = getVentaType();
+            if (tipoVenta === 'web') {
+                url = new URL(`${API_BASE_URL}/productos/web`);
+                console.log('Cargando productos del inventario web');
+            } else if (tipoVenta === 'tienda') {
+                url = new URL(`${API_BASE_URL}/productos/tienda`);
+                console.log('Cargando productos del inventario de tienda física');
+            } else {
+                // Por defecto, usar el catálogo general
+                url = new URL(`${API_BASE_URL}/productos`);
+                console.log('Cargando productos del catálogo general (tipo no especificado)');
+            }
         }
         
         // Construir los parámetros de la URL

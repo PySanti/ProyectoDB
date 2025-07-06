@@ -4,6 +4,10 @@
 const GUEST_USER_ID = 1;
 
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('=== DOMContentLoaded ejecutado ===');
+    console.log('URL actual:', window.location.href);
+    console.log('Página de checkout cargada');
+    
     initCheckout();
     poblarSelectBancos();
     poblarSelectAnios();
@@ -24,10 +28,19 @@ function getCurrentUserId() {
 }
 
 function initCheckout() {
+    console.log('=== INICIANDO initCheckout ===');
+    console.log('Buscando contenedor .checkout-section...');
+    
+    const checkoutSection = document.querySelector('.checkout-section');
+    console.log('Contenedor encontrado:', checkoutSection);
+    
     // Solo ejecuta la lógica de la página del checkout si encuentra el contenedor principal.
-    if (document.querySelector('.checkout-section')) {
+    if (checkoutSection) {
+        console.log('Contenedor encontrado, cargando datos del checkout...');
         loadCheckoutData();
         // Los event listeners se configurarán después de cargar los datos según el tipo de venta
+    } else {
+        console.log('Contenedor .checkout-section no encontrado');
     }
 }
 
@@ -37,6 +50,7 @@ function initCheckout() {
 async function loadCheckoutData() {
     try {
         console.log('=== INICIANDO CARGA DE DATOS DEL CHECKOUT ===');
+        console.log('Verificando si es venta de eventos...');
         
         // Verificar si es venta de eventos
         const eventoVenta = sessionStorage.getItem('eventoVenta');
@@ -47,15 +61,22 @@ async function loadCheckoutData() {
             try {
                 eventoData = JSON.parse(eventoVenta);
                 isEventoVenta = eventoData.tipo_venta === 'eventos';
+                console.log('Datos del evento encontrados:', eventoData);
             } catch (error) {
                 console.error('Error al parsear datos del evento:', error);
             }
+        } else {
+            console.log('No hay datos de evento en sessionStorage');
         }
 
+        console.log('¿Es venta de eventos?', isEventoVenta);
+
         if (isEventoVenta) {
+            console.log('Cargando checkout de eventos...');
             // Cargar datos del checkout de eventos
             await loadEventoCheckoutData(eventoData);
         } else {
+            console.log('Cargando checkout regular (web/físico)...');
             // Cargar datos del checkout regular (web/físico)
             await loadRegularCheckoutData();
         }
@@ -128,6 +149,7 @@ async function loadEventoCheckoutData(eventoData) {
 async function loadRegularCheckoutData() {
     try {
         const userId = getCurrentUserId();
+        console.log('=== DEBUG loadRegularCheckoutData ===');
         console.log('Cargando checkout regular para usuario ID:', userId);
         
         // Verificar el tipo de venta
@@ -160,17 +182,37 @@ async function loadRegularCheckoutData() {
             }
         }
         
+        console.log('Client params:', clientParams);
+        
         // Cargar resumen del carrito usando el usuario real
-        const summaryResponse = await fetch(`${API_BASE_URL}/carrito/resumen/${userId}${clientParams}`);
-        if (!summaryResponse.ok) throw new Error('No se pudo cargar el resumen del carrito.');
+        const summaryUrl = `${API_BASE_URL}/carrito/resumen/${userId}${clientParams}`;
+        console.log('Cargando resumen desde:', summaryUrl);
+        
+        const summaryResponse = await fetch(summaryUrl);
+        console.log('Summary response status:', summaryResponse.status);
+        
+        if (!summaryResponse.ok) {
+            const errorText = await summaryResponse.text();
+            console.error('Error response:', errorText);
+            throw new Error(`No se pudo cargar el resumen del carrito. Status: ${summaryResponse.status}`);
+        }
         
         const summary = await summaryResponse.json();
         console.log('Resumen del carrito:', summary);
         renderOrderSummary(summary);
         
         // Cargar items del carrito usando el usuario real
-        const itemsResponse = await fetch(`${API_BASE_URL}/carrito/usuario/${userId}${clientParams}`);
-        if (!itemsResponse.ok) throw new Error('No se pudo cargar los items del carrito.');
+        const itemsUrl = `${API_BASE_URL}/carrito/usuario/${userId}${clientParams}`;
+        console.log('Cargando items desde:', itemsUrl);
+        
+        const itemsResponse = await fetch(itemsUrl);
+        console.log('Items response status:', itemsResponse.status);
+        
+        if (!itemsResponse.ok) {
+            const errorText = await itemsResponse.text();
+            console.error('Error response:', errorText);
+            throw new Error(`No se pudo cargar los items del carrito. Status: ${itemsResponse.status}`);
+        }
         
         const items = await itemsResponse.json();
         console.log('Items del carrito:', items);
@@ -400,19 +442,39 @@ function setupCheckoutEventListeners() {
     const paymentCheckboxes = document.querySelectorAll('.payment-checkbox');
     paymentCheckboxes.forEach(checkbox => {
         const paymentMethod = checkbox.closest('.payment-method');
+        if (!paymentMethod) {
+            console.warn('Payment method container no encontrado para checkbox:', checkbox);
+            return;
+        }
+        
         const amountInput = paymentMethod.querySelector('.amount-input');
         const details = paymentMethod.querySelector('.payment-details');
-        // Deshabilitar por defecto
-        amountInput.disabled = true;
+        
+        // Verificar si es el método de efectivo (que no tiene amount-input)
+        const isCashMethod = paymentMethod.querySelector('#payment-cash') !== null;
+        
+        if (amountInput) {
+            // Deshabilitar por defecto
+            amountInput.disabled = true;
+        } else if (!isCashMethod) {
+            // Solo mostrar warning si NO es el método de efectivo
+            console.warn('Amount input no encontrado en payment method (no es efectivo):', paymentMethod);
+        }
+        
         if (details) details.classList.remove('active');
+        
         checkbox.addEventListener('change', function(event) {
             if (checkbox.checked) {
-                amountInput.disabled = false;
-                amountInput.focus();
+                if (amountInput) {
+                    amountInput.disabled = false;
+                    amountInput.focus();
+                }
                 if (details) details.classList.add('active');
             } else {
-                amountInput.disabled = true;
-                amountInput.value = '';
+                if (amountInput) {
+                    amountInput.disabled = true;
+                    amountInput.value = '';
+                }
                 if (details) details.classList.remove('active');
             }
             updatePaymentSummary();
@@ -483,8 +545,16 @@ function updatePaymentSummary() {
     updateMethodTotals();
     
     // Actualizar total pagado y restante
-    document.getElementById('total-paid').textContent = `$${totalPaid.toFixed(2)}`;
-    document.getElementById('amount-remaining').textContent = `$${remaining.toFixed(2)}`;
+    const totalPaidElement = document.getElementById('total-paid');
+    const amountRemainingElement = document.getElementById('amount-remaining');
+    
+    if (totalPaidElement) {
+        totalPaidElement.textContent = `$${totalPaid.toFixed(2)}`;
+    }
+    
+    if (amountRemainingElement) {
+        amountRemainingElement.textContent = `$${remaining.toFixed(2)}`;
+    }
     
     // Actualizar estado del botón
     updatePlaceOrderButton(totalPaid, totalToPay);
@@ -500,13 +570,24 @@ function getTotalToPay() {
 }
 
 function calculateTotalPaid() {
-    const amountInputs = document.querySelectorAll('.amount-input:not([disabled])');
     let total = 0;
     
+    // Sumar todos los amount-inputs habilitados
+    const amountInputs = document.querySelectorAll('.amount-input:not([disabled])');
     amountInputs.forEach(input => {
         const value = Number(input.value) || 0;
         total += value;
     });
+    
+    // Sumar el efectivo si está seleccionado
+    const cashCheckbox = document.getElementById('payment-cash');
+    if (cashCheckbox && cashCheckbox.checked) {
+        const cashTotalDisplay = cashCheckbox.closest('.payment-method')?.querySelector('.cash-total-display');
+        if (cashTotalDisplay) {
+            const cashAmount = Number(cashTotalDisplay.textContent.replace('$', '')) || 0;
+            total += cashAmount;
+        }
+    }
     
     return total;
 }
@@ -516,13 +597,31 @@ function updateMethodTotals() {
     
     methods.forEach(method => {
         const checkbox = document.getElementById(`payment-${method}`);
-        const amountInput = checkbox?.closest('.payment-method')?.querySelector('.amount-input');
         const totalElement = document.getElementById(`${method}-total`);
         
-        if (checkbox && amountInput && totalElement) {
-            if (checkbox.checked && !amountInput.disabled) {
-                const amount = Number(amountInput.value) || 0;
+        if (!checkbox || !totalElement) {
+            return;
+        }
+        
+        if (method === 'cash') {
+            // Para efectivo, usar el display del total
+            const cashTotalDisplay = checkbox.closest('.payment-method')?.querySelector('.cash-total-display');
+            if (checkbox.checked && cashTotalDisplay) {
+                const amount = Number(cashTotalDisplay.textContent.replace('$', '')) || 0;
                 totalElement.textContent = `$${amount.toFixed(2)}`;
+            } else {
+                totalElement.textContent = '$0.00';
+            }
+        } else {
+            // Para otros métodos, usar amount-input
+            const amountInput = checkbox.closest('.payment-method')?.querySelector('.amount-input');
+            if (amountInput) {
+                if (checkbox.checked && !amountInput.disabled) {
+                    const amount = Number(amountInput.value) || 0;
+                    totalElement.textContent = `$${amount.toFixed(2)}`;
+                } else {
+                    totalElement.textContent = '$0.00';
+                }
             } else {
                 totalElement.textContent = '$0.00';
             }
@@ -634,52 +733,59 @@ async function handleEventoPlaceOrder(eventoData) {
  * Procesa el pago regular (web/físico)
  */
 async function handleRegularPlaceOrder() {
-    const compraId = await getCompraId();
-    if (!compraId) {
-        showNotification('No se pudo identificar la compra.', 'error');
-        return;
-    }
+    console.log('=== DEBUG handleRegularPlaceOrder ===');
+    console.log('Tipo de venta:', getVentaType());
+    console.log('Usuario actual:', getCurrentUserId());
+    console.log('Cliente actual:', getCurrentClient());
     
-    // Verificar el tipo de venta
-    const tipoVenta = getVentaType();
-    console.log('Tipo de venta detectado:', tipoVenta);
-    let currentClient = null;
-    
-    if (tipoVenta === 'tienda') {
-        // Para compras físicas, necesitamos un cliente validado
-        currentClient = getCurrentClient();
-        if (!currentClient) {
-            showNotification('Debe validar un cliente antes de pagar.', 'error');
+    try {
+        const compraId = await getCompraId();
+        console.log('Compra ID obtenido:', compraId);
+        
+        if (!compraId) {
+            showNotification('No se pudo identificar la compra.', 'error');
             return;
         }
-    } else if (tipoVenta === 'web') {
-        // Para compras web, el usuario ya está autenticado, no necesitamos cliente adicional
-        console.log('Compra web - usuario autenticado:', getCurrentUserId());
-    } else {
-        // Si no hay tipo de venta establecido, intentar inferirlo
-        console.log('Tipo de venta no detectado, intentando inferir...');
-        const user = localStorage.getItem('user');
-        if (user) {
-            // Si hay usuario autenticado, asumir que es compra web
-            console.log('Usuario autenticado detectado, asumiendo compra web');
-        } else {
-            // Si no hay usuario, asumir que es compra física
-            console.log('No hay usuario autenticado, asumiendo compra física');
+        
+        // Verificar el tipo de venta
+        const tipoVenta = getVentaType();
+        console.log('Tipo de venta detectado:', tipoVenta);
+        let currentClient = null;
+        
+        if (tipoVenta === 'tienda') {
+            // Para compras físicas, necesitamos un cliente validado
             currentClient = getCurrentClient();
             if (!currentClient) {
                 showNotification('Debe validar un cliente antes de pagar.', 'error');
                 return;
             }
+        } else if (tipoVenta === 'web') {
+            // Para compras web, el usuario ya está autenticado, no necesitamos cliente adicional
+            console.log('Compra web - usuario autenticado:', getCurrentUserId());
+        } else {
+            // Si no hay tipo de venta establecido, intentar inferirlo
+            console.log('Tipo de venta no detectado, intentando inferir...');
+            const user = localStorage.getItem('user');
+            if (user) {
+                // Si hay usuario autenticado, asumir que es compra web
+                console.log('Usuario autenticado detectado, asumiendo compra web');
+            } else {
+                // Si no hay usuario, asumir que es compra física
+                console.log('No hay usuario autenticado, asumiendo compra física');
+                currentClient = getCurrentClient();
+                if (!currentClient) {
+                    showNotification('Debe validar un cliente antes de pagar.', 'error');
+                    return;
+                }
+            }
         }
-    }
-    
-    const pagos = collectSelectedPayments();
-    if (pagos.length === 0) {
-        showNotification('Debe seleccionar al menos un método de pago con monto.', 'error');
-        return;
-    }
-    
-    try {
+        
+        const pagos = collectSelectedPayments();
+        if (pagos.length === 0) {
+            showNotification('Debe seleccionar al menos un método de pago con monto.', 'error');
+            return;
+        }
+        
         const requestBody = { 
             compra_id: compraId, 
             pagos, 
@@ -703,6 +809,7 @@ async function handleRegularPlaceOrder() {
             showNotification(data.message || 'Error al registrar el pago', 'error');
         }
     } catch (error) {
+        console.error('Error en handleRegularPlaceOrder:', error);
         showNotification('Error de conexión al registrar el pago', 'error');
     }
 }
@@ -819,8 +926,23 @@ async function getCompraId() {
     if (currentClient) {
         params += `&id_cliente_natural=${currentClient.id}`;
     }
+    
+    console.log('=== DEBUG getCompraId ===');
+    console.log('userId:', userId);
+    console.log('currentClient:', currentClient);
+    console.log('params:', params);
+    console.log('URL:', `${API_BASE_URL}/carrito/compra-id?${params}`);
+    
     const response = await fetch(`${API_BASE_URL}/carrito/compra-id?${params}`);
     const data = await response.json();
+    
+    console.log('Response status:', response.status);
+    console.log('Response data:', data);
+    
+    if (!response.ok) {
+        throw new Error(`Error al obtener compra ID: ${response.status} - ${data.message || 'Error desconocido'}`);
+    }
+    
     return data.id_compra;
 }
 
