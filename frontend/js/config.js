@@ -3,7 +3,7 @@
 // =====================================================
 
 // Configuración de la API
-const API_BASE_URL = 'http://localhost:3000/api'; // Ajusta según tu backend 
+var API_BASE_URL = 'http://localhost:3000/api'; // Ajusta según tu backend 
 
 /**
  * Obtener imagen del producto (lógica centralizada)

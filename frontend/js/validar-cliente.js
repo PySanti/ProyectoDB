@@ -307,6 +307,21 @@ async function handleRegistroSubmit(event) {
  */
 function continueToCatalog() {
     console.log('Continuando al catálogo...');
+    
+    // Verificar si es venta de eventos
+    const eventoVenta = sessionStorage.getItem('eventoVenta');
+    let isEventoVenta = false;
+    let eventoData = null;
+    
+    if (eventoVenta) {
+        try {
+            eventoData = JSON.parse(eventoVenta);
+            isEventoVenta = eventoData.tipo_venta === 'eventos';
+        } catch (error) {
+            console.error('Error al parsear datos del evento:', error);
+        }
+    }
+    
     // Limpiar carrito si el cliente cambió
     const lastUserKey = 'lastUserOrClient';
     let currentClient = null;
@@ -322,7 +337,16 @@ function continueToCatalog() {
         fetch(`${API_BASE_URL}/carrito/limpiar/1?id_cliente_natural=${currentId}`, { method: 'DELETE' });
     }
     if (currentId) sessionStorage.setItem(lastUserKey, String(currentId));
-    setVentaType('tienda');
+    
+    // Establecer tipo de venta según el contexto
+    if (isEventoVenta) {
+        setVentaType('eventos');
+        console.log('Continuando a catálogo de eventos...');
+    } else {
+        setVentaType('tienda');
+        console.log('Continuando a catálogo de tienda...');
+    }
+    
     window.location.href = 'catalog.html';
 }
 

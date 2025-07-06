@@ -5,6 +5,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Actualizar tiempo cada segundo
     setInterval(updateTime, 1000);
+    
+    // Verificar si viene de una venta de eventos
+    checkEventoVenta();
 });
 
 /**
@@ -35,14 +38,92 @@ function updateTime() {
 }
 
 /**
+ * Verificar si viene de una venta de eventos y ajustar la interfaz
+ */
+function checkEventoVenta() {
+    const eventoVenta = sessionStorage.getItem('eventoVenta');
+    if (eventoVenta) {
+        try {
+            const eventoData = JSON.parse(eventoVenta);
+            if (eventoData.tipo_venta === 'eventos') {
+                // Ajustar la interfaz para ventas de eventos
+                adjustInterfaceForEventos();
+            }
+        } catch (error) {
+            console.error('Error al parsear datos del evento:', error);
+        }
+    }
+}
+
+/**
+ * Ajustar la interfaz para ventas de eventos
+ */
+function adjustInterfaceForEventos() {
+    // Cambiar el título
+    const welcomeTitle = document.querySelector('.welcome-title');
+    if (welcomeTitle) {
+        welcomeTitle.textContent = 'Venta de Eventos - ACAUCAB';
+    }
+    
+    // Cambiar el subtítulo
+    const welcomeSubtitle = document.querySelector('.welcome-subtitle');
+    if (welcomeSubtitle) {
+        welcomeSubtitle.textContent = 'Registro de ventas para eventos especiales';
+    }
+    
+    // Cambiar la descripción
+    const welcomeDescription = document.querySelector('.welcome-description');
+    if (welcomeDescription) {
+        welcomeDescription.textContent = 'Valide el cliente para proceder con la venta de productos del evento';
+    }
+    
+    // Cambiar el texto del botón
+    const startButton = document.querySelector('.start-purchase-btn span');
+    if (startButton) {
+        startButton.textContent = 'Validar Cliente para Evento';
+    }
+    
+    // Cambiar el ícono del botón
+    const startButtonIcon = document.querySelector('.start-purchase-btn i');
+    if (startButtonIcon) {
+        startButtonIcon.className = 'fas fa-calendar-check';
+    }
+    
+    // Cambiar el texto del footer
+    const footerText = document.querySelector('.footer-content p:last-child');
+    if (footerText) {
+        footerText.textContent = 'Sistema de Venta - Eventos';
+    }
+}
+
+/**
  * Función para iniciar el proceso de compra
  * Redirige a la página de validación de cliente
  */
 function startPurchase() {
     console.log('Iniciando proceso de compra...');
     
-    // Establecer tipo de venta como tienda física
-    setVentaType('tienda');
+    // Verificar si es venta de eventos
+    const eventoVenta = sessionStorage.getItem('eventoVenta');
+    let isEventoVenta = false;
+    
+    if (eventoVenta) {
+        try {
+            const eventoData = JSON.parse(eventoVenta);
+            isEventoVenta = eventoData.tipo_venta === 'eventos';
+        } catch (error) {
+            console.error('Error al parsear datos del evento:', error);
+        }
+    }
+    
+    // Establecer tipo de venta
+    if (isEventoVenta) {
+        setVentaType('eventos');
+        console.log('Iniciando venta de eventos...');
+    } else {
+        setVentaType('tienda');
+        console.log('Iniciando venta de tienda física...');
+    }
     
     // Mostrar indicador de carga
     const button = document.querySelector('.start-purchase-btn');

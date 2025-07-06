@@ -121,6 +121,7 @@ exports.crearEvento = async (req, res) => {
             fecha_inicio,
             fecha_fin,
             lugar_id_lugar,
+            n_entradas_vendidas,
             precio_unitario_entrada,
             tipo_evento_id,
             horarios,
@@ -134,10 +135,10 @@ exports.crearEvento = async (req, res) => {
 
         // 1. INSERTAR EVENTO PRINCIPAL
         const eventoResult = await client.query(`
-            INSERT INTO Evento (nombre, descripcion, fecha_inicio, fecha_fin, lugar_id_lugar, precio_unitario_entrada, tipo_evento_id)
-            VALUES ($1, $2, $3, $4, $5, $6, $7)
+            INSERT INTO Evento (nombre, descripcion, fecha_inicio, fecha_fin, lugar_id_lugar, n_entradas_vendidas, precio_unitario_entrada, tipo_evento_id)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
             RETURNING id_evento
-        `, [nombre, descripcion, fecha_inicio, fecha_fin, lugar_id_lugar, precio_unitario_entrada, tipo_evento_id]);
+        `, [nombre, descripcion, fecha_inicio, fecha_fin, lugar_id_lugar, n_entradas_vendidas || 0, precio_unitario_entrada, tipo_evento_id]);
         
         const id_evento = eventoResult.rows[0].id_evento;
         console.log('Evento creado con ID:', id_evento);
@@ -243,6 +244,519 @@ exports.crearEvento = async (req, res) => {
             success: false,
             error: 'Error al crear evento',
             details: error.message
+        });
+    } finally {
+        client.release();
+    }
+};
+
+// =================================================================
+// OBTENER TODOS LOS EVENTOS
+// =================================================================
+exports.getAllEventos = async (req, res) => {
+    try {
+        const result = await db.query(`
+            SELECT 
+                e.id_evento,
+                e.nombre,
+                e.fecha_inicio,
+                e.fecha_fin,
+                e.n_entradas_vendidas,
+                e.precio_unitario_entrada
+            FROM Evento e
+            ORDER BY e.fecha_inicio DESC
+        `);
+        
+        res.json({
+            success: true,
+            eventos: result.rows
+        });
+    } catch (error) {
+        console.error('Error al obtener eventos:', error);
+        res.status(500).json({ 
+            success: false, 
+            message: 'Error interno del servidor al obtener eventos' 
+        });
+    }
+};
+
+// =================================================================
+// OBTENER INVENTARIO DE UN EVENTO ESPECÍFICO
+// =================================================================
+exports.getInventarioEvento = async (req, res) => {
+    try {
+        const { id_evento } = req.params;
+        const { page = 1, limit = 9, sortBy = 'relevance' } = req.query;
+        
+        const offset = (page - 1) * limit;
+        
+        // Consulta para obtener el inventario del evento
+        const result = await db.query(`
+            SELECT 
+                c.id_cerveza,
+                c.nombre_cerveza,
+                tc.nombre as tipo_cerveza,
+                p.id_presentacion,
+                p.nombre as nombre_presentacion,
+                iep.cantidad as stock_disponible,
+                pc.precio as precio_unitario,
+                pr.razon_social as nombre_proveedor,
+                iep.id_proveedor,
+                iep.id_evento,
+                iep.id_tipo_cerveza,
+                iep.id_cerveza as id_cerveza_inv
+            FROM Inventario_Evento_Proveedor iep
+            JOIN Cerveza c ON iep.id_cerveza = c.id_cerveza
+            JOIN Tipo_Cerveza tc ON c.id_tipo_cerveza = tc.id_tipo_cerveza
+            JOIN Presentacion p ON iep.id_presentacion = p.id_presentacion
+            JOIN Presentacion_Cerveza pc ON p.id_presentacion = pc.id_presentacion AND c.id_cerveza = pc.id_cerveza
+            JOIN Proveedor pr ON iep.id_proveedor = pr.id_proveedor
+            WHERE iep.id_evento = $1 AND iep.cantidad > 0
+            ORDER BY c.nombre_cerveza, p.nombre
+            LIMIT $2 OFFSET $3
+        `, [id_evento, limit, offset]);
+        
+        // Consulta para contar el total
+        const countResult = await db.query(`
+            SELECT COUNT(*) as total
+            FROM Inventario_Evento_Proveedor iep
+            WHERE iep.id_evento = $1 AND iep.cantidad > 0
+        `, [id_evento]);
+        
+        const total = parseInt(countResult.rows[0].total);
+        const totalPages = Math.ceil(total / limit);
+        
+        // Agrupar por cerveza para el formato esperado por el frontend
+        const productosAgrupados = {};
+        
+        result.rows.forEach(row => {
+            const key = `${row.id_cerveza}`;
+            if (!productosAgrupados[key]) {
+                productosAgrupados[key] = {
+                    id_cerveza: row.id_cerveza,
+                    nombre_cerveza: row.nombre_cerveza,
+                    tipo_cerveza: row.tipo_cerveza,
+                    presentaciones: []
+                };
+            }
+            
+            productosAgrupados[key].presentaciones.push({
+                id_inventario: `${row.id_evento}_${row.id_proveedor}_${row.id_tipo_cerveza}_${row.id_presentacion}_${row.id_cerveza_inv}`,
+                id_presentacion: row.id_presentacion,
+                nombre_presentacion: row.nombre_presentacion,
+                stock_disponible: row.stock_disponible,
+                precio_unitario: row.precio_unitario,
+                nombre_proveedor: row.nombre_proveedor,
+                id_proveedor: row.id_proveedor,
+                id_evento: row.id_evento,
+                id_tipo_cerveza: row.id_tipo_cerveza,
+                id_cerveza: row.id_cerveza_inv
+            });
+        });
+        
+        const productos = Object.values(productosAgrupados);
+        
+        res.json({
+            success: true,
+            inventario: productos,
+            total: total,
+            totalPages: totalPages,
+            currentPage: parseInt(page),
+            itemsPerPage: parseInt(limit)
+        });
+        
+    } catch (error) {
+        console.error('Error al obtener inventario del evento:', error);
+        res.status(500).json({ 
+            success: false, 
+            message: 'Error interno del servidor al obtener inventario del evento' 
+        });
+    }
+};
+
+// =================================================================
+// AGREGAR PRODUCTO AL CARRITO DE EVENTOS
+// =================================================================
+exports.agregarProductoEvento = async (req, res) => {
+    const client = await db.connect();
+    
+    try {
+        await client.query('BEGIN'); // Iniciar transacción
+        
+        const { id_evento } = req.params;
+        const { id_cliente_natural, nombre_cerveza, nombre_presentacion, cantidad } = req.body;
+        
+        console.log('Agregando producto al evento:', {
+            id_evento,
+            id_cliente_natural,
+            nombre_cerveza,
+            nombre_presentacion,
+            cantidad
+        });
+        
+        // 1. Verificar que el evento existe
+        const eventoResult = await client.query(`
+            SELECT id_evento, nombre FROM Evento WHERE id_evento = $1
+        `, [id_evento]);
+        
+        if (eventoResult.rows.length === 0) {
+            throw new Error('Evento no encontrado');
+        }
+        
+        // 2. Buscar el inventario específico del evento
+        const inventarioResult = await client.query(`
+            SELECT 
+                iep.id_proveedor,
+                iep.id_tipo_cerveza,
+                iep.id_presentacion,
+                iep.id_cerveza,
+                iep.cantidad as stock_disponible,
+                pc.precio as precio_unitario
+            FROM Inventario_Evento_Proveedor iep
+            JOIN Cerveza c ON iep.id_cerveza = c.id_cerveza
+            JOIN Presentacion p ON iep.id_presentacion = p.id_presentacion
+            JOIN Presentacion_Cerveza pc ON p.id_presentacion = pc.id_presentacion AND c.id_cerveza = pc.id_cerveza
+            WHERE iep.id_evento = $1 
+            AND c.nombre_cerveza = $2 
+            AND p.nombre = $3
+            AND iep.cantidad > 0
+        `, [id_evento, nombre_cerveza, nombre_presentacion]);
+        
+        if (inventarioResult.rows.length === 0) {
+            throw new Error('Producto no disponible en el inventario del evento');
+        }
+        
+        const inventario = inventarioResult.rows[0];
+        
+        // 3. Verificar stock disponible
+        if (inventario.stock_disponible < cantidad) {
+            throw new Error(`Stock insuficiente. Solo hay ${inventario.stock_disponible} unidades disponibles`);
+        }
+        
+        // 4. Crear o obtener Venta_Evento
+        let ventaEventoResult = await client.query(`
+            SELECT evento_id, id_cliente_natural, total 
+            FROM Venta_Evento 
+            WHERE evento_id = $1 AND id_cliente_natural = $2
+        `, [id_evento, id_cliente_natural]);
+        
+        let ventaEvento;
+        if (ventaEventoResult.rows.length === 0) {
+            // Crear nueva venta de evento
+            ventaEventoResult = await client.query(`
+                INSERT INTO Venta_Evento (evento_id, id_cliente_natural, fecha_compra, total)
+                VALUES ($1, $2, NOW(), 0)
+                RETURNING evento_id, id_cliente_natural, total
+            `, [id_evento, id_cliente_natural]);
+            ventaEvento = ventaEventoResult.rows[0];
+            console.log('Nueva venta de evento creada');
+        } else {
+            ventaEvento = ventaEventoResult.rows[0];
+            console.log('Venta de evento existente encontrada');
+        }
+        
+        // 5. Verificar si ya existe el detalle
+        const detalleExistenteResult = await client.query(`
+            SELECT precio_unitario, cantidad 
+            FROM Detalle_Venta_Evento 
+            WHERE id_evento = $1 
+            AND id_cliente_natural = $2 
+            AND id_cerveza = $3 
+            AND id_proveedor = $4 
+            AND id_tipo_cerveza = $5 
+            AND id_presentacion = $6
+        `, [
+            id_evento, 
+            id_cliente_natural, 
+            inventario.id_cerveza,
+            inventario.id_proveedor,
+            inventario.id_tipo_cerveza,
+            inventario.id_presentacion
+        ]);
+        
+        if (detalleExistenteResult.rows.length > 0) {
+            // Actualizar cantidad existente
+            const detalleExistente = detalleExistenteResult.rows[0];
+            const nuevaCantidad = detalleExistente.cantidad + cantidad;
+            
+            await client.query(`
+                UPDATE Detalle_Venta_Evento 
+                SET cantidad = $1 
+                WHERE id_evento = $2 
+                AND id_cliente_natural = $3 
+                AND id_cerveza = $4 
+                AND id_proveedor = $5 
+                AND id_tipo_cerveza = $6 
+                AND id_presentacion = $7
+            `, [
+                nuevaCantidad,
+                id_evento, 
+                id_cliente_natural, 
+                inventario.id_cerveza,
+                inventario.id_proveedor,
+                inventario.id_tipo_cerveza,
+                inventario.id_presentacion
+            ]);
+            
+            console.log('Cantidad actualizada en detalle existente');
+        } else {
+            // Crear nuevo detalle
+            await client.query(`
+                INSERT INTO Detalle_Venta_Evento (
+                    precio_unitario, cantidad, id_evento, id_cliente_natural, 
+                    id_cerveza, id_proveedor, id_proveedor_evento, id_tipo_cerveza, 
+                    id_presentacion, id_cerveza_inv
+                ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+            `, [
+                inventario.precio_unitario,
+                cantidad,
+                id_evento,
+                id_cliente_natural,
+                inventario.id_cerveza,
+                inventario.id_proveedor,
+                inventario.id_proveedor, // id_proveedor_evento es el mismo
+                inventario.id_tipo_cerveza,
+                inventario.id_presentacion,
+                inventario.id_cerveza
+            ]);
+            
+            console.log('Nuevo detalle de venta creado');
+        }
+        
+        // 6. Actualizar total de la venta
+        const totalResult = await client.query(`
+            SELECT COALESCE(SUM(precio_unitario * cantidad), 0) as total
+            FROM Detalle_Venta_Evento 
+            WHERE id_evento = $1 AND id_cliente_natural = $2
+        `, [id_evento, id_cliente_natural]);
+        
+        await client.query(`
+            UPDATE Venta_Evento 
+            SET total = $1 
+            WHERE evento_id = $2 AND id_cliente_natural = $3
+        `, [totalResult.rows[0].total, id_evento, id_cliente_natural]);
+        
+        // 7. Descontar del inventario del evento
+        await client.query(`
+            UPDATE Inventario_Evento_Proveedor 
+            SET cantidad = cantidad - $1 
+            WHERE id_evento = $2 
+            AND id_proveedor = $3 
+            AND id_tipo_cerveza = $4 
+            AND id_presentacion = $5 
+            AND id_cerveza = $6
+        `, [
+            cantidad, 
+            id_evento, 
+            inventario.id_proveedor,
+            inventario.id_tipo_cerveza,
+            inventario.id_presentacion,
+            inventario.id_cerveza
+        ]);
+        
+        await client.query('COMMIT'); // Confirmar transacción
+        
+        res.json({
+            success: true,
+            message: `${cantidad} ${nombre_presentacion} de ${nombre_cerveza} agregado al carrito del evento`,
+            total: totalResult.rows[0].total
+        });
+        
+    } catch (error) {
+        await client.query('ROLLBACK'); // Revertir transacción en caso de error
+        console.error('Error al agregar producto al evento:', error);
+        res.status(500).json({
+            success: false,
+            message: error.message || 'Error al agregar producto al evento'
+        });
+    } finally {
+        client.release();
+    }
+};
+
+// =================================================================
+// OBTENER RESUMEN DEL CARRITO DE EVENTOS
+// =================================================================
+exports.obtenerResumenCarritoEvento = async (req, res) => {
+    const client = await db.connect();
+    
+    try {
+        const { id_evento, id_cliente_natural } = req.params;
+        
+        console.log('Obteniendo resumen del carrito del evento:', { id_evento, id_cliente_natural });
+        
+        // Obtener el total de ítems y el total monetario en el carrito del evento
+        const result = await client.query(`
+            SELECT 
+                COALESCE(SUM(cantidad), 0) as total_items,
+                COALESCE(SUM(precio_unitario * cantidad), 0) as total
+            FROM Detalle_Venta_Evento 
+            WHERE id_evento = $1 AND id_cliente_natural = $2
+        `, [id_evento, id_cliente_natural]);
+        
+        const totalItems = parseInt(result.rows[0].total_items) || 0;
+        const total = parseFloat(result.rows[0].total) || 0;
+        
+        res.json({
+            success: true,
+            total_items: totalItems,
+            total: total
+        });
+        
+    } catch (error) {
+        console.error('Error al obtener resumen del carrito del evento:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error al obtener resumen del carrito del evento'
+        });
+    } finally {
+        client.release();
+    }
+};
+
+// =================================================================
+// OBTENER ITEMS DEL CARRITO DE EVENTOS
+// =================================================================
+exports.obtenerItemsCarritoEvento = async (req, res) => {
+    const client = await db.connect();
+    
+    try {
+        const { id_evento, id_cliente_natural } = req.params;
+        
+        console.log('Obteniendo items del carrito del evento:', { id_evento, id_cliente_natural });
+        
+        // Obtener los items del carrito del evento con información detallada
+        const result = await client.query(`
+            SELECT 
+                dve.precio_unitario,
+                dve.cantidad,
+                dve.id_evento,
+                dve.id_cliente_natural,
+                dve.id_cerveza,
+                dve.id_proveedor,
+                dve.id_proveedor_evento,
+                dve.id_tipo_cerveza,
+                dve.id_presentacion,
+                dve.id_cerveza_inv,
+                c.nombre_cerveza,
+                p.nombre as nombre_presentacion
+            FROM Detalle_Venta_Evento dve
+            JOIN Cerveza c ON dve.id_cerveza = c.id_cerveza
+            JOIN Presentacion p ON dve.id_presentacion = p.id_presentacion
+            WHERE dve.id_evento = $1 AND dve.id_cliente_natural = $2
+            ORDER BY c.nombre_cerveza, p.nombre
+        `, [id_evento, id_cliente_natural]);
+        
+        res.json(result.rows);
+        
+    } catch (error) {
+        console.error('Error al obtener items del carrito del evento:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Error al obtener items del carrito del evento'
+        });
+    } finally {
+        client.release();
+    }
+};
+
+// =================================================================
+// PROCESAR PAGO DE EVENTO
+// =================================================================
+exports.procesarPagoEvento = async (req, res) => {
+    const client = await db.connect();
+    
+    try {
+        await client.query('BEGIN'); // Iniciar transacción
+        
+        const { id_evento } = req.params;
+        const { id_cliente_natural, pagos, total } = req.body;
+        
+        console.log('Procesando pago de evento:', {
+            id_evento,
+            id_cliente_natural,
+            pagos,
+            total
+        });
+        
+        // 1. Verificar que la venta del evento existe
+        const ventaResult = await client.query(`
+            SELECT evento_id, id_cliente_natural, total 
+            FROM Venta_Evento 
+            WHERE evento_id = $1 AND id_cliente_natural = $2
+        `, [id_evento, id_cliente_natural]);
+        
+        if (ventaResult.rows.length === 0) {
+            throw new Error('Venta del evento no encontrada');
+        }
+        
+        const venta = ventaResult.rows[0];
+        
+        // 2. Verificar que el total coincida
+        if (Number(venta.total) !== Number(total)) {
+            throw new Error('El total no coincide con la venta registrada');
+        }
+        
+        // 3. Procesar cada método de pago
+        for (const pago of pagos) {
+            console.log('Procesando pago:', pago);
+            
+            // Crear método de pago (solo con el cliente)
+            const metodoPagoResult = await client.query(`
+                INSERT INTO Metodo_Pago (id_cliente_natural)
+                VALUES ($1)
+                RETURNING id_metodo
+            `, [id_cliente_natural]);
+            
+            const idMetodoPago = metodoPagoResult.rows[0].id_metodo;
+            
+            // Crear pago específico según el tipo
+            if (pago.tipo === 'efectivo') {
+                await client.query(`
+                    INSERT INTO Efectivo (id_metodo, denominacion)
+                    VALUES ($1, $2)
+                `, [idMetodoPago, pago.denominacion]);
+                
+            } else if (pago.tipo === 'tarjeta-debito') {
+                await client.query(`
+                    INSERT INTO Tarjeta_Debito (id_metodo, numero, banco)
+                    VALUES ($1, $2, $3)
+                `, [idMetodoPago, pago.numero, pago.banco]);
+                
+            } else if (pago.tipo === 'tarjeta-credito') {
+                await client.query(`
+                    INSERT INTO Tarjeta_Credito (id_metodo, tipo, numero, banco, fecha_vencimiento)
+                    VALUES ($1, $2, $3, $4, $5)
+                `, [idMetodoPago, pago.tipo_tarjeta, pago.numero, pago.banco, pago.fecha_vencimiento]);
+                
+            } else if (pago.tipo === 'cheque') {
+                await client.query(`
+                    INSERT INTO Cheque (id_metodo, num_cheque, num_cuenta, banco)
+                    VALUES ($1, $2, $3, $4)
+                `, [idMetodoPago, pago.numero, pago.cuenta, pago.banco]);
+            }
+            
+            // Registrar el pago del evento
+            await client.query(`
+                INSERT INTO Pago_Evento (metodo_id, evento_id, id_cliente_natural, fecha_hora, monto, referencia)
+                VALUES ($1, $2, $3, NOW(), $4, $5)
+            `, [idMetodoPago, id_evento, id_cliente_natural, pago.monto, `PAGO_${Date.now()}`]);
+        }
+        
+        await client.query('COMMIT'); // Confirmar transacción
+        
+        res.json({
+            success: true,
+            message: 'Pago del evento procesado correctamente',
+            total: total
+        });
+        
+    } catch (error) {
+        await client.query('ROLLBACK'); // Revertir transacción en caso de error
+        console.error('Error al procesar pago del evento:', error);
+        res.status(500).json({
+            success: false,
+            message: error.message || 'Error al procesar el pago del evento'
         });
     } finally {
         client.release();

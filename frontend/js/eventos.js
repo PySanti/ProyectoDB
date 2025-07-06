@@ -1,12 +1,14 @@
 // eventos.js
 
-const API_BASE_URL = 'http://localhost:3000/api/eventos';
+// API_BASE_URL ya está definido en config.js
+console.log('🔄 Cargando eventos.js...');
+console.log('🔗 API_BASE_URL disponible:', typeof API_BASE_URL !== 'undefined' ? API_BASE_URL : 'NO DEFINIDO');
 
 let proveedoresSeleccionados = [];
 let invitadosSeleccionados = [];
 
 // Función para inicializar el formulario de eventos
-export function initEventosForm() {
+function initEventosForm() {
     cargarTiposEvento();
     cargarLugares();
     cargarInvitados();
@@ -25,7 +27,7 @@ export function initEventosForm() {
 
 // Poblar el select de tipo de evento
 function cargarTiposEvento() {
-    fetch(`${API_BASE_URL}/tipos`)
+    fetch(`${API_BASE_URL}/eventos/tipos`)
         .then(res => res.json())
         .then(tipos => {
             console.log('Tipos de evento recibidos:', tipos);
@@ -42,13 +44,13 @@ function cargarTiposEvento() {
 }
 
 // Poblar los selects de lugar (estado, municipio, parroquia) en cascada
-let lugaresData = null;
+let eventosLugaresData = null;
 function cargarLugares() {
-    fetch(`${API_BASE_URL}/lugares`)
+    fetch(`${API_BASE_URL}/eventos/lugares`)
         .then(res => res.json())
         .then(data => {
             console.log('Lugares recibidos:', data);
-            lugaresData = data;
+            eventosLugaresData = data;
             poblarEstados();
         })
         .catch(err => {
@@ -62,7 +64,7 @@ function poblarEstados() {
     const parroquiaSelect = document.getElementById('evento-parroquia');
     if (!estadoSelect || !municipioSelect || !parroquiaSelect) return;
     estadoSelect.innerHTML = '<option value="">Seleccione Estado</option>';
-    lugaresData.estados.forEach(e => {
+    eventosLugaresData.estados.forEach(e => {
         estadoSelect.innerHTML += `<option value="${e.id_lugar}">${e.nombre}</option>`;
     });
     estadoSelect.disabled = false;
@@ -89,7 +91,7 @@ function poblarMunicipios(estadoId) {
         municipioSelect.disabled = true;
         return;
     }
-    const municipios = lugaresData.municipios.filter(m => m.estado_id == estadoId);
+    const municipios = eventosLugaresData.municipios.filter(m => m.estado_id == estadoId);
     municipios.forEach(m => {
         municipioSelect.innerHTML += `<option value="${m.id_lugar}">${m.nombre}</option>`;
     });
@@ -103,7 +105,7 @@ function poblarParroquias(municipioId) {
         parroquiaSelect.disabled = true;
         return;
     }
-    const parroquias = lugaresData.parroquias.filter(p => p.municipio_id == municipioId);
+    const parroquias = eventosLugaresData.parroquias.filter(p => p.municipio_id == municipioId);
     parroquias.forEach(p => {
         parroquiaSelect.innerHTML += `<option value="${p.id_lugar}">${p.nombre}</option>`;
     });
@@ -111,7 +113,7 @@ function poblarParroquias(municipioId) {
 }
 
 function cargarInvitados() {
-    fetch(`${API_BASE_URL}/invitados`)
+    fetch(`${API_BASE_URL}/eventos/invitados`)
         .then(res => res.json())
         .then(data => {
             console.log('Invitados y tipos recibidos:', data);
@@ -135,7 +137,7 @@ function cargarInvitados() {
 }
 
 function cargarProveedores() {
-    fetch(`${API_BASE_URL}/proveedores`)
+    fetch(`${API_BASE_URL}/eventos/proveedores`)
         .then(res => res.json())
         .then(proveedores => {
             console.log('Proveedores recibidos:', proveedores);
@@ -152,7 +154,7 @@ function cargarProveedores() {
 }
 
 function cargarCervezas() {
-    fetch(`${API_BASE_URL}/cervezas`)
+    fetch(`${API_BASE_URL}/eventos/cervezas`)
         .then(res => res.json())
         .then(cervezas => {
             console.log('Cervezas recibidas:', cervezas);
@@ -169,7 +171,7 @@ function cargarCervezas() {
 }
 
 function cargarPresentaciones() {
-    fetch(`${API_BASE_URL}/presentaciones`)
+    fetch(`${API_BASE_URL}/eventos/presentaciones`)
         .then(res => res.json())
         .then(presentaciones => {
             console.log('Presentaciones recibidas:', presentaciones);
@@ -186,7 +188,7 @@ function cargarPresentaciones() {
 }
 
 function cargarPresentacionesPorCerveza(idCerveza, selectElement) {
-    fetch(`${API_BASE_URL}/presentaciones/${idCerveza}`)
+    fetch(`${API_BASE_URL}/eventos/presentaciones/${idCerveza}`)
         .then(res => res.json())
         .then(presentaciones => {
             console.log(`Presentaciones para cerveza ${idCerveza}:`, presentaciones);
@@ -201,7 +203,7 @@ function cargarPresentacionesPorCerveza(idCerveza, selectElement) {
 }
 
 function cargarTiposActividad() {
-    fetch(`${API_BASE_URL}/tipos-actividad`)
+    fetch(`${API_BASE_URL}/eventos/tipos-actividad`)
         .then(res => res.json())
         .then(tipos => {
             console.log('Tipos de actividad recibidos:', tipos);
@@ -431,7 +433,7 @@ function agregarInventario() {
 }
 
 // --- Función para guardar evento completo ---
-export function guardarEvento() {
+function guardarEvento() {
     try {
         console.log('Iniciando guardado de evento...');
         
@@ -442,6 +444,7 @@ export function guardarEvento() {
             fecha_inicio: document.getElementById('evento-fecha-inicio').value,
             fecha_fin: document.getElementById('evento-fecha-fin').value,
             lugar_id_lugar: document.getElementById('evento-parroquia').value,
+            n_entradas_vendidas: parseInt(document.getElementById('evento-entradas-vendidas').value) || 0,
             precio_unitario_entrada: parseFloat(document.getElementById('evento-precio-entrada').value),
             tipo_evento_id: parseInt(document.getElementById('evento-tipo').value)
         };
@@ -543,7 +546,7 @@ export function guardarEvento() {
         console.log('Datos a enviar:', datosCompletos);
 
         // Enviar al backend
-        fetch(`${API_BASE_URL}/crear`, {
+        fetch(`${API_BASE_URL}/eventos/crear`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -590,6 +593,7 @@ function limpiarFormularioEvento() {
     document.getElementById('evento-estado').value = '';
     document.getElementById('evento-municipio').value = '';
     document.getElementById('evento-parroquia').value = '';
+    document.getElementById('evento-entradas-vendidas').value = '0';
     document.getElementById('evento-precio-entrada').value = '';
     document.getElementById('evento-tipo').value = '';
 
@@ -671,4 +675,177 @@ function limpiarFormularioEvento() {
         cargarCervezas();
         cargarTiposActividad();
     }, 100);
-} 
+}
+
+// =================================================================
+// CARGAR EVENTOS DESDE LA BASE DE DATOS
+// =================================================================
+async function loadEventos() {
+    try {
+        const response = await fetch(`${API_BASE_URL}/eventos`);
+        const data = await response.json();
+        
+        if (data.success) {
+            renderEventos(data.eventos);
+        } else {
+            console.error('Error al cargar eventos:', data.message);
+            showNotification('Error al cargar eventos', 'error');
+        }
+    } catch (error) {
+        console.error('Error de conexión:', error);
+        showNotification('Error de conexión al cargar eventos', 'error');
+    }
+}
+
+// =================================================================
+// RENDERIZAR EVENTOS EN LA TABLA
+// =================================================================
+function renderEventos(eventos) {
+    const tbody = document.querySelector('#eventos-section .data-table tbody');
+    if (!tbody) return;
+    
+    tbody.innerHTML = '';
+    
+    if (eventos.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" class="text-center">No hay eventos registrados</td></tr>';
+        return;
+    }
+    
+    eventos.forEach(evento => {
+        const row = document.createElement('tr');
+        row.setAttribute('data-event-id', evento.id_evento);
+        
+        // Formatear fechas
+        const fechaInicio = new Date(evento.fecha_inicio);
+        const fechaFin = new Date(evento.fecha_fin);
+        const fechaInicioFormateada = fechaInicio.toLocaleDateString('es-ES') + ' ' + fechaInicio.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+        const fechaFinFormateada = fechaFin.toLocaleDateString('es-ES') + ' ' + fechaFin.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+        
+        // Formatear precio
+        const precioFormateado = `$${parseFloat(evento.precio_unitario_entrada).toFixed(2)}`;
+        
+        row.innerHTML = `
+            <td>EVT${String(evento.id_evento).padStart(3, '0')}</td>
+            <td>${evento.nombre}</td>
+            <td>${fechaInicioFormateada}</td>
+            <td>${fechaFinFormateada}</td>
+            <td>${evento.n_entradas_vendidas || 0}</td>
+            <td>${precioFormateado}</td>
+            <td class="actions">
+                <button class="action-btn register" title="Registrar compra" onclick="registrarCompra(${evento.id_evento})">
+                    <i class="fas fa-shopping-cart"></i>
+                </button>
+            </td>
+        `;
+        
+        tbody.appendChild(row);
+    });
+}
+
+// =================================================================
+// REGISTRAR COMPRA
+// =================================================================
+function registrarCompra(id) {
+    console.log('Registrar compra para evento:', id);
+    
+    // Buscar el nombre del evento en la tabla
+    const eventoRow = document.querySelector(`tr[data-event-id="${id}"]`);
+    let nombreEvento = 'Evento #' + id; // Valor por defecto
+    
+    if (eventoRow) {
+        const nombreCell = eventoRow.querySelector('td:nth-child(2)'); // La segunda columna es el nombre
+        if (nombreCell) {
+            nombreEvento = nombreCell.textContent.trim();
+        }
+    }
+    
+    // Guardar información del evento en sessionStorage para usar en el flujo de venta
+    sessionStorage.setItem('eventoVenta', JSON.stringify({
+        id_evento: id,
+        nombre_evento: nombreEvento,
+        tipo_venta: 'eventos'
+    }));
+    
+    console.log('Información del evento guardada:', {
+        id_evento: id,
+        nombre_evento: nombreEvento,
+        tipo_venta: 'eventos'
+    });
+    
+    // Redirigir a tiempo-muerto.html para validar cliente
+    window.location.href = '../html/tiempo-muerto.html';
+}
+
+// =================================================================
+// MOSTRAR NOTIFICACIÓN
+// =================================================================
+function showNotification(message, type = 'info') {
+    // Crear elemento de notificación
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.innerHTML = `
+        <div class="notification-content">
+            <span class="notification-message">${message}</span>
+            <button class="notification-close" onclick="this.parentElement.parentElement.remove()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    `;
+    
+    // Agregar al DOM
+    const container = document.querySelector('.dashboard-content') || document.body;
+    container.appendChild(notification);
+    
+    // Auto-remover después de 5 segundos
+    setTimeout(() => {
+        if (notification.parentElement) {
+            notification.remove();
+        }
+    }, 5000);
+}
+
+// =================================================================
+// INICIALIZACIÓN
+// =================================================================
+
+// Cargar eventos cuando se carga la página
+document.addEventListener('DOMContentLoaded', function() {
+    // Solo cargar eventos si estamos en la sección de eventos
+    const eventosSection = document.getElementById('eventos-section');
+    if (eventosSection && eventosSection.classList.contains('active')) {
+        loadEventos();
+    }
+    
+    // Escuchar cambios de sección
+    document.querySelectorAll('.sidebar-nav a').forEach(link => {
+        link.addEventListener('click', function(e) {
+            const sectionId = this.getAttribute('data-section');
+            if (sectionId === 'eventos') {
+                // Cargar eventos cuando se activa la sección
+                setTimeout(loadEventos, 100);
+            }
+        });
+    });
+});
+
+// Exportar funciones para uso global
+window.loadEventos = loadEventos;
+window.registrarCompra = registrarCompra;
+window.initEventosForm = initEventosForm;
+window.guardarEvento = guardarEvento;
+
+// Log para verificar que el script se cargó
+console.log('✅ eventos.js cargado correctamente');
+console.log('✅ API_BASE_URL:', API_BASE_URL);
+console.log('✅ Funciones disponibles:', {
+    loadEventos: typeof loadEventos,
+    registrarCompra: typeof registrarCompra,
+    initEventosForm: typeof initEventosForm,
+    guardarEvento: typeof guardarEvento
+});
+console.log('✅ Funciones en window:', {
+    loadEventos: typeof window.loadEventos,
+    registrarCompra: typeof window.registrarCompra,
+    initEventosForm: typeof window.initEventosForm,
+    guardarEvento: typeof window.guardarEvento
+}); 

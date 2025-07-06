@@ -2061,6 +2061,7 @@ INSERT INTO Tipo_Actividad (nombre) VALUES
 ('Presentación');
 
 INSERT INTO Tipo_Invitado (nombre) VALUES
+('Juez'),
 ('Maestro Cervecero'),
 ('Sommelier de Cerveza'),
 ('Distribuidor Mayorista'),

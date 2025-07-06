@@ -35,12 +35,73 @@ function showNotification(message, type = 'info') {
 
 /**
  * Actualiza el contador de productos en el ícono del carrito.
- * Llama al backend para obtener el total de ítems para el usuario actual.
+ * Maneja tanto carrito regular como carrito de eventos.
  */
 async function updateCartCounter() {
     const cartCountElement = document.querySelector('.cart-count');
     if (!cartCountElement) return;
 
+    // Verificar si es venta de eventos
+    const eventoVenta = sessionStorage.getItem('eventoVenta');
+    let isEventoVenta = false;
+    let eventoData = null;
+    
+    if (eventoVenta) {
+        try {
+            eventoData = JSON.parse(eventoVenta);
+            isEventoVenta = eventoData.tipo_venta === 'eventos';
+        } catch (error) {
+            console.error('Error al parsear datos del evento:', error);
+        }
+    }
+
+    if (isEventoVenta) {
+        // Contador para ventas de eventos
+        await updateEventoCartCounter(cartCountElement, eventoData);
+    } else {
+        // Contador para ventas regulares (web/físicas)
+        await updateRegularCartCounter(cartCountElement);
+    }
+}
+
+/**
+ * Actualiza el contador del carrito de eventos
+ */
+async function updateEventoCartCounter(cartCountElement, eventoData) {
+    try {
+        // Obtener el cliente validado
+        const currentClientStr = sessionStorage.getItem('currentClient');
+        if (!currentClientStr) {
+            cartCountElement.textContent = '0';
+            return;
+        }
+
+        const client = JSON.parse(currentClientStr);
+        if (client.tipo !== 'natural') {
+            cartCountElement.textContent = '0';
+            return;
+        }
+
+        const response = await fetch(`${API_BASE_URL}/eventos/${eventoData.id_evento}/carrito/${client.id}`);
+        if (!response.ok) {
+            if (response.status === 404) {
+                cartCountElement.textContent = '0';
+                return;
+            }
+            throw new Error('Error al obtener el resumen del carrito del evento');
+        }
+        const summary = await response.json();
+        cartCountElement.textContent = summary.total_items || '0';
+    } catch (error) {
+        console.error('Error al obtener contador del carrito de eventos:', error);
+        cartCountElement.textContent = '0';
+    }
+}
+
+/**
+ * Actualiza el contador del carrito regular (web/físico)
+ */
+async function updateRegularCartCounter(cartCountElement) {
     // Obtener el usuario actual
     const userStr = localStorage.getItem('user');
     let userId = 1; // GUEST_USER_ID por defecto

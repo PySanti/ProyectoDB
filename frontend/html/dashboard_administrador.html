@@ -260,8 +260,10 @@
                                 <option value="date-desc">Fecha (Lejana a Próxima)</option>
                                 <option value="name-asc">Nombre (A-Z)</option>
                                 <option value="name-desc">Nombre (Z-A)</option>
-                                <option value="capacity-asc">Capacidad (Menor a Mayor)</option>
-                                <option value="capacity-desc">Capacidad (Mayor a Menor)</option>
+                                <option value="entradas-asc">Entradas Vendidas (Menor a Mayor)</option>
+                                <option value="entradas-desc">Entradas Vendidas (Mayor a Menor)</option>
+                                <option value="precio-asc">Precio (Menor a Mayor)</option>
+                                <option value="precio-desc">Precio (Mayor a Menor)</option>
                             </select>
                             <button class="export-btn"><i class="fas fa-download"></i> Exportar</button>
                         </div>
@@ -273,11 +275,10 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Nombre</th>
-                                    <th>Fecha</th>
-                                    <th>Hora</th>
-                                    <th>Locación</th>
-                                    <th>Capacidad</th>
-                                    <th>Estado</th>
+                                    <th>Inicio</th>
+                                    <th>Fin</th>
+                                    <th>Entradas Vendidas</th>
+                                    <th>Precio Entrada</th>
                                     <th>Acciones</th>
                                 </tr>
                             </thead>
@@ -285,11 +286,10 @@
                                 <tr>
                                     <td>EVT001</td>
                                     <td>Festival de Cervezas Artesanales</td>
-                                    <td>15/07/2025</td>
-                                    <td>18:00 - 23:00</td>
-                                    <td>Salón Principal</td>
-                                    <td>200</td>
-                                    <td><span class="status active">Programado</span></td>
+                                    <td>15/07/2025 18:00</td>
+                                    <td>15/07/2025 23:00</td>
+                                    <td>150</td>
+                                    <td>$25.00</td>
                                     <td class="actions">
                                         <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
                                         <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
@@ -300,11 +300,10 @@
                                 <tr>
                                     <td>EVT002</td>
                                     <td>Cata de Cervezas Premium</td>
-                                    <td>22/07/2025</td>
-                                    <td>19:00 - 21:00</td>
-                                    <td>Terraza</td>
-                                    <td>50</td>
-                                    <td><span class="status active">Programado</span></td>
+                                    <td>22/07/2025 19:00</td>
+                                    <td>22/07/2025 21:00</td>
+                                    <td>45</td>
+                                    <td>$35.00</td>
                                     <td class="actions">
                                         <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
                                         <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
@@ -315,11 +314,52 @@
                                 <tr>
                                     <td>EVT003</td>
                                     <td>Lanzamiento Cerveza Temporada</td>
-                                    <td>10/07/2025</td>
-                                    <td>20:00 - 23:00</td>
-                                    <td>Jardín</td>
-                                    <td>100</td>
-                                    <td><span class="status pending">En curso</span></td>
+                                    <td>10/07/2025 20:00</td>
+                                    <td>10/07/2025 23:00</td>
+                                    <td>78</td>
+                                    <td>$20.00</td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                        <button class="action-btn download" title="Generar reporte"><i class="fas fa-file-alt"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>EVT004</td>
+                                    <td>Feria Gastronómica Local</td>
+                                    <td>05/08/2025 12:00</td>
+                                    <td>05/08/2025 20:00</td>
+                                    <td>320</td>
+                                    <td>$15.00</td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                        <button class="action-btn download" title="Generar reporte"><i class="fas fa-file-alt"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>EVT005</td>
+                                    <td>Workshop de Maridaje</td>
+                                    <td>18/06/2025 17:00</td>
+                                    <td>18/06/2025 19:00</td>
+                                    <td>28</td>
+                                    <td>$40.00</td>
+                                    <td class="actions">
+                                        <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
+                                        <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
+                                        <button class="action-btn delete" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                                        <button class="action-btn download" title="Generar reporte"><i class="fas fa-file-alt"></i></button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>EVT006</td>
+                                    <td>Degustación Nuevas Cervezas</td>
+                                    <td>25/06/2025 18:30</td>
+                                    <td>25/06/2025 21:30</td>
+                                    <td>35</td>
+                                    <td>$30.00</td>
                                     <td class="actions">
                                         <button class="action-btn view" title="Ver detalles"><i class="fas fa-eye"></i></button>
                                         <button class="action-btn edit" title="Editar"><i class="fas fa-edit"></i></button>
@@ -340,62 +380,7 @@
                             <button class="page-btn next"><i class="fas fa-chevron-right"></i></button>
                         </div>
                         <div class="page-info">
-                            Mostrando 1-3 de 25 eventos
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="card">
-                            <div class="card-header">
-                                <h3>Eventos Próximos</h3>
-                            </div>
-                            <div class="card-body">
-                                <div class="alert-list">
-                                    <div class="alert-item warning">
-                                        <div class="alert-icon"><i class="fas fa-calendar-day"></i></div>
-                                        <div class="alert-content">
-                                            <h4>Festival de Cervezas Artesanales</h4>
-                                            <p>En 5 días (15/07/2025)</p>
-                                            <span class="alert-time">18:00 - 23:00 | Salón Principal</span>
-                                        </div>
-                                        <button class="alert-action">Detalles</button>
-                                    </div>
-                                    <div class="alert-item warning">
-                                        <div class="alert-icon"><i class="fas fa-calendar-day"></i></div>
-                                        <div class="alert-content">
-                                            <h4>Cata de Cervezas Premium</h4>
-                                            <p>En 12 días (22/07/2025)</p>
-                                            <span class="alert-time">19:00 - 21:00 | Terraza</span>
-                                        </div>
-                                        <button class="alert-action">Detalles</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="col-md-6">
-                        <div class="card">
-                            <div class="card-header">
-                                <h3>Estadísticas de Eventos</h3>
-                            </div>
-                            <div class="card-body">
-                                <div class="chart-container">
-                                    <div class="chart-placeholder">
-                                        <i class="fas fa-chart-pie"></i>
-                                        <p>Distribución de eventos por tipo</p>
-                                        <ul class="chart-legend">
-                                            <li><span class="legend-color" style="background-color: var(--primary-color);"></span> Festivales (35%)</li>
-                                            <li><span class="legend-color" style="background-color: var(--info-color);"></span> Catas (25%)</li>
-                                            <li><span class="legend-color" style="background-color: var(--success-color);"></span> Lanzamientos (20%)</li>
-                                            <li><span class="legend-color" style="background-color: var(--warning-color);"></span> Workshops (15%)</li>
-                                            <li><span class="legend-color" style="background-color: var(--error-color);"></span> Otros (5%)</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
+                            Mostrando 1-6 de 25 eventos
                         </div>
                     </div>
                 </div>
@@ -1719,8 +1704,12 @@
             
             if (addEventoBtn && nuevoEventoModal) {
                 addEventoBtn.addEventListener('click', function() {
-                    initEventosForm();
-                    nuevoEventoModal.classList.add('active');
+                    if (typeof window.initEventosForm === 'function') {
+                        window.initEventosForm();
+                        nuevoEventoModal.classList.add('active');
+                    } else {
+                        console.error('initEventosForm no está disponible en este contexto');
+                    }
                 });
                 
                 // Cerrar modal de evento
@@ -1881,6 +1870,21 @@
                         this.closest('.inventario-item').remove();
                     });
                 });
+                
+                // Inicializar carga de eventos cuando se activa la sección
+                const eventosLink = document.querySelector('a[data-section="eventos"]');
+                if (eventosLink) {
+                    eventosLink.addEventListener('click', function(e) {
+                        // Cargar eventos cuando se activa la sección
+                        setTimeout(() => {
+                            if (typeof window.loadEventos === 'function') {
+                                window.loadEventos();
+                            } else {
+                                console.error('loadEventos no está disponible');
+                            }
+                        }, 100);
+                    });
+                }
             }
             document.getElementById('rol-form').onsubmit = async function(e) {
                 e.preventDefault();
@@ -2801,19 +2805,11 @@
     });
     </script>
     
+    <!-- Script de configuración -->
+    <script src="../js/config.js"></script>
     <!-- Script para reportes -->
     <script src="../js/reportes.js"></script>
-    <script type="module">
-    import { initEventosForm } from '../js/eventos.js';
-
-    const addEventoBtn = document.getElementById('add-evento-btn');
-    const nuevoEventoModal = document.getElementById('nuevo-evento-modal');
-    if (addEventoBtn && nuevoEventoModal) {
-        addEventoBtn.addEventListener('click', function() {
-            initEventosForm();
-            nuevoEventoModal.classList.add('active');
-        });
-    }
-    </script>
+    <!-- Script para eventos -->
+    <script src="../js/eventos.js"></script>
 </body>
 </html> 
