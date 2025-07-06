@@ -121,6 +121,7 @@ exports.crearEvento = async (req, res) => {
             fecha_inicio,
             fecha_fin,
             lugar_id_lugar,
+            n_entradas_vendidas,
             precio_unitario_entrada,
             tipo_evento_id,
             horarios,
@@ -134,10 +135,10 @@ exports.crearEvento = async (req, res) => {
 
         // 1. INSERTAR EVENTO PRINCIPAL
         const eventoResult = await client.query(`
-            INSERT INTO Evento (nombre, descripcion, fecha_inicio, fecha_fin, lugar_id_lugar, precio_unitario_entrada, tipo_evento_id)
-            VALUES ($1, $2, $3, $4, $5, $6, $7)
+            INSERT INTO Evento (nombre, descripcion, fecha_inicio, fecha_fin, lugar_id_lugar, n_entradas_vendidas, precio_unitario_entrada, tipo_evento_id)
+            VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
             RETURNING id_evento
-        `, [nombre, descripcion, fecha_inicio, fecha_fin, lugar_id_lugar, precio_unitario_entrada, tipo_evento_id]);
+        `, [nombre, descripcion, fecha_inicio, fecha_fin, lugar_id_lugar, n_entradas_vendidas || 0, precio_unitario_entrada, tipo_evento_id]);
         
         const id_evento = eventoResult.rows[0].id_evento;
         console.log('Evento creado con ID:', id_evento);
@@ -247,7 +248,6 @@ exports.crearEvento = async (req, res) => {
     } finally {
         client.release();
     }
-}; 
 };
 
 // =================================================================

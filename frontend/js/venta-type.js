@@ -49,6 +49,20 @@ function getVentaType() {
  * @returns {string} El nombre de visualización
  */
 function getVentaDisplayName() {
+    // Verificar si es venta de eventos
+    const eventoVenta = sessionStorage.getItem('eventoVenta');
+    if (eventoVenta) {
+        try {
+            const eventoData = JSON.parse(eventoVenta);
+            if (eventoData.tipo_venta === 'eventos') {
+                return `ACAUCAB - ${eventoData.nombre_evento}`;
+            }
+        } catch (error) {
+            console.error('Error al parsear datos del evento:', error);
+        }
+    }
+    
+    // Si no es evento, usar el sistema de tipos de venta regular
     const tipo = getVentaType();
     return tipo ? NOMBRES_VENTA[tipo] : 'ACAUCAB';
 }
@@ -60,6 +74,22 @@ function getVentaDisplayName() {
 function actualizarTituloVenta(elementId = 'logo-title') {
     const logoTitle = document.getElementById(elementId);
     if (logoTitle) {
+        // Verificar si es venta de eventos
+        const eventoVenta = sessionStorage.getItem('eventoVenta');
+        if (eventoVenta) {
+            try {
+                const eventoData = JSON.parse(eventoVenta);
+                if (eventoData.tipo_venta === 'eventos') {
+                    logoTitle.textContent = `ACAUCAB - ${eventoData.nombre_evento}`;
+                    console.log('Título actualizado para evento:', logoTitle.textContent);
+                    return;
+                }
+            } catch (error) {
+                console.error('Error al parsear datos del evento:', error);
+            }
+        }
+        
+        // Si no es evento, usar el sistema de tipos de venta regular
         logoTitle.textContent = getVentaDisplayName();
         console.log('Título actualizado:', logoTitle.textContent);
     }

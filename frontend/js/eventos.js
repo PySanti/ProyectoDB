@@ -1,12 +1,14 @@
 // eventos.js
 
-const API_BASE_URL = 'http://localhost:3000/api/eventos';
+// API_BASE_URL ya está definido en config.js
+console.log('🔄 Cargando eventos.js...');
+console.log('🔗 API_BASE_URL disponible:', typeof API_BASE_URL !== 'undefined' ? API_BASE_URL : 'NO DEFINIDO');
 
 let proveedoresSeleccionados = [];
 let invitadosSeleccionados = [];
 
 // Función para inicializar el formulario de eventos
-export function initEventosForm() {
+function initEventosForm() {
     cargarTiposEvento();
     cargarLugares();
     cargarInvitados();
@@ -25,7 +27,7 @@ export function initEventosForm() {
 
 // Poblar el select de tipo de evento
 function cargarTiposEvento() {
-    fetch(`${API_BASE_URL}/tipos`)
+    fetch(`${API_BASE_URL}/eventos/tipos`)
         .then(res => res.json())
         .then(tipos => {
             console.log('Tipos de evento recibidos:', tipos);
@@ -42,13 +44,13 @@ function cargarTiposEvento() {
 }
 
 // Poblar los selects de lugar (estado, municipio, parroquia) en cascada
-let lugaresData = null;
+let eventosLugaresData = null;
 function cargarLugares() {
-    fetch(`${API_BASE_URL}/lugares`)
+    fetch(`${API_BASE_URL}/eventos/lugares`)
         .then(res => res.json())
         .then(data => {
             console.log('Lugares recibidos:', data);
-            lugaresData = data;
+            eventosLugaresData = data;
             poblarEstados();
         })
         .catch(err => {
@@ -62,7 +64,7 @@ function poblarEstados() {
     const parroquiaSelect = document.getElementById('evento-parroquia');
     if (!estadoSelect || !municipioSelect || !parroquiaSelect) return;
     estadoSelect.innerHTML = '<option value="">Seleccione Estado</option>';
-    lugaresData.estados.forEach(e => {
+    eventosLugaresData.estados.forEach(e => {
         estadoSelect.innerHTML += `<option value="${e.id_lugar}">${e.nombre}</option>`;
     });
     estadoSelect.disabled = false;
@@ -89,7 +91,7 @@ function poblarMunicipios(estadoId) {
         municipioSelect.disabled = true;
         return;
     }
-    const municipios = lugaresData.municipios.filter(m => m.estado_id == estadoId);
+    const municipios = eventosLugaresData.municipios.filter(m => m.estado_id == estadoId);
     municipios.forEach(m => {
         municipioSelect.innerHTML += `<option value="${m.id_lugar}">${m.nombre}</option>`;
     });
@@ -103,7 +105,7 @@ function poblarParroquias(municipioId) {
         parroquiaSelect.disabled = true;
         return;
     }
-    const parroquias = lugaresData.parroquias.filter(p => p.municipio_id == municipioId);
+    const parroquias = eventosLugaresData.parroquias.filter(p => p.municipio_id == municipioId);
     parroquias.forEach(p => {
         parroquiaSelect.innerHTML += `<option value="${p.id_lugar}">${p.nombre}</option>`;
     });
@@ -111,7 +113,7 @@ function poblarParroquias(municipioId) {
 }
 
 function cargarInvitados() {
-    fetch(`${API_BASE_URL}/invitados`)
+    fetch(`${API_BASE_URL}/eventos/invitados`)
         .then(res => res.json())
         .then(data => {
             console.log('Invitados y tipos recibidos:', data);
@@ -135,7 +137,7 @@ function cargarInvitados() {
 }
 
 function cargarProveedores() {
-    fetch(`${API_BASE_URL}/proveedores`)
+    fetch(`${API_BASE_URL}/eventos/proveedores`)
         .then(res => res.json())
         .then(proveedores => {
             console.log('Proveedores recibidos:', proveedores);
@@ -152,7 +154,7 @@ function cargarProveedores() {
 }
 
 function cargarCervezas() {
-    fetch(`${API_BASE_URL}/cervezas`)
+    fetch(`${API_BASE_URL}/eventos/cervezas`)
         .then(res => res.json())
         .then(cervezas => {
             console.log('Cervezas recibidas:', cervezas);
@@ -169,7 +171,7 @@ function cargarCervezas() {
 }
 
 function cargarPresentaciones() {
-    fetch(`${API_BASE_URL}/presentaciones`)
+    fetch(`${API_BASE_URL}/eventos/presentaciones`)
         .then(res => res.json())
         .then(presentaciones => {
             console.log('Presentaciones recibidas:', presentaciones);
@@ -186,7 +188,7 @@ function cargarPresentaciones() {
 }
 
 function cargarPresentacionesPorCerveza(idCerveza, selectElement) {
-    fetch(`${API_BASE_URL}/presentaciones/${idCerveza}`)
+    fetch(`${API_BASE_URL}/eventos/presentaciones/${idCerveza}`)
         .then(res => res.json())
         .then(presentaciones => {
             console.log(`Presentaciones para cerveza ${idCerveza}:`, presentaciones);
@@ -201,7 +203,7 @@ function cargarPresentacionesPorCerveza(idCerveza, selectElement) {
 }
 
 function cargarTiposActividad() {
-    fetch(`${API_BASE_URL}/tipos-actividad`)
+    fetch(`${API_BASE_URL}/eventos/tipos-actividad`)
         .then(res => res.json())
         .then(tipos => {
             console.log('Tipos de actividad recibidos:', tipos);
@@ -431,7 +433,7 @@ function agregarInventario() {
 }
 
 // --- Función para guardar evento completo ---
-export function guardarEvento() {
+function guardarEvento() {
     try {
         console.log('Iniciando guardado de evento...');
         
@@ -442,6 +444,7 @@ export function guardarEvento() {
             fecha_inicio: document.getElementById('evento-fecha-inicio').value,
             fecha_fin: document.getElementById('evento-fecha-fin').value,
             lugar_id_lugar: document.getElementById('evento-parroquia').value,
+            n_entradas_vendidas: parseInt(document.getElementById('evento-entradas-vendidas').value) || 0,
             precio_unitario_entrada: parseFloat(document.getElementById('evento-precio-entrada').value),
             tipo_evento_id: parseInt(document.getElementById('evento-tipo').value)
         };
@@ -543,7 +546,7 @@ export function guardarEvento() {
         console.log('Datos a enviar:', datosCompletos);
 
         // Enviar al backend
-        fetch(`${API_BASE_URL}/crear`, {
+        fetch(`${API_BASE_URL}/eventos/crear`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -590,6 +593,7 @@ function limpiarFormularioEvento() {
     document.getElementById('evento-estado').value = '';
     document.getElementById('evento-municipio').value = '';
     document.getElementById('evento-parroquia').value = '';
+    document.getElementById('evento-entradas-vendidas').value = '0';
     document.getElementById('evento-precio-entrada').value = '';
     document.getElementById('evento-tipo').value = '';
 
@@ -671,7 +675,10 @@ function limpiarFormularioEvento() {
         cargarCervezas();
         cargarTiposActividad();
     }, 100);
+<<<<<<< HEAD
 } 
+=======
+>>>>>>> respaldo-local
 }
 
 // =================================================================

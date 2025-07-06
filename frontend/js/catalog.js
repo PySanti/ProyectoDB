@@ -90,6 +90,19 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 function initCatalog() {
+    // Verificar si es venta de eventos y ajustar la interfaz
+    const eventoVenta = sessionStorage.getItem('eventoVenta');
+    if (eventoVenta) {
+        try {
+            const eventoData = JSON.parse(eventoVenta);
+            if (eventoData.tipo_venta === 'eventos') {
+                adjustInterfaceForEventos();
+            }
+        } catch (error) {
+            console.error('Error al parsear datos del evento:', error);
+        }
+    }
+    
     loadProducts();
     // No es necesario llamar a setupEventListeners aquí si usamos delegación en un contenedor estático
 }
@@ -143,7 +156,40 @@ function setupEventListeners() {
 async function loadProducts(page = 1, sortBy = 'relevance') {
     showLoading();
     try {
-        const url = new URL(`${API_BASE_URL}/productos`);
+        // Verificar si es venta de eventos
+        const eventoVenta = sessionStorage.getItem('eventoVenta');
+        let isEventoVenta = false;
+        let eventoData = null;
+        
+        if (eventoVenta) {
+            try {
+                eventoData = JSON.parse(eventoVenta);
+                isEventoVenta = eventoData.tipo_venta === 'eventos';
+            } catch (error) {
+                console.error('Error al parsear datos del evento:', error);
+            }
+        }
+        
+        let url;
+        if (isEventoVenta && eventoData) {
+            // Cargar inventario específico del evento
+            url = new URL(`${API_BASE_URL}/eventos/${eventoData.id_evento}/inventario`);
+            console.log('Cargando inventario del evento:', eventoData.id_evento);
+        } else {
+            // Determinar el tipo de venta y cargar el inventario correspondiente
+            const tipoVenta = getVentaType();
+            if (tipoVenta === 'web') {
+                url = new URL(`${API_BASE_URL}/productos/web`);
+                console.log('Cargando productos del inventario web');
+            } else if (tipoVenta === 'tienda') {
+                url = new URL(`${API_BASE_URL}/productos/tienda`);
+                console.log('Cargando productos del inventario de tienda física');
+            } else {
+                // Por defecto, usar el catálogo general
+                url = new URL(`${API_BASE_URL}/productos`);
+                console.log('Cargando productos del catálogo general (tipo no especificado)');
+            }
+        }
         
         // Construir los parámetros de la URL
         url.searchParams.append('sortBy', sortBy);
@@ -156,9 +202,9 @@ async function loadProducts(page = 1, sortBy = 'relevance') {
         const data = await response.json();
         
         // Actualizar estado con los datos del backend
-        catalogState.products = data.products;
-        catalogState.totalProducts = data.totalProducts;
-        catalogState.totalPages = data.totalPages;
+        catalogState.products = data.products || data.inventario || [];
+        catalogState.totalProducts = data.totalProducts || data.total || 0;
+        catalogState.totalPages = data.totalPages || 1;
 
         renderPage();
 
@@ -246,7 +292,7 @@ function updateProductCount() {
 
 /**
  * Agrega un producto al carrito en la base de datos.
- * Usa el usuario real si está logueado, o GUEST_USER_ID si no.
+ * Maneja ventas web/físicas y ventas de eventos de manera diferente.
  */
 async function addToCart(nombre_cerveza, nombre_presentacion, cantidad = 1) {
     if (!nombre_cerveza || !nombre_presentacion) {
@@ -254,6 +300,78 @@ async function addToCart(nombre_cerveza, nombre_presentacion, cantidad = 1) {
         return;
     }
 
+    // Verificar si es venta de eventos
+    const eventoVenta = sessionStorage.getItem('eventoVenta');
+    let isEventoVenta = false;
+    let eventoData = null;
+    
+    if (eventoVenta) {
+        try {
+            eventoData = JSON.parse(eventoVenta);
+            isEventoVenta = eventoData.tipo_venta === 'eventos';
+        } catch (error) {
+            console.error('Error al parsear datos del evento:', error);
+        }
+    }
+
+    if (isEventoVenta) {
+        // Lógica para ventas de eventos
+        await addToEventoCart(nombre_cerveza, nombre_presentacion, cantidad, eventoData);
+    } else {
+        // Lógica para ventas web/físicas (código original)
+        await addToRegularCart(nombre_cerveza, nombre_presentacion, cantidad);
+    }
+}
+
+/**
+ * Agrega un producto al carrito de eventos
+ */
+async function addToEventoCart(nombre_cerveza, nombre_presentacion, cantidad, eventoData) {
+    try {
+        // Obtener el cliente validado
+        const currentClientStr = sessionStorage.getItem('currentClient');
+        if (!currentClientStr) {
+            showNotification('Debe validar un cliente antes de agregar productos.', 'error');
+            return;
+        }
+
+        const client = JSON.parse(currentClientStr);
+        if (client.tipo !== 'natural') {
+            showNotification('Solo clientes naturales pueden comprar en eventos.', 'error');
+            return;
+        }
+
+        const response = await fetch(`${API_BASE_URL}/eventos/${eventoData.id_evento}/agregar-producto`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                id_cliente_natural: client.id,
+                nombre_cerveza: nombre_cerveza,
+                nombre_presentacion: nombre_presentacion,
+                cantidad: cantidad
+            }),
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            showNotification(result.message || 'Producto agregado al carrito del evento', 'success');
+            updateCartCounter();
+        } else {
+            showNotification(result.message || 'Error al agregar el producto al evento', 'error');
+        }
+    } catch (error) {
+        console.error('Error al agregar al carrito del evento:', error);
+        showNotification('Error de conexión al agregar al carrito del evento.', 'error');
+    }
+}
+
+/**
+ * Agrega un producto al carrito regular (web/físico)
+ */
+async function addToRegularCart(nombre_cerveza, nombre_presentacion, cantidad) {
     // Obtener el usuario actual
     const userStr = localStorage.getItem('user');
     let idUsuario = 1; // GUEST_USER_ID por defecto
@@ -337,18 +455,23 @@ function createProductCard(product) {
         <div class="product-body">
             <h4>Presentaciones:</h4>
             <div class="presentation-list">
-                ${product.presentaciones.map(p => `
-                    <div class="presentation-item">
-                        <input type="radio" 
-                               name="${radioGroupName}" 
-                               id="inv-${p.id_inventario}" 
-                               value="${p.id_inventario}" 
-                               ${p.stock_disponible === 0 ? 'disabled' : ''}>
-                        <label for="inv-${p.id_inventario}">
-                            ${p.nombre_presentacion}
-                        </label>
-                    </div>
-                `).join('')}
+                ${product.presentaciones.map(p => {
+                    const stockClass = p.stock_disponible === 0 ? '' : 
+                                     p.stock_disponible <= 5 ? 'low-stock' : '';
+                    return `
+                        <div class="presentation-item">
+                            <input type="radio" 
+                                   name="${radioGroupName}" 
+                                   id="inv-${p.id_inventario}" 
+                                   value="${p.id_inventario}" 
+                                   ${p.stock_disponible === 0 ? 'disabled' : ''}>
+                            <label for="inv-${p.id_inventario}">
+                                ${p.nombre_presentacion}
+                                <span class="stock-info ${stockClass}">(${p.stock_disponible} disponibles)</span>
+                            </label>
+                        </div>
+                    `;
+                }).join('')}
             </div>
         </div>
 
@@ -369,8 +492,33 @@ function createProductCard(product) {
             const price = parseFloat(selectedPresentation.precio_unitario) || 0;
             priceElement.textContent = `$${price.toFixed(2)}`;
             addToCartButton.disabled = false;
-            addToCartButton.textContent = 'Añadir al carrito';
-            addToCartButton.onclick = () => addToCart(product.nombre_cerveza, selectedPresentation.nombre_presentacion, 1);
+            
+            // Mostrar información de stock en el botón
+            const stockInfo = selectedPresentation.stock_disponible > 0 
+                ? `Añadir al carrito (${selectedPresentation.stock_disponible} disponibles)`
+                : 'Sin stock disponible';
+            
+            addToCartButton.textContent = stockInfo;
+            
+            // Aplicar estilos según el stock
+            if (selectedPresentation.stock_disponible <= 0) {
+                addToCartButton.disabled = true;
+                addToCartButton.textContent = 'Sin stock disponible';
+                addToCartButton.style.backgroundColor = '#dc3545';
+                addToCartButton.style.cursor = 'not-allowed';
+            } else if (selectedPresentation.stock_disponible <= 5) {
+                addToCartButton.disabled = false;
+                addToCartButton.style.backgroundColor = '#ffc107';
+                addToCartButton.style.color = '#212529';
+                addToCartButton.style.cursor = 'pointer';
+                addToCartButton.onclick = () => addToCart(product.nombre_cerveza, selectedPresentation.nombre_presentacion, 1);
+            } else {
+                addToCartButton.disabled = false;
+                addToCartButton.style.backgroundColor = '#28a745';
+                addToCartButton.style.color = 'white';
+                addToCartButton.style.cursor = 'pointer';
+                addToCartButton.onclick = () => addToCart(product.nombre_cerveza, selectedPresentation.nombre_presentacion, 1);
+            }
         }
     }
 
@@ -386,4 +534,38 @@ function createProductCard(product) {
     }
 
     return card;
+}
+
+/**
+ * Ajustar la interfaz para ventas de eventos
+ */
+function adjustInterfaceForEventos() {
+    // Cambiar el título del header
+    const logoTitle = document.getElementById('logo-title');
+    if (logoTitle) {
+        const eventoVenta = sessionStorage.getItem('eventoVenta');
+        if (eventoVenta) {
+            try {
+                const eventoData = JSON.parse(eventoVenta);
+                logoTitle.textContent = `ACAUCAB - Evento #${eventoData.id_evento}`;
+            } catch (error) {
+                console.error('Error al parsear datos del evento:', error);
+                logoTitle.textContent = 'ACAUCAB - Eventos';
+            }
+        }
+    }
+    
+    // Cambiar el título de la página
+    const pageTitle = document.querySelector('.page-title h1');
+    if (pageTitle) {
+        pageTitle.textContent = 'Catálogo de Productos del Evento';
+    }
+    
+    // Cambiar la descripción
+    const pageDescription = document.querySelector('.page-title p');
+    if (pageDescription) {
+        pageDescription.textContent = 'Selecciona los productos disponibles para este evento especial';
+    }
+    
+    console.log('Interfaz ajustada para ventas de eventos');
 } 
