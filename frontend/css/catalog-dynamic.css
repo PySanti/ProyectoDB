@@ -123,20 +123,49 @@
 
 /* Estilos para información de stock */
 .stock-info {
-    font-size: 12px;
-    color: #666;
-    font-weight: 400;
+    font-size: 11px;
+    font-weight: 500;
     margin-left: 8px;
-    font-style: italic;
+    padding: 2px 6px;
+    border-radius: 12px;
+    display: inline-block;
+    transition: all 0.3s ease;
+}
+
+/* Stock disponible */
+.presentation-item:has(input[type="radio"]:not([disabled])) .stock-info {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
 }
 
 .presentation-item:has(input[type="radio"]:checked) .stock-info {
-    color: #007bff;
-    font-weight: 500;
+    background-color: #28a745;
+    color: white;
+    border-color: #28a745;
+    transform: scale(1.05);
+    box-shadow: 0 2px 4px rgba(40, 167, 69, 0.3);
 }
 
+/* Stock agotado */
 .presentation-item:has(input[type="radio"]:disabled) .stock-info {
-    color: #999;
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+/* Indicador de stock bajo (menos de 5 unidades) */
+.stock-info.low-stock {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeaa7;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.7; }
+    100% { opacity: 1; }
 }
 
 .product-footer {

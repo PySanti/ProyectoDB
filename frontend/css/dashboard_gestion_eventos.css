@@ -595,6 +595,15 @@ body {
 .action-btn.register {
     background-color: var(--success-color);
     color: white;
+    border: 2px solid var(--success-color);
+    transition: all 0.3s ease;
+}
+
+.action-btn.register:hover {
+    background-color: #27ae60;
+    border-color: #27ae60;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(46, 204, 113, 0.3);
 }
 
 /* Notifications */

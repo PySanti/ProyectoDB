@@ -455,19 +455,23 @@ function createProductCard(product) {
         <div class="product-body">
             <h4>Presentaciones:</h4>
             <div class="presentation-list">
-                ${product.presentaciones.map(p => `
-                    <div class="presentation-item">
-                        <input type="radio" 
-                               name="${radioGroupName}" 
-                               id="inv-${p.id_inventario}" 
-                               value="${p.id_inventario}" 
-                               ${p.stock_disponible === 0 ? 'disabled' : ''}>
-                        <label for="inv-${p.id_inventario}">
-                            ${p.nombre_presentacion}
-                            <span class="stock-info">(${p.stock_disponible} disponibles)</span>
-                        </label>
-                    </div>
-                `).join('')}
+                ${product.presentaciones.map(p => {
+                    const stockClass = p.stock_disponible === 0 ? '' : 
+                                     p.stock_disponible <= 5 ? 'low-stock' : '';
+                    return `
+                        <div class="presentation-item">
+                            <input type="radio" 
+                                   name="${radioGroupName}" 
+                                   id="inv-${p.id_inventario}" 
+                                   value="${p.id_inventario}" 
+                                   ${p.stock_disponible === 0 ? 'disabled' : ''}>
+                            <label for="inv-${p.id_inventario}">
+                                ${p.nombre_presentacion}
+                                <span class="stock-info ${stockClass}">(${p.stock_disponible} disponibles)</span>
+                            </label>
+                        </div>
+                    `;
+                }).join('')}
             </div>
         </div>
 
@@ -496,12 +500,23 @@ function createProductCard(product) {
             
             addToCartButton.textContent = stockInfo;
             
-            // Deshabilitar botón si no hay stock
+            // Aplicar estilos según el stock
             if (selectedPresentation.stock_disponible <= 0) {
                 addToCartButton.disabled = true;
                 addToCartButton.textContent = 'Sin stock disponible';
+                addToCartButton.style.backgroundColor = '#dc3545';
+                addToCartButton.style.cursor = 'not-allowed';
+            } else if (selectedPresentation.stock_disponible <= 5) {
+                addToCartButton.disabled = false;
+                addToCartButton.style.backgroundColor = '#ffc107';
+                addToCartButton.style.color = '#212529';
+                addToCartButton.style.cursor = 'pointer';
+                addToCartButton.onclick = () => addToCart(product.nombre_cerveza, selectedPresentation.nombre_presentacion, 1);
             } else {
                 addToCartButton.disabled = false;
+                addToCartButton.style.backgroundColor = '#28a745';
+                addToCartButton.style.color = 'white';
+                addToCartButton.style.cursor = 'pointer';
                 addToCartButton.onclick = () => addToCart(product.nombre_cerveza, selectedPresentation.nombre_presentacion, 1);
             }
         }

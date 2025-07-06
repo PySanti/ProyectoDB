@@ -438,6 +438,15 @@ function setupGeneralEventListeners() {
 // MANEJO DE EVENTOS DEL CHECKOUT
 // =================================================================
 function setupCheckoutEventListeners() {
+    // Ocultar método de puntos para ventas web
+    const tipoVenta = getVentaType();
+    if (tipoVenta === 'web') {
+        const pointsMethod = document.getElementById('new-points-method');
+        if (pointsMethod) {
+            pointsMethod.style.display = 'none';
+        }
+    }
+    
     // Event listeners para checkboxes de métodos de pago
     const paymentCheckboxes = document.querySelectorAll('.payment-checkbox');
     paymentCheckboxes.forEach(checkbox => {
