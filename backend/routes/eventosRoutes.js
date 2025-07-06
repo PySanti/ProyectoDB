@@ -17,6 +17,18 @@ router.get('/:id_evento/carrito/:id_cliente_natural', eventosController.obtenerR
 // GET Obtener items del carrito de un evento
 router.get('/:id_evento/carrito/:id_cliente_natural/items', eventosController.obtenerItemsCarritoEvento);
 
+// PUT Actualizar cantidad de un producto en el carrito de eventos
+router.put('/:id_evento/actualizar-cantidad', eventosController.actualizarCantidadEvento);
+
+// DELETE Eliminar un producto del carrito de eventos
+router.delete('/:id_evento/eliminar-producto', eventosController.eliminarProductoEvento);
+
+// DELETE Limpiar todo el carrito de un evento
+router.delete('/:id_evento/limpiar-carrito/:id_cliente_natural', eventosController.limpiarCarritoEvento);
+
+// PUT Actualizar evento (entradas vendidas y precio)
+router.put('/:id_evento/actualizar', eventosController.actualizarEvento);
+
 // POST Procesar pago de un evento
 router.post('/:id_evento/procesar-pago', eventosController.procesarPagoEvento);
 

@@ -463,8 +463,8 @@ function setupCheckoutEventListeners() {
         const isCashMethod = paymentMethod.querySelector('#payment-cash') !== null;
         
         if (amountInput) {
-            // Deshabilitar por defecto
-            amountInput.disabled = true;
+        // Deshabilitar por defecto
+        amountInput.disabled = true;
         } else if (!isCashMethod) {
             // Solo mostrar warning si NO es el método de efectivo
             console.warn('Amount input no encontrado en payment method (no es efectivo):', paymentMethod);
@@ -475,14 +475,14 @@ function setupCheckoutEventListeners() {
         checkbox.addEventListener('change', function(event) {
             if (checkbox.checked) {
                 if (amountInput) {
-                    amountInput.disabled = false;
-                    amountInput.focus();
+                amountInput.disabled = false;
+                amountInput.focus();
                 }
                 if (details) details.classList.add('active');
             } else {
                 if (amountInput) {
-                    amountInput.disabled = true;
-                    amountInput.value = '';
+                amountInput.disabled = true;
+                amountInput.value = '';
                 }
                 if (details) details.classList.remove('active');
             }
@@ -748,53 +748,53 @@ async function handleRegularPlaceOrder() {
     console.log('Cliente actual:', getCurrentClient());
     
     try {
-        const compraId = await getCompraId();
+    const compraId = await getCompraId();
         console.log('Compra ID obtenido:', compraId);
         
-        if (!compraId) {
-            showNotification('No se pudo identificar la compra.', 'error');
+    if (!compraId) {
+        showNotification('No se pudo identificar la compra.', 'error');
+        return;
+    }
+    
+    // Verificar el tipo de venta
+    const tipoVenta = getVentaType();
+    console.log('Tipo de venta detectado:', tipoVenta);
+    let currentClient = null;
+    
+    if (tipoVenta === 'tienda') {
+        // Para compras físicas, necesitamos un cliente validado
+        currentClient = getCurrentClient();
+        if (!currentClient) {
+            showNotification('Debe validar un cliente antes de pagar.', 'error');
             return;
         }
-        
-        // Verificar el tipo de venta
-        const tipoVenta = getVentaType();
-        console.log('Tipo de venta detectado:', tipoVenta);
-        let currentClient = null;
-        
-        if (tipoVenta === 'tienda') {
-            // Para compras físicas, necesitamos un cliente validado
+    } else if (tipoVenta === 'web') {
+        // Para compras web, el usuario ya está autenticado, no necesitamos cliente adicional
+        console.log('Compra web - usuario autenticado:', getCurrentUserId());
+    } else {
+        // Si no hay tipo de venta establecido, intentar inferirlo
+        console.log('Tipo de venta no detectado, intentando inferir...');
+        const user = localStorage.getItem('user');
+        if (user) {
+            // Si hay usuario autenticado, asumir que es compra web
+            console.log('Usuario autenticado detectado, asumiendo compra web');
+        } else {
+            // Si no hay usuario, asumir que es compra física
+            console.log('No hay usuario autenticado, asumiendo compra física');
             currentClient = getCurrentClient();
             if (!currentClient) {
                 showNotification('Debe validar un cliente antes de pagar.', 'error');
                 return;
             }
-        } else if (tipoVenta === 'web') {
-            // Para compras web, el usuario ya está autenticado, no necesitamos cliente adicional
-            console.log('Compra web - usuario autenticado:', getCurrentUserId());
-        } else {
-            // Si no hay tipo de venta establecido, intentar inferirlo
-            console.log('Tipo de venta no detectado, intentando inferir...');
-            const user = localStorage.getItem('user');
-            if (user) {
-                // Si hay usuario autenticado, asumir que es compra web
-                console.log('Usuario autenticado detectado, asumiendo compra web');
-            } else {
-                // Si no hay usuario, asumir que es compra física
-                console.log('No hay usuario autenticado, asumiendo compra física');
-                currentClient = getCurrentClient();
-                if (!currentClient) {
-                    showNotification('Debe validar un cliente antes de pagar.', 'error');
-                    return;
-                }
-            }
         }
-        
-        const pagos = collectSelectedPayments();
-        if (pagos.length === 0) {
-            showNotification('Debe seleccionar al menos un método de pago con monto.', 'error');
-            return;
-        }
-        
+    }
+    
+    const pagos = collectSelectedPayments();
+    if (pagos.length === 0) {
+        showNotification('Debe seleccionar al menos un método de pago con monto.', 'error');
+        return;
+    }
+    
         const requestBody = { 
             compra_id: compraId, 
             pagos, 

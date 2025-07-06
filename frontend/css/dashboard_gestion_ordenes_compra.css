@@ -625,6 +625,35 @@ body {
     opacity: 0.8;
 }
 
+/* Estilos para botones de eventos */
+.action-btn.register {
+    background-color: #2ecc71 !important;
+    color: white !important;
+    border: 2px solid #2ecc71 !important;
+}
+
+.action-btn.register:hover {
+    background-color: #27ae60 !important;
+    border-color: #27ae60 !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 8px rgba(46, 204, 113, 0.3) !important;
+    opacity: 1 !important;
+}
+
+.action-btn.edit-event {
+    background-color: #3498db !important;
+    color: white !important;
+    border: 2px solid #3498db !important;
+}
+
+.action-btn.edit-event:hover {
+    background-color: #2980b9 !important;
+    border-color: #2980b9 !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3) !important;
+    opacity: 1 !important;
+}
+
 .action-btn:disabled {
     background-color: #cccccc;
     cursor: not-allowed;
@@ -991,6 +1020,27 @@ body {
     display: flex;
     justify-content: flex-end;
     gap: 10px;
+}
+
+/* Estilos específicos para el modal de editar evento */
+#editar-evento-modal .modal-content {
+    max-width: 500px;
+}
+
+#editar-evento-modal .form-group input[readonly] {
+    background-color: #f8f9fa;
+    color: #6c757d;
+    cursor: not-allowed;
+}
+
+#editar-evento-modal .form-group input[type="number"] {
+    font-family: 'Courier New', monospace;
+    font-weight: 500;
+}
+
+#editar-evento-modal .form-group input[type="number"]:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
 }
 
 /* Responsive */

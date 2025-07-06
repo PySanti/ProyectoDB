@@ -732,14 +732,40 @@ function renderEventos(eventos) {
             <td>${evento.n_entradas_vendidas || 0}</td>
             <td>${precioFormateado}</td>
             <td class="actions">
-                <button class="action-btn register" title="Registrar compra" onclick="registrarCompra(${evento.id_evento})">
+                <button class="action-btn register" title="Registrar compra" onclick="registrarCompra(${evento.id_evento})" style="background-color: #2ecc71 !important; color: white !important; border: 2px solid #2ecc71 !important;">
                     <i class="fas fa-shopping-cart"></i>
+                </button>
+                <button class="action-btn edit-event" title="Editar entradas y precio" onclick="editarEvento(${evento.id_evento}, '${evento.nombre}', ${evento.n_entradas_vendidas || 0}, ${evento.precio_unitario_entrada})" style="background-color: #3498db !important; color: white !important; border: 2px solid #3498db !important;">
+                    <i class="fas fa-edit"></i>
                 </button>
             </td>
         `;
         
         tbody.appendChild(row);
     });
+    
+    // Debug de estilos después de renderizar
+    setTimeout(() => {
+        if (typeof window.debugEstilos === 'function') {
+            window.debugEstilos();
+        }
+        
+        // Probar que la función editarEvento funciona
+        console.log('🧪 Probando función editarEvento...');
+        if (typeof editarEvento === 'function') {
+            console.log('✅ Función editarEvento está disponible');
+            
+            // Verificar que el modal existe
+            const modal = document.getElementById('editar-evento-modal');
+            if (modal) {
+                console.log('✅ Modal encontrado:', modal);
+            } else {
+                console.error('❌ Modal no encontrado!');
+            }
+        } else {
+            console.error('❌ Función editarEvento no está disponible');
+        }
+    }, 500);
 }
 
 // =================================================================
@@ -774,6 +800,88 @@ function registrarCompra(id) {
     
     // Redirigir a tiempo-muerto.html para validar cliente
     window.location.href = '../html/tiempo-muerto.html';
+}
+
+// =================================================================
+// EDITAR EVENTO
+// =================================================================
+function editarEvento(id, nombre, entradasVendidas, precioUnitario) {
+    console.log('Editando evento:', { id, nombre, entradasVendidas, precioUnitario });
+    
+    // Llenar el modal con los datos actuales
+    document.getElementById('editar-evento-id').value = id;
+    document.getElementById('editar-evento-nombre').value = nombre;
+    document.getElementById('editar-evento-entradas').value = entradasVendidas;
+    document.getElementById('editar-evento-precio').value = precioUnitario;
+    
+    // Mostrar el modal
+    document.getElementById('editar-evento-modal').classList.add('active');
+}
+
+// =================================================================
+// CERRAR MODAL DE EDICIÓN
+// =================================================================
+function cerrarModalEditar() {
+    document.getElementById('editar-evento-modal').classList.remove('active');
+    
+    // Limpiar el formulario
+    document.getElementById('editar-evento-form').reset();
+}
+
+// =================================================================
+// GUARDAR CAMBIOS DEL EVENTO
+// =================================================================
+async function guardarCambiosEvento() {
+    try {
+        const id = document.getElementById('editar-evento-id').value;
+        const entradasVendidas = parseInt(document.getElementById('editar-evento-entradas').value);
+        const precioUnitario = parseFloat(document.getElementById('editar-evento-precio').value);
+        
+        // Validaciones
+        if (entradasVendidas < 0) {
+            showNotification('El número de entradas vendidas no puede ser negativo', 'error');
+            return;
+        }
+        
+        if (precioUnitario < 0) {
+            showNotification('El precio unitario no puede ser negativo', 'error');
+            return;
+        }
+        
+        console.log('Guardando cambios del evento:', {
+            id_evento: id,
+            n_entradas_vendidas: entradasVendidas,
+            precio_unitario_entrada: precioUnitario
+        });
+        
+        const response = await fetch(`${API_BASE_URL}/eventos/${id}/actualizar`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                n_entradas_vendidas: entradasVendidas,
+                precio_unitario_entrada: precioUnitario
+            }),
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            showNotification(result.message || 'Evento actualizado correctamente', 'success');
+            
+            // Cerrar el modal
+            cerrarModalEditar();
+            
+            // Recargar la tabla de eventos
+            loadEventos();
+        } else {
+            showNotification(result.message || 'Error al actualizar el evento', 'error');
+        }
+    } catch (error) {
+        console.error('Error al guardar cambios del evento:', error);
+        showNotification('Error de conexión al actualizar el evento', 'error');
+    }
 }
 
 // =================================================================
@@ -828,11 +936,194 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+// Función de debug para verificar estilos
+window.debugEstilos = function() {
+    console.log('🔍 Debugging estilos de botones...');
+    
+    const botonesRegister = document.querySelectorAll('.action-btn.register');
+    const botonesEdit = document.querySelectorAll('.action-btn.edit-event');
+    
+    console.log('Botones register encontrados:', botonesRegister.length);
+    console.log('Botones edit encontrados:', botonesEdit.length);
+    
+    // Debug botones register
+    botonesRegister.forEach((boton, index) => {
+        const styles = window.getComputedStyle(boton);
+        console.log(`Botón register ${index + 1}:`, {
+            backgroundColor: styles.backgroundColor,
+            color: styles.color,
+            borderColor: styles.borderColor,
+            classes: boton.className
+        });
+        
+        // Aplicar estilos forzados si es necesario
+        boton.style.backgroundColor = '#2ecc71';
+        boton.style.color = 'white';
+        boton.style.border = '2px solid #2ecc71';
+    });
+    
+    // Debug botones edit
+    botonesEdit.forEach((boton, index) => {
+        const styles = window.getComputedStyle(boton);
+        console.log(`Botón edit ${index + 1}:`, {
+            backgroundColor: styles.backgroundColor,
+            color: styles.color,
+            borderColor: styles.borderColor,
+            classes: boton.className
+        });
+        
+        // Aplicar estilos forzados si es necesario
+        boton.style.backgroundColor = '#3498db';
+        boton.style.color = 'white';
+        boton.style.border = '2px solid #3498db';
+    });
+    
+    console.log('✅ Estilos aplicados forzadamente');
+};
+
+// Función de debug para verificar el modal
+window.debugModal = function() {
+    console.log('🔍 Debugging modal de edición...');
+    
+    const modal = document.getElementById('editar-evento-modal');
+    if (!modal) {
+        console.error('❌ Modal no encontrado!');
+        return;
+    }
+    
+    console.log('✅ Modal encontrado:', modal);
+    console.log('Clases del modal:', modal.className);
+    
+    // Verificar si el modal está visible
+    const styles = window.getComputedStyle(modal);
+    console.log('Estilos del modal:', {
+        display: styles.display,
+        visibility: styles.visibility,
+        opacity: styles.opacity,
+        zIndex: styles.zIndex
+    });
+    
+    // Intentar mostrar el modal manualmente
+    console.log('🔄 Intentando mostrar el modal...');
+    modal.classList.add('active');
+    
+    // Verificar después de mostrar
+    setTimeout(() => {
+        const newStyles = window.getComputedStyle(modal);
+        console.log('Estilos después de mostrar:', {
+            display: newStyles.display,
+            visibility: newStyles.visibility,
+            opacity: newStyles.opacity,
+            zIndex: newStyles.zIndex
+        });
+        
+        if (newStyles.visibility === 'visible') {
+            console.log('✅ Modal mostrado correctamente');
+        } else {
+            console.log('❌ Modal no se mostró correctamente');
+        }
+    }, 100);
+};
+
+// Función de debug para verificar la función editarEvento
+window.testEditarEvento = function() {
+    console.log('🧪 Probando función editarEvento...');
+    
+    try {
+        // Simular datos de prueba
+        const id = 1;
+        const nombre = 'Evento de Prueba';
+        const entradasVendidas = 50;
+        const precioUnitario = 25.00;
+        
+        console.log('Llamando editarEvento con:', { id, nombre, entradasVendidas, precioUnitario });
+        
+        if (typeof editarEvento === 'function') {
+            editarEvento(id, nombre, entradasVendidas, precioUnitario);
+            console.log('✅ Función editarEvento ejecutada');
+            
+            // Verificar que el modal se mostró
+            setTimeout(() => {
+                const modal = document.getElementById('editar-evento-modal');
+                if (modal && modal.classList.contains('active')) {
+                    console.log('✅ Modal activado correctamente');
+                } else {
+                    console.log('❌ Modal no se activó');
+                }
+            }, 100);
+        } else {
+            console.error('❌ Función editarEvento no está definida');
+        }
+    } catch (error) {
+        console.error('❌ Error al ejecutar editarEvento:', error);
+    }
+};
+
+// Función simple para probar el modal
+window.probarModal = function() {
+    console.log('🔍 Probando modal...');
+    
+    const modal = document.getElementById('editar-evento-modal');
+    if (modal) {
+        console.log('✅ Modal encontrado, intentando mostrar...');
+        
+        // Llenar con datos de prueba
+        document.getElementById('editar-evento-id').value = '1';
+        document.getElementById('editar-evento-nombre').value = 'Evento de Prueba';
+        document.getElementById('editar-evento-entradas').value = '50';
+        document.getElementById('editar-evento-precio').value = '25.00';
+        
+        modal.classList.add('active');
+        
+        // Verificar después de un momento
+        setTimeout(() => {
+            const styles = window.getComputedStyle(modal);
+            console.log('Estilos del modal:', {
+                visibility: styles.visibility,
+                opacity: styles.opacity,
+                display: styles.display
+            });
+            
+            if (styles.visibility === 'visible') {
+                console.log('✅ Modal mostrado correctamente');
+            } else {
+                console.log('❌ Modal no se mostró');
+            }
+        }, 100);
+    } else {
+        console.error('❌ Modal no encontrado');
+    }
+};
+
+// Función para probar hacer clic en un botón de editar real
+window.testClickEditButton = function() {
+    console.log('🔍 Probando clic en botón de editar...');
+    
+    const editButtons = document.querySelectorAll('.action-btn.edit-event');
+    console.log('Botones de editar encontrados:', editButtons.length);
+    
+    if (editButtons.length > 0) {
+        console.log('🖱️ Haciendo clic en el primer botón de editar...');
+        editButtons[0].click();
+        console.log('✅ Clic ejecutado');
+    } else {
+        console.log('❌ No se encontraron botones de editar');
+    }
+};
+
 // Exportar funciones para uso global
 window.loadEventos = loadEventos;
 window.registrarCompra = registrarCompra;
+window.editarEvento = editarEvento;
+window.cerrarModalEditar = cerrarModalEditar;
+window.guardarCambiosEvento = guardarCambiosEvento;
 window.initEventosForm = initEventosForm;
 window.guardarEvento = guardarEvento;
+window.probarModal = probarModal;
+window.testEditarEvento = testEditarEvento;
+window.debugEstilos = debugEstilos;
+window.debugModal = debugModal;
+window.testClickEditButton = testClickEditButton;
 
 // Log para verificar que el script se cargó
 console.log('✅ eventos.js cargado correctamente');
@@ -840,12 +1131,22 @@ console.log('✅ API_BASE_URL:', API_BASE_URL);
 console.log('✅ Funciones disponibles:', {
     loadEventos: typeof loadEventos,
     registrarCompra: typeof registrarCompra,
+    editarEvento: typeof editarEvento,
+    cerrarModalEditar: typeof cerrarModalEditar,
+    guardarCambiosEvento: typeof guardarCambiosEvento,
     initEventosForm: typeof initEventosForm,
-    guardarEvento: typeof guardarEvento
+    guardarEvento: typeof guardarEvento,
+    probarModal: typeof probarModal,
+    testEditarEvento: typeof testEditarEvento
 });
 console.log('✅ Funciones en window:', {
     loadEventos: typeof window.loadEventos,
     registrarCompra: typeof window.registrarCompra,
+    editarEvento: typeof window.editarEvento,
+    cerrarModalEditar: typeof window.cerrarModalEditar,
+    guardarCambiosEvento: typeof window.guardarCambiosEvento,
     initEventosForm: typeof window.initEventosForm,
-    guardarEvento: typeof window.guardarEvento
+    guardarEvento: typeof window.guardarEvento,
+    probarModal: typeof window.probarModal,
+    testEditarEvento: typeof window.testEditarEvento
 }); 

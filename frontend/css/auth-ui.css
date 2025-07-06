@@ -1,0 +1,82 @@
+/* =====================================================
+   ESTILOS PARA INTERFAZ DE AUTENTICACIÓN
+   ===================================================== */
+
+/* Variables CSS para consistencia */
+:root {
+    --primary-color: #c77b30;
+    --primary-dark: #a05a1a;
+    --text-color: #333333;
+    --transition: all 0.3s ease;
+}
+
+.login-btn {
+    padding: 8px 15px;
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 5px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--primary-color);
+}
+
+.login-btn:hover {
+    background-color: var(--primary-dark);
+    border-color: var(--primary-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(199, 123, 48, 0.3);
+}
+
+.login-btn.logged-in {
+    background-color: #dc3545;
+    border-color: #dc3545;
+}
+
+.login-btn.logged-in:hover {
+    background-color: #c82333;
+    border-color: #c82333;
+    box-shadow: 0 2px 4px rgba(220, 53, 69, 0.3);
+}
+
+.profile-btn {
+    font-size: 18px;
+    color: var(--text-color);
+    text-decoration: none;
+    transition: var(--transition);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px;
+    border-radius: 50%;
+    width: 36px;
+    height: 36px;
+}
+
+.profile-btn:hover {
+    color: var(--primary-color);
+    background-color: rgba(199, 123, 48, 0.1);
+}
+
+.profile-btn[style*="display: none"] {
+    display: none !important;
+}
+
+/* Animación para el cambio de estado */
+.login-btn {
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+} 

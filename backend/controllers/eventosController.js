@@ -761,4 +761,360 @@ exports.procesarPagoEvento = async (req, res) => {
     } finally {
         client.release();
     }
+};
+
+// =================================================================
+// ACTUALIZAR CANTIDAD EN CARRITO DE EVENTOS
+// =================================================================
+exports.actualizarCantidadEvento = async (req, res) => {
+    const client = await db.connect();
+    
+    try {
+        await client.query('BEGIN'); // Iniciar transacción
+        
+        const { id_evento } = req.params;
+        const { id_cliente_natural, id_cerveza, id_proveedor, id_tipo_cerveza, id_presentacion, nueva_cantidad } = req.body;
+        
+        console.log('Actualizando cantidad en evento:', {
+            id_evento,
+            id_cliente_natural,
+            id_cerveza,
+            id_proveedor,
+            id_tipo_cerveza,
+            id_presentacion,
+            nueva_cantidad
+        });
+        
+        // 1. Obtener la cantidad actual en el carrito
+        const cantidadActualResult = await client.query(`
+            SELECT cantidad 
+            FROM Detalle_Venta_Evento 
+            WHERE id_evento = $1 
+            AND id_cliente_natural = $2 
+            AND id_cerveza = $3 
+            AND id_proveedor = $4 
+            AND id_tipo_cerveza = $5 
+            AND id_presentacion = $6
+        `, [id_evento, id_cliente_natural, id_cerveza, id_proveedor, id_tipo_cerveza, id_presentacion]);
+        
+        if (cantidadActualResult.rows.length === 0) {
+            throw new Error('Producto no encontrado en el carrito del evento');
+        }
+        
+        const cantidadActual = cantidadActualResult.rows[0].cantidad;
+        const diferencia = nueva_cantidad - cantidadActual;
+        
+        // 2. Verificar stock disponible si se está aumentando la cantidad
+        if (diferencia > 0) {
+            const stockResult = await client.query(`
+                SELECT cantidad as stock_disponible
+                FROM Inventario_Evento_Proveedor 
+                WHERE id_evento = $1 
+                AND id_proveedor = $2 
+                AND id_tipo_cerveza = $3 
+                AND id_presentacion = $4 
+                AND id_cerveza = $5
+            `, [id_evento, id_proveedor, id_tipo_cerveza, id_presentacion, id_cerveza]);
+            
+            if (stockResult.rows.length === 0 || stockResult.rows[0].stock_disponible < diferencia) {
+                throw new Error(`Stock insuficiente. Solo hay ${stockResult.rows[0]?.stock_disponible || 0} unidades disponibles`);
+            }
+        }
+        
+        // 3. Actualizar la cantidad en el carrito
+        await client.query(`
+            UPDATE Detalle_Venta_Evento 
+            SET cantidad = $1 
+            WHERE id_evento = $2 
+            AND id_cliente_natural = $3 
+            AND id_cerveza = $4 
+            AND id_proveedor = $5 
+            AND id_tipo_cerveza = $6 
+            AND id_presentacion = $7
+        `, [nueva_cantidad, id_evento, id_cliente_natural, id_cerveza, id_proveedor, id_tipo_cerveza, id_presentacion]);
+        
+        // 4. Actualizar el inventario del evento
+        if (diferencia !== 0) {
+            await client.query(`
+                UPDATE Inventario_Evento_Proveedor 
+                SET cantidad = cantidad - $1 
+                WHERE id_evento = $2 
+                AND id_proveedor = $3 
+                AND id_tipo_cerveza = $4 
+                AND id_presentacion = $5 
+                AND id_cerveza = $6
+            `, [diferencia, id_evento, id_proveedor, id_tipo_cerveza, id_presentacion, id_cerveza]);
+        }
+        
+        // 5. Actualizar el total de la venta
+        const totalResult = await client.query(`
+            SELECT COALESCE(SUM(precio_unitario * cantidad), 0) as total
+            FROM Detalle_Venta_Evento 
+            WHERE id_evento = $1 AND id_cliente_natural = $2
+        `, [id_evento, id_cliente_natural]);
+        
+        await client.query(`
+            UPDATE Venta_Evento 
+            SET total = $1 
+            WHERE evento_id = $2 AND id_cliente_natural = $3
+        `, [totalResult.rows[0].total, id_evento, id_cliente_natural]);
+        
+        await client.query('COMMIT'); // Confirmar transacción
+        
+        res.json({
+            success: true,
+            message: `Cantidad actualizada a ${nueva_cantidad} unidades`,
+            total: totalResult.rows[0].total
+        });
+        
+    } catch (error) {
+        await client.query('ROLLBACK'); // Revertir transacción en caso de error
+        console.error('Error al actualizar cantidad en evento:', error);
+        res.status(500).json({
+            success: false,
+            message: error.message || 'Error al actualizar la cantidad'
+        });
+    } finally {
+        client.release();
+    }
+};
+
+// =================================================================
+// ELIMINAR PRODUCTO DEL CARRITO DE EVENTOS
+// =================================================================
+exports.eliminarProductoEvento = async (req, res) => {
+    const client = await db.connect();
+    
+    try {
+        await client.query('BEGIN'); // Iniciar transacción
+        
+        const { id_evento } = req.params;
+        const { id_cliente_natural, id_cerveza, id_proveedor, id_tipo_cerveza, id_presentacion } = req.body;
+        
+        console.log('Eliminando producto del evento:', {
+            id_evento,
+            id_cliente_natural,
+            id_cerveza,
+            id_proveedor,
+            id_tipo_cerveza,
+            id_presentacion
+        });
+        
+        // 1. Obtener la cantidad que estaba en el carrito
+        const cantidadResult = await client.query(`
+            SELECT cantidad 
+            FROM Detalle_Venta_Evento 
+            WHERE id_evento = $1 
+            AND id_cliente_natural = $2 
+            AND id_cerveza = $3 
+            AND id_proveedor = $4 
+            AND id_tipo_cerveza = $5 
+            AND id_presentacion = $6
+        `, [id_evento, id_cliente_natural, id_cerveza, id_proveedor, id_tipo_cerveza, id_presentacion]);
+        
+        if (cantidadResult.rows.length === 0) {
+            throw new Error('Producto no encontrado en el carrito del evento');
+        }
+        
+        const cantidad = cantidadResult.rows[0].cantidad;
+        
+        // 2. Eliminar el producto del carrito
+        await client.query(`
+            DELETE FROM Detalle_Venta_Evento 
+            WHERE id_evento = $1 
+            AND id_cliente_natural = $2 
+            AND id_cerveza = $3 
+            AND id_proveedor = $4 
+            AND id_tipo_cerveza = $5 
+            AND id_presentacion = $6
+        `, [id_evento, id_cliente_natural, id_cerveza, id_proveedor, id_tipo_cerveza, id_presentacion]);
+        
+        // 3. Restaurar el inventario del evento
+        await client.query(`
+            UPDATE Inventario_Evento_Proveedor 
+            SET cantidad = cantidad + $1 
+            WHERE id_evento = $2 
+            AND id_proveedor = $3 
+            AND id_tipo_cerveza = $4 
+            AND id_presentacion = $5 
+            AND id_cerveza = $6
+        `, [cantidad, id_evento, id_proveedor, id_tipo_cerveza, id_presentacion, id_cerveza]);
+        
+        // 4. Actualizar el total de la venta
+        const totalResult = await client.query(`
+            SELECT COALESCE(SUM(precio_unitario * cantidad), 0) as total
+            FROM Detalle_Venta_Evento 
+            WHERE id_evento = $1 AND id_cliente_natural = $2
+        `, [id_evento, id_cliente_natural]);
+        
+        await client.query(`
+            UPDATE Venta_Evento 
+            SET total = $1 
+            WHERE evento_id = $2 AND id_cliente_natural = $3
+        `, [totalResult.rows[0].total, id_evento, id_cliente_natural]);
+        
+        await client.query('COMMIT'); // Confirmar transacción
+        
+        res.json({
+            success: true,
+            message: 'Producto eliminado del carrito del evento',
+            total: totalResult.rows[0].total
+        });
+        
+    } catch (error) {
+        await client.query('ROLLBACK'); // Revertir transacción en caso de error
+        console.error('Error al eliminar producto del evento:', error);
+        res.status(500).json({
+            success: false,
+            message: error.message || 'Error al eliminar el producto'
+        });
+    } finally {
+        client.release();
+    }
+};
+
+// =================================================================
+// LIMPIAR CARRITO DE EVENTOS
+// =================================================================
+exports.limpiarCarritoEvento = async (req, res) => {
+    const client = await db.connect();
+    
+    try {
+        await client.query('BEGIN'); // Iniciar transacción
+        
+        const { id_evento, id_cliente_natural } = req.params;
+        
+        console.log('Limpiando carrito del evento:', { id_evento, id_cliente_natural });
+        
+        // 1. Obtener todos los productos en el carrito con sus cantidades
+        const productosResult = await client.query(`
+            SELECT id_cerveza, id_proveedor, id_tipo_cerveza, id_presentacion, cantidad
+            FROM Detalle_Venta_Evento 
+            WHERE id_evento = $1 AND id_cliente_natural = $2
+        `, [id_evento, id_cliente_natural]);
+        
+        // 2. Restaurar el inventario para cada producto
+        for (const producto of productosResult.rows) {
+            await client.query(`
+                UPDATE Inventario_Evento_Proveedor 
+                SET cantidad = cantidad + $1 
+                WHERE id_evento = $2 
+                AND id_proveedor = $3 
+                AND id_tipo_cerveza = $4 
+                AND id_presentacion = $5 
+                AND id_cerveza = $6
+            `, [
+                producto.cantidad,
+                id_evento,
+                producto.id_proveedor,
+                producto.id_tipo_cerveza,
+                producto.id_presentacion,
+                producto.id_cerveza
+            ]);
+        }
+        
+        // 3. Eliminar todos los productos del carrito
+        await client.query(`
+            DELETE FROM Detalle_Venta_Evento 
+            WHERE id_evento = $1 AND id_cliente_natural = $2
+        `, [id_evento, id_cliente_natural]);
+        
+        // 4. Actualizar el total de la venta a 0
+        await client.query(`
+            UPDATE Venta_Evento 
+            SET total = 0 
+            WHERE evento_id = $1 AND id_cliente_natural = $2
+        `, [id_evento, id_cliente_natural]);
+        
+        await client.query('COMMIT'); // Confirmar transacción
+        
+        res.json({
+            success: true,
+            message: 'Carrito del evento limpiado correctamente',
+            productos_restaurados: productosResult.rows.length
+        });
+        
+    } catch (error) {
+        await client.query('ROLLBACK'); // Revertir transacción en caso de error
+        console.error('Error al limpiar carrito del evento:', error);
+        res.status(500).json({
+            success: false,
+            message: error.message || 'Error al limpiar el carrito'
+        });
+    } finally {
+        client.release();
+    }
+};
+
+// =================================================================
+// ACTUALIZAR EVENTO (ENTRADAS VENDIDAS Y PRECIO)
+// =================================================================
+exports.actualizarEvento = async (req, res) => {
+    const client = await db.connect();
+    
+    try {
+        await client.query('BEGIN'); // Iniciar transacción
+        
+        const { id_evento } = req.params;
+        const { n_entradas_vendidas, precio_unitario_entrada } = req.body;
+        
+        console.log('Actualizando evento:', {
+            id_evento,
+            n_entradas_vendidas,
+            precio_unitario_entrada
+        });
+        
+        // Validaciones
+        if (n_entradas_vendidas < 0) {
+            throw new Error('El número de entradas vendidas no puede ser negativo');
+        }
+        
+        if (precio_unitario_entrada < 0) {
+            throw new Error('El precio unitario no puede ser negativo');
+        }
+        
+        // Verificar que el evento existe
+        const eventoResult = await client.query(`
+            SELECT id_evento, nombre 
+            FROM Evento 
+            WHERE id_evento = $1
+        `, [id_evento]);
+        
+        if (eventoResult.rows.length === 0) {
+            throw new Error('Evento no encontrado');
+        }
+        
+        const evento = eventoResult.rows[0];
+        
+        // Actualizar el evento
+        await client.query(`
+            UPDATE Evento 
+            SET n_entradas_vendidas = $1, 
+                precio_unitario_entrada = $2
+            WHERE id_evento = $3
+        `, [n_entradas_vendidas, precio_unitario_entrada, id_evento]);
+        
+        await client.query('COMMIT'); // Confirmar transacción
+        
+        res.json({
+            success: true,
+            message: `Evento "${evento.nombre}" actualizado correctamente`,
+            evento: {
+                id_evento: id_evento,
+                nombre: evento.nombre,
+                n_entradas_vendidas: n_entradas_vendidas,
+                precio_unitario_entrada: precio_unitario_entrada
+            }
+        });
+        
+    } catch (error) {
+        await client.query('ROLLBACK'); // Revertir transacción en caso de error
+        console.error('Error al actualizar evento:', error);
+        res.status(500).json({
+            success: false,
+            message: error.message || 'Error al actualizar el evento'
+        });
+    } finally {
+        client.release();
+    }
 }; 

@@ -318,28 +318,88 @@ function setupCartEventListeners() {
 
         console.log('checkoutBtn encontrado:', checkoutBtn);
 
-        if (removeBtn) {
-            const inventarioId = removeBtn.dataset.inventarioId;
-            if(confirm('¿Seguro que quieres eliminar este producto?')) removeFromCart(inventarioId);
-        } else if (decreaseBtn) {
-            const input = decreaseBtn.nextElementSibling;
-            const newQuantity = parseInt(input.value) - 1;
-            if (newQuantity > 0) {
-                updateQuantity(input.dataset.inventarioId, newQuantity);
-            } else {
-                if(confirm('¿Quieres eliminar este producto del carrito?')) removeFromCart(input.dataset.inventarioId);
+        // Verificar si es venta de eventos
+        const eventoVenta = sessionStorage.getItem('eventoVenta');
+        let isEventoVenta = false;
+        let eventoData = null;
+        
+        if (eventoVenta) {
+            try {
+                eventoData = JSON.parse(eventoVenta);
+                isEventoVenta = eventoData.tipo_venta === 'eventos';
+            } catch (error) {
+                console.error('Error al parsear datos del evento:', error);
             }
-        } else if (increaseBtn) {
-            const input = increaseBtn.previousElementSibling;
-            updateQuantity(input.dataset.inventarioId, parseInt(input.value) + 1);
-        } else if (clearCartBtn) {
-            if(confirm('¿Estás seguro de que quieres vaciar el carrito?')) clearCart();
-        } else if (checkoutBtn) {
-            console.log('Redirigiendo al checkout...');
-            // Redirigir al checkout
-            proceedToCheckout();
+        }
+
+        if (isEventoVenta && eventoData) {
+            // Lógica para eventos
+            if (removeBtn) {
+                const eventData = extractEventData(removeBtn);
+                if(confirm('¿Seguro que quieres eliminar este producto?')) {
+                    removeFromEventoCart(eventData);
+                }
+            } else if (decreaseBtn) {
+                const input = decreaseBtn.nextElementSibling;
+                const newQuantity = parseInt(input.value) - 1;
+                const eventData = extractEventData(decreaseBtn);
+                if (newQuantity > 0) {
+                    updateEventoQuantity(eventData, newQuantity);
+                } else {
+                    if(confirm('¿Quieres eliminar este producto del carrito?')) {
+                        removeFromEventoCart(eventData);
+                    }
+                }
+            } else if (increaseBtn) {
+                const input = increaseBtn.previousElementSibling;
+                const eventData = extractEventData(increaseBtn);
+                updateEventoQuantity(eventData, parseInt(input.value) + 1);
+            } else if (clearCartBtn) {
+                if(confirm('¿Estás seguro de que quieres vaciar el carrito?')) {
+                    clearEventoCart(eventoData);
+                }
+            } else if (checkoutBtn) {
+                console.log('Redirigiendo al checkout del evento...');
+                proceedToEventoCheckout();
+            }
+        } else {
+            // Lógica para carrito regular
+            if (removeBtn) {
+                const inventarioId = removeBtn.dataset.inventarioId;
+                if(confirm('¿Seguro que quieres eliminar este producto?')) removeFromCart(inventarioId);
+            } else if (decreaseBtn) {
+                const input = decreaseBtn.nextElementSibling;
+                const newQuantity = parseInt(input.value) - 1;
+                if (newQuantity > 0) {
+                    updateQuantity(input.dataset.inventarioId, newQuantity);
+                } else {
+                    if(confirm('¿Quieres eliminar este producto del carrito?')) removeFromCart(input.dataset.inventarioId);
+                }
+            } else if (increaseBtn) {
+                const input = increaseBtn.previousElementSibling;
+                updateQuantity(input.dataset.inventarioId, parseInt(input.value) + 1);
+            } else if (clearCartBtn) {
+                if(confirm('¿Estás seguro de que quieres vaciar el carrito?')) clearCart();
+            } else if (checkoutBtn) {
+                console.log('Redirigiendo al checkout...');
+                proceedToCheckout();
+            }
         }
     });
+}
+
+/**
+ * Extrae los datos del evento de un elemento del DOM
+ */
+function extractEventData(element) {
+    return {
+        id_evento: element.dataset.eventoId,
+        id_cliente_natural: element.dataset.clienteId,
+        id_cerveza: element.dataset.cervezaId,
+        id_proveedor: element.dataset.proveedorId,
+        id_tipo_cerveza: element.dataset.tipoCervezaId,
+        id_presentacion: element.dataset.presentacionId
+    };
 }
 
 // =================================================================
@@ -379,4 +439,121 @@ function removeFromCart(inventarioId) {
 
 function clearCart() {
     apiCall(`/carrito/limpiar/${GUEST_USER_ID}`, 'DELETE');
+}
+
+// =================================================================
+// FUNCIONES ESPECÍFICAS PARA EVENTOS
+// =================================================================
+
+/**
+ * Actualiza la cantidad de un producto en el carrito de eventos
+ * También actualiza el inventario del evento
+ */
+async function updateEventoQuantity(eventData, nueva_cantidad) {
+    try {
+        console.log('Actualizando cantidad en evento:', eventData, 'Nueva cantidad:', nueva_cantidad);
+        
+        const response = await fetch(`${API_BASE_URL}/eventos/${eventData.id_evento}/actualizar-cantidad`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                id_cliente_natural: eventData.id_cliente_natural,
+                id_cerveza: eventData.id_cerveza,
+                id_proveedor: eventData.id_proveedor,
+                id_tipo_cerveza: eventData.id_tipo_cerveza,
+                id_presentacion: eventData.id_presentacion,
+                nueva_cantidad: nueva_cantidad
+            }),
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            showNotification(result.message || 'Cantidad actualizada correctamente', 'success');
+            // Recargar el carrito para mostrar los cambios
+            loadCart();
+            updateCartCounter();
+        } else {
+            showNotification(result.message || 'Error al actualizar la cantidad', 'error');
+        }
+    } catch (error) {
+        console.error('Error al actualizar cantidad en evento:', error);
+        showNotification('Error de conexión al actualizar la cantidad', 'error');
+    }
+}
+
+/**
+ * Elimina un producto del carrito de eventos
+ * También restaura el inventario del evento
+ */
+async function removeFromEventoCart(eventData) {
+    try {
+        console.log('Eliminando producto del evento:', eventData);
+        
+        const response = await fetch(`${API_BASE_URL}/eventos/${eventData.id_evento}/eliminar-producto`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                id_cliente_natural: eventData.id_cliente_natural,
+                id_cerveza: eventData.id_cerveza,
+                id_proveedor: eventData.id_proveedor,
+                id_tipo_cerveza: eventData.id_tipo_cerveza,
+                id_presentacion: eventData.id_presentacion
+            }),
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            showNotification(result.message || 'Producto eliminado correctamente', 'success');
+            // Recargar el carrito para mostrar los cambios
+            loadCart();
+            updateCartCounter();
+        } else {
+            showNotification(result.message || 'Error al eliminar el producto', 'error');
+        }
+    } catch (error) {
+        console.error('Error al eliminar producto del evento:', error);
+        showNotification('Error de conexión al eliminar el producto', 'error');
+    }
+}
+
+/**
+ * Limpia todo el carrito de eventos
+ * También restaura todo el inventario del evento
+ */
+async function clearEventoCart(eventoData) {
+    try {
+        console.log('Limpiando carrito del evento:', eventoData);
+        
+        const currentClientStr = sessionStorage.getItem('currentClient');
+        if (!currentClientStr) {
+            showNotification('Error: Cliente no encontrado', 'error');
+            return;
+        }
+
+        const client = JSON.parse(currentClientStr);
+        
+        const response = await fetch(`${API_BASE_URL}/eventos/${eventoData.id_evento}/limpiar-carrito/${client.id}`, {
+            method: 'DELETE'
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+            showNotification(result.message || 'Carrito limpiado correctamente', 'success');
+            // Recargar el carrito para mostrar los cambios
+            loadCart();
+            updateCartCounter();
+        } else {
+            showNotification(result.message || 'Error al limpiar el carrito', 'error');
+        }
+    } catch (error) {
+        console.error('Error al limpiar carrito del evento:', error);
+        showNotification('Error de conexión al limpiar el carrito', 'error');
+    }
 }
