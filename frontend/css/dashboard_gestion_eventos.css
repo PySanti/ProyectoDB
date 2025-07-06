@@ -592,6 +592,161 @@ body {
     color: white;
 }
 
+.action-btn.register {
+    background-color: var(--success-color) !important;
+    color: white !important;
+    border: 2px solid var(--success-color) !important;
+    transition: all 0.3s ease !important;
+}
+
+.action-btn.register:hover {
+    background-color: #27ae60 !important;
+    border-color: #27ae60 !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 8px rgba(46, 204, 113, 0.3) !important;
+}
+
+/* Estilos adicionales para asegurar que el botón se vea verde */
+.actions .action-btn.register {
+    background-color: #2ecc71 !important;
+    color: white !important;
+    border-color: #2ecc71 !important;
+}
+
+.actions .action-btn.register:hover {
+    background-color: #27ae60 !important;
+    border-color: #27ae60 !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 8px rgba(46, 204, 113, 0.3) !important;
+}
+
+/* Estilos ultra específicos para forzar el color verde */
+.data-table .actions .action-btn.register,
+.data-table tbody .actions .action-btn.register,
+#eventos-section .data-table .actions .action-btn.register {
+    background-color: #2ecc71 !important;
+    color: white !important;
+    border: 2px solid #2ecc71 !important;
+    transition: all 0.3s ease !important;
+}
+
+.data-table .actions .action-btn.register:hover,
+.data-table tbody .actions .action-btn.register:hover,
+#eventos-section .data-table .actions .action-btn.register:hover {
+    background-color: #27ae60 !important;
+    border-color: #27ae60 !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 8px rgba(46, 204, 113, 0.3) !important;
+    opacity: 1 !important;
+}
+
+/* Estilos para el botón de editar evento */
+.data-table .actions .action-btn.edit-event,
+.data-table tbody .actions .action-btn.edit-event,
+#eventos-section .data-table .actions .action-btn.edit-event {
+    background-color: #3498db !important;
+    color: white !important;
+    border: 2px solid #3498db !important;
+    transition: all 0.3s ease !important;
+}
+
+.data-table .actions .action-btn.edit-event:hover,
+.data-table tbody .actions .action-btn.edit-event:hover,
+#eventos-section .data-table .actions .action-btn.edit-event:hover {
+    background-color: #2980b9 !important;
+    border-color: #2980b9 !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 8px rgba(52, 152, 219, 0.3) !important;
+    opacity: 1 !important;
+}
+
+/* Estilos específicos para el modal de editar evento */
+#editar-evento-modal .modal-content {
+    max-width: 500px;
+}
+
+#editar-evento-modal .form-group input[readonly] {
+    background-color: #f8f9fa;
+    color: #6c757d;
+    cursor: not-allowed;
+}
+
+#editar-evento-modal .form-group input[type="number"] {
+    font-family: 'Courier New', monospace;
+    font-weight: 500;
+}
+
+#editar-evento-modal .form-group input[type="number"]:focus {
+    border-color: #3498db;
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+/* Notifications */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    z-index: 1000;
+    max-width: 400px;
+    border-left: 4px solid var(--info-color);
+    animation: slideIn 0.3s ease;
+}
+
+.notification.success {
+    border-left-color: var(--success-color);
+}
+
+.notification.error {
+    border-left-color: var(--error-color);
+}
+
+.notification.warning {
+    border-left-color: var(--warning-color);
+}
+
+.notification-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 20px;
+}
+
+.notification-message {
+    flex: 1;
+    font-size: 14px;
+    color: var(--text-color);
+}
+
+.notification-close {
+    background: none;
+    border: none;
+    color: var(--light-text);
+    cursor: pointer;
+    padding: 5px;
+    margin-left: 10px;
+    border-radius: 3px;
+    transition: var(--transition);
+}
+
+.notification-close:hover {
+    background-color: #f0f0f0;
+    color: var(--text-color);
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
 .action-btn:hover {
     opacity: 0.8;
 }
