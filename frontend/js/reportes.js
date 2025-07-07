@@ -1521,6 +1521,38 @@ function inicializarReportes() {
 }
 
 // ========================================
+// NAVEGACIÓN ENTRE SECCIONES DEL DASHBOARD
+// ========================================
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Navegación entre secciones
+    const menuLinks = document.querySelectorAll('.sidebar-nav a[data-section]');
+    const sections = document.querySelectorAll('.content-section');
+    menuLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const sectionId = link.getAttribute('data-section');
+            // Ocultar todas las secciones
+            sections.forEach(sec => sec.style.display = 'none');
+            // Remover clase activa del menú
+            menuLinks.forEach(l => l.parentElement.classList.remove('active'));
+            // Mostrar la sección seleccionada
+            if (sectionId === 'dashboard-datos') {
+                document.getElementById('dashboard-datos-section').style.display = 'block';
+                window.inicializarDashboardDatos && window.inicializarDashboardDatos();
+            } else {
+                const sec = document.getElementById(sectionId + '-section');
+                if (sec) sec.style.display = 'block';
+            }
+            // Marcar como activo
+            link.parentElement.classList.add('active');
+        });
+    });
+    // Mostrar la primera sección por defecto
+    if (sections.length > 0) sections[0].style.display = 'block';
+});
+
+// ========================================
 // EXPORTACIÓN DE FUNCIONES
 // ========================================
 

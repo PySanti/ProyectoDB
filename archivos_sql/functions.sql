@@ -1,4 +1,4 @@
--- Login function
+﻿-- Login function
 
 CREATE OR REPLACE FUNCTION verificar_credenciales(
     p_correo VARCHAR,
@@ -1014,6 +1014,7 @@ DECLARE
     v_producto_ya_en_carrito BOOLEAN;
     v_cantidad_actual INTEGER;
     v_es_compra_web BOOLEAN;
+    v_id_empleado INTEGER;
 BEGIN
     -- Determinar si es compra web o tienda física
     v_es_compra_web := (p_id_cliente_natural IS NULL AND p_id_cliente_juridico IS NULL);
@@ -1024,6 +1025,21 @@ BEGIN
         IF NOT v_usuario_existe THEN
             RAISE EXCEPTION 'Usuario no encontrado';
         END IF;
+    END IF;
+
+    -- Obtener el empleado asociado al usuario (solo para compras físicas)
+    IF NOT v_es_compra_web THEN
+        SELECT empleado_id INTO v_id_empleado
+        FROM Usuario 
+        WHERE id_usuario = p_id_usuario;
+        
+        -- Si no hay empleado asociado, usar NULL (venta sin empleado)
+        IF v_id_empleado IS NULL THEN
+            v_id_empleado := NULL;
+        END IF;
+    ELSE
+        -- Para compras web, no hay empleado asociado
+        v_id_empleado := NULL;
     END IF;
 
     -- Verificar que el producto existe en inventario
@@ -1066,8 +1082,8 @@ BEGIN
         WHERE id_compra = v_id_compra AND id_inventario = p_id_inventario
         RETURNING cantidad INTO v_cantidad_actual;
     ELSE
-        INSERT INTO Detalle_Compra (precio_unitario, cantidad, id_inventario, id_compra)
-        VALUES (v_precio_unitario, p_cantidad, p_id_inventario, v_id_compra);
+        INSERT INTO Detalle_Compra (precio_unitario, cantidad, id_inventario, id_compra, id_empleado)
+        VALUES (v_precio_unitario, p_cantidad, p_id_inventario, v_id_compra, v_id_empleado);
     END IF;
     
     -- Actualizar el monto total de la compra
@@ -3177,6 +3193,26 @@ BEGIN
 END $$;
 
 -- =====================================================
+-- FUNCIÓN PARA INSERTAR NUEVA TASA DE CAMBIO
+-- =====================================================
+
+CREATE OR REPLACE FUNCTION insertar_nueva_tasa(
+    p_nombre VARCHAR(50),
+    p_valor DECIMAL
+)
+RETURNS TABLE(
+    id_tasa INTEGER,
+    nombre VARCHAR(50),
+    valor DECIMAL,
+    fecha DATE
+) AS $$
+BEGIN
+    RETURN QUERY
+    INSERT INTO Tasa (nombre, valor, fecha)
+    VALUES (p_nombre, p_valor, CURRENT_DATE)
+    RETURNING Tasa.id_tasa, Tasa.nombre, Tasa.valor, Tasa.fecha;
+END;
+$$ LANGUAGE plpgsql;
 -- FUNCIONES ROBUSTAS DE CARRITO CON ESTATUS (TIENDA FÍSICA, CLIENTE)
 -- =====================================================
 
@@ -3235,7 +3271,6 @@ $$ LANGUAGE plpgsql;
 -- =================================================================
 -- FUNCIONES PARA OPERACIONES POR COMPRA_ID
 -- =================================================================
-
 
 -- Obtener carrito por compra_id
 DROP FUNCTION IF EXISTS obtener_carrito_por_id(integer);
@@ -3306,88 +3341,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 -- =====================================================
--- ACTUALIZACIÓN DE FUNCIÓN PARA CORREGIR CONTADOR DE CARRITO
--- =====================================================
--- Esta función ahora solo cuenta items cuando la compra está "en proceso"
-
--- Obtener resumen por compra_id (CORREGIDA)
-DROP FUNCTION IF EXISTS obtener_resumen_carrito_por_id(integer);
-CREATE OR REPLACE FUNCTION obtener_resumen_carrito_por_id(p_id_compra INTEGER)
-RETURNS TABLE (
-    id_compra INTEGER,
-    total_productos INTEGER,
-    total_items INTEGER,
-    monto_total DECIMAL,
-    items_carrito JSON,
-    estatus_id INTEGER,
-    estatus_nombre VARCHAR(50)
-) AS $$
-DECLARE
-    v_items JSON;
-    v_estatus_id INTEGER;
-    v_estatus_nombre VARCHAR(50);
-    v_estatus_en_proceso_id INTEGER;
-BEGIN
-    -- Obtener el id del estatus "en proceso"
-    SELECT id_estatus INTO v_estatus_en_proceso_id 
-    FROM Estatus 
-    WHERE LOWER(nombre) = 'en proceso' 
-    LIMIT 1;
-
-    -- Obtener el estatus actual de la compra (el abierto)
-    SELECT ce.estatus_id_estatus, e.nombre INTO v_estatus_id, v_estatus_nombre
-    FROM Compra_Estatus ce
-    JOIN Estatus e ON ce.estatus_id_estatus = e.id_estatus
-    WHERE ce.compra_id_compra = p_id_compra
-      AND ce.fecha_hora_fin = '9999-12-31 23:59:59'
-    LIMIT 1;
-
-    -- Si la compra NO está en proceso, devolver 0 items
-    IF v_estatus_id IS NULL OR v_estatus_id != v_estatus_en_proceso_id THEN
-        RETURN QUERY
-        SELECT p_id_compra, 0::INTEGER, 0::INTEGER, 0::DECIMAL, '[]'::json, v_estatus_id, v_estatus_nombre;
-        RETURN;
-    END IF;
-
-    -- Solo obtener items si la compra está en proceso
-    SELECT json_agg(json_build_object(
-            'id_inventario', dc.id_inventario, 
-            'nombre_cerveza', c.nombre_cerveza,
-            'nombre_presentacion', p.nombre, 
-            'cantidad', dc.cantidad,
-            'precio_unitario', dc.precio_unitario, 
-            'subtotal', (dc.cantidad * dc.precio_unitario)
-        )) INTO v_items
-    FROM Detalle_Compra dc
-    JOIN Inventario i ON dc.id_inventario = i.id_inventario
-    JOIN Cerveza c ON i.id_cerveza = c.id_cerveza
-    JOIN Presentacion p ON i.id_presentacion = p.id_presentacion
-    WHERE dc.id_compra = p_id_compra;
-
-    -- Si no hay items, devolver valores por defecto
-    IF v_items IS NULL THEN
-        RETURN QUERY
-        SELECT p_id_compra, 0::INTEGER, 0::INTEGER, 0::DECIMAL, '[]'::json, v_estatus_id, v_estatus_nombre;
-        RETURN;
-    END IF;
-
-    -- Devolver el resumen con los items y el estatus
-    RETURN QUERY
-    SELECT 
-        p_id_compra,
-        COUNT(DISTINCT dc.id_inventario)::INTEGER,
-        COALESCE(SUM(dc.cantidad), 0)::INTEGER,
-        COALESCE(SUM(dc.cantidad * dc.precio_unitario), 0),
-        v_items,
-        v_estatus_id,
-        v_estatus_nombre
-    FROM Detalle_Compra dc
-    WHERE dc.id_compra = p_id_compra;
-END;
-$$ LANGUAGE plpgsql;
-
--- =====================================================
--- SISTEMA DE PUNTOS - FUNCIONES CORREGIDAS
+-- FUNCIÓN PARA OBTENER LA TASA ACTUAL DEL DÓLAR
 -- =====================================================
 
 -- Función para acumular puntos automáticamente al finalizar una compra física
@@ -3907,3 +3861,165 @@ BEGIN
     PERFORM agregar_al_carrito(p_id_usuario, v_id_inventario, p_cantidad, p_id_cliente_natural, p_id_cliente_juridico);
 END;
 $$;
+
+-- FUNCIÓN: get_ventas_por_empleado()
+-- =================================================================
+-- Descripción: Calcula las ventas por empleado en tiendas físicas, sumando cada compra solo una vez por empleado, e incluye una fila especial para ventas sin empleado
+-- Parámetros:
+--   - p_fecha_inicio: Fecha de inicio del análisis
+--   - p_fecha_fin: Fecha de fin del análisis
+-- Retorna: Ventas desglosadas por empleado y ventas sin empleado
+-- =================================================================
+CREATE OR REPLACE FUNCTION get_ventas_por_empleado(
+    p_fecha_inicio DATE,
+    p_fecha_fin DATE
+)
+RETURNS TABLE (
+    id_empleado INTEGER,            -- ID del empleado (NULL para sin empleado)
+    nombre_empleado VARCHAR,        -- Nombre completo del empleado o 'Ventas sin empleado'
+    cantidad_ventas INTEGER,        -- Número de ventas realizadas
+    monto_total_ventas DECIMAL,     -- Monto total de ventas
+    promedio_por_venta DECIMAL      -- Promedio de venta por transacción
+) AS $$
+BEGIN
+    RETURN QUERY
+    -- Ventas por empleado
+    SELECT
+        e.id_empleado,
+        CONCAT(
+            e.primer_nombre, ' ',
+            COALESCE(e.segundo_nombre, ''), ' ',
+            e.primer_apellido, ' ',
+            COALESCE(e.segundo_apellido, '')
+        )::VARCHAR as nombre_empleado,
+        COUNT(DISTINCT cu.id_compra)::INTEGER as cantidad_ventas,
+        COALESCE(SUM(cu.monto), 0) as monto_total_ventas,
+        CASE
+            WHEN COUNT(DISTINCT cu.id_compra) > 0 THEN
+                COALESCE(SUM(cu.monto), 0) / COUNT(DISTINCT cu.id_compra)
+            ELSE 0
+        END as promedio_por_venta
+    FROM Empleado e
+    JOIN (
+        SELECT DISTINCT dc.id_empleado, c.id_compra, pc.monto
+        FROM Detalle_Compra dc
+        JOIN Compra c ON dc.id_compra = c.id_compra
+        JOIN Pago_Compra pc ON c.id_compra = pc.compra_id
+        WHERE pc.fecha_hora BETWEEN p_fecha_inicio AND p_fecha_fin
+          AND c.tienda_fisica_id_tienda IS NOT NULL
+          AND dc.id_empleado IS NOT NULL
+    ) AS cu ON cu.id_empleado = e.id_empleado
+    GROUP BY e.id_empleado, e.primer_nombre, e.segundo_nombre, e.primer_apellido, e.segundo_apellido
+
+    UNION ALL
+
+    -- Ventas físicas sin empleado
+    SELECT
+        NULL as id_empleado,
+        'Ventas sin empleado'::VARCHAR as nombre_empleado,
+        COUNT(DISTINCT c.id_compra)::INTEGER as cantidad_ventas,
+        COALESCE(SUM(pc.monto), 0) as monto_total_ventas,
+        CASE
+            WHEN COUNT(DISTINCT c.id_compra) > 0 THEN
+                COALESCE(SUM(pc.monto), 0) / COUNT(DISTINCT c.id_compra)
+            ELSE 0
+        END as promedio_por_venta
+    FROM Compra c
+    JOIN Pago_Compra pc ON c.id_compra = pc.compra_id
+    LEFT JOIN Detalle_Compra dc ON c.id_compra = dc.id_compra
+    WHERE pc.fecha_hora BETWEEN p_fecha_inicio AND p_fecha_fin
+      AND c.tienda_fisica_id_tienda IS NOT NULL
+      AND (dc.id_empleado IS NULL OR dc.id_empleado = 0)
+    ;
+END;
+$$ LANGUAGE plpgsql;
+
+--------------------------------------------------------------------------------------------------------
+
+-- FUNCIÓN: get_tendencia_ventas (CORREGIDA)
+-- Devuelve cantidad de compras por mes (no montos)
+DROP FUNCTION IF EXISTS get_tendencia_ventas();
+CREATE OR REPLACE FUNCTION get_tendencia_ventas()
+RETURNS TABLE (
+    periodo VARCHAR,
+    total_ventas INTEGER
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+        TO_CHAR(pc.fecha_hora, 'YYYY-MM')::VARCHAR AS periodo,
+        COUNT(DISTINCT pc.compra_id)::INTEGER AS total_ventas
+    FROM Pago_Compra pc
+    GROUP BY periodo
+    ORDER BY periodo;
+END;
+$$ LANGUAGE plpgsql;
+
+-- FUNCIÓN: get_ventas_por_canal (CORREGIDA)
+-- Devuelve cantidad de compras por canal (no montos)
+DROP FUNCTION IF EXISTS get_ventas_por_canal();
+CREATE OR REPLACE FUNCTION get_ventas_por_canal()
+RETURNS TABLE (
+    canal VARCHAR,
+    total_ventas INTEGER
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+        CASE
+            WHEN c.tienda_fisica_id_tienda IS NOT NULL THEN 'Tienda Física'
+            WHEN c.tienda_web_id_tienda IS NOT NULL THEN 'Tienda Web'
+            ELSE 'Otro'
+        END::VARCHAR AS canal,
+        COUNT(DISTINCT c.id_compra)::INTEGER AS total_ventas
+    FROM Compra c
+    JOIN Pago_Compra pc ON c.id_compra = pc.compra_id
+    GROUP BY canal
+    ORDER BY canal;
+END;
+$$ LANGUAGE plpgsql;
+
+-- FUNCIÓN: get_top_productos_vendidos (RESTAURADA)
+-- Devuelve el top 10 de productos más vendidos por unidades
+DROP FUNCTION IF EXISTS get_top_productos_vendidos();
+CREATE OR REPLACE FUNCTION get_top_productos_vendidos()
+RETURNS TABLE (
+    producto VARCHAR,
+    unidades_vendidas BIGINT
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+        ce.nombre_cerveza AS producto,
+        SUM(dc.cantidad) AS unidades_vendidas
+    FROM Detalle_Compra dc
+    JOIN Inventario i ON dc.id_inventario = i.id_inventario
+    JOIN Cerveza ce ON i.id_cerveza = ce.id_cerveza
+    GROUP BY ce.nombre_cerveza
+    ORDER BY unidades_vendidas DESC
+    LIMIT 10;
+END;
+$$ LANGUAGE plpgsql;
+
+-- FUNCIÓN: get_stock_actual (RESTAURADA)
+-- Devuelve el stock disponible por producto y presentación
+DROP FUNCTION IF EXISTS get_stock_actual();
+CREATE OR REPLACE FUNCTION get_stock_actual()
+RETURNS TABLE (
+    producto VARCHAR,
+    presentacion VARCHAR,
+    stock_disponible BIGINT
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+        ce.nombre_cerveza AS producto,
+        p.nombre AS presentacion,
+        SUM(i.cantidad) AS stock_disponible
+    FROM Inventario i
+    JOIN Cerveza ce ON i.id_cerveza = ce.id_cerveza
+    JOIN Presentacion p ON i.id_presentacion = p.id_presentacion
+    GROUP BY ce.nombre_cerveza, p.nombre
+    ORDER BY producto, presentacion;
+END;
+$$ LANGUAGE plpgsql;
