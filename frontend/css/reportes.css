@@ -577,4 +577,226 @@
     .btn-descargar-pdf i {
         font-size: 18px;
     }
+}
+
+/* ================================================================= */
+/* ESTILOS PARA INDICADORES DE VENTAS */
+/* ================================================================= */
+
+/* Controles de reportes */
+.reportes-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #e9ecef;
+}
+
+.filtros-periodo {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.filtros-periodo label {
+    font-weight: 600;
+    color: #495057;
+    font-size: 14px;
+}
+
+.filtro-fecha {
+    padding: 8px 12px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 14px;
+    background: white;
+}
+
+.filtro-fecha:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+/* Contenedor de indicadores de ventas */
+.indicadores-ventas-container {
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Grid de indicadores */
+.indicadores-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+/* Tarjetas de indicadores */
+.indicador-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.indicador-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.indicador-card:nth-child(2) {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.indicador-card:nth-child(3) {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.indicador-card:nth-child(4) {
+    background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+}
+
+.indicador-card:nth-child(5) {
+    background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+}
+
+.indicador-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.indicador-header i {
+    font-size: 24px;
+    opacity: 0.9;
+}
+
+.indicador-header h4 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    opacity: 0.95;
+}
+
+.indicador-content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.indicador-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.indicador-item:last-child {
+    border-bottom: none;
+}
+
+.indicador-item.total {
+    border-top: 2px solid rgba(255,255,255,0.3);
+    padding-top: 12px;
+    margin-top: 8px;
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.indicador-label {
+    font-size: 14px;
+    opacity: 0.9;
+}
+
+.indicador-valor {
+    font-weight: 600;
+    font-size: 16px;
+    text-align: right;
+}
+
+.indicador-item.total .indicador-valor {
+    font-size: 18px;
+    font-weight: 700;
+}
+
+/* Gráficos de ventas */
+.graficos-ventas {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.grafico-venta-card {
+    background: white;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.grafico-venta-card h4 {
+    margin: 0 0 20px 0;
+    color: #495057;
+    font-size: 18px;
+    font-weight: 600;
+    text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .reportes-controls {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .filtros-periodo {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    
+    .indicadores-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .graficos-ventas {
+        grid-template-columns: 1fr;
+    }
+    
+    .grafico-venta-card {
+        padding: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .filtros-periodo {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .filtro-fecha {
+        width: 100%;
+    }
+    
+    .indicador-card {
+        padding: 15px;
+    }
+    
+    .indicador-header h4 {
+        font-size: 14px;
+    }
+    
+    .indicador-valor {
+        font-size: 14px;
+    }
 } 

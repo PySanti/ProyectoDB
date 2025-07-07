@@ -11,6 +11,14 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- html2pdf.js CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        .dashboard-card canvas {
+            max-width: 320px !important;
+            max-height: 220px !important;
+            margin: 0 auto !important;
+            display: block;
+        }
+    </style>
 </head>
 <body>
     <div class="dashboard-container">
@@ -36,6 +44,7 @@
                     <li><a href="#ordenes" data-section="ordenes"><i class="fas fa-clipboard-list"></i> Órdenes</a></li>
                     <li><a href="#eventos" data-section="eventos"><i class="fas fa-calendar-alt"></i> Eventos</a></li>
                     <li><a href="#reportes" data-section="reportes"><i class="fas fa-chart-bar"></i> Reportes</a></li>
+                    <li><a href="#dashboard-datos" data-section="dashboard-datos"><i class="fas fa-chart-line"></i> Dashboard de Datos</a></li>
                 </ul>
             </nav>
             <div class="sidebar-footer">
@@ -457,8 +466,224 @@
                                 <button id="comparativa-siguiente" class="paginacion-btn">Siguiente</button>
                             </div>
                         </div>
+                        
+
                     </div>
                     <button id="reporte-next" class="arrow-btn reporte-next"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </section>
+            <!-- Dashboard de Datos Section -->
+            <section class="content-section" id="dashboard-datos-section">
+                <div class="section-header">
+                    <h2 style="color: #ff6b35; font-size: 1.5em; margin-bottom: 0.5em;">📊 Dashboard de Indicadores</h2>
+                </div>
+                <div class="filtros-section" style="margin-bottom: 1em;">
+                    <div class="reportes-controls">
+                        <div class="filtros-periodo" style="display: flex; gap: 0.5em; align-items: center;">
+                            <label for="fecha-inicio-datos" style="font-size: 0.9em; color: #666;">Desde:</label>
+                            <input type="date" id="fecha-inicio-datos" class="filtro-fecha" style="padding: 0.3em; border: 1px solid #ddd; border-radius: 4px;">
+                            <label for="fecha-fin-datos" style="font-size: 0.9em; color: #666;">Hasta:</label>
+                            <input type="date" id="fecha-fin-datos" class="filtro-fecha" style="padding: 0.3em; border: 1px solid #ddd; border-radius: 4px;">
+                            <button id="aplicar-filtros-datos" class="primary-btn" style="background: #ff6b35; color: white; border: none; padding: 0.4em 1em; border-radius: 4px; cursor: pointer;">Aplicar</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Contenedor para exportar a PDF -->
+                <div id="graficos-section-datos">
+                <div class="indicadores-ventas-panel" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.8em; margin-bottom: 1.5em;">
+                    <div class="indicador-venta-card" id="card-ventas-tienda-fisica" style="background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%); border-radius: 8px; padding: 1em; box-shadow: 0 2px 8px rgba(255,107,53,0.2);">
+                        <div style="font-size: 0.85em; color: rgba(255,255,255,0.9); margin-bottom: 0.5em;">🏪 Tienda Física</div>
+                        <div id="valor-ventas-tienda-fisica" style="font-size: 1.5em; font-weight: 700; color: #fff; margin-bottom: 0.2em;">$0</div>
+                        <div id="sub-ventas-tienda-fisica" style="font-size: 0.75em; color: rgba(255,255,255,0.8);"></div>
+                    </div>
+                    <div class="indicador-venta-card" id="card-ventas-tienda-online" style="background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%); border-radius: 8px; padding: 1em; box-shadow: 0 2px 8px rgba(255,107,53,0.2);">
+                        <div style="font-size: 0.85em; color: rgba(255,255,255,0.9); margin-bottom: 0.5em;">🖥️ Tienda Online</div>
+                        <div id="valor-ventas-tienda-online" style="font-size: 1.5em; font-weight: 700; color: #fff; margin-bottom: 0.2em;">$0</div>
+                        <div id="sub-ventas-tienda-online" style="font-size: 0.75em; color: rgba(255,255,255,0.8);"></div>
+                    </div>
+                    <div class="indicador-venta-card" id="card-crecimiento-ventas" style="background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%); border-radius: 8px; padding: 1em; box-shadow: 0 2px 8px rgba(255,107,53,0.2);">
+                        <div style="font-size: 0.85em; color: rgba(255,255,255,0.9); margin-bottom: 0.5em;">📈 Crecimiento</div>
+                        <div id="valor-crecimiento-ventas" style="font-size: 1.3em; font-weight: 700; color: #fff; margin-bottom: 0.2em;">$0 (0%)</div>
+                        <div id="sub-crecimiento-ventas" style="font-size: 0.75em; color: rgba(255,255,255,0.8);"></div>
+                    </div>
+                    <div class="indicador-venta-card" id="card-ticket-promedio" style="background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%); border-radius: 8px; padding: 1em; box-shadow: 0 2px 8px rgba(255,107,53,0.2);">
+                        <div style="font-size: 0.85em; color: rgba(255,255,255,0.9); margin-bottom: 0.5em;">💰 Ticket Promedio</div>
+                        <div id="valor-ticket-promedio" style="font-size: 1.5em; font-weight: 700; color: #fff; margin-bottom: 0.2em;">$0</div>
+                        <div id="sub-ticket-promedio" style="font-size: 0.75em; color: rgba(255,255,255,0.8);"></div>
+                    </div>
+                    <div class="indicador-venta-card" id="card-volumen-vendido" style="background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%); border-radius: 8px; padding: 1em; box-shadow: 0 2px 8px rgba(255,107,53,0.2);">
+                        <div style="font-size: 0.85em; color: rgba(255,255,255,0.9); margin-bottom: 0.5em;">📦 Volumen Vendido</div>
+                        <div id="valor-volumen-vendido" style="font-size: 1.5em; font-weight: 700; color: #fff; margin-bottom: 0.2em;">0</div>
+                        <div id="sub-volumen-vendido" style="font-size: 0.75em; color: rgba(255,255,255,0.8);"></div>
+                    </div>
+                </div>
+                
+                <!-- Tabla de ventas por estilo más compacta -->
+                <div class="tabla-estilos-ventas" style="margin-bottom: 1.5em; background: #fff; border-radius: 8px; padding: 1em; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-left: 4px solid #ff6b35;">
+                    <h3 style="font-size: 1em; color: #ff6b35; margin-bottom: 0.8em; font-weight: 600;">🍺 Ventas por Estilo</h3>
+                    <table style="width: 100%; border-collapse: collapse; font-size: 0.9em;">
+                        <thead>
+                            <tr style="background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);">
+                                <th style="padding: 8px; text-align: left; color: #fff; font-weight: 600;">Estilo</th>
+                                <th style="padding: 8px; text-align: right; color: #fff; font-weight: 600;">Total Vendido</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody-ventas-estilo">
+                            <!-- Aquí se insertan los estilos -->
+                        </tbody>
+                        <tfoot>
+                            <tr style="background: #f8f9fa;">
+                                <td style="padding: 8px; font-weight: bold; color: #666;">Total</td>
+                                <td id="total-ventas-estilo" style="padding: 8px; text-align: right; font-weight: bold; color: #ff6b35;">0</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                
+                <!-- Indicadores de Clientes más compactos -->
+                <div class="indicadores-clientes-panel" style="margin-bottom: 1.5em; border-radius: 8px; background: linear-gradient(135deg, #28a745 0%, #20c997 100%); padding: 1em; box-shadow: 0 2px 8px rgba(40,167,69,0.2);">
+                    <h2 style="font-size: 1.1em; color: #fff; margin-bottom: 1em; font-weight: 600;">👥 Indicadores de Clientes</h2>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1em;">
+                        <div class="indicador-cliente-card" style="background: rgba(255,255,255,0.95); border-radius: 6px; padding: 1em; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                            <div style="font-size: 0.8em; color: #666; font-weight: 600; margin-bottom: 0.5em;">🆕 Nuevos Clientes</div>
+                            <div id="valor-clientes-nuevos" style="font-size: 1.5em; font-weight: 700; color: #28a745; margin-bottom: 0.2em;">0</div>
+                            <div id="sub-clientes-nuevos" style="font-size: 0.7em; color: #999;">Nuevos</div>
+                        </div>
+                        <div class="indicador-cliente-card" style="background: rgba(255,255,255,0.95); border-radius: 6px; padding: 1em; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                            <div style="font-size: 0.8em; color: #666; font-weight: 600; margin-bottom: 0.5em;">🔄 Recurrentes</div>
+                            <div id="valor-clientes-recurrentes" style="font-size: 1.5em; font-weight: 700; color: #28a745; margin-bottom: 0.2em;">0</div>
+                            <div id="sub-clientes-recurrentes" style="font-size: 0.7em; color: #999;">Recurrentes</div>
+                        </div>
+                        <div class="indicador-cliente-card" style="background: rgba(255,255,255,0.95); border-radius: 6px; padding: 1em; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                            <div style="font-size: 0.8em; color: #666; font-weight: 600; margin-bottom: 0.5em;">📊 Tasa de Retención</div>
+                            <div id="valor-tasa-retencion" style="font-size: 1.5em; font-weight: 700; color: #28a745; margin-bottom: 0.2em;">0%</div>
+                            <div id="sub-tasa-retencion" style="font-size: 0.7em; color: #999;">Porcentaje de retención</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Indicadores de Inventario más compactos -->
+                <div class="indicadores-inventario-panel" style="margin-bottom: 1.5em; border-radius: 8px; background: linear-gradient(135deg, #6f42c1 0%, #e83e8c 100%); padding: 1em; box-shadow: 0 2px 8px rgba(111,66,193,0.2);">
+                    <h2 style="font-size: 1.1em; color: #fff; margin-bottom: 1em; font-weight: 600;">📦 Indicadores de Inventario</h2>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1em;">
+                        <div class="indicador-inventario-card" style="background: rgba(255,255,255,0.95); border-radius: 6px; padding: 1em; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                            <div style="font-size: 0.8em; color: #666; font-weight: 600; margin-bottom: 0.5em;">🔄 Rotación</div>
+                            <div id="valor-rotacion-inventario" style="font-size: 1.5em; font-weight: 700; color: #6f42c1; margin-bottom: 0.2em;">0</div>
+                            <div id="sub-rotacion-inventario" style="font-size: 0.7em; color: #999;">Veces que se renueva</div>
+                        </div>
+                        <div class="indicador-inventario-card" style="background: rgba(255,255,255,0.95); border-radius: 6px; padding: 1em; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                            <div style="font-size: 0.8em; color: #666; font-weight: 600; margin-bottom: 0.5em;">💰 Valor Promedio</div>
+                            <div id="valor-promedio-inventario" style="font-size: 1.5em; font-weight: 700; color: #6f42c1; margin-bottom: 0.2em;">$0</div>
+                            <div id="sub-promedio-inventario" style="font-size: 0.7em; color: #999;">Valor promedio</div>
+                        </div>
+                        <div class="indicador-inventario-card" style="background: rgba(255,255,255,0.95); border-radius: 6px; padding: 1em; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                            <div style="font-size: 0.8em; color: #666; font-weight: 600; margin-bottom: 0.5em;">💸 Costo Vendido</div>
+                            <div id="valor-costo-vendido" style="font-size: 1.5em; font-weight: 700; color: #6f42c1; margin-bottom: 0.2em;">$0</div>
+                            <div id="sub-costo-vendido" style="font-size: 0.7em; color: #999;">Costo total vendido</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Tasa de Ruptura de Stock más compacta -->
+                <div class="indicadores-stock-panel" style="margin-bottom: 1.5em; border-radius: 8px; background: linear-gradient(135deg, #fd7e14 0%, #ffc107 100%); padding: 1em; box-shadow: 0 2px 8px rgba(253,126,20,0.2);">
+                    <h2 style="font-size: 1.1em; color: #fff; margin-bottom: 1em; font-weight: 600;">⚠️ Tasa de Ruptura de Stock</h2>
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1em;">
+                        <div class="indicador-stock-card" style="background: rgba(255,255,255,0.95); border-radius: 6px; padding: 1em; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                            <div style="font-size: 0.8em; color: #666; font-weight: 600; margin-bottom: 0.5em;">📉 Tasa de Ruptura</div>
+                            <div id="valor-tasa-ruptura" style="font-size: 1.5em; font-weight: 700; color: #dc3545; margin-bottom: 0.2em;">0%</div>
+                            <div id="sub-tasa-ruptura" style="font-size: 0.7em; color: #999;">Porcentaje sin stock</div>
+                        </div>
+                        <div class="indicador-stock-card" style="background: rgba(255,255,255,0.95); border-radius: 6px; padding: 1em; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                            <div style="font-size: 0.8em; color: #666; font-weight: 600; margin-bottom: 0.5em;">❌ Sin Stock</div>
+                            <div id="valor-productos-sin-stock" style="font-size: 1.5em; font-weight: 700; color: #dc3545; margin-bottom: 0.2em;">0</div>
+                            <div id="sub-productos-sin-stock" style="font-size: 0.7em; color: #999;">Productos agotados</div>
+                        </div>
+                        <div class="indicador-stock-card" style="background: rgba(255,255,255,0.95); border-radius: 6px; padding: 1em; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                            <div style="font-size: 0.8em; color: #666; font-weight: 600; margin-bottom: 0.5em;">📊 Total Productos</div>
+                            <div id="valor-total-productos" style="font-size: 1.5em; font-weight: 700; color: #fd7e14; margin-bottom: 0.2em;">0</div>
+                            <div id="sub-total-productos" style="font-size: 0.7em; color: #999;">Total en inventario</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Ventas por Empleado más compacta -->
+                <div class="indicadores-empleados-panel" style="margin-bottom: 1.5em; border-radius: 8px; background: linear-gradient(135deg, #17a2b8 0%, #20c997 100%); padding: 1em; box-shadow: 0 2px 8px rgba(23,162,184,0.2);">
+                    <h2 style="font-size: 1.1em; color: #fff; margin-bottom: 1em; font-weight: 600;">👨‍💼 Ventas por Empleado</h2>
+                    <div class="tabla-ventas-empleados" style="background: rgba(255,255,255,0.95); border-radius: 6px; padding: 1em; backdrop-filter: blur(10px);">
+                        <table style="width: 100%; border-collapse: collapse; font-size: 0.85em;">
+                            <thead>
+                                <tr style="background: linear-gradient(135deg, #17a2b8 0%, #20c997 100%);">
+                                    <th style="padding: 6px; text-align: left; color: #fff; font-weight: 600;">Empleado</th>
+                                    <th style="padding: 6px; text-align: right; color: #fff; font-weight: 600;">Cantidad</th>
+                                    <th style="padding: 6px; text-align: right; color: #fff; font-weight: 600;">Monto Total</th>
+                                    <th style="padding: 6px; text-align: right; color: #fff; font-weight: 600;">Promedio</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tbody-ventas-empleado">
+                                <!-- Aquí se insertan los empleados -->
+                            </tbody>
+                            <tfoot>
+                                <tr style="background: #f8f9fa;">
+                                    <td style="padding: 6px; font-weight: bold; color: #666;">Total</td>
+                                    <td style="padding: 6px; text-align: right; font-weight: bold; color: #666;">-</td>
+                                    <td id="total-ventas-empleados" style="padding: 6px; text-align: right; font-weight: bold; color: #17a2b8;">$0</td>
+                                    <td style="padding: 6px; text-align: right; font-weight: bold; color: #666;">-</td>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- DATOS RELEVANTES DEL NEGOCIO -->
+                <div class="datos-relevantes-panel" style="margin-bottom: 1.5em; border-radius: 8px; background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%); padding: 1em; box-shadow: 0 2px 8px rgba(255,107,53,0.2);">
+                    <h2 style="font-size: 1.1em; color: #fff; margin-bottom: 1em; font-weight: 600;">📊 Datos Relevantes del Negocio</h2>
+                    
+                    <!-- Gráficos más pequeños lado a lado -->
+                    <div class="dashboard-row" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1em; margin-bottom: 1.5em;">
+                        <div class="dashboard-card" style="background: #fff; border-radius: 6px; padding: 1em; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                            <h3 style="margin-bottom: 0.6em; color: #ff6b35; font-size: 0.9em; font-weight: 600;">📈 Tendencia de Ventas</h3>
+                            <canvas id="grafico-tendencia-ventas" height="60"></canvas>
+                        </div>
+                        <div class="dashboard-card" style="background: #fff; border-radius: 6px; padding: 1em; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                            <h3 style="margin-bottom: 0.6em; color: #ff6b35; font-size: 0.9em; font-weight: 600;">🛒 Ventas por Canal</h3>
+                            <canvas id="grafico-ventas-canal" height="60"></canvas>
+                        </div>
+                    </div>
+                    
+                    <!-- Tablas que ocupan todo el ancho -->
+                    <div class="dashboard-row" style="display: grid; grid-template-columns: 1fr; gap: 1em;">
+                        <div class="dashboard-card" style="background: #fff; border-radius: 6px; padding: 1em; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                            <h3 style="margin-bottom: 0.8em; color: #ff6b35; font-size: 0.9em; font-weight: 600;">🏆 Top 10 Productos Más Vendidos</h3>
+                            <div class="table-responsive" style="width: 100%; overflow-x: auto;">
+                                <table class="data-table" style="width: 100%; border-collapse: collapse; font-size: 0.85em;">
+                                    <thead>
+                                        <tr style="background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%); color: #fff;">
+                                            <th style="padding: 8px; text-align: left; font-weight: 600; width: 70%;">Producto</th>
+                                            <th style="padding: 8px; text-align: right; font-weight: 600; width: 30%;">Unidades Vendidas</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbody-top-productos"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="dashboard-card" style="background: #fff; border-radius: 6px; padding: 1em; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                            <h3 style="margin-bottom: 0.8em; color: #ff6b35; font-size: 0.9em; font-weight: 600;">📦 Inventario Actual</h3>
+                            <div class="table-responsive" style="width: 100%; overflow-x: auto;">
+                                <table class="data-table" style="width: 100%; border-collapse: collapse; font-size: 0.85em;">
+                                    <thead>
+                                        <tr style="background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%); color: #fff;">
+                                            <th style="padding: 8px; text-align: left; font-weight: 600; width: 40%;">Producto</th>
+                                            <th style="padding: 8px; text-align: left; font-weight: 600; width: 30%;">Presentación</th>
+                                            <th style="padding: 8px; text-align: right; font-weight: 600; width: 30%;">Stock Disponible</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tbody-stock-actual"></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Fin del contenedor para exportar a PDF -->
                 </div>
             </section>
         </main>
@@ -2800,7 +3025,8 @@
                 mostrarReporte(0);
             }, 100);
         }
-        
+
+
 
     });
     </script>
@@ -2843,6 +3069,7 @@
     <script src="../js/config.js"></script>
     <!-- Script para reportes -->
     <script src="../js/reportes.js"></script>
+    <script src="../js/dashboard_datos.js"></script>
     <!-- Script para eventos -->
     <script src="../js/eventos.js"></script>
 </body>
