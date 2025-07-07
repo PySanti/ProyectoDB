@@ -1419,3 +1419,18 @@ ALTER TABLE Pago_Compra ADD CONSTRAINT pago_compra_metodo_compra_unique UNIQUE (
 -- =====================================================
 -- FIN DE MODIFICACIONES
 -- =====================================================
+
+-- =================================================================
+-- AGREGAR RELACIÓN EMPLEADO-DETALLE_COMPRA PARA VENTAS POR EMPLEADO
+-- =================================================================
+-- Agregar columna id_empleado a Detalle_Compra para rastrear qué empleado realizó cada venta
+ALTER TABLE Detalle_Compra 
+ADD COLUMN id_empleado INTEGER;
+
+-- Agregar foreign key constraint
+ALTER TABLE Detalle_Compra
+ADD CONSTRAINT Detalle_Compra_Empleado_FK 
+FOREIGN KEY (id_empleado) REFERENCES Empleado(id_empleado);
+
+-- Crear índice para mejorar performance en consultas por empleado
+CREATE INDEX idx_detalle_compra_empleado ON Detalle_Compra(id_empleado);

@@ -3696,87 +3696,87 @@ INSERT INTO Compra (monto_total, id_cliente_juridico, id_cliente_natural, tienda
 -- Luego insertamos los detalles corregidos con IDs válidos
 
 -- Detalles para compras web (usando inventario de tienda web - IDs 55-108)
-INSERT INTO Detalle_Compra (precio_unitario, cantidad, id_inventario, id_compra) VALUES
+INSERT INTO Detalle_Compra (precio_unitario, cantidad, id_inventario, id_compra, id_empleado) VALUES
 -- Compra 1 (web) - monto_total: 150.00
-(25.00, 2, 55, 1),    -- Inventario tienda web para presentacion_cerveza 1
-(30.00, 2, 69, 1),    -- Inventario tienda web para presentacion_cerveza 15
-(40.00, 1, 84, 1),    -- Inventario tienda web para presentacion_cerveza 30
+(25.00, 2, 55, 1, 1),    -- Inventario tienda web para presentacion_cerveza 1
+(30.00, 2, 69, 1, 1),    -- Inventario tienda web para presentacion_cerveza 15
+(40.00, 1, 84, 1, 1),    -- Inventario tienda web para presentacion_cerveza 30
 
 -- Compra 2 (web) - monto_total: 180.00
-(35.00, 2, 59, 2),    -- Inventario tienda web para presentacion_cerveza 5
-(25.00, 3, 74, 2),    -- Inventario tienda web para presentacion_cerveza 20
-(35.00, 1, 89, 2),    -- Inventario tienda web para presentacion_cerveza 35
+(35.00, 2, 59, 2, 2),    -- Inventario tienda web para presentacion_cerveza 5
+(25.00, 3, 74, 2, 2),    -- Inventario tienda web para presentacion_cerveza 20
+(35.00, 1, 89, 2, 2),    -- Inventario tienda web para presentacion_cerveza 35
 
 -- Compra 5 (web) - monto_total: 160.00
-(25.00, 3, 66, 5),    -- Inventario tienda web para presentacion_cerveza 12
-(35.00, 2, 76, 5),    -- Inventario tienda web para presentacion_cerveza 22
-(15.00, 1, 94, 5),    -- Inventario tienda web para presentacion_cerveza 40
+(25.00, 3, 66, 5, 3),    -- Inventario tienda web para presentacion_cerveza 12
+(35.00, 2, 76, 5, 3),    -- Inventario tienda web para presentacion_cerveza 22
+(15.00, 1, 94, 5, 3),    -- Inventario tienda web para presentacion_cerveza 40
 
 -- Compra 6 (web) - monto_total: 140.00
-(20.00, 4, 61, 6),    -- Inventario tienda web para presentacion_cerveza 7
-(30.00, 1, 82, 6),    -- Inventario tienda web para presentacion_cerveza 28
-(30.00, 1, 96, 6),    -- Inventario tienda web para presentacion_cerveza 42
+(20.00, 4, 61, 6, 4),    -- Inventario tienda web para presentacion_cerveza 7
+(30.00, 1, 82, 6, 4),    -- Inventario tienda web para presentacion_cerveza 28
+(30.00, 1, 96, 6, 4),    -- Inventario tienda web para presentacion_cerveza 42
 
 -- Compra 9 (web) - monto_total: 130.00
-(25.00, 2, 70, 9),    -- Inventario tienda web para presentacion_cerveza 16
-(40.00, 1, 87, 9),    -- Inventario tienda web para presentacion_cerveza 33
-(40.00, 1, 93, 9),    -- Inventario tienda web para presentacion_cerveza 39
+(25.00, 2, 70, 9, 5),    -- Inventario tienda web para presentacion_cerveza 16
+(40.00, 1, 87, 9, 5),    -- Inventario tienda web para presentacion_cerveza 33
+(40.00, 1, 93, 9, 5),    -- Inventario tienda web para presentacion_cerveza 39
 
 -- Compra 10 (web) - monto_total: 210.00
-(35.00, 3, 65, 10),   -- Inventario tienda web para presentacion_cerveza 11
-(35.00, 2, 83, 10),   -- Inventario tienda web para presentacion_cerveza 29
-(35.00, 1, 100, 10),  -- Inventario tienda web para presentacion_cerveza 46
+(35.00, 3, 65, 10, 6),   -- Inventario tienda web para presentacion_cerveza 11
+(35.00, 2, 83, 10, 6),   -- Inventario tienda web para presentacion_cerveza 29
+(35.00, 1, 100, 10, 6),  -- Inventario tienda web para presentacion_cerveza 46
 
 -- Detalles para compras físicas (usando inventario de ubicaciones/anaqueles - IDs 109-162)
 -- Compra 3 (física) - monto_total: 120.00
-(20.00, 3, 109, 3),   -- Inventario ubicacion para presentacion_cerveza 1
-(30.00, 1, 123, 3),   -- Inventario ubicacion para presentacion_cerveza 15
-(30.00, 1, 138, 3),   -- Inventario ubicacion para presentacion_cerveza 30
+(20.00, 3, 109, 3, 7),   -- Inventario ubicacion para presentacion_cerveza 1
+(30.00, 1, 123, 3, 7),   -- Inventario ubicacion para presentacion_cerveza 15
+(30.00, 1, 138, 3, 7),   -- Inventario ubicacion para presentacion_cerveza 30
 
 -- Compra 4 (física) - monto_total: 200.00
-(40.00, 2, 116, 4),   -- Inventario ubicacion para presentacion_cerveza 8
-(30.00, 3, 126, 4),   -- Inventario ubicacion para presentacion_cerveza 18
-(30.00, 1, 143, 4),   -- Inventario ubicacion para presentacion_cerveza 35
+(40.00, 2, 116, 4, 8),   -- Inventario ubicacion para presentacion_cerveza 8
+(30.00, 3, 126, 4, 8),   -- Inventario ubicacion para presentacion_cerveza 18
+(30.00, 1, 143, 4, 8),   -- Inventario ubicacion para presentacion_cerveza 35
 
 -- Compra 7 (física) - monto_total: 190.00
-(35.00, 2, 112, 7),   -- Inventario ubicacion para presentacion_cerveza 4
-(40.00, 2, 130, 7),   -- Inventario ubicacion para presentacion_cerveza 22
-(40.00, 1, 146, 7),   -- Inventario ubicacion para presentacion_cerveza 38
+(35.00, 2, 112, 7, 9),   -- Inventario ubicacion para presentacion_cerveza 4
+(40.00, 2, 130, 7, 9),   -- Inventario ubicacion para presentacion_cerveza 22
+(40.00, 1, 146, 7, 9),   -- Inventario ubicacion para presentacion_cerveza 38
 
 -- Compra 8 (física) - monto_total: 170.00
-(30.00, 3, 117, 8),   -- Inventario ubicacion para presentacion_cerveza 9
-(25.00, 2, 134, 8),   -- Inventario ubicacion para presentacion_cerveza 26
-(30.00, 1, 150, 8),   -- Inventario ubicacion para presentacion_cerveza 44
+(30.00, 3, 117, 8, 10),   -- Inventario ubicacion para presentacion_cerveza 9
+(25.00, 2, 134, 8, 10),   -- Inventario ubicacion para presentacion_cerveza 26
+(30.00, 1, 150, 8, 10),   -- Inventario ubicacion para presentacion_cerveza 44
 
 -- Compra 11 (física) - monto_total: 145.00
-(30.00, 2, 127, 11),  -- Inventario ubicacion para presentacion_cerveza 19
-(25.00, 2, 144, 11),  -- Inventario ubicacion para presentacion_cerveza 36
-(35.00, 1, 159, 11),  -- Inventario ubicacion para presentacion_cerveza 51
+(30.00, 2, 127, 11, 1),  -- Inventario ubicacion para presentacion_cerveza 19
+(25.00, 2, 144, 11, 1),  -- Inventario ubicacion para presentacion_cerveza 36
+(35.00, 1, 159, 11, 1),  -- Inventario ubicacion para presentacion_cerveza 51
 
 -- Compra 12 (física) - monto_total: 175.00
-(35.00, 2, 121, 12),  -- Inventario ubicacion para presentacion_cerveza 13
-(30.00, 2, 139, 12),  -- Inventario ubicacion para presentacion_cerveza 31
-(45.00, 1, 155, 12),  -- Inventario ubicacion para presentacion_cerveza 47
+(35.00, 2, 121, 12, 2),  -- Inventario ubicacion para presentacion_cerveza 13
+(30.00, 2, 139, 12, 2),  -- Inventario ubicacion para presentacion_cerveza 31
+(45.00, 1, 155, 12, 2),  -- Inventario ubicacion para presentacion_cerveza 47
 
 -- Compra 15 (física) - monto_total: 135.00
-(25.00, 2, 131, 15),  -- Inventario ubicacion para presentacion_cerveza 23
-(30.00, 2, 147, 15),  -- Inventario ubicacion para presentacion_cerveza 39
-(25.00, 1, 162, 15),  -- Inventario ubicacion para presentacion_cerveza 54
+(25.00, 2, 131, 15, 3),  -- Inventario ubicacion para presentacion_cerveza 23
+(30.00, 2, 147, 15, 3),  -- Inventario ubicacion para presentacion_cerveza 39
+(25.00, 1, 162, 15, 3),  -- Inventario ubicacion para presentacion_cerveza 54
 
 -- Compra 16 (física) - monto_total: 195.00
-(35.00, 3, 135, 16),  -- Inventario ubicacion para presentacion_cerveza 27
-(30.00, 2, 149, 16),  -- Inventario ubicacion para presentacion_cerveza 41
-(30.00, 1, 114, 16),  -- Inventario ubicacion para presentacion_cerveza 6
+(35.00, 3, 135, 16, 4),  -- Inventario ubicacion para presentacion_cerveza 27
+(30.00, 2, 149, 16, 4),  -- Inventario ubicacion para presentacion_cerveza 41
+(30.00, 1, 114, 16, 4),  -- Inventario ubicacion para presentacion_cerveza 6
 
 -- Compra 19 (física) - monto_total: 205.00
-(35.00, 3, 114, 19),  -- Inventario ubicacion para presentacion_cerveza 6
-(40.00, 2, 116, 19),  -- Inventario ubicacion para presentacion_cerveza 8
-(20.00, 1, 118, 19),  -- Inventario ubicacion para presentacion_cerveza 10
+(35.00, 3, 114, 19, 5),  -- Inventario ubicacion para presentacion_cerveza 6
+(40.00, 2, 116, 19, 5),  -- Inventario ubicacion para presentacion_cerveza 8
+(20.00, 1, 118, 19, 5),  -- Inventario ubicacion para presentacion_cerveza 10
 
 -- Compra 20 (física) - monto_total: 150.00
-(30.00, 2, 120, 20),  -- Inventario ubicacion para presentacion_cerveza 12
-(30.00, 2, 122, 20),  -- Inventario ubicacion para presentacion_cerveza 14
-(30.00, 1, 124, 20);  -- Inventario ubicacion para presentacion_cerveza 16
+(30.00, 2, 120, 20, 6),  -- Inventario ubicacion para presentacion_cerveza 12
+(30.00, 2, 122, 20, 6),  -- Inventario ubicacion para presentacion_cerveza 14
+(30.00, 1, 124, 20, 6);  -- Inventario ubicacion para presentacion_cerveza 16
 
 
 INSERT INTO Compra_Estatus (compra_id_compra, estatus_id_estatus, fecha_hora_asignacion, fecha_hora_fin) VALUES
