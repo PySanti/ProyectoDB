@@ -4173,3 +4173,204 @@ BEGIN
     ORDER BY producto, presentacion;
 END;
 $$ LANGUAGE plpgsql;
+
+
+CREATE OR REPLACE FUNCTION get_indicadores_ventas(p_fecha_inicio date, p_fecha_fin date)
+RETURNS TABLE(ventas_totales_fisica numeric, ventas_totales_web numeric, ventas_totales_general numeric, crecimiento_ventas numeric, crecimiento_porcentual numeric, ticket_promedio numeric, volumen_unidades integer, estilo_mas_vendido character varying, unidades_estilo_mas_vendido integer)
+LANGUAGE plpgsql
+AS $function$
+DECLARE
+    -- Variables para calcular el perÃ­odo anterior automÃ¡ticamente
+    v_periodo_anterior_inicio DATE;
+    v_periodo_anterior_fin DATE;
+    v_ventas_periodo_actual DECIMAL;    -- Ventas del perÃ­odo solicitado
+    v_ventas_periodo_anterior DECIMAL;  -- Ventas del perÃ­odo anterior (para comparaciÃ³n)
+    v_duracion_dias INTEGER;            -- DuraciÃ³n en dÃ­as del perÃ­odoa co
+BEGIN
+    -- =================================================================
+    -- CÃLCULO DEL PERÃODO ANTERIOR AUTOMÃTICO
+    -- =================================================================
+    -- Calcula automÃ¡ticamente el perÃ­odo anterior con la misma duraciÃ³n co
+    -- Ejemplo: Si analizas del 1 al 31 de enero, compara con el 1 al 31 de diciembre
+    v_duracion_dias := p_fecha_fin - p_fecha_inicio;
+    v_periodo_anterior_fin := p_fecha_inicio - INTERVAL '1 day';
+    v_periodo_anterior_inicio := v_periodo_anterior_fin - (v_duracion_dias * INTERVAL '1 day');
+    -- =================================================================
+    -- OBTENCIÃ“N DE VENTAS DEL PERÃODO ACTUAL
+    -- =================================================================
+    -- Suma todas las ventas pagadas en el perio­odo solicitado
+    -- COALESCE: Si no hay ventas, retorna 0 en lugar de NULL
+    SELECT COALESCE(SUM(pc.monto), 0) INTO v_ventas_periodo_actual
+    FROM Pago_Compra pc
+    JOIN Compra c ON pc.compra_id = c.id_compra
+    WHERE pc.fecha_hora BETWEEN p_fecha_inicio AND p_fecha_fin;
+    -- =================================================================
+    -- OBTENCIon DE VENTAS DEL PERiODO ANTERIOR (PARA COMPARACIoN)
+    -- =================================================================
+    -- Suma todas las ventas pagadas en el periodo anterior calculado
+    SELECT COALESCE(SUM(pc.monto), 0) INTO v_ventas_periodo_anterior
+    FROM Pago_Compra pc
+    JOIN Compra c ON pc.compra_id = c.id_compra
+    WHERE pc.fecha_hora BETWEEN v_periodo_anterior_inicio AND v_periodo_anterior_fin;
+    -- =================================================================
+    -- CONSULTA PRINCIPAL CON CTEs (Common Table Expressions)
+    -- =================================================================
+    RETURN QUERY
+    WITH
+    -- =================================================================
+    -- CTE 1: VENTAS POR TIPO DE TIENDA
+    -- =================================================================
+    -- Clasifica las ventas entre tienda fÃ­sica y tienda web
+    -- Agrupa y suma las ventas por cada tipo de tienda
+    ventas_por_tienda AS (
+        SELECT
+            CASE
+                WHEN c.tienda_fisica_id_tienda IS NOT NULL THEN 'fisica'
+                WHEN c.tienda_web_id_tienda IS NOT NULL THEN 'web'
+            END as tipo_tienda,
+            SUM(pc.monto) as total_ventas
+        FROM Pago_Compra pc
+        JOIN Compra c ON pc.compra_id = c.id_compra
+        WHERE pc.fecha_hora BETWEEN p_fecha_inicio AND p_fecha_fin
+        GROUP BY tipo_tienda
+    ),
+    -- =================================================================
+    -- CTE 2: ESTILO DE CERVEZA MÃS VENDIDO
+    -- =================================================================
+    -- Encuentra el estilo de cerveza que mÃ¡s unidades vendiÃ³
+    -- JOINs necesarios para llegar desde Detalle_Compra hasta Tipo_Cerveza
+    ventas_por_estilo AS (
+        SELECT
+            tc.nombre as estilo_cerveza,
+            SUM(dc.cantidad) as unidades_vendidas
+        FROM Detalle_Compra dc
+        JOIN Compra c ON dc.id_compra = c.id_compra
+        JOIN Pago_Compra pc ON c.id_compra = pc.compra_id
+        JOIN Inventario i ON dc.id_inventario = i.id_inventario
+        JOIN Cerveza ce ON i.id_cerveza = ce.id_cerveza
+        JOIN Tipo_Cerveza tc ON ce.id_tipo_cerveza = tc.id_tipo_cerveza
+        WHERE pc.fecha_hora BETWEEN p_fecha_inicio AND p_fecha_fin
+        GROUP BY tc.id_tipo_cerveza, tc.nombre
+        ORDER BY unidades_vendidas DESC
+        LIMIT 1  -- Solo el estilo mÃ¡s vendido
+    ),
+    -- =================================================================
+    -- CTE 3: MeTRICAS GENERALES
+    -- =================================================================
+    -- Calcula el nÃºmero total de compras y unidades vendidas
+    -- Necesario para calcular el ticket promedio
+    metricas_generales AS (
+        SELECT
+            COUNT(DISTINCT c.id_compra) as total_compras,
+            SUM(dc.cantidad) as total_unidades
+        FROM Compra c
+        JOIN Pago_Compra pc ON c.id_compra = pc.compra_id
+        JOIN Detalle_Compra dc ON c.id_compra = dc.id_compra
+        WHERE pc.fecha_hora BETWEEN p_fecha_inicio AND p_fecha_fin
+    )
+    -- =================================================================
+    -- SELECT FINAL: COMBINA TODOS LOS RESULTADOS
+    -- =================================================================
+    SELECT
+        -- Ventas por tipo de tienda (usando subconsultas)
+        -- Ventas totales generales
+        v_ventas_periodo_actual as ventas_totales_general,
+        -- Crecimiento absoluto (diferencia con perÃ­odo anterior)
+        -- Crecimiento porcentual (evita divisiÃ³n por cero)
+        CASE
+            WHEN v_ventas_periodo_anterior > 0 THEN
+                (v_ventas_periodo_actual - v_ventas_periodo_anterior) / v_ventas_periodo_anterior
+            ELSE 0
+        END as crecimiento_porcentual,
+        -- Ticket promedio (ventas totales / nÃºmero de compras)
+        CASE
+            WHEN (SELECT total_compras FROM metricas_generales) > 0 THEN
+                v_ventas_periodo_actual / (SELECT total_compras FROM metricas_generales)
+            ELSE 0
+        END as ticket_promedio,
+
+END;
+$function$;
+
+CREATE OR REPLACE FUNCTION get_ventas_por_estilo(p_fecha_inicio date, p_fecha_fin date)
+RETURNS TABLE(estilo_cerveza character varying, unidades_vendidas integer, monto_total numeric, porcentaje_ventas numeric)
+LANGUAGE plpgsql
+AS $function$
+BEGIN
+    RETURN QUERY
+    WITH
+    -- =================================================================
+    -- CTE 1: VENTAS POR ESTILO DE CERVEZA
+    -- =================================================================
+    -- Agrupa las ventas por estilo de cerveza y calcula:
+    -- - Total de unidades vendidas por estilo
+    -- - Monto total en dinero por estilo
+    -- JOINs necesarios: Detalle_Compra -> Compra -> Pago_Compra -> Inventario -> Cerveza -> Tipo_Cerveza
+    ventas_estilos AS (
+        SELECT
+            tc.nombre as estilo,
+            SUM(dc.cantidad) as unidades,
+            SUM(dc.cantidad * dc.precio_unitario) as monto
+        FROM Detalle_Compra dc
+        JOIN Compra c ON dc.id_compra = c.id_compra
+        JOIN Pago_Compra pc ON c.id_compra = pc.compra_id
+        JOIN Inventario i ON dc.id_inventario = i.id_inventario
+        JOIN Cerveza ce ON i.id_cerveza = ce.id_cerveza
+        JOIN Tipo_Cerveza tc ON ce.id_tipo_cerveza = tc.id_tipo_cerveza
+        WHERE pc.fecha_hora BETWEEN p_fecha_inicio AND p_fecha_fin
+        GROUP BY tc.id_tipo_cerveza, tc.nombre
+    ),
+    -- =================================================================
+    -- CTE 2: TOTAL DE VENTAS GENERAL
+    -- =================================================================
+    -- Calcula el total general de ventas para calcular porcentajes
+    total_ventas AS (
+        SELECT SUM(monto) as total
+        FROM ventas_estilos
+    ),
+    -- =================================================================
+    -- SELECT FINAL: COMBINA VENTAS POR ESTILO CON TOTALES
+    -- =================================================================
+    SELECT
+        ve.estilo,
+        ve.unidades::INTEGER,
+        ve.monto,
+        -- Calcula el porcentaje de participaciÃ³n (evita divisiÃ³n por cero)
+        CASE
+            WHEN tv.total > 0 THEN (ve.monto / tv.total) * 100
+            ELSE 0
+        END as porcentaje
+    FROM ventas_estilos ve
+    CROSS JOIN total_ventas tv
+    ORDER BY ve.unidades DESC;  -- Ordena por unidades vendidas (mÃ¡s vendido primero)
+END;
+$function$;
+
+CREATE OR REPLACE FUNCTION get_ventas_por_periodo(p_fecha_inicio date, p_fecha_fin date, p_tipo_periodo character varying DEFAULT 'day'::character varying)
+RETURNS TABLE(periodo character varying, ventas_totales numeric, unidades_vendidas integer, numero_compras integer)
+LANGUAGE plpgsql
+AS $function$
+BEGIN
+    RETURN QUERY
+    SELECT
+        CASE p_tipo_periodo
+            WHEN 'day' THEN TO_CHAR(pc.fecha_hora, 'YYYY-MM-DD')
+            WHEN 'week' THEN TO_CHAR(pc.fecha_hora, 'YYYY-WW')
+            WHEN 'month' THEN TO_CHAR(pc.fecha_hora, 'YYYY-MM')
+        END as periodo,
+        -- =================================================================
+        -- MeTRICAS CALCULADAS POR PERÃODO
+        -- =================================================================
+        SUM(pc.monto) as ventas_totales,           -- Suma de todos los pagos
+        SUM(dc.cantidad)::INTEGER as unidades_vendidas,     -- Suma de todas las unidades vendidas
+        COUNT(DISTINCT c.id_compra)::INTEGER as numero_compras  -- Cuenta compras Ãºnicas
+    FROM Pago_Compra pc
+    JOIN Compra c ON pc.compra_id = c.id_compra
+    JOIN Detalle_Compra dc ON c.id_compra = dc.id_compra
+    WHERE pc.fecha_hora BETWEEN p_fecha_inicio AND p_fecha_fin
+    GROUP BY periodo  -- Agrupa por el perÃ­odo calculado
+    ORDER BY periodo; -- Ordena cronolÃ³gicamente
+END;
+$function$;
+
+
