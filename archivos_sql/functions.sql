@@ -4185,12 +4185,12 @@ DECLARE
     v_periodo_anterior_fin DATE;
     v_ventas_periodo_actual DECIMAL;    -- Ventas del perÃ­odo solicitado
     v_ventas_periodo_anterior DECIMAL;  -- Ventas del perÃ­odo anterior (para comparaciÃ³n)
-    v_duracion_dias INTEGER;            -- DuraciÃ³n en dÃ­as del perÃ­odoa co
+    v_duracion_dias INTEGER;            -- DuraciÃ³n en dÃ­as del perÃ­odo
 BEGIN
     -- =================================================================
     -- CÃLCULO DEL PERÃODO ANTERIOR AUTOMÃTICO
     -- =================================================================
-    -- Calcula automÃ¡ticamente el perÃ­odo anterior con la misma duraciÃ³n co
+    -- Calcula automÃ¡ticamente el perÃ­odo anterior con la misma duraciÃ³n
     -- Ejemplo: Si analizas del 1 al 31 de enero, compara con el 1 al 31 de diciembre
     v_duracion_dias := p_fecha_fin - p_fecha_inicio;
     v_periodo_anterior_fin := p_fecha_inicio - INTERVAL '1 day';
@@ -4273,13 +4273,16 @@ BEGIN
     -- =================================================================
     SELECT
         -- Ventas por tipo de tienda (usando subconsultas)
+        COALESCE((SELECT total_ventas FROM ventas_por_tienda WHERE tipo_tienda = 'fisica'), 0) as ventas_totales_fisica,
+        COALESCE((SELECT total_ventas FROM ventas_por_tienda WHERE tipo_tienda = 'web'), 0) as ventas_totales_web,
         -- Ventas totales generales
         v_ventas_periodo_actual as ventas_totales_general,
         -- Crecimiento absoluto (diferencia con perÃ­odo anterior)
+        (v_ventas_periodo_actual - v_ventas_periodo_anterior) as crecimiento_ventas,
         -- Crecimiento porcentual (evita divisiÃ³n por cero)
         CASE
             WHEN v_ventas_periodo_anterior > 0 THEN
-                (v_ventas_periodo_actual - v_ventas_periodo_anterior) / v_ventas_periodo_anterior
+                ((v_ventas_periodo_actual - v_ventas_periodo_anterior) / v_ventas_periodo_anterior) * 100
             ELSE 0
         END as crecimiento_porcentual,
         -- Ticket promedio (ventas totales / nÃºmero de compras)
@@ -4288,7 +4291,12 @@ BEGIN
                 v_ventas_periodo_actual / (SELECT total_compras FROM metricas_generales)
             ELSE 0
         END as ticket_promedio,
-
+        -- Volumen total de unidades vendidas (convertir bigint a integer)
+        COALESCE((SELECT total_unidades FROM metricas_generales), 0)::INTEGER as volumen_unidades,
+        -- Estilo mÃ¡s vendido y sus unidades (convertir bigint a integer)
+        COALESCE((SELECT estilo_cerveza FROM ventas_por_estilo), 'N/A') as estilo_mas_vendido,
+        COALESCE((SELECT unidades_vendidas FROM ventas_por_estilo), 0)::INTEGER as unidades_estilo_mas_vendido
+    END;
 END;
 $function$;
 
