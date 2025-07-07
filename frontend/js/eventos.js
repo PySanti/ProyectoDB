@@ -675,10 +675,6 @@ function limpiarFormularioEvento() {
         cargarCervezas();
         cargarTiposActividad();
     }, 100);
-<<<<<<< HEAD
-} 
-=======
->>>>>>> respaldo-local
 }
 
 // =================================================================

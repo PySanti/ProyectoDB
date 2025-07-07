@@ -465,7 +465,6 @@ function setupCheckoutEventListeners() {
         if (amountInput) {
         // Deshabilitar por defecto
         amountInput.disabled = true;
-<<<<<<< HEAD
         
         // Verificar si es el método de efectivo (que no tiene amount-input)
         const isCashMethod = paymentMethod.querySelector('#payment-cash') !== null;
@@ -473,8 +472,6 @@ function setupCheckoutEventListeners() {
         if (amountInput) {
         // Deshabilitar por defecto
         amountInput.disabled = true;
-=======
->>>>>>> respaldo-local
         } else if (!isCashMethod) {
             // Solo mostrar warning si NO es el método de efectivo
             console.warn('Amount input no encontrado en payment method (no es efectivo):', paymentMethod);
@@ -487,25 +484,16 @@ function setupCheckoutEventListeners() {
                 if (amountInput) {
                 amountInput.disabled = false;
                 amountInput.focus();
-<<<<<<< HEAD
                 if (amountInput) {
                 amountInput.disabled = false;
                 amountInput.focus();
-=======
->>>>>>> respaldo-local
                 }
                 if (details) details.classList.add('active');
             } else {
                 if (amountInput) {
                 amountInput.disabled = true;
                 amountInput.value = '';
-<<<<<<< HEAD
-                if (amountInput) {
-                amountInput.disabled = true;
-                amountInput.value = '';
-=======
->>>>>>> respaldo-local
-                }
+
                 if (details) details.classList.remove('active');
             }
             updatePaymentSummary();
@@ -817,7 +805,6 @@ async function handleRegularPlaceOrder() {
         return;
     }
     
-<<<<<<< HEAD
     try {
     // Verificar si es venta de eventos
     const eventoVenta = sessionStorage.getItem('eventoVenta');
