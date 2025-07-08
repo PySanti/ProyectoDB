@@ -4105,7 +4105,7 @@ BEGIN
             WHEN 'month' THEN TO_CHAR(pc.fecha_hora, 'YYYY-MM')
         END as periodo,
         -- =================================================================
-        -- MeTRICAS CALCULADAS POR PERÃODO
+        -- MeTRICAS CALCULAD/AS POR PERÃODO
         -- =================================================================
         SUM(pc.monto) as ventas_totales,           -- Suma de todos los pagos
         SUM(dc.cantidad)::INTEGER as unidades_vendidas,     -- Suma de todas las unidades vendidas
@@ -4183,9 +4183,6 @@ BEGIN
         WHERE pc.fecha_hora BETWEEN p_fecha_inicio AND p_fecha_fin
         GROUP BY cc.id_cliente
     )
-    -- =================================================================
-    -- SELECT FINAL: C├üLCULO DE KPIs
-    -- =================================================================
     SELECT
         -- CLIENTES NUEVOS: Aquellos cuya primera compra fue en el per├¡odo analizado
         (SELECT COUNT(*) FROM primeras_compras WHERE primera_compra BETWEEN p_fecha_inicio AND p_fecha_fin) AS clientes_nuevos,
@@ -4242,7 +4239,7 @@ BEGIN
         WHERE pc.fecha_hora BETWEEN p_fecha_inicio AND p_fecha_fin
     )
     -- =================================================================
-    -- SELECT FINAL: C├üLCULO DE ROTACI├ôN
+    -- SELECT FINAL: C├áLCULO DE ROTACI├ôN
     -- =================================================================
     SELECT
         CASE 
@@ -4294,7 +4291,7 @@ BEGIN
         WHERE cantidad > 0
     )
     -- =================================================================
-    -- SELECT FINAL: C├üLCULO DE TASA DE RUPTURA
+    -- SELECT FINAL: C├áLCULO DE TASA DE RUPTURA
     -- =================================================================
     SELECT
         CASE 
@@ -4310,5 +4307,65 @@ BEGIN
     CROSS JOIN total_productos_inv tpi;
 END;
 $$;
+
+-- Listar órdenes de compra
+CREATE OR REPLACE FUNCTION get_ordenes_compra()
+RETURNS TABLE(
+    id_compra INTEGER,
+    cliente TEXT,
+    tipo_cliente TEXT,
+    monto_total NUMERIC,
+    estatus TEXT
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+        c.id_compra,
+        COALESCE(cn.primer_nombre || ' ' || cn.primer_apellido, cj.razon_social) AS cliente,
+        CASE
+            WHEN cn.id_cliente_natural IS NOT NULL THEN 'Natural'
+            WHEN cj.id_cliente_juridico IS NOT NULL THEN 'Jurídico'
+            ELSE 'Desconocido'
+        END AS tipo_cliente,
+        c.monto_total,
+        ce.nombre_estatus
+    FROM compra c
+    LEFT JOIN cliente_natural cn ON c.id_cliente_natural = cn.id_cliente_natural
+    LEFT JOIN cliente_juridico cj ON c.id_cliente_juridico = cj.id_cliente_juridico
+    LEFT JOIN compra_estatus ce ON c.id_estatus = ce.id_estatus
+    ORDER BY c.id_compra DESC;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Detalle de una orden de compra
+CREATE OR REPLACE FUNCTION get_detalle_orden_compra(p_id_compra INTEGER)
+RETURNS TABLE(
+    producto TEXT,
+    cantidad INTEGER,
+    precio_unitario NUMERIC,
+    subtotal NUMERIC
+) AS $$
+BEGIN
+    RETURN QUERY
+    SELECT
+        COALESCE(ce.nombre_cerveza, 'Producto') || ' ' || COALESCE(pres.nombre, '') AS producto,
+        dc.cantidad,
+        dc.precio_unitario,
+        dc.cantidad * dc.precio_unitario AS subtotal
+    FROM detalle_compra dc
+    LEFT JOIN inventario i ON dc.id_inventario = i.id_inventario
+    LEFT JOIN cerveza ce ON i.id_cerveza = ce.id_cerveza
+    LEFT JOIN presentacion pres ON i.id_presentacion = pres.id_presentacion
+    WHERE dc.id_compra = p_id_compra;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Actualizar estatus de una orden de compra
+CREATE OR REPLACE FUNCTION update_estatus_orden_compra(p_id_compra INTEGER, p_id_estatus INTEGER)
+RETURNS VOID AS $$
+BEGIN
+    UPDATE compra SET id_estatus = p_id_estatus WHERE id_compra = p_id_compra;
+END;
+$$ LANGUAGE plpgsql;
 
 
