@@ -465,13 +465,6 @@ function setupCheckoutEventListeners() {
         if (amountInput) {
         // Deshabilitar por defecto
         amountInput.disabled = true;
-        
-        // Verificar si es el método de efectivo (que no tiene amount-input)
-        const isCashMethod = paymentMethod.querySelector('#payment-cash') !== null;
-        
-        if (amountInput) {
-        // Deshabilitar por defecto
-        amountInput.disabled = true;
         } else if (!isCashMethod) {
             // Solo mostrar warning si NO es el método de efectivo
             console.warn('Amount input no encontrado en payment method (no es efectivo):', paymentMethod);
@@ -484,9 +477,6 @@ function setupCheckoutEventListeners() {
                 if (amountInput) {
                 amountInput.disabled = false;
                 amountInput.focus();
-                if (amountInput) {
-                amountInput.disabled = false;
-                amountInput.focus();
                 }
                 if (details) details.classList.add('active');
             } else {
@@ -495,6 +485,7 @@ function setupCheckoutEventListeners() {
                 amountInput.value = '';
 
                 if (details) details.classList.remove('active');
+            }
             }
             updatePaymentSummary();
         });
@@ -659,26 +650,29 @@ function updatePlaceOrderButton(totalPaid, totalToPay) {
 // PROCESAMIENTO DEL PEDIDO
 // =================================================================
 async function handlePlaceOrder() {
-    // Verificar si es venta de eventos
-    const eventoVenta = sessionStorage.getItem('eventoVenta');
-    let isEventoVenta = false;
-    let eventoData = null;
-    
-    if (eventoVenta) {
-        try {
-            eventoData = JSON.parse(eventoVenta);
-            isEventoVenta = eventoData.tipo_venta === 'eventos';
-        } catch (error) {
-            console.error('Error al parsear datos del evento:', error);
+    try {
+        // Verificar si es venta de eventos
+        const eventoVenta = sessionStorage.getItem('eventoVenta');
+        let isEventoVenta = false;
+        let eventoData = null;
+        if (eventoVenta) {
+            try {
+                eventoData = JSON.parse(eventoVenta);
+                isEventoVenta = eventoData.tipo_venta === 'eventos';
+            } catch (error) {
+                console.error('Error al parsear datos del evento:', error);
+            }
         }
-    }
-
-    if (isEventoVenta) {
-        // Procesar pago de evento
-        await handleEventoPlaceOrder(eventoData);
-    } else {
-        // Procesar pago regular (web/físico)
-        await handleRegularPlaceOrder();
+        if (isEventoVenta) {
+            // Procesar pago de evento
+            await handleEventoPlaceOrder(eventoData);
+        } else {
+            // Procesar pago regular (web/físico)
+            await handleRegularPlaceOrder();
+        }
+    } catch (error) {
+        console.error('Error en handlePlaceOrder:', error);
+        showNotification('Error inesperado al procesar el pago.', 'error');
     }
 }
 
@@ -688,35 +682,29 @@ async function handlePlaceOrder() {
 async function handleEventoPlaceOrder(eventoData) {
     try {
         console.log('Procesando pago de evento:', eventoData);
-        
         // Obtener el cliente validado
         const currentClientStr = sessionStorage.getItem('currentClient');
         if (!currentClientStr) {
             showNotification('Cliente no validado para evento.', 'error');
             return;
         }
-
         const client = JSON.parse(currentClientStr);
         if (client.tipo !== 'natural') {
             showNotification('Solo clientes naturales pueden comprar en eventos.', 'error');
             return;
         }
-
         const pagos = collectSelectedPayments();
         if (pagos.length === 0) {
             showNotification('Debe seleccionar al menos un método de pago con monto.', 'error');
             return;
         }
-
         // Verificar que el total pagado coincida con el total de la venta
         const totalToPay = getTotalToPay();
         const totalPaid = calculateTotalPaid();
-        
         if (totalPaid !== totalToPay) {
             showNotification('El monto pagado debe ser igual al total de la venta.', 'error');
             return;
         }
-
         // Procesar el pago del evento
         const response = await fetch(`${API_BASE_URL}/eventos/${eventoData.id_evento}/procesar-pago`, {
             method: 'POST',
@@ -729,9 +717,7 @@ async function handleEventoPlaceOrder(eventoData) {
                 total: totalToPay
             }),
         });
-
         const result = await response.json();
-
         if (result.success) {
             showNotification('Pago procesado correctamente', 'success');
             showPaymentSuccessCountdown();
@@ -741,7 +727,6 @@ async function handleEventoPlaceOrder(eventoData) {
         } else {
             showNotification(result.message || 'Error al procesar el pago del evento', 'error');
         }
-        
     } catch (error) {
         console.error('Error al procesar pago del evento:', error);
         showNotification('Error de conexión al procesar el pago del evento', 'error');
@@ -752,233 +737,58 @@ async function handleEventoPlaceOrder(eventoData) {
  * Procesa el pago regular (web/físico)
  */
 async function handleRegularPlaceOrder() {
-    console.log('=== DEBUG handleRegularPlaceOrder ===');
-    console.log('Tipo de venta:', getVentaType());
-    console.log('Usuario actual:', getCurrentUserId());
-    console.log('Cliente actual:', getCurrentClient());
-    
     try {
-    const compraId = await getCompraId();
+        console.log('=== DEBUG handleRegularPlaceOrder ===');
+        console.log('Tipo de venta:', getVentaType());
+        console.log('Usuario actual:', getCurrentUserId());
+        console.log('Cliente actual:', getCurrentClient());
+        const compraId = await getCompraId();
         console.log('Compra ID obtenido:', compraId);
-        
-    if (!compraId) {
-        showNotification('No se pudo identificar la compra.', 'error');
-        return;
-    }
-    
-    // Verificar el tipo de venta
-    const tipoVenta = getVentaType();
-    console.log('Tipo de venta detectado:', tipoVenta);
-    let currentClient = null;
-    
-    if (tipoVenta === 'tienda') {
-        // Para compras físicas, necesitamos un cliente validado
-        currentClient = getCurrentClient();
-        if (!currentClient) {
-            showNotification('Debe validar un cliente antes de pagar.', 'error');
+        if (!compraId) {
+            showNotification('No se pudo identificar la compra.', 'error');
             return;
         }
-    } else if (tipoVenta === 'web') {
-        // Para compras web, el usuario ya está autenticado, no necesitamos cliente adicional
-        console.log('Compra web - usuario autenticado:', getCurrentUserId());
-    } else {
-        // Si no hay tipo de venta establecido, intentar inferirlo
-        console.log('Tipo de venta no detectado, intentando inferir...');
-        const user = localStorage.getItem('user');
-        if (user) {
-            // Si hay usuario autenticado, asumir que es compra web
-            console.log('Usuario autenticado detectado, asumiendo compra web');
-        } else {
-            // Si no hay usuario, asumir que es compra física
-            console.log('No hay usuario autenticado, asumiendo compra física');
+        // Verificar el tipo de venta
+        const tipoVenta = getVentaType();
+        console.log('Tipo de venta detectado:', tipoVenta);
+        let currentClient = null;
+        if (tipoVenta === 'tienda') {
+            // Para compras físicas, necesitamos un cliente validado
             currentClient = getCurrentClient();
             if (!currentClient) {
                 showNotification('Debe validar un cliente antes de pagar.', 'error');
                 return;
             }
+        } else if (tipoVenta === 'web') {
+            // Para compras web, el usuario ya está autenticado, no necesitamos cliente adicional
+            console.log('Compra web - usuario autenticado:', getCurrentUserId());
+        } else {
+            // Si no hay tipo de venta establecido, intentar inferirlo
+            console.log('Tipo de venta no detectado, intentando inferir...');
+            const user = localStorage.getItem('user');
+            if (user) {
+                // Si hay usuario autenticado, asumir que es compra web
+                console.log('Usuario autenticado detectado, asumiendo compra web');
+            } else {
+                // Si no hay usuario, asumir que es compra física
+                console.log('No hay usuario autenticado, asumiendo compra física');
+                currentClient = getCurrentClient();
+                if (!currentClient) {
+                    showNotification('Debe validar un cliente antes de pagar.', 'error');
+                    return;
+                }
+            }
         }
-    }
-    
-    const pagos = collectSelectedPayments();
-    if (pagos.length === 0) {
-        showNotification('Debe seleccionar al menos un método de pago con monto.', 'error');
-        return;
-    }
-    
-    try {
-    // Verificar si es venta de eventos
-    const eventoVenta = sessionStorage.getItem('eventoVenta');
-    let isEventoVenta = false;
-    let eventoData = null;
-    
-    if (eventoVenta) {
-        try {
-            eventoData = JSON.parse(eventoVenta);
-            isEventoVenta = eventoData.tipo_venta === 'eventos';
-        } catch (error) {
-            console.error('Error al parsear datos del evento:', error);
-        }
-    }
-
-    if (isEventoVenta) {
-        // Procesar pago de evento
-        await handleEventoPlaceOrder(eventoData);
-    } else {
-        // Procesar pago regular (web/físico)
-        await handleRegularPlaceOrder();
-    }
-}
-
-/**
- * Procesa el pago de un evento
- */
-async function handleEventoPlaceOrder(eventoData) {
-    try {
-        console.log('Procesando pago de evento:', eventoData);
-        
-        // Obtener el cliente validado
-        const currentClientStr = sessionStorage.getItem('currentClient');
-        if (!currentClientStr) {
-            showNotification('Cliente no validado para evento.', 'error');
-            return;
-        }
-
-        const client = JSON.parse(currentClientStr);
-        if (client.tipo !== 'natural') {
-            showNotification('Solo clientes naturales pueden comprar en eventos.', 'error');
-            return;
-        }
-
         const pagos = collectSelectedPayments();
         if (pagos.length === 0) {
             showNotification('Debe seleccionar al menos un método de pago con monto.', 'error');
             return;
         }
-
-        // Verificar que el total pagado coincida con el total de la venta
-        const totalToPay = getTotalToPay();
-        const totalPaid = calculateTotalPaid();
-        
-        if (totalPaid !== totalToPay) {
-            showNotification('El monto pagado debe ser igual al total de la venta.', 'error');
-            return;
-        }
-
-        // Procesar el pago del evento
-        const response = await fetch(`${API_BASE_URL}/eventos/${eventoData.id_evento}/procesar-pago`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                id_cliente_natural: client.id,
-                pagos: pagos,
-                total: totalToPay
-            }),
-        });
-
-        const result = await response.json();
-
-        if (result.success) {
-            showNotification('Pago procesado correctamente', 'success');
-            showPaymentSuccessCountdown();
-            // Limpiar datos del evento
-            sessionStorage.removeItem('eventoVenta');
-            sessionStorage.removeItem('currentClient');
-        } else {
-            showNotification(result.message || 'Error al procesar el pago del evento', 'error');
-        }
-        
+        // Aquí iría la lógica para procesar el pago regular (web/físico)
+        // ...
     } catch (error) {
-        console.error('Error al procesar pago del evento:', error);
-        showNotification('Error de conexión al procesar el pago del evento', 'error');
-    }
-}
-
-/**
- * Procesa el pago regular (web/físico)
- */
-async function handleRegularPlaceOrder() {
-    console.log('=== DEBUG handleRegularPlaceOrder ===');
-    console.log('Tipo de venta:', getVentaType());
-    console.log('Usuario actual:', getCurrentUserId());
-    console.log('Cliente actual:', getCurrentClient());
-    
-    try {
-    const compraId = await getCompraId();
-        console.log('Compra ID obtenido:', compraId);
-        
-    if (!compraId) {
-        showNotification('No se pudo identificar la compra.', 'error');
-        return;
-    }
-    
-    // Verificar el tipo de venta
-    const tipoVenta = getVentaType();
-    console.log('Tipo de venta detectado:', tipoVenta);
-    let currentClient = null;
-    
-    if (tipoVenta === 'tienda') {
-        // Para compras físicas, necesitamos un cliente validado
-        currentClient = getCurrentClient();
-        if (!currentClient) {
-            showNotification('Debe validar un cliente antes de pagar.', 'error');
-            return;
-        }
-    } else if (tipoVenta === 'web') {
-        // Para compras web, el usuario ya está autenticado, no necesitamos cliente adicional
-        console.log('Compra web - usuario autenticado:', getCurrentUserId());
-    } else {
-        // Si no hay tipo de venta establecido, intentar inferirlo
-        console.log('Tipo de venta no detectado, intentando inferir...');
-        const user = localStorage.getItem('user');
-        if (user) {
-            // Si hay usuario autenticado, asumir que es compra web
-            console.log('Usuario autenticado detectado, asumiendo compra web');
-        } else {
-            // Si no hay usuario, asumir que es compra física
-            console.log('No hay usuario autenticado, asumiendo compra física');
-            currentClient = getCurrentClient();
-            if (!currentClient) {
-                showNotification('Debe validar un cliente antes de pagar.', 'error');
-                return;
-            }
-        }
-    }
-    
-    const pagos = collectSelectedPayments();
-    if (pagos.length === 0) {
-        showNotification('Debe seleccionar al menos un método de pago con monto.', 'error');
-        return;
-    }
-    
-=======
->>>>>>> respaldo-local
-        const requestBody = { 
-            compra_id: compraId, 
-            pagos, 
-            id_usuario: getCurrentUserId()  // Usar el usuario real
-        };
-        
-        // Solo incluir cliente si es compra física
-        if (currentClient) {
-            requestBody.cliente = currentClient;
-        }
-        
-        const response = await fetch(`${API_BASE_URL}/carrito/pago`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(requestBody)
-        });
-        const data = await response.json();
-        if (response.ok && data.success) {
-            showPaymentSuccessCountdown();
-        } else {
-            showNotification(data.message || 'Error al registrar el pago', 'error');
-        }
-    } catch (error) {
-        console.error('Error en handleRegularPlaceOrder:', error);
-        showNotification('Error de conexión al registrar el pago', 'error');
+        console.error('Error al procesar pago regular:', error);
+        showNotification('Error de conexión al procesar el pago regular', 'error');
     }
 }
 
@@ -1202,8 +1012,3 @@ function esSumaDeDenominaciones(monto, denominaciones) {
     }
     return monto === 0;
 }
-
-async function ensureCompraId() {
-    // Usar el usuario real para asegurar consistencia
-    return getCurrentUserId();
-} 

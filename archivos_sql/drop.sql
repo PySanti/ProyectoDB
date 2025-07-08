@@ -255,3 +255,9 @@ DROP FUNCTION IF EXISTS get_cliente_natural_by_cedula(VARCHAR);
 DROP FUNCTION IF EXISTS get_cliente_natural_by_cedula(INTEGER);
 
 DROP FUNCTION IF EXISTS obtener_o_crear_carrito_usuario(integer);
+
+-- Eliminar funciones si existen
+DROP FUNCTION IF EXISTS get_volumen_por_presentacion(date, date);
+DROP FUNCTION IF EXISTS get_indicadores_clientes(date, date);
+DROP FUNCTION IF EXISTS get_rotacion_inventario(date, date);
+DROP FUNCTION IF EXISTS get_tasa_ruptura_stock(date, date);
