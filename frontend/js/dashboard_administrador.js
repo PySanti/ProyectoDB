@@ -77,7 +77,12 @@ document.addEventListener('DOMContentLoaded', function() {
                         <td>${orden.monto_total != null ? '$' + Number(orden.monto_total).toFixed(2) : ''}</td>
                         <td>${orden.estatus || ''}</td>
                         <td class="actions">
-                            <!-- Aquí puedes agregar botones para detalles o cambiar estatus -->
+                            <button class="action-btn view" title="Ver Detalles" onclick="verDetallesOrdenCompra(${orden.id_orden_compra || orden.id_compra})">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="action-btn assign-role" title="Cambiar Estatus" onclick="cambiarEstatusOrdenCompra(${orden.id_orden_compra || orden.id_compra})">
+                                <i class="fas fa-exchange-alt"></i>
+                            </button>
                         </td>
                     </tr>
                 `;
@@ -150,3 +155,105 @@ document.addEventListener('DOMContentLoaded', function() {
     // Inicialización al cargar la página SOLO una vez
     alternarTablasOrdenes(filterOrden.value);
 }); 
+
+// Agregar stubs globales para los botones de acción de órdenes de compra
+window.verDetallesOrdenCompra = async function(id) {
+    const modal = document.getElementById('modal-detalles-orden-compra');
+    const tbody = document.getElementById('detalles-orden-compra-tbody');
+    tbody.innerHTML = '<tr><td colspan="4">Cargando detalles...</td></tr>';
+    modal.classList.add('active');
+    try {
+        const res = await fetch(`http://localhost:3000/ordenes/compra/${id}/detalles`);
+        const detalles = await res.json();
+        if (!Array.isArray(detalles) || detalles.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="4">No se encontraron detalles para esta orden.</td></tr>';
+            return;
+        }
+        tbody.innerHTML = '';
+        detalles.forEach(item => {
+            tbody.innerHTML += `
+                <tr>
+                    <td>${item.producto || item.nombre_producto || ''}</td>
+                    <td>${item.cantidad || ''}</td>
+                    <td>${item.precio_unitario != null ? '$' + Number(item.precio_unitario).toFixed(2) : ''}</td>
+                    <td>${item.subtotal != null ? '$' + Number(item.subtotal).toFixed(2) : ''}</td>
+                </tr>
+            `;
+        });
+    } catch (err) {
+        tbody.innerHTML = '<tr><td colspan="4">Error al cargar los detalles.</td></tr>';
+    }
+};
+window.cambiarEstatusOrdenCompra = async function(id) {
+    const modal = document.getElementById('modal-cambiar-estatus-compra');
+    const lista = document.getElementById('estatus-lista-compra');
+    lista.innerHTML = 'Cargando estatus...';
+    modal.classList.add('active');
+    try {
+        const res = await fetch('http://localhost:3000/ordenes/estatus');
+        const estatus = await res.json();
+        if (!Array.isArray(estatus) || estatus.length === 0) {
+            lista.innerHTML = '<p>No hay estatus disponibles.</p>';
+            return;
+        }
+        lista.innerHTML = '';
+        estatus.forEach(e => {
+            const btn = document.createElement('button');
+            btn.className = 'estatus-btn';
+            btn.textContent = e.nombre;
+            btn.onclick = async () => {
+                // Actualizar estatus
+                try {
+                    const res = await fetch(`http://localhost:3000/ordenes/compra/${id}/estatus`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ id_estatus: e.id_estatus })
+                    });
+                    if (res.ok) {
+                        alert('Estatus actualizado a: ' + e.nombre);
+                        modal.classList.remove('active');
+                        cargarOrdenesCompra();
+                    } else {
+                        alert('Error al actualizar el estatus');
+                    }
+                } catch (err) {
+                    alert('Error de conexión al actualizar el estatus');
+                }
+            };
+            lista.appendChild(btn);
+        });
+    } catch (err) {
+        lista.innerHTML = '<p>Error al cargar los estatus.</p>';
+    }
+};
+// Cierre de modales de compra
+const closeDetallesCompra = document.getElementById('close-modal-detalles-orden-compra');
+if (closeDetallesCompra) {
+    closeDetallesCompra.onclick = function() {
+        document.getElementById('modal-detalles-orden-compra').classList.remove('active');
+    };
+}
+const closeEstatusCompra = document.getElementById('close-modal-cambiar-estatus-compra');
+if (closeEstatusCompra) {
+    closeEstatusCompra.onclick = function() {
+        document.getElementById('modal-cambiar-estatus-compra').classList.remove('active');
+    };
+} 
+
+// Permitir cerrar los modales de compra haciendo clic fuera del contenido
+const modalDetallesCompra = document.getElementById('modal-detalles-orden-compra');
+if (modalDetallesCompra) {
+    modalDetallesCompra.addEventListener('click', function(e) {
+        if (e.target === modalDetallesCompra) {
+            modalDetallesCompra.classList.remove('active');
+        }
+    });
+}
+const modalEstatusCompra = document.getElementById('modal-cambiar-estatus-compra');
+if (modalEstatusCompra) {
+    modalEstatusCompra.addEventListener('click', function(e) {
+        if (e.target === modalEstatusCompra) {
+            modalEstatusCompra.classList.remove('active');
+        }
+    });
+} 
