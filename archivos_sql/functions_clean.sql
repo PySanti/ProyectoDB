@@ -1,4 +1,5 @@
 ﻿-- Login function
+
 CREATE OR REPLACE FUNCTION verificar_credenciales(
     p_correo VARCHAR,
     p_contrasena VARCHAR
@@ -34,7 +35,9 @@ BEGIN
         AND u.contraseña = p_contrasena;
 END;
 $$ LANGUAGE plpgsql; 
+
 -- Create cliente juridico function
+
 CREATE OR REPLACE FUNCTION create_cliente_juridico(
   p_rif_cliente INTEGER,
   p_razon_social VARCHAR,
@@ -57,13 +60,16 @@ BEGIN
   ) VALUES (
     p_rif_cliente, p_razon_social, p_denominacion_comercial, p_capital_disponible, p_direccion_fiscal, p_direccion_fisica, p_pagina_web, p_lugar_id_lugar, p_lugar_id_lugar2
   ) RETURNING id_cliente INTO new_cliente_id;
+
   INSERT INTO Usuario (id_cliente_juridico, fecha_creacion, contraseña)
   VALUES (new_cliente_id,  CURRENT_DATE, p_contrasena)
   RETURNING id_usuario INTO new_usuario_id;
+
   INSERT INTO Correo (nombre, extension_pag, id_cliente_juridico)
   VALUES (split_part(p_correo, '@', 1), split_part(p_correo, '@', 2), new_cliente_id);
 END;
 $$ LANGUAGE plpgsql; 
+
 CREATE OR REPLACE FUNCTION create_cliente_natural(
   p_cedula INTEGER,
   p_rif INTEGER,
@@ -83,13 +89,16 @@ BEGIN
   INSERT INTO Cliente_Natural (ci_cliente, rif_cliente , primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, lugar_id_lugar, direccion)
   VALUES (p_cedula, p_rif, p_primer_nombre, p_segundo_nombre, p_primer_apellido, p_segundo_apellido, p_id_lugar, p_direccion_fisica)
   RETURNING id_cliente INTO new_cliente_id;
+
   INSERT INTO Usuario (id_cliente_natural, fecha_creacion, contraseña)
   VALUES (new_cliente_id,  CURRENT_DATE, p_contrasena)
   RETURNING id_usuario INTO new_usuario_id;
+
   INSERT INTO Correo (nombre, extension_pag, id_cliente_natural)
   VALUES (split_part(p_correo, '@', 1), split_part(p_correo, '@', 2), new_cliente_id);
 END;
 $$ LANGUAGE plpgsql; 
+
 CREATE OR REPLACE FUNCTION create_proveedor(
   p_razon_social VARCHAR,
   p_denominacion VARCHAR,
@@ -109,13 +118,16 @@ BEGIN
   INSERT INTO Proveedor (razon_social, denominacion, rif, url_web, id_lugar, direccion_fisica, lugar_id2, direccion_fiscal)
   VALUES (p_razon_social, p_denominacion, p_rif, p_url_web, p_id_lugar, p_direccion_fisica, p_id_lugar2, p_direccion_fiscal)
   RETURNING id_proveedor INTO new_proveedor_id;
+
   INSERT INTO Usuario (id_proveedor, fecha_creacion, contraseña)
   VALUES (new_proveedor_id,  CURRENT_DATE, p_contrasena)
   RETURNING id_usuario INTO new_usuario_id;
+
   INSERT INTO Correo (nombre, extension_pag, id_proveedor_proveedor)
   VALUES (split_part(p_correo, '@', 1), split_part(p_correo, '@', 2), new_proveedor_id);
 END;
 $$ LANGUAGE plpgsql; 
+
 CREATE OR REPLACE FUNCTION get_usuarios_clientes_juridicos()
 RETURNS TABLE (
     id_usuario INTEGER,
@@ -166,6 +178,7 @@ BEGIN
     WHERE u.id_cliente_juridico IS NOT NULL;
 END;
 $$ LANGUAGE plpgsql; 
+
 CREATE OR REPLACE FUNCTION get_usuarios_clientes_naturales()
 RETURNS TABLE (
     id_usuario INTEGER,
@@ -199,6 +212,7 @@ BEGIN
     WHERE u.id_cliente_natural IS NOT NULL;
 END;
 $$ LANGUAGE plpgsql; 
+
 CREATE OR REPLACE FUNCTION get_usuarios_empleados()
 RETURNS TABLE (
     id_usuario INTEGER,
@@ -235,6 +249,7 @@ BEGIN
     WHERE u.empleado_id IS NOT NULL;
 END;
 $$ LANGUAGE plpgsql; 
+
 CREATE OR REPLACE FUNCTION get_usuarios_proveedores()
 RETURNS TABLE (
     id_usuario INTEGER,
@@ -283,6 +298,7 @@ BEGIN
     WHERE u.id_proveedor IS NOT NULL;
 END;
 $$ LANGUAGE plpgsql; 
+
 -- Function to get all roles with their associated privileges and tables
 CREATE OR REPLACE FUNCTION get_roles()
 RETURNS TABLE (
@@ -315,6 +331,7 @@ BEGIN
         r.id_rol;
 END;
 $$ LANGUAGE plpgsql;
+
 -- Function to create a new role and assign privileges by table
 CREATE OR REPLACE FUNCTION create_role(
     p_nombre_rol VARCHAR,
@@ -327,6 +344,7 @@ DECLARE
 BEGIN
     -- Insert the new role and get its ID
     INSERT INTO Rol (nombre) VALUES (p_nombre_rol) RETURNING id_rol INTO new_rol_id;
+
     -- Insert privileges for each (privilegio, tabla)
     FOR p IN SELECT * FROM json_array_elements(p_privilegios)
     LOOP
@@ -339,6 +357,7 @@ BEGIN
     END LOOP;
 END;
 $$ LANGUAGE plpgsql;
+
 -- Function to update role privileges by table
 CREATE OR REPLACE FUNCTION update_role_privileges(
     p_id_rol INTEGER,
@@ -351,6 +370,7 @@ DECLARE
 BEGIN
     -- Update role name if different
     UPDATE Rol SET nombre = p_nombre_rol WHERE id_rol = p_id_rol;
+
     -- Delete pairs that are not in the new list
     DELETE FROM Rol_Privilegio
     WHERE id_rol = p_id_rol
@@ -360,6 +380,7 @@ BEGIN
         WHERE Rol_Privilegio.id_privilegio = pr.id_privilegio
           AND Rol_Privilegio.nom_tabla_ojetivo = j->>'tabla'
       );
+
     -- Insert new pairs
     FOR p IN SELECT * FROM json_array_elements(p_privilegios)
     LOOP
@@ -377,6 +398,7 @@ BEGIN
     END LOOP;
 END;
 $$ LANGUAGE plpgsql;
+
 -- Cambiar el rol de un usuario
 CREATE OR REPLACE FUNCTION set_rol_usuario(p_id_usuario INTEGER, p_id_rol INTEGER)
 RETURNS VOID AS $$
@@ -384,6 +406,7 @@ BEGIN
     UPDATE Usuario SET id_rol = p_id_rol WHERE id_usuario = p_id_usuario;
 END;
 $$ LANGUAGE plpgsql;
+
 CREATE OR REPLACE FUNCTION create_empleado(
     p_cedula VARCHAR,
     p_primer_nombre VARCHAR,
@@ -417,24 +440,28 @@ BEGIN
     IF rol_empleado_id IS NULL THEN
         RAISE EXCEPTION 'No se encontró el rol Empleado Nuevo en la tabla Rol';
     END IF;
+
     -- Insertar en Empleado
     INSERT INTO Empleado (
         cedula, primer_nombre, segundo_nombre, primer_apellido, segundo_apellido, direccion, activo, lugar_id_lugar
     ) VALUES (
         p_cedula, p_primer_nombre, p_segundo_nombre, p_primer_apellido, p_segundo_apellido, p_direccion, 'S', p_lugar_id_lugar
     ) RETURNING id_empleado INTO new_empleado_id;
+
     -- Insertar en Usuario
     INSERT INTO Usuario (
         empleado_id, id_rol, fecha_creacion, contraseña
     ) VALUES (
         new_empleado_id, rol_empleado_id, CURRENT_DATE, p_contrasena
     ) RETURNING id_usuario INTO new_usuario_id;
+
     -- Insertar en Correo
     INSERT INTO Correo (
         nombre, extension_pag, id_empleado
     ) VALUES (
         p_correo_nombre, p_correo_extension, new_empleado_id
     );
+
     -- Retornar los datos completos del empleado recién creado, incluyendo el nombre del rol
     RETURN QUERY
     SELECT
@@ -458,6 +485,7 @@ BEGIN
     WHERE e.id_empleado = new_empleado_id;
 END;
 $$ LANGUAGE plpgsql;
+
 CREATE OR REPLACE FUNCTION get_ordenes_reposicion_proveedores()
 RETURNS TABLE (
     id_orden_reposicion INTEGER,
@@ -493,6 +521,7 @@ BEGIN
     ORDER BY o.id_orden_reposicion DESC;
 END;
 $$ LANGUAGE plpgsql;
+
 CREATE OR REPLACE FUNCTION set_estatus_orden_reposicion(
     p_id_orden_reposicion INTEGER,
     p_id_estatus INTEGER
@@ -507,12 +536,14 @@ BEGIN
     INTO v_id_proveedor, v_id_departamento
     FROM Orden_Reposicion
     WHERE id_orden_reposicion = p_id_orden_reposicion;
+
     -- Insertar nuevo estatus
     INSERT INTO Orden_Reposicion_Estatus (
         id_orden_reposicion, id_proveedor, id_departamento, id_estatus, fecha_asignacion
     ) VALUES (
         p_id_orden_reposicion, v_id_proveedor, v_id_departamento, p_id_estatus, NOW()
     );
+
     -- Si el estatus es 'Atendida', actualizar fecha_fin
     SELECT nombre INTO v_nombre_estatus FROM Estatus WHERE id_estatus = p_id_estatus;
     IF LOWER(v_nombre_estatus) = 'atendida' THEN
@@ -520,6 +551,7 @@ BEGIN
     END IF;
 END;
 $$ LANGUAGE plpgsql;
+
 CREATE OR REPLACE FUNCTION get_ordenes_anaquel()
 RETURNS TABLE (
     id_orden_reposicion INTEGER,
@@ -549,6 +581,7 @@ BEGIN
     ORDER BY o.id_orden_reposicion DESC;
 END;
 $$ LANGUAGE plpgsql;
+
 CREATE OR REPLACE FUNCTION set_estatus_orden_anaquel(
     p_id_orden_reposicion INTEGER,
     p_id_estatus INTEGER
@@ -562,10 +595,13 @@ BEGIN
     ) VALUES (
         p_id_orden_reposicion, p_id_estatus, NOW()
     );
+
     -- Si el estatus es 'Atendida', actualizar fecha_fin en la orden si existe ese campo
     SELECT nombre INTO v_nombre_estatus FROM Estatus WHERE id_estatus = p_id_estatus;
+
 END;
 $$ LANGUAGE plpgsql;
+
 CREATE OR REPLACE FUNCTION get_full_location_path(p_location_id INTEGER)
 RETURNS TEXT AS $$
 DECLARE
@@ -580,7 +616,9 @@ BEGIN
             1 AS level
         FROM Ubicacion_Tienda
         WHERE id_ubicacion = p_location_id
+
         UNION ALL
+
         SELECT 
             ut.id_ubicacion, 
             ut.tipo,
@@ -593,9 +631,11 @@ BEGIN
     SELECT string_agg(tipo || ': ' || nombre, ' / ' ORDER BY level DESC)
     INTO full_path
     FROM location_path;
+
     RETURN full_path;
 END;
 $$ LANGUAGE plpgsql;
+
 CREATE OR REPLACE FUNCTION get_detalle_orden_anaquel(p_id_orden_reposicion INTEGER)
 RETURNS TABLE (
     presentacion VARCHAR,
@@ -615,6 +655,7 @@ BEGIN
     WHERE dora.id_orden_reposicion = p_id_orden_reposicion;
 END;
 $$ LANGUAGE plpgsql;
+
 CREATE OR REPLACE FUNCTION get_detalle_orden_proveedor(p_id_orden_reposicion INTEGER)
 RETURNS TABLE (
     presentacion VARCHAR,
@@ -633,7 +674,11 @@ BEGIN
     WHERE dor.id_orden_reposicion = p_id_orden_reposicion;
 END;
 $$ LANGUAGE plpgsql;
+
+
+
 -- Funciones para validación de clientes por cédula adaptadas a la estructura real
+
 -- Función para obtener cliente natural por cédula
 CREATE OR REPLACE FUNCTION get_cliente_natural_by_cedula(p_cedula INTEGER)
 RETURNS TABLE (
@@ -670,6 +715,7 @@ BEGIN
     LIMIT 1;
 END;
 $$ LANGUAGE plpgsql;
+
 -- Función para obtener cliente jurídico por RIF
 CREATE OR REPLACE FUNCTION get_cliente_juridico_by_rif(p_rif INTEGER)
 RETURNS TABLE (
@@ -704,6 +750,7 @@ BEGIN
     LIMIT 1;
 END;
 $$ LANGUAGE plpgsql;
+
 -- Función para crear cliente natural y su correo/telefono
 CREATE OR REPLACE FUNCTION create_cliente_natural_fisica(
     p_ci_cliente INTEGER,
@@ -746,6 +793,7 @@ BEGIN
     RETURN v_id_cliente;
 END;
 $$ LANGUAGE plpgsql;
+
 -- Función para verificar si existe un cliente (natural o jurídico) por documento
 CREATE OR REPLACE FUNCTION check_cliente_exists(p_documento INTEGER)
 RETURNS BOOLEAN AS $$
@@ -763,9 +811,13 @@ BEGIN
     RETURN FALSE;
 END;
 $$ LANGUAGE plpgsql; 
+
+
+
 -- ==============================================================================
 -- FUNCIONES PARA EL CATÁLOGO DE PRODUCTOS
 -- ==============================================================================
+
 -- Función para obtener productos del catálogo con paginación y ordenamiento
 CREATE OR REPLACE FUNCTION obtener_productos_catalogo(
     p_sort_by VARCHAR DEFAULT 'relevance',
@@ -820,6 +872,7 @@ BEGIN
     LIMIT p_limit OFFSET ((p_page - 1) * p_limit);
 END;
 $$ LANGUAGE plpgsql;
+
 -- Función para contar total de productos en el catálogo
 CREATE OR REPLACE FUNCTION contar_productos_catalogo() 
 RETURNS INTEGER AS $$
@@ -834,9 +887,11 @@ BEGIN
     RETURN total;
 END;
 $$ LANGUAGE plpgsql;
+
 -- =====================================================
 -- FUNCIONES PARA PRODUCTOS WEB (INVENTARIO WEB)
 -- =====================================================
+
 -- Función para obtener productos del catálogo web con paginación y ordenamiento
 CREATE OR REPLACE FUNCTION obtener_productos_web(
     p_sort_by VARCHAR DEFAULT 'relevance',
@@ -891,6 +946,7 @@ BEGIN
     LIMIT p_limit OFFSET ((p_page - 1) * p_limit);
 END;
 $$ LANGUAGE plpgsql;
+
 -- Función para contar total de productos web
 CREATE OR REPLACE FUNCTION contar_productos_web() 
 RETURNS INTEGER AS $$
@@ -906,9 +962,11 @@ BEGIN
     RETURN total;
 END;
 $$ LANGUAGE plpgsql;
+
 -- =====================================================
 -- FUNCIONES PARA PRODUCTOS DE TIENDA FÍSICA (INVENTARIO DE ANAQUELES)
 -- =====================================================
+
 -- Función para obtener productos del catálogo de tienda física con paginación y ordenamiento
 CREATE OR REPLACE FUNCTION obtener_productos_tienda(
     p_sort_by VARCHAR DEFAULT 'relevance',
@@ -963,6 +1021,7 @@ BEGIN
     LIMIT p_limit OFFSET ((p_page - 1) * p_limit);
 END;
 $$ LANGUAGE plpgsql;
+
 -- Función para contar total de productos de tienda física
 CREATE OR REPLACE FUNCTION contar_productos_tienda() 
 RETURNS INTEGER AS $$
@@ -978,15 +1037,21 @@ BEGIN
     RETURN total;
 END;
 $$ LANGUAGE plpgsql; 
+
+
 -- =====================================================
 -- SISTEMA DE CARRITO DE COMPRAS - REFACTORIZADO
 -- =====================================================
 -- Este sistema usa Stored Procedures para acciones (CUD)
 -- y Funciones para consultas (R).
+
 -- =====================================================
 -- INSERTAR ESTATUS NECESARIO PARA EL CARRITO
 -- =====================================================
+
 -- Agregar estatus "Pendiente" para carritos (si no existe)
+
+
 -- =====================================================
 -- FUNCIÓN AUXILIAR PARA DETERMINAR TIPO DE COMPRA Y OBTENER CARRITO
 -- =====================================================
@@ -1011,13 +1076,16 @@ BEGIN
     RETURN v_id_compra;
 END;
 $$ LANGUAGE plpgsql;
+
 -- =====================================================
 -- FUNCIÓN AUXILIAR PARA OBTENER O CREAR CARRITO
 -- (Se mantiene como función porque retorna un valor directo)
 -- =====
+
 -- =====================================================
 -- FUNCIÓN MODIFICADA PARA AGREGAR AL CARRITO POR NOMBRE Y PRESENTACIÓN
 -- =====================================================
+
 CREATE OR REPLACE FUNCTION agregar_al_carrito_por_producto(
     p_id_usuario INTEGER,
     p_nombre_cerveza VARCHAR(50),
@@ -1049,9 +1117,11 @@ BEGIN
     PERFORM agregar_al_carrito(p_id_usuario, v_id_inventario, p_cantidad, p_id_cliente_natural, p_id_cliente_juridico);
 END;
 $$;
+
 -- =====================================================
 -- FUNCIÓN PARA BUSCAR INVENTARIO POR NOMBRE Y PRESENTACIÓN
 -- =====================================================
+
 CREATE OR REPLACE FUNCTION buscar_inventario_por_producto(
     p_nombre_cerveza VARCHAR(50),
     p_nombre_presentacion VARCHAR(50)
@@ -1072,9 +1142,11 @@ BEGIN
     RETURN v_id_inventario;
 END;
 $$ LANGUAGE plpgsql;
+
 -- =====================================================
 -- FUNCIÓN (antes Procedimiento) PARA AGREGAR PRODUCTO AL CARRITO
 -- =====================================================
+
 CREATE OR REPLACE FUNCTION agregar_al_carrito(
     p_id_usuario INTEGER,
     p_id_inventario INTEGER,
@@ -1104,6 +1176,7 @@ BEGIN
             RAISE EXCEPTION 'Usuario no encontrado';
         END IF;
     END IF;
+
     -- Obtener el empleado asociado al usuario (solo para compras físicas)
     IF NOT v_es_compra_web THEN
         SELECT empleado_id INTO v_id_empleado
@@ -1118,11 +1191,13 @@ BEGIN
         -- Para compras web, no hay empleado asociado
         v_id_empleado := NULL;
     END IF;
+
     -- Verificar que el producto existe en inventario
     SELECT EXISTS(SELECT 1 FROM Inventario WHERE id_inventario = p_id_inventario) INTO v_producto_existe;
     IF NOT v_producto_existe THEN
         RAISE EXCEPTION 'Producto no encontrado';
     END IF;
+
     -- Verificar stock disponible
     SELECT cantidad INTO v_stock_disponible 
     FROM Inventario 
@@ -1131,20 +1206,25 @@ BEGIN
     IF v_stock_disponible < p_cantidad THEN
         RAISE EXCEPTION 'Stock insuficiente. Disponible: %', v_stock_disponible;
     END IF;
+
     -- Obtener o crear carrito usando la función auxiliar
     v_id_compra := obtener_carrito_por_tipo(p_id_usuario, p_id_cliente_natural, p_id_cliente_juridico);
+
     -- Verificar si el producto ya está en el carrito
     SELECT EXISTS(SELECT 1 FROM Detalle_Compra WHERE id_compra = v_id_compra AND id_inventario = p_id_inventario) 
     INTO v_producto_ya_en_carrito;
+
     -- Obtener precio unitario
     SELECT precio INTO v_precio_unitario
     FROM presentacion_cerveza
     WHERE id_cerveza = (SELECT i.id_cerveza FROM inventario i WHERE i.id_inventario = p_id_inventario)
       AND id_presentacion = (SELECT i.id_presentacion FROM inventario i WHERE i.id_inventario = p_id_inventario);
+
     -- Si no se encuentra el precio, usar 0 como valor por defecto
     IF v_precio_unitario IS NULL THEN
         v_precio_unitario := 0;
     END IF;
+
     -- Insertar o actualizar detalle de compra
     IF v_producto_ya_en_carrito THEN
         UPDATE Detalle_Compra 
@@ -1160,9 +1240,11 @@ BEGIN
     PERFORM actualizar_monto_compra(p_id_usuario, p_id_cliente_natural, p_id_cliente_juridico);
 END;
 $$;
+
 -- =====================================================
 -- FUNCIÓN (CONSULTA) PARA OBTENER EL CARRITO
 -- =====================================================
+
 CREATE OR REPLACE FUNCTION obtener_carrito_usuario(
     p_id_usuario INTEGER,
     p_id_cliente_natural INTEGER DEFAULT NULL,
@@ -1188,6 +1270,7 @@ BEGIN
     IF v_id_compra IS NULL THEN
         RETURN;
     END IF;
+
     RETURN QUERY
     SELECT 
         dc.id_compra,
@@ -1208,9 +1291,11 @@ BEGIN
     ORDER BY c.nombre_cerveza;
 END;
 $$ LANGUAGE plpgsql;
+
 -- =====================================================
 -- FUNCIÓN (antes Procedimiento) PARA ACTUALIZAR CANTIDAD
 -- =====================================================
+
 CREATE OR REPLACE FUNCTION actualizar_cantidad_carrito(
     p_id_usuario INTEGER,
     p_id_inventario INTEGER,
@@ -1228,6 +1313,7 @@ BEGIN
     IF v_id_compra IS NULL THEN
         RAISE EXCEPTION 'No se encontró carrito';
     END IF;
+
     SELECT cantidad INTO v_stock_disponible 
     FROM Inventario 
     WHERE id_inventario = p_id_inventario;
@@ -1235,6 +1321,7 @@ BEGIN
     IF v_stock_disponible < p_nueva_cantidad THEN
         RAISE EXCEPTION 'Stock insuficiente';
     END IF;
+
     UPDATE Detalle_Compra 
     SET cantidad = p_nueva_cantidad
     WHERE id_compra = v_id_compra AND id_inventario = p_id_inventario;
@@ -1247,9 +1334,12 @@ BEGIN
     PERFORM actualizar_monto_compra(p_id_usuario, p_id_cliente_natural, p_id_cliente_juridico);
 END;
 $$;
+
 -- =====================================================
 -- FUNCIÓN (antes Procedimiento) PARA ELIMINAR PRODUCTO
 -- =====================================================
+
+
 CREATE OR REPLACE FUNCTION eliminar_del_carrito(
     p_id_usuario INTEGER,
     p_id_inventario INTEGER,
@@ -1265,6 +1355,7 @@ BEGIN
     IF v_id_compra IS NULL THEN
         RAISE EXCEPTION 'No se encontró carrito';
     END IF;
+
     DELETE FROM Detalle_Compra 
     WHERE id_compra = v_id_compra AND id_inventario = p_id_inventario;
     
@@ -1276,9 +1367,12 @@ BEGIN
     PERFORM actualizar_monto_compra(p_id_usuario, p_id_cliente_natural, p_id_cliente_juridico);
 END;
 $$;
+
 -- =====================================================
 -- FUNCIÓN (antes Procedimiento) PARA LIMPIAR EL CARRITO
 -- =====================================================
+
+
 CREATE OR REPLACE FUNCTION limpiar_carrito_usuario(
     p_id_usuario INTEGER,
     p_id_cliente_natural INTEGER DEFAULT NULL,
@@ -1293,12 +1387,15 @@ BEGIN
     IF v_id_compra IS NULL THEN
         RAISE EXCEPTION 'No se encontró carrito';
     END IF;
+
     DELETE FROM Detalle_Compra WHERE id_compra = v_id_compra;
     
     -- Actualizar el monto total de la compra
     PERFORM actualizar_monto_compra(p_id_usuario, p_id_cliente_natural, p_id_cliente_juridico);
 END;
 $$;
+
+
 -- =====================================================
 -- FUNCIÓN (CONSULTA) PARA OBTENER RESUMEN
 -- =====================================================
@@ -1326,6 +1423,7 @@ BEGIN
         SELECT NULL::INTEGER, 0::INTEGER, 0::INTEGER, 0::DECIMAL, '[]'::json;
         RETURN;
     END IF;
+
     -- Obtener los items del carrito
     SELECT json_agg(json_build_object(
             'id_inventario', dc.id_inventario, 
@@ -1340,12 +1438,14 @@ BEGIN
     JOIN Cerveza c ON i.id_cerveza = c.id_cerveza
     JOIN Presentacion p ON i.id_presentacion = p.id_presentacion
     WHERE dc.id_compra = v_id_compra;
+
     -- Si no hay items, devolver valores por defecto
     IF v_items IS NULL THEN
         RETURN QUERY
         SELECT v_id_compra, 0::INTEGER, 0::INTEGER, 0::DECIMAL, '[]'::json;
         RETURN;
     END IF;
+
     -- Devolver el resumen con los items
     RETURN QUERY
     SELECT 
@@ -1358,9 +1458,11 @@ BEGIN
     WHERE dc.id_compra = v_id_compra;
 END;
 $$ LANGUAGE plpgsql;
+
 -- =====================================================
 -- FUNCIÓN (CONSULTA) PARA VERIFICAR STOCK
 -- =====================================================
+
 CREATE OR REPLACE FUNCTION verificar_stock_carrito(
     p_id_usuario INTEGER,
     p_id_cliente_natural INTEGER DEFAULT NULL,
@@ -1382,6 +1484,7 @@ BEGIN
     IF v_id_compra IS NULL THEN
         RETURN;
     END IF;
+
     RETURN QUERY
     SELECT 
         dc.id_inventario,
@@ -1398,9 +1501,12 @@ BEGIN
     ORDER BY stock_suficiente ASC, c.nombre_cerveza;
 END;
 $$ LANGUAGE plpgsql;
+
+
 -- =====================================================
 -- FUNCIÓN PARA ACTUALIZAR MONTO DE COMPRA AL PROCEDER AL PAGO
 -- =====================================================
+
 CREATE OR REPLACE FUNCTION actualizar_monto_compra(
     p_id_usuario INTEGER,
     p_id_cliente_natural INTEGER DEFAULT NULL,
@@ -1431,9 +1537,11 @@ BEGIN
     RETURN v_monto_total;
 END;
 $$ LANGUAGE plpgsql;
+
 -- =====================================================
 -- FUNCIÓN PARA ACTUALIZAR MONTO DE COMPRA POR ID DE COMPRA
 -- =====================================================
+
 CREATE OR REPLACE FUNCTION actualizar_monto_compra_por_id(
     p_id_compra INTEGER
 )
@@ -1454,9 +1562,11 @@ BEGIN
     RETURN v_monto_total;
 END;
 $$ LANGUAGE plpgsql;
+
 -- =====================================================
 -- FUNCIONES PARA MÉTODOS DE PAGO (SUPERTIPO-SUBTIPO)
 -- =====================================================
+
 -- Función para crear método de pago con Cheque
 DROP FUNCTION IF EXISTS crear_metodo_pago_cheque(integer, integer, varchar, integer, integer);
   -- O la firma que corresponda
@@ -1480,6 +1590,7 @@ BEGIN
     RETURN v_id_metodo;
 END;
 $$ LANGUAGE plpgsql;
+
 -- Función para crear método de pago con Efectivo
 CREATE OR REPLACE FUNCTION crear_metodo_pago_efectivo(
     p_denominacion INTEGER,
@@ -1499,6 +1610,7 @@ BEGIN
     RETURN v_id_metodo;
 END;
 $$ LANGUAGE plpgsql;
+
 -- Función para crear método de pago con Tarjeta de Crédito
 CREATE OR REPLACE FUNCTION crear_metodo_pago_tarjeta_credito(
     p_tipo VARCHAR(20),
@@ -1521,6 +1633,7 @@ BEGIN
     RETURN v_id_metodo;
 END;
 $$ LANGUAGE plpgsql;
+
 -- Función para crear método de pago con Tarjeta de Débito
 CREATE OR REPLACE FUNCTION crear_metodo_pago_tarjeta_debito(
     p_numero VARCHAR(20),
@@ -1541,6 +1654,7 @@ BEGIN
     RETURN v_id_metodo;
 END;
 $$ LANGUAGE plpgsql;
+
 -- Función para obtener información completa de un método de pago
 CREATE OR REPLACE FUNCTION obtener_metodo_pago_completo(
     p_id_metodo INTEGER
@@ -1595,6 +1709,7 @@ BEGIN
     WHERE mp.id_metodo = p_id_metodo;
 END;
 $$ LANGUAGE plpgsql;
+
 -- Función para eliminar un método de pago (elimina supertipo y subtipo)
 CREATE OR REPLACE FUNCTION eliminar_metodo_pago(
     p_id_metodo INTEGER
@@ -1636,6 +1751,7 @@ BEGIN
     RETURN TRUE;
 END;
 $$ LANGUAGE plpgsql;
+
 -- =====================================================
 -- FUNCIÓN PARA REGISTRAR PAGOS Y DESCONTAR INVENTARIO (ACTUALIZADA)
 -- =====================================================
@@ -1743,21 +1859,27 @@ BEGIN
         END IF;
         UPDATE Inventario SET cantidad = cantidad - v_cantidad WHERE id_inventario = v_id_inventario;
     END LOOP;
+
     -- Cambiar estatus de la compra a 'Atendida' (estatus 3)
     SELECT id_estatus INTO v_id_estatus_atendida FROM Estatus WHERE LOWER(nombre) = 'atendida' LIMIT 1;
+
     IF v_id_estatus_atendida IS NULL THEN
         RAISE EXCEPTION 'No existe el estatus "Atendida" en la tabla Estatus';
     END IF;
+
     -- Cerrar el estatus anterior (ponerle fecha_hora_fin = NOW())
     UPDATE Compra_Estatus
     SET fecha_hora_fin = NOW()
     WHERE compra_id_compra = p_compra_id AND fecha_hora_fin = '9999-12-31 23:59:59';
+
     -- Insertar el nuevo estatus 'Atendida'
     INSERT INTO Compra_Estatus (compra_id_compra, estatus_id_estatus, fecha_hora_asignacion, fecha_hora_fin)
     VALUES (p_compra_id, v_id_estatus_atendida, NOW(), '9999-12-31 23:59:59');
+
     RETURN TRUE;
 END;
 $$ LANGUAGE plpgsql;
+
 -- Comentarios de documentación
 COMMENT ON FUNCTION crear_metodo_pago_cheque IS 'Función: Crea un método de pago tipo cheque con patrón supertipo-subtipo';
 COMMENT ON FUNCTION crear_metodo_pago_efectivo IS 'Función: Crea un método de pago tipo efectivo con patrón supertipo-subtipo';
@@ -1766,9 +1888,11 @@ COMMENT ON FUNCTION crear_metodo_pago_tarjeta_debito IS 'Función: Crea un méto
 COMMENT ON FUNCTION obtener_metodo_pago_completo IS 'Función: Obtiene información completa de un método de pago incluyendo datos específicos';
 COMMENT ON FUNCTION eliminar_metodo_pago IS 'Función: Elimina un método de pago completo (supertipo y subtipo)';
 COMMENT ON FUNCTION registrar_pagos_y_descuento_inventario IS 'Función: Registra pagos y descuenta inventario';
+
 -- =====================================================
 -- FUNCIÓN PARA OBTENER EL SIGUIENTE ID DE MÉTODO DE PAGO
 -- =====================================================
+
 CREATE OR REPLACE FUNCTION obtener_siguiente_id_metodo_pago()
 RETURNS INTEGER AS $$
 DECLARE
@@ -1790,9 +1914,11 @@ BEGIN
     RETURN siguiente_id;
 END;
 $$ LANGUAGE plpgsql;
+
 -- =====================================================
 -- FUNCIÓN MEJORADA PARA INSERTAR MÉTODO DE PAGO CON ID AUTOMÁTICO
 -- =====================================================
+
 CREATE OR REPLACE FUNCTION insertar_metodo_pago_automatico(
     p_id_cliente_natural INTEGER DEFAULT NULL,
     p_id_cliente_juridico INTEGER DEFAULT NULL
@@ -1811,9 +1937,11 @@ BEGIN
     RETURN nuevo_id;
 END;
 $$ LANGUAGE plpgsql; 
+
 -- =====================================================
 -- AJUSTE AUTOMÁTICO DE SECUENCIA AL CARGAR FUNCIONES
 -- =====================================================
+
 -- Ajustar la secuencia de Metodo_Pago de forma segura
 -- Solo ajustar si hay datos existentes
 DO $$
@@ -1833,9 +1961,11 @@ BEGIN
         RAISE NOTICE 'No hay datos existentes. La secuencia mantendrá su valor por defecto.';
     END IF;
 END $$;
+
 -- =====================================================
 -- FUNCIÓN PARA INSERTAR NUEVA TASA DE CAMBIO
 -- =====================================================
+
 CREATE OR REPLACE FUNCTION insertar_nueva_tasa(
     p_nombre VARCHAR(50),
     p_valor DECIMAL
@@ -1855,6 +1985,7 @@ END;
 $$ LANGUAGE plpgsql;
 -- FUNCIONES ROBUSTAS DE CARRITO CON ESTATUS (TIENDA FÍSICA, CLIENTE)
 -- =====================================================
+
 DROP FUNCTION IF EXISTS obtener_o_crear_carrito_cliente_en_proceso(INTEGER, INTEGER);
 CREATE OR REPLACE FUNCTION obtener_o_crear_carrito_cliente_en_proceso(
     p_id_cliente_natural INTEGER DEFAULT NULL,
@@ -1870,6 +2001,7 @@ BEGIN
     IF v_id_estatus_en_proceso IS NULL THEN
         RAISE EXCEPTION 'No existe el estatus "en proceso" en la tabla Estatus';
     END IF;
+
     -- Buscar si ya existe una compra abierta "en proceso" para este cliente
     SELECT c.id_compra INTO v_id_compra
     FROM Compra c
@@ -1881,10 +2013,12 @@ BEGIN
     AND ce.estatus_id_estatus = v_id_estatus_en_proceso
     AND ce.fecha_hora_fin > v_now
     LIMIT 1;
+
     -- Si ya existe, retornar el id_compra
     IF v_id_compra IS NOT NULL THEN
         RETURN v_id_compra;
     END IF;
+
     -- Si no existe, crear una nueva compra respetando los arcos de exclusividad
     INSERT INTO Compra (id_cliente_natural, id_cliente_juridico, monto_total, tienda_fisica_id_tienda)
     VALUES (
@@ -1893,16 +2027,21 @@ BEGIN
         0,
         1 -- Asume tienda física con id 1, ajusta si es necesario
     ) RETURNING id_compra INTO v_id_compra;
+
     -- Asociar la compra con estatus 'en proceso' en Compra_Estatus
     INSERT INTO Compra_Estatus (compra_id_compra, estatus_id_estatus, fecha_hora_asignacion, fecha_hora_fin)
     VALUES (v_id_compra, v_id_estatus_en_proceso, v_now, '9999-12-31 23:59:59');
+
     RETURN v_id_compra;
 END;
 $$ LANGUAGE plpgsql;
+
 -- FIN FUNCIONES ROBUSTAS DE CARRITO CON ESTATUS
+
 -- =================================================================
 -- FUNCIONES PARA OPERACIONES POR COMPRA_ID
 -- =================================================================
+
 -- Obtener carrito por compra_id
 DROP FUNCTION IF EXISTS obtener_carrito_por_id(integer);
 CREATE OR REPLACE FUNCTION obtener_carrito_por_id(p_id_compra INTEGER)
@@ -1932,6 +2071,7 @@ BEGIN
     WHERE dc.id_compra = p_id_compra;
 END;
 $$ LANGUAGE plpgsql;
+
 -- Actualizar cantidad por compra_id
 DROP FUNCTION IF EXISTS actualizar_cantidad_carrito_por_id(integer, integer, integer);
 CREATE OR REPLACE FUNCTION actualizar_cantidad_carrito_por_id(p_id_compra INTEGER, p_id_inventario INTEGER, p_nueva_cantidad INTEGER)
@@ -1949,6 +2089,7 @@ BEGIN
     PERFORM actualizar_monto_compra_por_id(p_id_compra);
 END;
 $$ LANGUAGE plpgsql;
+
 -- Eliminar producto por compra_id
 DROP FUNCTION IF EXISTS eliminar_del_carrito_por_id(integer, integer);
 CREATE OR REPLACE FUNCTION eliminar_del_carrito_por_id(p_id_compra INTEGER, p_id_inventario INTEGER)
@@ -1960,6 +2101,7 @@ BEGIN
     PERFORM actualizar_monto_compra_por_id(p_id_compra);
 END;
 $$ LANGUAGE plpgsql;
+
 -- Limpiar carrito por compra_id
 DROP FUNCTION IF EXISTS limpiar_carrito_por_id(integer);
 CREATE OR REPLACE FUNCTION limpiar_carrito_por_id(p_id_compra INTEGER)
@@ -1968,9 +2110,11 @@ BEGIN
     DELETE FROM Detalle_Compra WHERE id_compra = p_id_compra;
 END;
 $$ LANGUAGE plpgsql;
+
 -- =====================================================
 -- FUNCIÓN PARA OBTENER LA TASA ACTUAL DEL DÓLAR
 -- =====================================================
+
 -- Función para acumular puntos automáticamente al finalizar una compra física
 CREATE OR REPLACE FUNCTION acumular_puntos_compra_fisica(
     p_id_compra INTEGER
@@ -2035,6 +2179,7 @@ BEGIN
     RETURN v_puntos_ganados;
 END;
 $$ LANGUAGE plpgsql;
+
 -- Función para obtener el saldo de puntos de un cliente natural
 CREATE OR REPLACE FUNCTION obtener_saldo_puntos_cliente(
     p_id_cliente_natural INTEGER
@@ -2050,6 +2195,7 @@ BEGIN
     RETURN v_saldo;
 END;
 $$ LANGUAGE plpgsql;
+
 -- Función para validar si un cliente puede usar puntos como método de pago
 CREATE OR REPLACE FUNCTION validar_uso_puntos(
     p_id_cliente_natural INTEGER,
@@ -2065,6 +2211,7 @@ BEGIN
     RETURN v_saldo_actual >= p_puntos_a_usar;
 END;
 $$ LANGUAGE plpgsql;
+
 -- Función para usar puntos como método de pago
 CREATE OR REPLACE FUNCTION usar_puntos_como_pago(
     p_id_cliente_natural INTEGER,
@@ -2145,6 +2292,7 @@ BEGIN
     RETURN p_puntos_a_usar;
 END;
 $$ LANGUAGE plpgsql;
+
 -- Función para obtener el historial de movimientos de puntos de un cliente
 CREATE OR REPLACE FUNCTION obtener_historial_puntos_cliente(
     p_id_cliente_natural INTEGER,
@@ -2178,6 +2326,7 @@ BEGIN
     LIMIT p_limite;
 END;
 $$ LANGUAGE plpgsql;
+
 -- Función para obtener información completa de puntos de un cliente
 CREATE OR REPLACE FUNCTION obtener_info_puntos_cliente(
     p_id_cliente_natural INTEGER
@@ -2242,6 +2391,7 @@ BEGIN
         v_tasa;
 END;
 $$ LANGUAGE plpgsql;
+
 -- =============================================
 -- AJUSTE AUTOMÁTICO DE SECUENCIA DE Metodo_Pago
 -- =============================================
@@ -2255,6 +2405,7 @@ BEGIN
         RAISE NOTICE 'Secuencia metodo_pago_id_metodo_seq ajustada a %', max_id;
     END IF;
 END $$;
+
 -- =====================================================
 -- FUNCIÓN PARA CREAR MÉTODO DE PAGO CON PUNTOS
 -- =====================================================
@@ -2281,6 +2432,7 @@ BEGIN
     RETURN v_id_metodo;
 END;
 $$ LANGUAGE plpgsql;
+
 -- =====================================================
 -- FUNCIÓN PARA REGISTRAR PAGOS Y DESCONTAR INVENTARIO (ACTUALIZADA CON PUNTOS)
 -- =====================================================
@@ -2399,19 +2551,24 @@ BEGIN
     
     -- Cambiar estatus de la compra a 'Atendida' (estatus 3)
     SELECT id_estatus INTO v_id_estatus_atendida FROM Estatus WHERE LOWER(nombre) = 'atendida' LIMIT 1;
+
     IF v_id_estatus_atendida IS NULL THEN
         RAISE EXCEPTION 'No existe el estatus "Atendida" en la tabla Estatus';
     END IF;
+
     -- Cerrar el estatus anterior (ponerle fecha_hora_fin = NOW())
     UPDATE Compra_Estatus
     SET fecha_hora_fin = NOW()
     WHERE compra_id_compra = p_compra_id AND fecha_hora_fin = '9999-12-31 23:59:59';
+
     -- Insertar el nuevo estatus 'Atendida'
     INSERT INTO Compra_Estatus (compra_id_compra, estatus_id_estatus, fecha_hora_asignacion, fecha_hora_fin)
     VALUES (p_compra_id, v_id_estatus_atendida, NOW(), '9999-12-31 23:59:59');
+
     RETURN TRUE;
 END;
 $$ LANGUAGE plpgsql;
+
 -- Comentarios de documentación
 COMMENT ON FUNCTION crear_metodo_pago_cheque IS 'Función: Crea un método de pago tipo cheque con patrón supertipo-subtipo';
 COMMENT ON FUNCTION crear_metodo_pago_efectivo IS 'Función: Crea un método de pago tipo efectivo con patrón supertipo-subtipo';
@@ -2421,9 +2578,11 @@ COMMENT ON FUNCTION crear_metodo_pago_puntos IS 'Función: Crea un método de pa
 COMMENT ON FUNCTION obtener_metodo_pago_completo IS 'Función: Obtiene información completa de un método de pago incluyendo datos específicos';
 COMMENT ON FUNCTION eliminar_metodo_pago IS 'Función: Elimina un método de pago completo (supertipo y subtipo)';
 COMMENT ON FUNCTION registrar_pagos_y_descuento_inventario IS 'Función: Registra pagos y descuenta inventario';
+
 -- =====================================================
 -- FUNCIÓN PARA OBTENER EL SIGUIENTE ID DE MÉTODO DE PAGO
 -- =====================================================
+
 CREATE OR REPLACE FUNCTION obtener_siguiente_id_metodo_pago()
 RETURNS INTEGER AS $$
 DECLARE
@@ -2445,9 +2604,11 @@ BEGIN
     RETURN siguiente_id;
 END;
 $$ LANGUAGE plpgsql;
+
 -- =====================================================
 -- FUNCIÓN MEJORADA PARA INSERTAR MÉTODO DE PAGO CON ID AUTOMÁTICO
 -- =====================================================
+
 CREATE OR REPLACE FUNCTION insertar_metodo_pago_automatico(
     p_id_cliente_natural INTEGER DEFAULT NULL,
     p_id_cliente_juridico INTEGER DEFAULT NULL
@@ -2466,9 +2627,11 @@ BEGIN
     RETURN nuevo_id;
 END;
 $$ LANGUAGE plpgsql; 
+
 -- =====================================================
 -- AJUSTE AUTOMÁTICO DE SECUENCIA AL CARGAR FUNCIONES
 -- =====================================================
+
 -- Ajustar la secuencia de Metodo_Pago de forma segura
 -- Solo ajustar si hay datos existentes
 DO $$
@@ -2488,9 +2651,11 @@ BEGIN
         RAISE NOTICE 'No hay datos existentes. La secuencia mantendrá su valor por defecto.';
     END IF;
 END $$;
+
 -- =====================================================
 -- FUNCIÓN PARA INSERTAR NUEVA TASA DE CAMBIO
 -- =====================================================
+
 CREATE OR REPLACE FUNCTION insertar_nueva_tasa(
     p_nombre VARCHAR(50),
     p_valor DECIMAL
@@ -2510,6 +2675,7 @@ END;
 $$ LANGUAGE plpgsql;
 -- FUNCIONES ROBUSTAS DE CARRITO CON ESTATUS (TIENDA FÍSICA, CLIENTE)
 -- =====================================================
+
 DROP FUNCTION IF EXISTS obtener_o_crear_carrito_cliente_en_proceso(INTEGER, INTEGER);
 CREATE OR REPLACE FUNCTION obtener_o_crear_carrito_cliente_en_proceso(
     p_id_cliente_natural INTEGER DEFAULT NULL,
@@ -2525,6 +2691,7 @@ BEGIN
     IF v_id_estatus_en_proceso IS NULL THEN
         RAISE EXCEPTION 'No existe el estatus "en proceso" en la tabla Estatus';
     END IF;
+
     -- Buscar si ya existe una compra abierta "en proceso" para este cliente
     SELECT c.id_compra INTO v_id_compra
     FROM Compra c
@@ -2536,10 +2703,12 @@ BEGIN
     AND ce.estatus_id_estatus = v_id_estatus_en_proceso
     AND ce.fecha_hora_fin > v_now
     LIMIT 1;
+
     -- Si ya existe, retornar el id_compra
     IF v_id_compra IS NOT NULL THEN
         RETURN v_id_compra;
     END IF;
+
     -- Si no existe, crear una nueva compra respetando los arcos de exclusividad
     INSERT INTO Compra (id_cliente_natural, id_cliente_juridico, monto_total, tienda_fisica_id_tienda)
     VALUES (
@@ -2548,16 +2717,21 @@ BEGIN
         0,
         1 -- Asume tienda física con id 1, ajusta si es necesario
     ) RETURNING id_compra INTO v_id_compra;
+
     -- Asociar la compra con estatus 'en proceso' en Compra_Estatus
     INSERT INTO Compra_Estatus (compra_id_compra, estatus_id_estatus, fecha_hora_asignacion, fecha_hora_fin)
     VALUES (v_id_compra, v_id_estatus_en_proceso, v_now, '9999-12-31 23:59:59');
+
     RETURN v_id_compra;
 END;
 $$ LANGUAGE plpgsql;
+
 -- FIN FUNCIONES ROBUSTAS DE CARRITO CON ESTATUS
+
 -- =================================================================
 -- FUNCIONES PARA OPERACIONES POR COMPRA_ID
 -- =================================================================
+
 -- Obtener carrito por compra_id
 DROP FUNCTION IF EXISTS obtener_carrito_por_id(integer);
 CREATE OR REPLACE FUNCTION obtener_carrito_por_id(p_id_compra INTEGER)
@@ -2587,6 +2761,7 @@ BEGIN
     WHERE dc.id_compra = p_id_compra;
 END;
 $$ LANGUAGE plpgsql;
+
 -- Actualizar cantidad por compra_id
 DROP FUNCTION IF EXISTS actualizar_cantidad_carrito_por_id(integer, integer, integer);
 CREATE OR REPLACE FUNCTION actualizar_cantidad_carrito_por_id(p_id_compra INTEGER, p_id_inventario INTEGER, p_nueva_cantidad INTEGER)
@@ -2604,6 +2779,7 @@ BEGIN
     PERFORM actualizar_monto_compra_por_id(p_id_compra);
 END;
 $$ LANGUAGE plpgsql;
+
 -- Eliminar producto por compra_id
 DROP FUNCTION IF EXISTS eliminar_del_carrito_por_id(integer, integer);
 CREATE OR REPLACE FUNCTION eliminar_del_carrito_por_id(p_id_compra INTEGER, p_id_inventario INTEGER)
@@ -2615,6 +2791,7 @@ BEGIN
     PERFORM actualizar_monto_compra_por_id(p_id_compra);
 END;
 $$ LANGUAGE plpgsql;
+
 -- Limpiar carrito por compra_id
 DROP FUNCTION IF EXISTS limpiar_carrito_por_id(integer);
 CREATE OR REPLACE FUNCTION limpiar_carrito_por_id(p_id_compra INTEGER)
@@ -2623,9 +2800,11 @@ BEGIN
     DELETE FROM Detalle_Compra WHERE id_compra = p_id_compra;
 END;
 $$ LANGUAGE plpgsql;
+
 -- =====================================================
 -- FUNCIÓN PARA OBTENER LA TASA ACTUAL DEL DÓLAR
 -- =====================================================
+
 -- Función para acumular puntos automáticamente al finalizar una compra física
 CREATE OR REPLACE FUNCTION acumular_puntos_compra_fisica(
     p_id_compra INTEGER
@@ -2690,6 +2869,7 @@ BEGIN
     RETURN v_puntos_ganados;
 END;
 $$ LANGUAGE plpgsql;
+
 -- Función para obtener el saldo de puntos de un cliente natural
 CREATE OR REPLACE FUNCTION obtener_saldo_puntos_cliente(
     p_id_cliente_natural INTEGER
@@ -2705,6 +2885,7 @@ BEGIN
     RETURN v_saldo;
 END;
 $$ LANGUAGE plpgsql;
+
 -- Función para validar si un cliente puede usar puntos como método de pago
 CREATE OR REPLACE FUNCTION validar_uso_puntos(
     p_id_cliente_natural INTEGER,
@@ -2720,6 +2901,7 @@ BEGIN
     RETURN v_saldo_actual >= p_puntos_a_usar;
 END;
 $$ LANGUAGE plpgsql;
+
 -- Función para usar puntos como método de pago
 CREATE OR REPLACE FUNCTION usar_puntos_como_pago(
     p_id_cliente_natural INTEGER,
@@ -2800,6 +2982,7 @@ BEGIN
     RETURN p_puntos_a_usar;
 END;
 $$ LANGUAGE plpgsql;
+
 -- Función para obtener el historial de movimientos de puntos de un cliente
 CREATE OR REPLACE FUNCTION obtener_historial_puntos_cliente(
     p_id_cliente_natural INTEGER,
@@ -2833,6 +3016,7 @@ BEGIN
     LIMIT p_limite;
 END;
 $$ LANGUAGE plpgsql;
+
 -- Función para obtener información completa de puntos de un cliente
 CREATE OR REPLACE FUNCTION obtener_info_puntos_cliente(
     p_id_cliente_natural INTEGER
@@ -2897,6 +3081,7 @@ BEGIN
         v_tasa;
 END;
 $$ LANGUAGE plpgsql;
+
 -- =============================================
 -- AJUSTE AUTOMÁTICO DE SECUENCIA DE Metodo_Pago
 -- =============================================
@@ -2910,6 +3095,7 @@ BEGIN
         RAISE NOTICE 'Secuencia metodo_pago_id_metodo_seq ajustada a %', max_id;
     END IF;
 END $$;
+
 -- =====================================================
 -- FUNCIÓN PARA CREAR MÉTODO DE PAGO CON PUNTOS
 -- =====================================================
@@ -2936,6 +3122,7 @@ BEGIN
     RETURN v_id_metodo;
 END;
 $$ LANGUAGE plpgsql;
+
 -- =====================================================
 -- FUNCIÓN PARA REGISTRAR PAGOS Y DESCONTAR INVENTARIO (ACTUALIZADA CON PUNTOS)
 -- =====================================================
@@ -3054,19 +3241,24 @@ BEGIN
     
     -- Cambiar estatus de la compra a 'Atendida' (estatus 3)
     SELECT id_estatus INTO v_id_estatus_atendida FROM Estatus WHERE LOWER(nombre) = 'atendida' LIMIT 1;
+
     IF v_id_estatus_atendida IS NULL THEN
         RAISE EXCEPTION 'No existe el estatus "Atendida" en la tabla Estatus';
     END IF;
+
     -- Cerrar el estatus anterior (ponerle fecha_hora_fin = NOW())
     UPDATE Compra_Estatus
     SET fecha_hora_fin = NOW()
     WHERE compra_id_compra = p_compra_id AND fecha_hora_fin = '9999-12-31 23:59:59';
+
     -- Insertar el nuevo estatus 'Atendida'
     INSERT INTO Compra_Estatus (compra_id_compra, estatus_id_estatus, fecha_hora_asignacion, fecha_hora_fin)
     VALUES (p_compra_id, v_id_estatus_atendida, NOW(), '9999-12-31 23:59:59');
+
     RETURN TRUE;
 END;
 $$ LANGUAGE plpgsql;
+
 -- Comentarios de documentación
 COMMENT ON FUNCTION crear_metodo_pago_cheque IS 'Función: Crea un método de pago tipo cheque con patrón supertipo-subtipo';
 COMMENT ON FUNCTION crear_metodo_pago_efectivo IS 'Función: Crea un método de pago tipo efectivo con patrón supertipo-subtipo';
@@ -3076,9 +3268,11 @@ COMMENT ON FUNCTION crear_metodo_pago_puntos IS 'Función: Crea un método de pa
 COMMENT ON FUNCTION obtener_metodo_pago_completo IS 'Función: Obtiene información completa de un método de pago incluyendo datos específicos';
 COMMENT ON FUNCTION eliminar_metodo_pago IS 'Función: Elimina un método de pago completo (supertipo y subtipo)';
 COMMENT ON FUNCTION registrar_pagos_y_descuento_inventario IS 'Función: Registra pagos y descuenta inventario';
+
 -- =====================================================
 -- FUNCIÓN PARA OBTENER EL SIGUIENTE ID DE MÉTODO DE PAGO
 -- =====================================================
+
 CREATE OR REPLACE FUNCTION obtener_siguiente_id_metodo_pago()
 RETURNS INTEGER AS $$
 DECLARE
@@ -3100,9 +3294,11 @@ BEGIN
     RETURN siguiente_id;
 END;
 $$ LANGUAGE plpgsql;
+
 -- =====================================================
 -- FUNCIÓN MEJORADA PARA INSERTAR MÉTODO DE PAGO CON ID AUTOMÁTICO
 -- =====================================================
+
 CREATE OR REPLACE FUNCTION insertar_metodo_pago_automatico(
     p_id_cliente_natural INTEGER DEFAULT NULL,
     p_id_cliente_juridico INTEGER DEFAULT NULL
@@ -3121,9 +3317,11 @@ BEGIN
     RETURN nuevo_id;
 END;
 $$ LANGUAGE plpgsql; 
+
 -- =====================================================
 -- AJUSTE AUTOMÁTICO DE SECUENCIA AL CARGAR FUNCIONES
 -- =====================================================
+
 -- Ajustar la secuencia de Metodo_Pago de forma segura
 -- Solo ajustar si hay datos existentes
 DO $$
@@ -3143,9 +3341,11 @@ BEGIN
         RAISE NOTICE 'No hay datos existentes. La secuencia mantendrá su valor por defecto.';
     END IF;
 END $$;
+
 -- =====================================================
 -- FUNCIÓN PARA INSERTAR NUEVA TASA DE CAMBIO
 -- =====================================================
+
 CREATE OR REPLACE FUNCTION insertar_nueva_tasa(
     p_nombre VARCHAR(50),
     p_valor DECIMAL
@@ -3165,6 +3365,7 @@ END;
 $$ LANGUAGE plpgsql;
 -- FUNCIONES ROBUSTAS DE CARRITO CON ESTATUS (TIENDA FÍSICA, CLIENTE)
 -- =====================================================
+
 DROP FUNCTION IF EXISTS obtener_o_crear_carrito_cliente_en_proceso(INTEGER, INTEGER);
 CREATE OR REPLACE FUNCTION obtener_o_crear_carrito_cliente_en_proceso(
     p_id_cliente_natural INTEGER DEFAULT NULL,
@@ -3180,6 +3381,7 @@ BEGIN
     IF v_id_estatus_en_proceso IS NULL THEN
         RAISE EXCEPTION 'No existe el estatus "en proceso" en la tabla Estatus';
     END IF;
+
     -- Buscar si ya existe una compra abierta "en proceso" para este cliente
     SELECT c.id_compra INTO v_id_compra
     FROM Compra c
@@ -3191,10 +3393,12 @@ BEGIN
     AND ce.estatus_id_estatus = v_id_estatus_en_proceso
     AND ce.fecha_hora_fin > v_now
     LIMIT 1;
+
     -- Si ya existe, retornar el id_compra
     IF v_id_compra IS NOT NULL THEN
         RETURN v_id_compra;
     END IF;
+
     -- Si no existe, crear una nueva compra respetando los arcos de exclusividad
     INSERT INTO Compra (id_cliente_natural, id_cliente_juridico, monto_total, tienda_fisica_id_tienda)
     VALUES (
@@ -3203,16 +3407,21 @@ BEGIN
         0,
         1 -- Asume tienda física con id 1, ajusta si es necesario
     ) RETURNING id_compra INTO v_id_compra;
+
     -- Asociar la compra con estatus 'en proceso' en Compra_Estatus
     INSERT INTO Compra_Estatus (compra_id_compra, estatus_id_estatus, fecha_hora_asignacion, fecha_hora_fin)
     VALUES (v_id_compra, v_id_estatus_en_proceso, v_now, '9999-12-31 23:59:59');
+
     RETURN v_id_compra;
 END;
 $$ LANGUAGE plpgsql;
+
 -- FIN FUNCIONES ROBUSTAS DE CARRITO CON ESTATUS
+
 -- =================================================================
 -- FUNCIONES PARA OPERACIONES POR COMPRA_ID
 -- =================================================================
+
 -- Obtener carrito por compra_id
 DROP FUNCTION IF EXISTS obtener_carrito_por_id(integer);
 CREATE OR REPLACE FUNCTION obtener_carrito_por_id(p_id_compra INTEGER)
@@ -3241,6 +3450,7 @@ BEGIN
     ORDER BY stock_suficiente ASC, c.nombre_cerveza;
 END;
 $$ LANGUAGE plpgsql;
+
 -- Actualizar cantidad en carrito por compra_id
 DROP FUNCTION IF EXISTS actualizar_cantidad_carrito_por_id(integer, integer, integer);
 CREATE OR REPLACE FUNCTION actualizar_cantidad_carrito_por_id(p_id_compra INTEGER, p_id_inventario INTEGER, p_nueva_cantidad INTEGER)
@@ -3258,6 +3468,7 @@ BEGIN
     PERFORM actualizar_monto_compra_por_id(p_id_compra);
 END;
 $$ LANGUAGE plpgsql;
+
 -- Eliminar del carrito por compra_id
 DROP FUNCTION IF EXISTS eliminar_del_carrito_por_id(integer, integer);
 CREATE OR REPLACE FUNCTION eliminar_del_carrito_por_id(p_id_compra INTEGER, p_id_inventario INTEGER)
@@ -3269,6 +3480,7 @@ BEGIN
     PERFORM actualizar_monto_compra_por_id(p_id_compra);
 END;
 $$ LANGUAGE plpgsql;
+
 -- Limpiar carrito por compra_id
 DROP FUNCTION IF EXISTS limpiar_carrito_por_id(integer);
 CREATE OR REPLACE FUNCTION limpiar_carrito_por_id(p_id_compra INTEGER)
@@ -3277,9 +3489,11 @@ BEGIN
     DELETE FROM Detalle_Compra WHERE id_compra = p_id_compra;
 END;
 $$ LANGUAGE plpgsql;
+
 -- =====================================================
 -- FUNCIÓN PARA OBTENER LA TASA ACTUAL DEL DÓLAR
 -- =====================================================
+
 -- Función para acumular puntos automáticamente al finalizar una compra física
 CREATE OR REPLACE FUNCTION acumular_puntos_compra_fisica(
     p_id_compra INTEGER
@@ -3344,6 +3558,7 @@ BEGIN
     RETURN v_puntos_ganados;
 END;
 $$ LANGUAGE plpgsql;
+
 -- Función para obtener el saldo de puntos de un cliente natural
 CREATE OR REPLACE FUNCTION obtener_saldo_puntos_cliente(
     p_id_cliente_natural INTEGER
@@ -3359,6 +3574,7 @@ BEGIN
     RETURN v_saldo;
 END;
 $$ LANGUAGE plpgsql;
+
 -- Función para validar si un cliente puede usar puntos como método de pago
 CREATE OR REPLACE FUNCTION validar_uso_puntos(
     p_id_cliente_natural INTEGER,
@@ -3374,6 +3590,7 @@ BEGIN
     RETURN v_saldo_actual >= p_puntos_a_usar;
 END;
 $$ LANGUAGE plpgsql;
+
 -- Función para usar puntos como método de pago
 CREATE OR REPLACE FUNCTION usar_puntos_como_pago(
     p_id_cliente_natural INTEGER,
@@ -3454,6 +3671,7 @@ BEGIN
     RETURN p_puntos_a_usar;
 END;
 $$ LANGUAGE plpgsql;
+
 -- Función para obtener el historial de movimientos de puntos de un cliente
 CREATE OR REPLACE FUNCTION obtener_historial_puntos_cliente(
     p_id_cliente_natural INTEGER,
@@ -3487,6 +3705,7 @@ BEGIN
     LIMIT p_limite;
 END;
 $$ LANGUAGE plpgsql;
+
 -- Función para obtener información completa de puntos de un cliente
 CREATE OR REPLACE FUNCTION obtener_info_puntos_cliente(
     p_id_cliente_natural INTEGER
@@ -3551,6 +3770,7 @@ BEGIN
         v_tasa;
 END;
 $$ LANGUAGE plpgsql;
+
 -- =============================================
 -- AJUSTE AUTOMÁTICO DE SECUENCIA DE Metodo_Pago
 -- =============================================
@@ -3564,6 +3784,7 @@ BEGIN
         RAISE NOTICE 'Secuencia metodo_pago_id_metodo_seq ajustada a %', max_id;
     END IF;
 END $$;
+
 -- =============================================
 -- FUNCIÓN DE DIAGNÓSTICO PARA PUNTOS
 -- =============================================
@@ -3599,9 +3820,11 @@ BEGIN
     ORDER BY pc.fecha ASC, pc.id_punto_cliente ASC;
 END;
 $$ LANGUAGE plpgsql;
+
 -- =============================================
 -- AJUSTE AUTOMÁTICO DE SECUENCIA DE Metodo_Pago
 -- =============================================
+
 -- =============================================
 -- FUNCIÓN PARA LIMPIAR PUNTOS DE UN CLIENTE
 -- =============================================
@@ -3620,15 +3843,20 @@ BEGIN
     RETURN v_registros_eliminados;
 END;
 $$ LANGUAGE plpgsql;
+
 -- =============================================
 -- FUNCIÓN DE DIAGNÓSTICO PARA PUNTOS
 -- =============================================
+
 -- =============================================
 -- INSERT DE TASA DE VALOR DE PUNTO POR DEFECTO (id_metodo NULL)
 -- =============================================
+
+
 -- =============================================
 -- FUNCIÓN DE DIAGNÓSTICO PARA VERIFICAR TASAS DE PUNTOS
 -- =============================================
+
 CREATE OR REPLACE FUNCTION obtener_tasa_actual_dolar()
 RETURNS TABLE(
     id_tasa INTEGER,
@@ -3645,6 +3873,7 @@ BEGIN
     LIMIT 1;
 END;
 $$ LANGUAGE plpgsql;
+
 -- =====================================================
 -- FUNCIÓN PARA OBTENER O CREAR CARRITO DE USUARIO (WEB) O CLIENTE (FÍSICO)
 -- =====================================================
@@ -3665,10 +3894,12 @@ BEGIN
     IF v_id_estatus_en_proceso IS NULL THEN
         RAISE EXCEPTION 'No existe el estatus "en proceso" en la tabla Estatus';
     END IF;
+
     -- Si es compra física (cliente), delegar a la función existente
     IF p_id_cliente_natural IS NOT NULL OR p_id_cliente_juridico IS NOT NULL THEN
         RETURN obtener_o_crear_carrito_cliente_en_proceso(p_id_cliente_natural, p_id_cliente_juridico);
     END IF;
+
     -- Si es compra web (usuario)
     -- Buscar si ya existe una compra abierta "en proceso" para este usuario
     SELECT c.id_compra INTO v_id_compra
@@ -3678,19 +3909,24 @@ BEGIN
       AND ce.estatus_id_estatus = v_id_estatus_en_proceso
       AND ce.fecha_hora_fin > v_now
     LIMIT 1;
+
     IF v_id_compra IS NOT NULL THEN
         RETURN v_id_compra;
     END IF;
+
     -- Si no existe, crear una nueva compra web con tienda_web_id_tienda = 1
     INSERT INTO Compra (usuario_id_usuario, monto_total, tienda_web_id_tienda)
     VALUES (p_id_usuario, 0, 1)
     RETURNING id_compra INTO v_id_compra;
+
     -- Asociar la compra con estatus 'en proceso' en Compra_Estatus
     INSERT INTO Compra_Estatus (compra_id_compra, estatus_id_estatus, fecha_hora_asignacion, fecha_hora_fin)
     VALUES (v_id_compra, v_id_estatus_en_proceso, v_now, '9999-12-31 23:59:59');
+
     RETURN v_id_compra;
 END;
 $$ LANGUAGE plpgsql;
+
 -- =====================================================
 -- FUNCIÓN PARA BUSCAR EL ID DE INVENTARIO SEGÚN EL TIPO DE VENTA
 -- =====================================================
@@ -3740,6 +3976,7 @@ BEGIN
     RETURN v_id_inventario;
 END;
 $$ LANGUAGE plpgsql;
+
 -- =====================================================
 -- MODIFICACIÓN DE agregar_al_carrito_por_producto PARA USAR LA NUEVA FUNCIÓN
 -- =====================================================
@@ -3774,6 +4011,7 @@ BEGIN
     PERFORM agregar_al_carrito(p_id_usuario, v_id_inventario, p_cantidad, p_id_cliente_natural, p_id_cliente_juridico);
 END;
 $$;
+
 -- FUNCIÓN: get_ventas_por_empleado()
 -- =================================================================
 -- Descripción: Calcula las ventas por empleado en tiendas físicas, sumando cada compra solo una vez por empleado, e incluye una fila especial para ventas sin empleado
@@ -3822,7 +4060,9 @@ BEGIN
           AND dc.id_empleado IS NOT NULL
     ) AS cu ON cu.id_empleado = e.id_empleado
     GROUP BY e.id_empleado, e.primer_nombre, e.segundo_nombre, e.primer_apellido, e.segundo_apellido
+
     UNION ALL
+
     -- Ventas físicas sin empleado
     SELECT
         NULL as id_empleado,
@@ -3843,7 +4083,9 @@ BEGIN
     ;
 END;
 $$ LANGUAGE plpgsql;
+
 --------------------------------------------------------------------------------------------------------
+
 -- FUNCIÓN: get_tendencia_ventas (CORREGIDA)
 -- Devuelve cantidad de compras por mes (no montos)
 DROP FUNCTION IF EXISTS get_tendencia_ventas();
@@ -3862,6 +4104,7 @@ BEGIN
     ORDER BY periodo;
 END;
 $$ LANGUAGE plpgsql;
+
 -- FUNCIÓN: get_ventas_por_canal (CORREGIDA)
 -- Devuelve cantidad de compras por canal (no montos)
 DROP FUNCTION IF EXISTS get_ventas_por_canal();
@@ -3885,6 +4128,7 @@ BEGIN
     ORDER BY canal;
 END;
 $$ LANGUAGE plpgsql;
+
 -- FUNCIÓN: get_top_productos_vendidos (RESTAURADA)
 -- Devuelve el top 10 de productos más vendidos por unidades
 DROP FUNCTION IF EXISTS get_top_productos_vendidos();
@@ -3906,6 +4150,7 @@ BEGIN
     LIMIT 10;
 END;
 $$ LANGUAGE plpgsql;
+
 -- FUNCIÓN: get_stock_actual (RESTAURADA)
 -- Devuelve el stock disponible por producto y presentación
 DROP FUNCTION IF EXISTS get_stock_actual();
@@ -3929,10 +4174,11 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+
 CREATE OR REPLACE FUNCTION get_indicadores_ventas(p_fecha_inicio date, p_fecha_fin date)
-RETURNS TABLE(ventas_totales_fisica numeric, ventas_totales_web numeric, ventas_totales_general numeric, crecimiento_ventas numeric, crecimiento_porcentual numeric, ticket_promedio numeric, volumen_unidades integer, estilo_mas_vendido character varying, unidades_estilo_mas_vendido integer) 
+RETURNS TABLE(ventas_totales_fisica numeric, ventas_totales_web numeric, ventas_totales_general numeric, crecimiento_ventas numeric, crecimiento_porcentual numeric, ticket_promedio numeric, volumen_unidades integer, estilo_mas_vendido character varying, unidades_estilo_mas_vendido integer)
 LANGUAGE plpgsql
-AS $$
+AS $function$
 DECLARE
     -- Variables para calcular el perÃ­odo anterior automÃ¡ticamente
     v_periodo_anterior_inicio DATE;
@@ -4051,15 +4297,22 @@ BEGIN
         COALESCE((SELECT estilo_cerveza FROM ventas_por_estilo), 'N/A') as estilo_mas_vendido,
         COALESCE((SELECT unidades_vendidas FROM ventas_por_estilo), 0)::INTEGER as unidades_estilo_mas_vendido;
 END;
-$$;
+$function$
 
 CREATE OR REPLACE FUNCTION get_ventas_por_estilo(p_fecha_inicio date, p_fecha_fin date)
 RETURNS TABLE(estilo_cerveza character varying, unidades_vendidas integer, monto_total numeric, porcentaje_ventas numeric)
 LANGUAGE plpgsql
-AS $$
+AS $function$
 BEGIN
     RETURN QUERY
     WITH
+    -- =================================================================
+    -- CTE 1: VENTAS POR ESTILO DE CERVEZA
+    -- =================================================================
+    -- Agrupa las ventas por estilo de cerveza y calcula:
+    -- - Total de unidades vendidas por estilo
+    -- - Monto total en dinero por estilo
+    -- JOINs necesarios: Detalle_Compra -> Compra -> Pago_Compra -> Inventario -> Cerveza -> Tipo_Cerveza
     ventas_estilos AS (
         SELECT
             tc.nombre as estilo,
@@ -4074,28 +4327,36 @@ BEGIN
         WHERE pc.fecha_hora BETWEEN p_fecha_inicio AND p_fecha_fin
         GROUP BY tc.id_tipo_cerveza, tc.nombre
     ),
+    -- =================================================================
+    -- CTE 2: TOTAL DE VENTAS GENERAL
+    -- =================================================================
+    -- Calcula el total general de ventas para calcular porcentajes
     total_ventas AS (
         SELECT SUM(monto) as total
         FROM ventas_estilos
-    )
+    ),
+    -- =================================================================
+    -- SELECT FINAL: COMBINA VENTAS POR ESTILO CON TOTALES
+    -- =================================================================
     SELECT
-        ve.estilo AS estilo_cerveza,
-        ve.unidades::INTEGER AS unidades_vendidas,
-        ve.monto AS monto_total,
+        ve.estilo,
+        ve.unidades::INTEGER,
+        ve.monto,
+        -- Calcula el porcentaje de participaciÃ³n (evita divisiÃ³n por cero)
         CASE
             WHEN tv.total > 0 THEN (ve.monto / tv.total) * 100
             ELSE 0
-        END AS porcentaje_ventas
+        END as porcentaje
     FROM ventas_estilos ve
     CROSS JOIN total_ventas tv
-    ORDER BY ve.unidades DESC;
+    ORDER BY ve.unidades DESC;  -- Ordena por unidades vendidas (mÃ¡s vendido primero)
 END;
-$$;
+$function$
 
 CREATE OR REPLACE FUNCTION get_ventas_por_periodo(p_fecha_inicio date, p_fecha_fin date, p_tipo_periodo character varying DEFAULT 'day'::character varying)
 RETURNS TABLE(periodo character varying, ventas_totales numeric, unidades_vendidas integer, numero_compras integer)
 LANGUAGE plpgsql
-AS $$
+AS $function$
 BEGIN
     RETURN QUERY
     SELECT
@@ -4117,198 +4378,6 @@ BEGIN
     GROUP BY periodo  -- Agrupa por el perÃ­odo calculado
     ORDER BY periodo; -- Ordena cronolÃ³gicamente
 END;
-$$;
-
-
-CREATE FUNCTION public.get_volumen_por_presentacion(p_fecha_inicio date, p_fecha_fin date) RETURNS TABLE(presentacion character varying, volumen_total bigint)
-    LANGUAGE plpgsql
-    AS $$
-BEGIN
-    RETURN QUERY
-    SELECT 
-        p.nombre as presentacion,
-        COALESCE(SUM(dc.cantidad), 0) as volumen_total
-    FROM Presentacion p
-    LEFT JOIN Inventario i ON p.id_presentacion = i.id_presentacion
-    LEFT JOIN Detalle_Compra dc ON i.id_inventario = dc.id_inventario
-    LEFT JOIN Compra c ON dc.id_compra = c.id_compra
-    LEFT JOIN Pago_Compra pc ON c.id_compra = pc.compra_id
-    WHERE pc.fecha_hora BETWEEN p_fecha_inicio AND p_fecha_fin
-    GROUP BY p.id_presentacion, p.nombre
-    ORDER BY volumen_total DESC;
-END;
-$$;
-
-
-
-
-CREATE FUNCTION public.get_indicadores_clientes(p_fecha_inicio date, p_fecha_fin date) RETURNS TABLE(clientes_nuevos bigint, clientes_recurrentes bigint, tasa_retencion numeric)
-    LANGUAGE plpgsql
-    AS $$
-BEGIN
-    RETURN QUERY
-    WITH 
-    -- =================================================================
-    -- CTE 1: COMPRAS CON IDENTIFICACI├ôN DE CLIENTE
-    -- =================================================================
-    -- Unifica clientes naturales y jur├¡dicos en un solo identificador
-    -- Usa COALESCE para manejar los dos tipos de cliente (natural/jur├¡dico)
-    compras_con_cliente AS (
-        SELECT
-            COALESCE(CAST(id_cliente_juridico AS TEXT), CAST(id_cliente_natural AS TEXT)) AS id_cliente,
-            id_compra
-        FROM Compra
-        WHERE id_cliente_juridico IS NOT NULL OR id_cliente_natural IS NOT NULL
-    ),
-    -- =================================================================
-    -- CTE 2: PRIMERAS COMPRAS POR CLIENTE
-    -- =================================================================
-    -- Encuentra la fecha de la primera compra de cada cliente
-    -- Esto es crucial para determinar si un cliente es nuevo o recurrente
-    primeras_compras AS (
-        SELECT cc.id_cliente, MIN(pc.fecha_hora) AS primera_compra
-        FROM compras_con_cliente cc
-        JOIN Pago_Compra pc ON cc.id_compra = pc.compra_id
-        GROUP BY cc.id_cliente
-    ),
-    -- =================================================================
-    -- CTE 3: COMPRAS EN EL PER├ìODO ANALIZADO
-    -- =================================================================
-    -- Identifica qu├⌐ clientes realizaron compras en el per├¡odo espec├¡fico
-    -- y cu├íntas compras hicieron cada uno
-    compras_periodo AS (
-        SELECT cc.id_cliente, COUNT(*) AS compras
-        FROM compras_con_cliente cc
-        JOIN Pago_Compra pc ON cc.id_compra = pc.compra_id
-        WHERE pc.fecha_hora BETWEEN p_fecha_inicio AND p_fecha_fin
-        GROUP BY cc.id_cliente
-    )
-    -- =================================================================
-    -- SELECT FINAL: C├üLCULO DE KPIs
-    -- =================================================================
-    SELECT
-        -- CLIENTES NUEVOS: Aquellos cuya primera compra fue en el per├¡odo analizado
-        (SELECT COUNT(*) FROM primeras_compras WHERE primera_compra BETWEEN p_fecha_inicio AND p_fecha_fin) AS clientes_nuevos,
-        
-        -- CLIENTES RECURRENTES: Aquellos que ya hab├¡an comprado antes del per├¡odo pero volvieron a comprar
-        (SELECT COUNT(*) FROM compras_periodo cp
-            JOIN primeras_compras pc ON cp.id_cliente = pc.id_cliente
-            WHERE pc.primera_compra < p_fecha_inicio) AS clientes_recurrentes,
-        
-        -- TASA DE RETENCI├ôN: Porcentaje de clientes recurrentes vs total de clientes activos
-        CASE WHEN (SELECT COUNT(*) FROM compras_periodo) > 0 THEN
-            (SELECT COUNT(*) FROM compras_periodo cp
-                JOIN primeras_compras pc ON cp.id_cliente = pc.id_cliente
-                WHERE pc.primera_compra < p_fecha_inicio)::DECIMAL
-            /
-            (SELECT COUNT(*) FROM compras_periodo)::DECIMAL * 100
-        ELSE 0 END AS tasa_retencion;
-END;
-$$;
-
-
-CREATE FUNCTION public.get_rotacion_inventario(p_fecha_inicio date, p_fecha_fin date) RETURNS TABLE(rotacion_inventario numeric, valor_promedio_inventario numeric, costo_productos_vendidos numeric)
-    LANGUAGE plpgsql
-    AS $$
-BEGIN
-    RETURN QUERY
-    WITH 
-    -- =================================================================
-    -- CTE 1: VALOR PROMEDIO DEL INVENTARIO EN EL PER├ìODO
-    -- =================================================================
-    -- Calcula el valor promedio del inventario durante el per├¡odo analizado
-    -- Considera el inventario inicial + final / 2
-    valor_inventario AS (
-        SELECT 
-            COALESCE(AVG(i.cantidad * dc.precio_unitario), 0) as valor_promedio
-        FROM Inventario i
-        LEFT JOIN Detalle_Compra dc ON i.id_inventario = dc.id_inventario
-        LEFT JOIN Compra c ON dc.id_compra = c.id_compra
-        LEFT JOIN Pago_Compra pc ON c.id_compra = pc.compra_id
-        WHERE (pc.fecha_hora BETWEEN p_fecha_inicio AND p_fecha_fin) 
-           OR (pc.fecha_hora IS NULL AND i.cantidad > 0)
-    ),
-    -- =================================================================
-    -- CTE 2: COSTO DE PRODUCTOS VENDIDOS
-    -- =================================================================
-    -- Calcula el costo total de los productos vendidos en el per├¡odo
-    -- Usa el precio unitario * cantidad vendida
-    costo_vendido AS (
-        SELECT 
-            COALESCE(SUM(dc.cantidad * dc.precio_unitario), 0) as costo_total
-        FROM Detalle_Compra dc
-        JOIN Compra c ON dc.id_compra = c.id_compra
-        JOIN Pago_Compra pc ON c.id_compra = pc.compra_id
-        WHERE pc.fecha_hora BETWEEN p_fecha_inicio AND p_fecha_fin
-    )
-    -- =================================================================
-    -- SELECT FINAL: C├üLCULO DE ROTACI├ôN
-    -- =================================================================
-    SELECT
-        CASE 
-            WHEN vi.valor_promedio > 0 THEN cv.costo_total / vi.valor_promedio
-            ELSE 0 
-        END as rotacion_inventario,
-        vi.valor_promedio as valor_promedio_inventario,
-        cv.costo_total as costo_productos_vendidos
-    FROM valor_inventario vi
-    CROSS JOIN costo_vendido cv;
-END;
-$$;
-
-
-
-CREATE FUNCTION public.get_tasa_ruptura_stock(p_fecha_inicio date, p_fecha_fin date) RETURNS TABLE(tasa_ruptura_stock numeric, productos_sin_stock bigint, total_productos bigint)
-    LANGUAGE plpgsql
-    AS $$
-BEGIN
-    RETURN QUERY
-    WITH 
-    -- =================================================================
-    -- CTE 1: PRODUCTOS SIN STOCK
-    -- =================================================================
-    -- Identifica productos que se quedaron sin stock durante el per├¡odo
-    -- Un producto est├í sin stock si su cantidad lleg├│ a 0
-    productos_agotados AS (
-        SELECT 
-            i.id_inventario,
-            i.id_cerveza,
-            i.id_presentacion,
-            MIN(i.cantidad) as stock_minimo
-        FROM Inventario i
-        LEFT JOIN Detalle_Compra dc ON i.id_inventario = dc.id_inventario
-        LEFT JOIN Compra c ON dc.id_compra = c.id_compra
-        LEFT JOIN Pago_Compra pc ON c.id_compra = pc.compra_id
-        WHERE (pc.fecha_hora BETWEEN p_fecha_inicio AND p_fecha_fin) 
-           OR (i.cantidad = 0)
-        GROUP BY i.id_inventario, i.id_cerveza, i.id_presentacion
-        HAVING MIN(i.cantidad) = 0
-    ),
-    -- =================================================================
-    -- CTE 2: TOTAL DE PRODUCTOS EN INVENTARIO
-    -- =================================================================
-    -- Cuenta el total de productos ├║nicos en inventario
-    total_productos_inv AS (
-        SELECT COUNT(DISTINCT CONCAT(id_cerveza, '-', id_presentacion)) as total
-        FROM Inventario
-        WHERE cantidad > 0
-    )
-    -- =================================================================
-    -- SELECT FINAL: C├üLCULO DE TASA DE RUPTURA
-    -- =================================================================
-    SELECT
-        CASE 
-            WHEN tpi.total > 0 THEN (pa.count_agotados::DECIMAL / tpi.total::DECIMAL) * 100
-            ELSE 0 
-        END as tasa_ruptura_stock,
-        pa.count_agotados as productos_sin_stock,
-        tpi.total as total_productos
-    FROM (
-        SELECT COUNT(*) as count_agotados
-        FROM productos_agotados
-    ) pa
-    CROSS JOIN total_productos_inv tpi;
-END;
-$$;
+$function$
 
 
