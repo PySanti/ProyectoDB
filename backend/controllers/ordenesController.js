@@ -87,4 +87,51 @@ exports.getDetalleOrdenProveedor = async (req, res) => {
     console.error(err);
     res.status(500).json({ error: 'Error al obtener los detalles de la orden de reposición' });
   }
+};
+
+// Obtener todos los estatus posibles para órdenes de compra
+exports.getEstatusOrdenCompra = async (req, res) => {
+  try {
+    const { rows } = await db.query('SELECT * FROM get_estatus_orden_compra()');
+    res.json(rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error al obtener los estatus de órdenes de compra' });
+  }
+};
+
+// Obtener todas las órdenes de compra
+exports.getOrdenesCompra = async (req, res) => {
+  try {
+    const { rows } = await db.query('SELECT * FROM get_ordenes_compra()');
+    res.json(rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error al obtener las órdenes de compra' });
+  }
+};
+
+// Obtener detalle de una orden de compra
+exports.getDetalleOrdenCompra = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const { rows } = await db.query('SELECT * FROM get_detalle_orden_compra($1)', [id]);
+    res.json(rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error al obtener el detalle de la orden de compra' });
+  }
+};
+
+// Cambiar el estatus de una orden de compra
+exports.setEstatusOrdenCompra = async (req, res) => {
+  const { id } = req.params;
+  const { id_estatus } = req.body;
+  try {
+    await db.query('SELECT update_estatus_orden_compra($1, $2)', [id, id_estatus]);
+    res.json({ message: 'Estatus actualizado correctamente' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error al actualizar el estatus de la orden de compra' });
+  }
 }; 

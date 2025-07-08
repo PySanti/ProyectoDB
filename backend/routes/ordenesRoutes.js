@@ -9,5 +9,10 @@ router.get('/anaquel', ordenesController.getOrdenesAnaquel);
 router.post('/anaquel/:id/estatus', ordenesController.setEstatusOrdenAnaquel);
 router.get('/anaquel/:id/detalles', ordenesController.getDetalleOrdenAnaquel);
 router.get('/reposicion/:id/detalles', ordenesController.getDetalleOrdenProveedor);
+// Órdenes de compra
+router.get('/compra', ordenesController.getOrdenesCompra);
+router.get('/compra/:id/detalles', ordenesController.getDetalleOrdenCompra);
+router.get('/compra/estatus', ordenesController.getEstatusOrdenCompra);
+router.put('/compra/:id/estatus', ordenesController.setEstatusOrdenCompra);
 
 module.exports = router; 

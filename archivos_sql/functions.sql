@@ -3930,7 +3930,7 @@ END;
 $$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION get_indicadores_ventas(p_fecha_inicio date, p_fecha_fin date)
-RETURNS TABLE(ventas_totales_fisica numeric, ventas_totales_web numeric, ventas_totales_general numeric, crecimiento_ventas numeric, crecimiento_porcentual numeric, ticket_promedio numeric, volumen_unidades integer, estilo_mas_vendido character varying, unidades_estilo_mas_vendido integer) 
+RETURNS TABLE(ventas_totales_fisica numeric, ventas_totales_web numeric, ventas_totales_general numeric, crecimiento_ventas numeric, crecimiento_porcentual numeric, ticket_promedio numeric, volumen_unidades integer, estilo_mas_vendido character varying, unidades_estilo_mas_vendido integer)
 LANGUAGE plpgsql
 AS $$
 DECLARE
@@ -4050,7 +4050,7 @@ BEGIN
         -- Estilo mÃ¡s vendido y sus unidades (convertir bigint a integer)
         COALESCE((SELECT estilo_cerveza FROM ventas_por_estilo), 'N/A') as estilo_mas_vendido,
         COALESCE((SELECT unidades_vendidas FROM ventas_por_estilo), 0)::INTEGER as unidades_estilo_mas_vendido;
-END;
+    END;
 $$;
 
 CREATE OR REPLACE FUNCTION get_ventas_por_estilo(p_fecha_inicio date, p_fecha_fin date)
@@ -4323,16 +4323,23 @@ BEGIN
         c.id_compra,
         COALESCE(cn.primer_nombre || ' ' || cn.primer_apellido, cj.razon_social) AS cliente,
         CASE
-            WHEN cn.id_cliente_natural IS NOT NULL THEN 'Natural'
-            WHEN cj.id_cliente_juridico IS NOT NULL THEN 'Jurídico'
+            WHEN cn.id_cliente IS NOT NULL THEN 'Natural'
+            WHEN cj.id_cliente IS NOT NULL THEN 'Jurídico'
             ELSE 'Desconocido'
         END AS tipo_cliente,
         c.monto_total,
-        ce.nombre_estatus
+        e.nombre::text AS estatus
     FROM compra c
-    LEFT JOIN cliente_natural cn ON c.id_cliente_natural = cn.id_cliente_natural
-    LEFT JOIN cliente_juridico cj ON c.id_cliente_juridico = cj.id_cliente_juridico
-    LEFT JOIN compra_estatus ce ON c.id_estatus = ce.id_estatus
+    LEFT JOIN cliente_natural cn ON c.id_cliente_natural = cn.id_cliente
+    LEFT JOIN cliente_juridico cj ON c.id_cliente_juridico = cj.id_cliente
+    LEFT JOIN LATERAL (
+        SELECT ce.estatus_id_estatus
+        FROM compra_estatus ce
+        WHERE ce.compra_id_compra = c.id_compra
+        ORDER BY ce.fecha_hora_asignacion DESC
+        LIMIT 1
+    ) ce ON TRUE
+    LEFT JOIN estatus e ON ce.estatus_id_estatus = e.id_estatus
     ORDER BY c.id_compra DESC;
 END;
 $$ LANGUAGE plpgsql;
@@ -4365,6 +4372,14 @@ CREATE OR REPLACE FUNCTION update_estatus_orden_compra(p_id_compra INTEGER, p_id
 RETURNS VOID AS $$
 BEGIN
     UPDATE compra SET id_estatus = p_id_estatus WHERE id_compra = p_id_compra;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Obtener todos los estatus posibles para órdenes de compra
+CREATE OR REPLACE FUNCTION get_estatus_orden_compra()
+RETURNS TABLE(id_estatus INTEGER, nombre_estatus TEXT) AS $$
+BEGIN
+    RETURN QUERY SELECT id_estatus, nombre FROM Estatus ORDER BY id_estatus;
 END;
 $$ LANGUAGE plpgsql;
 

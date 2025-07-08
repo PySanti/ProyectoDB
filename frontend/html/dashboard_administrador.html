@@ -6,6 +6,7 @@
     <title>Dashboard Administrador - ACAUCAB</title>
     <link rel="stylesheet" href="../css/dashboard_gestion_ordenes_compra.css">
     <link rel="stylesheet" href="../css/reportes.css">
+    <script src="../js/dashboard_administrador.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -139,6 +140,7 @@
                         <select id="filter-orden">
                             <option value="reposicion">Órdenes de Reposición a Proveedores</option>
                             <option value="anaquel">Órdenes de Reposición de Anaquel</option>
+                            <option value="compra">Órdenes de compra</option>
                         </select>
                         <button class="export-btn"><i class="fas fa-download"></i> Exportar</button>
                     </div>
@@ -177,6 +179,22 @@
                             <tbody>
                                 <tr><td colspan="5">Cargando...</td></tr>
                             </tbody>
+                        </table>
+                        <!-- Tabla de Órdenes de Compra (inicialmente oculta) -->
+                        <table class="data-table" id="tabla-ordenes-compra" style="display: none;">
+                          <thead>
+                            <tr>
+                              <th>ID Orden</th>
+                              <th>Cliente</th>
+                              <th>Tipo Cliente</th>
+                              <th>Monto Total</th>
+                              <th>Estatus</th>
+                              <th>Acciones</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr><td colspan="6">Cargando órdenes de compra...</td></tr>
+                          </tbody>
                         </table>
                     </div>
                 </div>
@@ -2674,6 +2692,7 @@
 
         // Renderizar tabla de órdenes de reposición de anaqueles
         async function renderOrdenesAnaquel() {
+            console.log("flag 1")
             const tbody = document.querySelector('#tabla-ordenes-anaquel tbody');
             tbody.innerHTML = '<tr><td colspan="5">Cargando...</td></tr>';
             try {
@@ -2760,6 +2779,7 @@
 
         // Inicializar tabla de órdenes de anaquel al alternar el filtro
         function inicializarOrdenesAnaquel() {
+            console.log("flag 2")
             const filterOrden = document.getElementById('filter-orden');
             if (filterOrden && filterOrden.value === 'anaquel') {
                 renderOrdenesAnaquel();
@@ -2783,10 +2803,14 @@
                 tablaReposicion.style.display = '';
                 tablaAnaquel.style.display = 'none';
                 renderOrdenesReposicion();
-            } else {
+            } else if (filterOrden.value === 'anaquel') {
                 tablaReposicion.style.display = 'none';
                 tablaAnaquel.style.display = '';
                 renderOrdenesAnaquel();
+            } else if (filterOrden.value === 'compra') {
+                tablaReposicion.style.display = 'none';
+                tablaAnaquel.style.display = 'none';
+                renderOrdenesCompra();
             }
         }
 
@@ -3072,5 +3096,39 @@
     <script src="../js/dashboard_datos.js"></script>
     <!-- Script para eventos -->
     <script src="../js/eventos.js"></script>
+
+    <!-- Modal Detalle Orden de Compra -->
+    <div id="modal-detalle-orden-compra" class="modal">
+      <div class="modal-content">
+        <span class="close-modal" id="close-modal-detalle-compra">&times;</span>
+        <h3>Detalle de Orden de Compra <span id="modal-orden-compra-id"></span></h3>
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Producto</th>
+              <th>Cantidad</th>
+              <th>Precio Unitario</th>
+              <th>Subtotal</th>
+            </tr>
+          </thead>
+          <tbody id="modal-detalle-compra-tbody">
+            <!-- Detalle dinámico -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Modal Cambiar Estatus Orden de Compra -->
+    <div id="modal-cambiar-estatus-compra" class="modal">
+      <div class="modal-content">
+        <span class="close-modal" id="close-modal-estatus-compra">&times;</span>
+        <h3>Cambiar Estatus de Orden de Compra <span id="modal-orden-compra-id-estatus"></span></h3>
+        <form id="form-cambiar-estatus-compra">
+          <label for="select-nuevo-estatus-compra">Nuevo Estatus:</label>
+          <select id="select-nuevo-estatus-compra"></select>
+          <button type="submit" class="primary-btn">Guardar</button>
+        </form>
+      </div>
+    </div>
 </body>
 </html> 
